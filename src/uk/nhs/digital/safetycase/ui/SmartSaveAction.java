@@ -134,8 +134,9 @@ public class SmartSaveAction
                             updated.object.setAttribute("Name", updated.name);
                         }
                     }
+                } else {
+                    createProcessStepHazardRelationship(hazard, processStepId);
                 }
-                createProcessStepHazardRelationship(hazard, processStepId);
                 saveBowtie(hazard, bowtieElements, projectid);
             }
 //            String exml = URLEncoder.encode(xml, "UTF-8");

@@ -27,10 +27,14 @@ public class BowtieElement {
 
     int cellId = -1;
     
-    // TODO:
-    // These are single ints for now because we're only doing single "from" and
-    // single "to" connections. In future they might need to be arrays where
-    // we can have many-to-many links.
+    // TODO NEXT:
+    // This doesn't support real "bowties" where for example a hazard has more than one
+    // effect, or multiple causes. So... replace the "fromCell" and "toCell" with an
+    // ArrayList<BowtieElement> which is populated with *targets* by the parseBowtie()
+    // method. Processing those from the targets will allow bi-directional relationships
+    // to be made when a bowtie is saved, and the overall hazard/component "BowtieDiagram"
+    // relationsips.
+
     
     public int fromCell = -1;
     public int toCell = -1;
