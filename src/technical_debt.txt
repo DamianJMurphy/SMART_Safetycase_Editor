@@ -6,10 +6,6 @@ High-level
 
 - System/subsystem/function graphical editor in the style of the bowtie/process interfaces
 
-- If we're going to have a lot of graphical editors (which is probably a Good Thing), it is
-    worth splitting out the actual handling of creates and updates into specialised worker classes
-    rather than having everything in one huge SmartSaveAction.
-
 - Library including "Condition" editor/maintenance facility, and integration with the graphical
     editors (e.g. clone an existing hazard into a new context when making a bowtie from a new
     process model)
