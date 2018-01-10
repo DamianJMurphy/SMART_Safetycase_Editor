@@ -1,0 +1,23 @@
+High-level
+
+- Need to add a housekeeping/purge function to get rid of "deleted" (i.e. records marked with a
+    deleted date but still extant in the database) relationships, and another one for persistable
+    objects.
+
+- System/subsystem/function graphical editor in the style of the bowtie/process interfaces
+
+- Library including "Condition" editor/maintenance facility
+
+- Reports
+
+- DQ checking and issues system
+
+
+Functional
+
+- Go through and tidy up the editor forms
+
+- Do we need the "Bowtie Diagram" relationships ?
+
+- Editing the 
+
