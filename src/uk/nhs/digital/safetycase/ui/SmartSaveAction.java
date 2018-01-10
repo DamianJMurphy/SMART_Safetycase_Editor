@@ -111,15 +111,17 @@ public class SmartSaveAction
                     projectid = process.getAttribute("ProjectID").getIntValue();
                     hazard.setAttribute("ProjectID", projectid);
                     hazard.setAttribute("ConditionID", 0);
-                    hazard.setAttribute("Status", "New");
-                    hf.put(hazard);
+                    hazard.setAttribute("Status", "New");                    
                 } else {
                     projectid = hazard.getAttribute("ProjectID").getIntValue();
                     existingBowtie = bge.getExistingBowtie();
                 }
                 NodeList cells = parseHazard(xml, hazard);
-                HashMap<String,BowtieElement> bowtieElements = parseBowtie(cells, hazard, projectid);
+                HashMap<String,BowtieElement> bowtieElements = parseBowtie(cells, projectid);
+
+
                 
+                hf.put(hazard);
                                 
                 if (existingBowtie != null) {
         
@@ -171,7 +173,7 @@ public class SmartSaveAction
         psf.put(ps);
     }
     
-    private HashMap<String,BowtieElement> parseBowtie(NodeList nl, Hazard h, int projectid)
+    private HashMap<String,BowtieElement> parseBowtie(NodeList nl, int projectid)
             throws Exception
     {
         // Get the list of causes, controls and effects in the bowtie...
@@ -205,8 +207,9 @@ public class SmartSaveAction
                     throw new BrokenConnectionException("Link from " + c + " has no target bowtie element");
                 }
                 BowtieElement bt = bowtieElements.get(s);
-                bt.fromCell = Integer.parseInt(s);
-                bt.toCell = Integer.parseInt(t);
+//                bt.fromCell = Integer.parseInt(s);
+//                bt.toCell = Integer.parseInt(t);
+                bt.connections.add(t);
             }
         }
         return bowtieElements;
@@ -298,41 +301,65 @@ public class SmartSaveAction
                 h.addRelationship(hr);
             }
             if (bt.type.contentEquals("Cause")) {
-                BowtieElement target = bowtieElements.get(Integer.toString(bt.toCell));
-                if (target != null) {
-                    Relationship r = new Relationship(bt.object.getId(), target.object.getId(), target.type);
-                    if (target.type.contentEquals("Hazard")) {
-                        r.setComment("Causes");
-                    } else {
-                        r.setComment("Controlled by");
+                for (String t : bt.connections) {
+                    BowtieElement target = bowtieElements.get(t);
+                    if (target != null) {
+                        Relationship rto = new Relationship(bt.object.getId(), target.object.getId(), target.type);
+                        Relationship rfrom = new Relationship(target.object.getId(), bt.object.getId(), bt.type);
+                        if (target.type.contentEquals("Hazard")) {
+                            rto.setComment("Causes");
+                            rfrom.setComment("Caused by");
+                        } else {
+                            rto.setComment("Controlled by");
+                            rfrom.setComment("Controls");
+                        }
+                        rto.setManagementClass("ConnectionTo");
+                        rfrom.setManagementClass("ConnectionFrom");
+                        bt.object.addRelationship(rto);
+                        target.object.addRelationship(rfrom);
+                        MetaFactory.getInstance().getFactory(target.type).put(target.object);
                     }
-                    r.setManagementClass("Connection");
-                    bt.object.addRelationship(r);
                 }
             } else if (bt.type.contentEquals("Hazard")) {
-                BowtieElement target = bowtieElements.get(Integer.toString(bt.toCell));
-                if (target != null) {
-                    Relationship r = new Relationship(bt.object.getId(), target.object.getId(), target.type);
-                    if (target.type.contentEquals("Effect")) {
-                        r.setComment("Has effect");
-                    } else {
-                        r.setComment("Is mitigated by");
-                    }
-                    r.setManagementClass("Connection");
-                    bt.object.addRelationship(r);
-                }                
+                for (String t : bt.connections) {
+                    BowtieElement target = bowtieElements.get(t);
+                    if (target != null) {
+                        Relationship rto = new Relationship(bt.object.getId(), target.object.getId(), target.type);
+                        Relationship rfrom = new Relationship(target.object.getId(), bt.object.getId(), bt.type);
+                        if (target.type.contentEquals("Effect")) {
+                            rto.setComment("Has effect");
+                            rfrom.setComment("Effect of");
+                        } else {
+                            rto.setComment("Mitigated by");
+                            rfrom.setComment("Mitigates");
+                        }
+                        rto.setManagementClass("ConnectionTo");
+                        rfrom.setManagementClass("ConnectionFrom");
+                        bt.object.addRelationship(rto);
+                        target.object.addRelationship(rfrom);
+                        MetaFactory.getInstance().getFactory(target.type).put(target.object);
+                    }                
+                }
             } else if (bt.type.contentEquals("Control")) {
-                BowtieElement target = bowtieElements.get(Integer.toString(bt.toCell));
-                if (target != null) {
-                    Relationship r = new Relationship(bt.object.getId(), target.object.getId(), target.type);
-                    if (target.type.contentEquals("Hazard")) {
-                        r.setComment("Controls");
-                    } else {
-                        r.setComment("Mitigates");
-                    }
-                    r.setManagementClass("Connection");
-                    bt.object.addRelationship(r);
-                }                
+                for (String t : bt.connections) {
+                    BowtieElement target = bowtieElements.get(t);
+                    if (target != null) {
+                        Relationship rto = new Relationship(bt.object.getId(), target.object.getId(), target.type);
+                        Relationship rfrom = new Relationship(target.object.getId(), bt.object.getId(), bt.type);
+                        if (target.type.contentEquals("Hazard")) {
+                            rto.setComment("Controls");
+                            rfrom.setComment("Controlled by");
+                        } else {
+                            rto.setComment("Mitigates");
+                            rfrom.setComment("Mitigated by");
+                        }
+                        rto.setManagementClass("ConnectionTo");
+                        rfrom.setManagementClass("ConnectionFrom");
+                        bt.object.addRelationship(rto);
+                        target.object.addRelationship(rfrom);
+                        MetaFactory.getInstance().getFactory(target.type).put(target.object);
+                    }                
+                }
             }
             MetaFactory.getInstance().getFactory(bt.type).put(bt.object);
         }       

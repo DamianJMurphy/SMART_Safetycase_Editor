@@ -140,8 +140,9 @@ public class BowtieEditor
                     String s = cell.getAttribute("source");
                     String t = cell.getAttribute("target");
                     BowtieElement bt = bowtieElements.get(s);
-                    bt.fromCell = Integer.parseInt(s);
-                    bt.toCell = Integer.parseInt(t);
+//                    bt.fromCell = Integer.parseInt(s);
+//                    bt.toCell = Integer.parseInt(t);
+                    bt.connections.add(t);
                 }
             }
             

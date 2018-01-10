@@ -17,6 +17,7 @@
  */
 package uk.nhs.digital.safetycase.ui;
 
+import java.util.ArrayList;
 import uk.nhs.digital.safetycase.data.Persistable;
 
 /**
@@ -36,8 +37,9 @@ public class BowtieElement {
     // relationsips.
 
     
-    public int fromCell = -1;
-    public int toCell = -1;
+//    public int fromCell = -1;
+//    public int toCell = -1;
+    public ArrayList<String> connections = new ArrayList<>();
     public String type = null;
     public String name = null;
     public Persistable object = null;

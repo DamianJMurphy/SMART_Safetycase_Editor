@@ -440,7 +440,7 @@ public class ControlEditor extends javax.swing.JPanel
          int current = controlsTable.getSelectedRow();
         if (current == -1)
             return;
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Delete this Hazard ?", "Warning", JOptionPane.YES_NO_OPTION);
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Delete this Control ?", "Warning", JOptionPane.YES_NO_OPTION);
         if (dialogResult == JOptionPane.NO_OPTION) {
             return;
         }

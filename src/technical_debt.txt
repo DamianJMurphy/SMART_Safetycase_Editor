@@ -2,11 +2,13 @@ High-level
 
 - Need to add a housekeeping/purge function to get rid of "deleted" (i.e. records marked with a
     deleted date but still extant in the database) relationships, and another one for persistable
-    objects.
+    objects. Probably constrained to current project.
 
 - System/subsystem/function graphical editor in the style of the bowtie/process interfaces
 
-- Library including "Condition" editor/maintenance facility
+- Library including "Condition" editor/maintenance facility, and integration with the graphical
+    editors (e.g. clone an existing hazard into a new context when making a bowtie from a new
+    process model)
 
 - Reports
 
@@ -19,5 +21,7 @@ Functional
 
 - Do we need the "Bowtie Diagram" relationships ?
 
-- Editing the 
+- Process editing
+
+-
 
