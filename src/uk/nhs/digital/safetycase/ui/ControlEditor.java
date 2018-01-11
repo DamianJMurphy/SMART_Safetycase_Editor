@@ -585,6 +585,7 @@ public class ControlEditor extends javax.swing.JPanel
       int selected = -1;
       try {
           control = (Control)p;
+          int populated = -1;
             DefaultTableModel dtm = new DefaultTableModel(controlcolumns, 0);
             DefaultTableModel ld = new DefaultTableModel(linkcolumns, 0);
             linksTable.setModel(ld);
@@ -593,13 +594,14 @@ public class ControlEditor extends javax.swing.JPanel
                 Control c = (Control)ctrl.get(i);
                 if (c.isDeleted())
                     continue;
+                populated++;
                 controls.add(c);
                 String[] row = new String[controlcolumns.length];
                 row[0] = c.getAttributeValue("Name");
                 row[1] = c.getAttributeValue("Type");
                 row[2] = c.getAttributeValue("State");
                 if (p.getId() == c.getId()) {
-                    selected = i;
+                    selected = populated;
                 }
                 dtm.addRow(row);
             }    

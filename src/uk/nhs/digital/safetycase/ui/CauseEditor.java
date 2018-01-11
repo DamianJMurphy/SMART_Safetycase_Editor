@@ -485,6 +485,7 @@ public class CauseEditor extends javax.swing.JPanel
             return;
         }
         int selected = -1;
+        int populated = -1;
         try {
             cause = (Cause)p;
             DefaultTableModel dtm = new DefaultTableModel(causecolumns, 0);
@@ -495,12 +496,13 @@ public class CauseEditor extends javax.swing.JPanel
                 Cause c = (Cause)haz.get(i);
                 if (c.isDeleted())
                     continue;
+                populated++;
                 causes.add(c);
                 String[] row = new String[causecolumns.length];
                 row[0] = c.getAttributeValue("Name");
                 row[1] = c.getAttributeValue("Description");
                 if (p.getId() == c.getId()) {
-                    selected = i;
+                    selected = populated;
                 }
                 dtm.addRow(row);
             }    

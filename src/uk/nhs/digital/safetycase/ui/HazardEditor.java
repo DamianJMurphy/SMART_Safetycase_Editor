@@ -693,6 +693,7 @@ public class HazardEditor extends javax.swing.JPanel
             return;
         }
         int selected = -1;
+        int populated = -1;
         try {
             hazard = (Hazard)p;
             DefaultTableModel dtm = new DefaultTableModel(hazardcolumns, 0);
@@ -703,12 +704,13 @@ public class HazardEditor extends javax.swing.JPanel
                 Hazard h = (Hazard)haz.get(i);
                 if (h.isDeleted())
                     continue;
+                populated++;
                 hazards.add(h);
                 String[] row = new String[hazardcolumns.length];
                 row[0] = h.getAttributeValue("Name");
                 row[1] = h.getAttributeValue("Status");
                 if (p.getId() == h.getId()) {
-                    selected = i;
+                    selected = populated;
                 }
                 dtm.addRow(row);
             }    

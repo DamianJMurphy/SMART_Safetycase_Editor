@@ -491,6 +491,7 @@ public class EffectEditor extends javax.swing.JPanel
             return;
         }
       int selected = -1;
+      int populated = -1;
       try {
           effect = (Effect)p;
             DefaultTableModel dtm = new DefaultTableModel(effectcolumns, 0);
@@ -501,12 +502,13 @@ public class EffectEditor extends javax.swing.JPanel
                 Effect ex = (Effect)eff.get(i);
                 if (ex.isDeleted())
                     continue;
+                populated++;
                 effects.add(ex);
                 String[] row = new String[effectcolumns.length];
                 row[0] = ex.getAttributeValue("Name");
                 row[1] = ex.getAttributeValue("Type");
                 if (p.getId() == ex.getId()) {
-                    selected = i;
+                    selected = populated;
                 }
                 dtm.addRow(row);
             }    
