@@ -45,13 +45,18 @@ public class SmartProject
     private static final String EDITORCLASSROOT = "uk.nhs.digital.safetycase.ui.";
     private DefaultTreeModel treeModel = null;
     
+    private static SmartProject project = null;
+    
     public SmartProject()
             throws Exception
     {
         metaFactory = MetaFactory.getInstance();
         metaFactory.initialise();
+        project = this;
     }
  
+    public static final SmartProject getProject() { return project; }
+    
     private EditorComponent resolveNonContainedComponent(TreePath t) {
         
         Project p = null;
@@ -94,10 +99,10 @@ public class SmartProject
         eclass = java.lang.System.getProperty(EDITORCLASSROOT + eclass);
         try {
             uk.nhs.digital.safetycase.ui.PersistableEditor pe = (uk.nhs.digital.safetycase.ui.PersistableEditor)Class.forName(eclass).newInstance();
-            pe.setPersistableObject(null);
-            pe.setNewObjectProjectId(getSelectedProject(t));
             ec = new EditorComponent(pe.getComponent(), s, this);
             pe.setEditorComponent(ec);
+            pe.setPersistableObject(null);
+            pe.setNewObjectProjectId(getSelectedProject(t));
         }
         catch (Exception e) {
             e.printStackTrace();

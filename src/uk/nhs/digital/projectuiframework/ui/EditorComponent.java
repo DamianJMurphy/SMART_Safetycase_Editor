@@ -40,6 +40,7 @@ public class EditorComponent {
     }
     
     public void setProject(Project p) { project = p; }
+    public Project getProject() { return project; }
     public Component getComponent() { return editorPanel; }
     public String getTitle() { return title; }
     public void notifyEditorEvent(int e, Object o) { project.editorEvent(e, o); }

@@ -23,7 +23,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
@@ -32,8 +31,6 @@ import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.ui.bowtie.BowtieEditor;
-import uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor;
-import uk.nhs.digital.safetycase.ui.processeditor.ProcessStepDetail;
 
 /**
  *
@@ -50,6 +47,7 @@ public class AddHazardAction
 
     public AddHazardAction(Object o) {
         selected = (mxCell)o;
+
     }
         
     @Override

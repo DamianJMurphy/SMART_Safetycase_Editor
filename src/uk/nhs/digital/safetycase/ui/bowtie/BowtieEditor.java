@@ -39,7 +39,6 @@ import uk.nhs.digital.safetycase.data.PersistableFactory;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.ui.BowtieElement;
-import uk.nhs.digital.safetycase.ui.BrokenConnectionException;
 import uk.nhs.digital.safetycase.ui.PersistableEditor;
 
 /**
@@ -56,6 +55,7 @@ public class BowtieEditor
     private EditorComponent editorComponent = null;
     private int newObjectProjectId = -1;
     private ProcessStep processStep = null;
+
     
     
     public BowtieEditor() {
@@ -63,7 +63,6 @@ public class BowtieEditor
 
         mxSwingConstants.SHADOW_COLOR = Color.LIGHT_GRAY;
         mxConstants.W3C_SHADOWCOLOR = "#D3D3D3";
-
         table = new HazardListForm(this);
         editor = new BowtieGraphEditor();
         this.setTopComponent(table);

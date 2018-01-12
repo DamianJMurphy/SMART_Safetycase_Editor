@@ -11,7 +11,7 @@ import uk.nhs.digital.safetycase.ui.AddHazardAction;
 import uk.nhs.digital.safetycase.ui.LinkAction;
 import uk.nhs.digital.safetycase.ui.ProcessStepDetailsAction;
 
-public class ProcessEditorPopupMenu extends JPopupMenu
+public class ProcessEditorPopupMenu_old extends JPopupMenu
 {
 
 	/**
@@ -20,7 +20,7 @@ public class ProcessEditorPopupMenu extends JPopupMenu
 	private static final long serialVersionUID = -3132749140550242191L;
 
         @SuppressWarnings("OverridableMethodCallInConstructor")
-	public ProcessEditorPopupMenu(BasicGraphEditor editor)
+	public ProcessEditorPopupMenu_old(BasicGraphEditor editor)
 	{
 		boolean selected = !editor.getGraphComponent().getGraph()
 				.isSelectionEmpty();

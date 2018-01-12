@@ -20,35 +20,8 @@ package uk.nhs.digital.safetycase.ui;
 //import com.mxgraph.examples.swing.editor.BasicGraphEditor;
 import com.mxgraph.examples.swing.editor.BasicGraphEditor;
 import static com.mxgraph.examples.swing.editor.EditorActions.getEditor;
-import com.mxgraph.io.mxCodec;
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.util.mxXmlUtils;
-import com.mxgraph.view.mxGraph;
 import java.awt.event.ActionEvent;
-import java.io.StringReader;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.AbstractAction;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import uk.nhs.digital.safetycase.data.Attribute;
-import uk.nhs.digital.safetycase.data.Cause;
-import uk.nhs.digital.safetycase.data.Control;
-import uk.nhs.digital.safetycase.data.Effect;
-import uk.nhs.digital.safetycase.data.Hazard;
-import uk.nhs.digital.safetycase.data.MetaFactory;
-import uk.nhs.digital.safetycase.data.Persistable;
-import uk.nhs.digital.safetycase.data.PersistableFactory;
-import uk.nhs.digital.safetycase.data.Process;
-import uk.nhs.digital.safetycase.data.ProcessStep;
-import uk.nhs.digital.safetycase.data.Relationship;
-import uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor;
-import uk.nhs.digital.safetycase.ui.processeditor.ProcessGraphEditor;
 /**
  *
  * @author damian

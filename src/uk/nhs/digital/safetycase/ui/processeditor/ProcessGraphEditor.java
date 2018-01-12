@@ -2,7 +2,6 @@
  * Copyright (c) 2006-2012, JGraph Ltd */
 package uk.nhs.digital.safetycase.ui.processeditor;
 
-import com.mxgraph.examples.swing.*;
 import java.awt.Color;
 import java.awt.Point;
 import java.net.URL;
@@ -31,7 +30,6 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.util.mxPoint;
-import com.mxgraph.util.mxResources;
 import com.mxgraph.util.mxUtils;
 import com.mxgraph.util.mxXmlUtils;
 import com.mxgraph.view.mxCellState;

@@ -26,6 +26,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import uk.nhs.digital.projectuiframework.Project;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.Cause;
 import uk.nhs.digital.safetycase.data.Control;
 import uk.nhs.digital.safetycase.data.Effect;
@@ -45,7 +47,9 @@ import uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor;
 public class BowtieSaveHandler 
         extends AbstractSaveHandler
 {
-
+    private final ArrayList<Persistable> added = new ArrayList<>();
+    private final ArrayList<Persistable> updated = new ArrayList<>();
+    
     @Override
     public void handle(BasicGraphEditor ge) 
             throws Exception 
@@ -76,10 +80,12 @@ public class BowtieSaveHandler
                 projectid = process.getAttribute("ProjectID").getIntValue();
                 hazard.setAttribute("ProjectID", projectid);
                 hazard.setAttribute("ConditionID", 0);
-                hazard.setAttribute("Status", "New");                    
+                hazard.setAttribute("Status", "New");
+                added.add(hazard);
             } else {
                 projectid = hazard.getAttribute("ProjectID").getIntValue();
                 existingBowtie = bge.getExistingBowtie();
+                updated.add(hazard);
             }
             NodeList cells = parseHazard(xml, hazard);
             HashMap<String,BowtieElement> bowtieElements = parseBowtie(cells, projectid);
@@ -93,10 +99,13 @@ public class BowtieSaveHandler
                     bt.object.deleteAutomaticRelationships();
                     MetaFactory.getInstance().getFactory(bt.object.getDatabaseObjectName()).put(bt.object);
                     MetaFactory.getInstance().getFactory(bt.object.getDatabaseObjectName()).refresh(bt.object.getId());
-                    BowtieElement updated = bowtieElements.get(cid);
-                    if (updated != null) {
-                        updated.object = bt.object;
-                        updated.object.setAttribute("Name", updated.name);
+                    BowtieElement btupdate = bowtieElements.get(cid);
+                    if (btupdate != null) {
+                        btupdate.object = bt.object;
+                        if (!btupdate.object.getAttributeValue("Name").contentEquals(btupdate.name)) {
+                            btupdate.object.setAttribute("Name", btupdate.name);
+                            updated.add(btupdate.object);
+                        }
                     }
                 }
             } else {
@@ -104,14 +113,21 @@ public class BowtieSaveHandler
             }
             saveBowtie(hazard, bowtieElements, projectid);
             System.out.println(xml);
+            // TOOD: This relies on Project.editorEvent() (in SmartProject) to cause a UI refresh based on 
+            // the changes we've made. But nothing has passed it in. So need some static method to return
+            // a reference to the project.
+            SmartProject sp = SmartProject.getProject();
+            for (Persistable n : added)
+                sp.editorEvent(Project.ADD, n);
+            for (Persistable n : updated)
+                sp.editorEvent(Project.UPDATE, n);
         } 
         catch (BrokenConnectionException bce) {
             System.err.println("TODO: Notify user that the diagram has a broken link and has not been saved: " + bce.getMessage());
         }
         catch (Exception ex) {
             ex.printStackTrace();
-        }    
-       
+        }            
     }
 
     private void createProcessStepHazardRelationship(Hazard h, int psid) 
@@ -326,20 +342,21 @@ public class BowtieSaveHandler
     }
     
     Persistable createPersistable(String t) {
+        Persistable p = null;
         if (t.contentEquals("Cause"))
-            return new Cause();
+            p = new Cause();
         if (t.contentEquals("Control")) {
-            Control p = new Control();
+            p = new Control();
             p.setAttribute("Type", "New");
             p.setAttribute("State", "New");
-            return p;
         }
         if (t.contentEquals("Effect")) {
-            Effect e = new Effect();
-            e.setAttribute("Type", "New");
-            return e;
+            p = new Effect();
+            p.setAttribute("Type", "New");
         }
-        return null;
+        if (p != null)
+            added.add(p);
+        return p;
     }
     
     private NodeList parseHazard(String xml, Hazard h)

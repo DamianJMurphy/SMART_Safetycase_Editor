@@ -52,11 +52,11 @@ public class ProcessEditor
 
         mxSwingConstants.SHADOW_COLOR = Color.LIGHT_GRAY;
         mxConstants.W3C_SHADOWCOLOR = "#D3D3D3";
-
         table = new ProcessListForm(this);
 	editor = new ProcessGraphEditor();
         this.setTopComponent(table);
         this.setBottomComponent(editor);
+
     }
 
     EditorComponent getEditorComponent() { return editorComponent; }
