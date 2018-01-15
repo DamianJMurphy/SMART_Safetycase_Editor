@@ -49,11 +49,16 @@ public class BowtieSaveHandler
 {
     private final ArrayList<Persistable> added = new ArrayList<>();
     private final ArrayList<Persistable> updated = new ArrayList<>();
+    private final ArrayList<Persistable> removed = new ArrayList<>();
     
     @Override
     public void handle(BasicGraphEditor ge) 
             throws Exception 
     {
+        // TODO NEXT FIXME:
+        // Or at least test... on editing, what exactly gets put into the database and 
+        // how is the in-memory copy set synchronised.
+        // Still doesn't appear to be - needs more testing and checking
         try {
             int processStepId = -1;
             BowtieGraphEditor bge = (BowtieGraphEditor)ge;
@@ -81,7 +86,7 @@ public class BowtieSaveHandler
                 hazard.setAttribute("ProjectID", projectid);
                 hazard.setAttribute("ConditionID", 0);
                 hazard.setAttribute("Status", "New");
-                added.add(hazard);
+                added.add(hazard);                
             } else {
                 projectid = hazard.getAttribute("ProjectID").getIntValue();
                 existingBowtie = bge.getExistingBowtie();
@@ -91,36 +96,47 @@ public class BowtieSaveHandler
             HashMap<String,BowtieElement> bowtieElements = parseBowtie(cells, projectid);
 
             hf.put(hazard);
-
+            
             if (existingBowtie != null) {
 
                 for (String cid : existingBowtie.keySet()) {
                     BowtieElement bt = existingBowtie.get(cid);
-                    bt.object.deleteAutomaticRelationships();
+                    ArrayList<Relationship> d = bt.object.deleteAutomaticRelationships();
                     MetaFactory.getInstance().getFactory(bt.object.getDatabaseObjectName()).put(bt.object);
-                    MetaFactory.getInstance().getFactory(bt.object.getDatabaseObjectName()).refresh(bt.object.getId());
-                    BowtieElement btupdate = bowtieElements.get(cid);
-                    if (btupdate != null) {
-                        btupdate.object = bt.object;
-                        if (!btupdate.object.getAttributeValue("Name").contentEquals(btupdate.name)) {
-                            btupdate.object.setAttribute("Name", btupdate.name);
-                            updated.add(btupdate.object);
+//                    MetaFactory.getInstance().getFactory(bt.object.getDatabaseObjectName()).refresh(bt.object.getId());
+                    bt.object.purgeAutomaticRelationships(d);
+                    if (bowtieElements.containsKey(cid)) {                        
+                        BowtieElement btupdate = bowtieElements.get(cid);
+                        if (btupdate != null) {
+                            btupdate.object = bt.object;
+                            if (!btupdate.object.getAttributeValue("Name").contentEquals(btupdate.name)) {
+                                btupdate.object.setAttribute("Name", btupdate.name);
+                                updated.add(btupdate.object);
+                            }
                         }
+                    } else {
+                        removed.add(bt.object);
                     }
                 }
             } else {
                 createProcessStepHazardRelationship(hazard, processStepId);
             }
             saveBowtie(hazard, bowtieElements, projectid);
+            bge.setExistingBowtie(bowtieElements);
+            bge.setHazardId(hazard.getId(), xml);
             System.out.println(xml);
-            // TOOD: This relies on Project.editorEvent() (in SmartProject) to cause a UI refresh based on 
-            // the changes we've made. But nothing has passed it in. So need some static method to return
-            // a reference to the project.
             SmartProject sp = SmartProject.getProject();
-            for (Persistable n : added)
+            for (Persistable n : added) {
+//                MetaFactory.getInstance().getFactory(n.getDatabaseObjectName()).refresh(n.getId());
                 sp.editorEvent(Project.ADD, n);
-            for (Persistable n : updated)
+            }
+            for (Persistable n : updated) {
+//                MetaFactory.getInstance().getFactory(n.getDatabaseObjectName()).refresh(n.getId());
                 sp.editorEvent(Project.UPDATE, n);
+            }
+            for (Persistable n : removed) {
+                sp.editorEvent(Project.DELETE, n);
+            }
         } 
         catch (BrokenConnectionException bce) {
             System.err.println("TODO: Notify user that the diagram has a broken link and has not been saved: " + bce.getMessage());

@@ -17,7 +17,6 @@ High-level
 
 Functional
 
-- Bowtie editor update UI after save
 
 - Go through and tidy up the editor forms
 

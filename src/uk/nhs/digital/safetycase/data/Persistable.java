@@ -80,15 +80,25 @@ public abstract class Persistable {
         changed = true;
     }
 
-    public void deleteAutomaticRelationships() {
+    public ArrayList deleteAutomaticRelationships() {
+        ArrayList<Relationship> deleted = new ArrayList<>();
         for (ArrayList<Relationship> a : relationships.values()) {
             for (Relationship r : a) {
                 if (r.getManagementClass() != null) {
                     r.setDeleted();
                     changed = true;
+                    deleted.add(r);
                 }
             }
         }
+        return deleted;
+    }
+    
+    public void purgeAutomaticRelationships(ArrayList<Relationship> deleted) 
+    {
+        for (Relationship r : deleted) {
+            relationships.get(r.getTargetType()).remove(r);
+        }        
     }
     
     public void deleteRelationship(Relationship r) {
