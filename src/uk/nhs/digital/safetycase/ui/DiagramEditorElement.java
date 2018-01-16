@@ -24,28 +24,17 @@ import uk.nhs.digital.safetycase.data.Persistable;
  *
  * @author damian
  */
-public class BowtieElement {
+public class DiagramEditorElement {
 
     int cellId = -1;
     
-    // TODO NEXT:
-    // This doesn't support real "bowties" where for example a hazard has more than one
-    // effect, or multiple causes. So... replace the "fromCell" and "toCell" with an
-    // ArrayList<BowtieElement> which is populated with *targets* by the parseBowtie()
-    // method. Processing those from the targets will allow bi-directional relationships
-    // to be made when a bowtie is saved, and the overall hazard/component "BowtieDiagram"
-    // relationsips.
-
-    
-//    public int fromCell = -1;
-//    public int toCell = -1;
     public ArrayList<String> connections = new ArrayList<>();
     public String type = null;
     public String name = null;
     public Persistable object = null;
     public boolean updateDone = false;
     
-    BowtieElement(String s, String n, String c) {
+    DiagramEditorElement(String s, String n, String c) {
         cellId = Integer.parseInt(c);
         name = n;
         int lastslash = s.lastIndexOf("/");
@@ -54,7 +43,7 @@ public class BowtieElement {
         type = uf + s.substring(lastslash + 2, s.indexOf("."));
     }
     
-    public BowtieElement(Persistable p) {
+    public DiagramEditorElement(Persistable p) {
         name = p.getAttributeValue("Name");
         type = p.getDatabaseObjectName();
         cellId = p.getAttribute("GraphCellId").getIntValue();

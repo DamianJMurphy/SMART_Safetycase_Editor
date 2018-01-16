@@ -38,17 +38,17 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import javax.swing.SwingUtilities;
 import uk.nhs.digital.safetycase.data.ProcessStep;
-import uk.nhs.digital.safetycase.ui.BowtieElement;
+import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 
 public class BowtieGraphEditor extends BasicGraphEditor
 {
     private static int hazardId = -1;
     private ProcessStep processStep = null;
-    private HashMap<String,BowtieElement> existingBowtie = null; 
+    private HashMap<String,DiagramEditorElement> existingBowtie = null; 
     
     public int getHazardId() { return hazardId; }
-    public void setExistingBowtie(HashMap<String,BowtieElement> ex) { existingBowtie = ex; }
-    public HashMap<String,BowtieElement> getExistingBowtie() { return existingBowtie; }
+    public void setExistingBowtie(HashMap<String,DiagramEditorElement> ex) { existingBowtie = ex; }
+    public HashMap<String,DiagramEditorElement> getExistingBowtie() { return existingBowtie; }
     
     public void setHazardId(int i, String x) { 
         hazardId = i; 

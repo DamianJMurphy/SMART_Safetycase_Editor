@@ -38,7 +38,7 @@ import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.Relationship;
-import uk.nhs.digital.safetycase.ui.BowtieElement;
+import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 import uk.nhs.digital.safetycase.ui.PersistableEditor;
 
 /**
@@ -107,11 +107,11 @@ public class BowtieEditor
             
             editor.setHazardId(hazard.getId(),xml);
             
-            // Make a collection of BowtieElement instances from the Hazard, and store it so we
+            // Make a collection of DiagramEditorElement instances from the Hazard, and store it so we
             // can see what needs saving when the user asks.
             
-            HashMap<String,BowtieElement> bowtieElements = new HashMap<>();
-            bowtieElements.put(hazard.getAttributeValue("GraphCellId"), new BowtieElement(hazard));
+            HashMap<String,DiagramEditorElement> bowtieElements = new HashMap<>();
+            bowtieElements.put(hazard.getAttributeValue("GraphCellId"), new DiagramEditorElement(hazard));
             HashMap<String, ArrayList<Relationship>> hrels = hazard.getRelationshipsForLoad();
             if (hrels == null)
                 return;
@@ -120,7 +120,7 @@ public class BowtieEditor
                 for (Relationship r : a) {
                     if ((r.getComment() != null) && (r.getComment().contains("Bowtie diagram"))) {
                         Persistable p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                        bowtieElements.put(p.getAttributeValue("GraphCellId"), new BowtieElement(p));
+                        bowtieElements.put(p.getAttributeValue("GraphCellId"), new DiagramEditorElement(p));
                     }
                 }
             }
@@ -138,7 +138,7 @@ public class BowtieEditor
                 if (cell.hasAttribute("edge")) {
                     String s = cell.getAttribute("source");
                     String t = cell.getAttribute("target");
-                    BowtieElement bt = bowtieElements.get(s);
+                    DiagramEditorElement bt = bowtieElements.get(s);
 //                    bt.fromCell = Integer.parseInt(s);
 //                    bt.toCell = Integer.parseInt(t);
                     bt.connections.add(t);

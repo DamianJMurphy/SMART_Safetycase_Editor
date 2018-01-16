@@ -55,10 +55,6 @@ public class BowtieSaveHandler
     public void handle(BasicGraphEditor ge) 
             throws Exception 
     {
-        // TODO NEXT FIXME:
-        // Or at least test... on editing, what exactly gets put into the database and 
-        // how is the in-memory copy set synchronised.
-        // Still doesn't appear to be - needs more testing and checking
         try {
             int processStepId = -1;
             BowtieGraphEditor bge = (BowtieGraphEditor)ge;
@@ -77,7 +73,7 @@ public class BowtieSaveHandler
             processStepId = ps.getId();
             String xml = getXml(ge);
 
-            HashMap<String,BowtieElement> existingBowtie = null; 
+            HashMap<String,DiagramEditorElement> existingBowtie = null; 
             int projectid = -1;
             if (hazard == null) {
                 hazard = new Hazard();
@@ -93,20 +89,20 @@ public class BowtieSaveHandler
                 updated.add(hazard);
             }
             NodeList cells = parseHazard(xml, hazard);
-            HashMap<String,BowtieElement> bowtieElements = parseBowtie(cells, projectid);
+            HashMap<String,DiagramEditorElement> bowtieElements = parseBowtie(cells, projectid);
 
             hf.put(hazard);
             
             if (existingBowtie != null) {
 
                 for (String cid : existingBowtie.keySet()) {
-                    BowtieElement bt = existingBowtie.get(cid);
+                    DiagramEditorElement bt = existingBowtie.get(cid);
                     ArrayList<Relationship> d = bt.object.deleteAutomaticRelationships();
                     MetaFactory.getInstance().getFactory(bt.object.getDatabaseObjectName()).put(bt.object);
 //                    MetaFactory.getInstance().getFactory(bt.object.getDatabaseObjectName()).refresh(bt.object.getId());
                     bt.object.purgeAutomaticRelationships(d);
                     if (bowtieElements.containsKey(cid)) {                        
-                        BowtieElement btupdate = bowtieElements.get(cid);
+                        DiagramEditorElement btupdate = bowtieElements.get(cid);
                         if (btupdate != null) {
                             btupdate.object = bt.object;
                             if (!btupdate.object.getAttributeValue("Name").contentEquals(btupdate.name)) {
@@ -164,18 +160,18 @@ public class BowtieSaveHandler
         psf.put(ps);
     }
     
-    private HashMap<String,BowtieElement> parseBowtie(NodeList nl, int projectid)
+    private HashMap<String,DiagramEditorElement> parseBowtie(NodeList nl, int projectid)
             throws Exception
     {
         // Get the list of causes, controls and effects in the bowtie...
         
-        HashMap<String,BowtieElement> bowtieElements = new HashMap<>();
+        HashMap<String,DiagramEditorElement> bowtieElements = new HashMap<>();
         
         for (int i = 0; i < nl.getLength(); i++) {
             Element cell = (Element)nl.item(i);
             if (!cell.hasAttribute("edge")) { // Vertices only
                 if (cell.hasAttribute("style")) { // Ignore the couple of "virtual" cells at the start of the model
-                    BowtieElement bt = new BowtieElement(cell.getAttribute("style"), cell.getAttribute("value"), cell.getAttribute("id"));
+                    DiagramEditorElement bt = new DiagramEditorElement(cell.getAttribute("style"), cell.getAttribute("value"), cell.getAttribute("id"));
                     bowtieElements.put(cell.getAttribute("id"), bt);
                 }
             }
@@ -197,7 +193,7 @@ public class BowtieSaveHandler
                     String c = getCellName(nl, t);
                     throw new BrokenConnectionException("Link from " + c + " has no target bowtie element");
                 }
-                BowtieElement bt = bowtieElements.get(s);
+                DiagramEditorElement bt = bowtieElements.get(s);
 //                bt.fromCell = Integer.parseInt(s);
 //                bt.toCell = Integer.parseInt(t);
                 bt.connections.add(t);
@@ -217,7 +213,7 @@ public class BowtieSaveHandler
         return null;
     }
     
-    private void saveBowtie(Hazard h, HashMap<String,BowtieElement> bowtieElements, int projectid) 
+    private void saveBowtie(Hazard h, HashMap<String,DiagramEditorElement> bowtieElements, int projectid) 
             throws Exception
     {
         
@@ -226,7 +222,7 @@ public class BowtieSaveHandler
         // 2. If not, create an appropriate Persistable, and set the Name and GraphCellId
         // 3. if we do, get it out of the factory
         
-        for (BowtieElement bt : bowtieElements.values()) {
+        for (DiagramEditorElement bt : bowtieElements.values()) {
             if (bt.type.contentEquals("Hazard")) {
                 bt.object = h;
                 h.setAttribute("Name", bt.name);
@@ -277,7 +273,7 @@ public class BowtieSaveHandler
         // later, and save the Hazard
         
         
-        for (BowtieElement bt : bowtieElements.values()) {
+        for (DiagramEditorElement bt : bowtieElements.values()) {
             if (!bt.type.contentEquals("Hazard")) {
                 ArrayList<Relationship> rels = bt.object.getRelationships("Hazard");
                 if (rels == null) {
@@ -293,7 +289,7 @@ public class BowtieSaveHandler
             }
             if (bt.type.contentEquals("Cause")) {
                 for (String t : bt.connections) {
-                    BowtieElement target = bowtieElements.get(t);
+                    DiagramEditorElement target = bowtieElements.get(t);
                     if (target != null) {
                         Relationship rto = new Relationship(bt.object.getId(), target.object.getId(), target.type);
                         Relationship rfrom = new Relationship(target.object.getId(), bt.object.getId(), bt.type);
@@ -313,7 +309,7 @@ public class BowtieSaveHandler
                 }
             } else if (bt.type.contentEquals("Hazard")) {
                 for (String t : bt.connections) {
-                    BowtieElement target = bowtieElements.get(t);
+                    DiagramEditorElement target = bowtieElements.get(t);
                     if (target != null) {
                         Relationship rto = new Relationship(bt.object.getId(), target.object.getId(), target.type);
                         Relationship rfrom = new Relationship(target.object.getId(), bt.object.getId(), bt.type);
@@ -333,7 +329,7 @@ public class BowtieSaveHandler
                 }
             } else if (bt.type.contentEquals("Control")) {
                 for (String t : bt.connections) {
-                    BowtieElement target = bowtieElements.get(t);
+                    DiagramEditorElement target = bowtieElements.get(t);
                     if (target != null) {
                         Relationship rto = new Relationship(bt.object.getId(), target.object.getId(), target.type);
                         Relationship rfrom = new Relationship(target.object.getId(), bt.object.getId(), bt.type);
