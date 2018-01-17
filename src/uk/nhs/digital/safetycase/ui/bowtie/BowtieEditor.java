@@ -93,8 +93,7 @@ public class BowtieEditor
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
-        
+        }        
     }
 
     void setSelectedHazard(int h) {
@@ -118,7 +117,7 @@ public class BowtieEditor
             
             for (ArrayList<Relationship> a : hrels.values()) {
                 for (Relationship r : a) {
-                    if ((r.getComment() != null) && (r.getComment().contains("Bowtie diagram"))) {
+                    if ((r.getManagementClass() != null) && (r.getManagementClass().contentEquals("Diagram"))) {
                         Persistable p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
                         bowtieElements.put(p.getAttributeValue("GraphCellId"), new DiagramEditorElement(p));
                     }

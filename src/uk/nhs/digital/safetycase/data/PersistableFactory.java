@@ -53,6 +53,29 @@ public class PersistableFactory <T extends Persistable> {
     
     public Collection<T> getEntries() { return instances.values(); }
     
+    public Collection<T> getEntries(ArrayList<PersistableFilter> filter)
+    {
+        Collection<T> f1 = instances.values();
+        ArrayList<T> f2 = new ArrayList<>();
+        for (T e : f1) {
+            for (PersistableFilter p : filter) {
+                try {
+                    String s = e.getAttributeValue(p.attribute);
+                    if ((s == null) && (p.value == null)) {
+                        f2.add(e);
+                    } else {
+                        if (s.contentEquals(p.value))
+                            f2.add(e);
+                    }
+                }
+                catch (Exception ex) {
+                    continue;
+                }
+            }
+        }
+        return f2;
+    }
+    
     public Collection<T> getEntries(int projectid)
     {
         Collection<T> c = instances.values();

@@ -37,10 +37,19 @@ public class DiagramEditorElement {
     DiagramEditorElement(String s, String n, String c) {
         cellId = Integer.parseInt(c);
         name = n;
-        int lastslash = s.lastIndexOf("/");
-        char f = s.charAt(lastslash + 1);
-        Character uf = Character.toUpperCase(f);
-        type = uf + s.substring(lastslash + 2, s.indexOf("."));
+        if (s.contains("bowtie")) {
+            // Bowtie types are the actual persistable classes
+            int lastslash = s.lastIndexOf("/");
+            char f = s.charAt(lastslash + 1);
+            Character uf = Character.toUpperCase(f);
+            type = uf + s.substring(lastslash + 2, s.indexOf("."));
+        } else if (s.contains("processeditor")) {
+            // Process editor types are the "type" values from a ProcessStep
+            int lastslash = s.lastIndexOf("/");
+            char f = s.charAt(lastslash + 1);
+            Character uf = Character.toUpperCase(f);
+            type = uf + s.substring(lastslash + 2, s.indexOf("."));
+        }
     }
     
     public DiagramEditorElement(Persistable p) {

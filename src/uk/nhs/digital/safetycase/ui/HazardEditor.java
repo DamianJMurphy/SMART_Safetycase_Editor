@@ -495,6 +495,10 @@ public class HazardEditor extends javax.swing.JPanel
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
                 for (Relationship r : a) {
+                    // Suppress "diagram editor management" relationships so they don't clutter up the view
+                    if ((r.getManagementClass() != null) && (r.getManagementClass().contentEquals("Diagram"))) {
+                        continue;
+                    }
                     String[] row = new String[linkcolumns.length];
                     row[0] = t;
                     row[1] = Integer.toString(r.getTarget());
