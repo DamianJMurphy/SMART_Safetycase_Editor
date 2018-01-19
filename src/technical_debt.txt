@@ -20,8 +20,13 @@ Functional
 
 - Go through and tidy up the editor forms
 
-- Do we need the "Bowtie Diagram" relationships ?
 
-- Process editing
+
+Done (Design or implementation decisions)
+
+- Do we need the "Bowtie Diagram" relationships ?  Yes we do, but the user doesn't need to see
+    them. "Diagram" management class relationships suppressed in the UI. "Connection*" class
+    and anything added manually are displayed.
+
 
 
