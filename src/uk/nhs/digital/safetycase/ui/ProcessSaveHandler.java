@@ -44,6 +44,10 @@ public class ProcessSaveHandler
     @Override
     public void handle(BasicGraphEditor ge) throws Exception {
        try {
+           // TODO NEXT: Amend to handle "existing steps" from the editor, modelled on the 
+           // way that the bowtie editor does it (but without the connections - see the
+           // comment in ProcessEditor.setPersistableObject() about this).
+           
             ProcessGraphEditor pge = (ProcessGraphEditor)ge;
             MetaFactory mf = MetaFactory.getInstance();
             PersistableFactory<uk.nhs.digital.safetycase.data.Process> pf = mf.getFactory("Process");

@@ -35,11 +35,17 @@ import com.mxgraph.util.mxXmlUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import javax.swing.SwingUtilities;
+import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 
 public class ProcessGraphEditor extends BasicGraphEditor
 {
     private static int processId = -1;
+    private HashMap<String,DiagramEditorElement> existingSteps = null;
+    
+    public void setExistingSteps(HashMap<String,DiagramEditorElement> ex) { existingSteps = ex; }
+    public HashMap<String,DiagramEditorElement> getExistingSteps() { return existingSteps; }
     
     public int getProcessId() { return processId; }
     
@@ -132,28 +138,28 @@ public class ProcessGraphEditor extends BasicGraphEditor
 				.addTemplate("Start",
 						new ImageIcon(
 								ProcessGraphEditor.class
-										.getResource("/com/mxgraph/examples/swing/images/event.png")),
-						"roundImage;image=/com/mxgraph/examples/swing/images/event.png",
+										.getResource("/uk/nhs/digital/safetycase/ui/processeditor/start.png")),
+						"roundImage;image=/uk/nhs/digital/safetycase/ui/processeditor/start.png",
 						80, 80, "Start");
 
                 processPalette
 				.addTemplate("Stop",
 						new ImageIcon(
 								ProcessGraphEditor.class
-										.getResource("/com/mxgraph/examples/swing/images/cancel_end.png")),
-						"roundImage;image=/com/mxgraph/examples/swing/images/cancel_end.png",
+										.getResource("/uk/nhs/digital/safetycase/ui/processeditor/stop.png")),
+						"roundImage;image=/uk/nhs/digital/safetycase/ui/processeditor/stop.png",
 						80, 80, "Stop");
 		processPalette
 				.addTemplate("Activity",
 						new ImageIcon(
 								ProcessGraphEditor.class
-										.getResource("/com/mxgraph/examples/swing/images/rectangle.png")),
-						null, 160, 120, "");
+										.getResource("/uk/nhs/digital/safetycase/ui/processeditor/activity.png")),
+						null, 160, 120, "activity");
 		processPalette
 				.addTemplate("Decision",
 						new ImageIcon(
 								ProcessGraphEditor.class
-										.getResource("/com/mxgraph/examples/swing/images/rhombus.png")),
+										.getResource("/uk/nhs/digital/safetycase/ui/processeditor/decision.png")),
 						"rhombus", 160, 160, "");
 		processPalette
 				.addEdgeTemplate("Straight",

@@ -21,7 +21,9 @@ import com.mxgraph.swing.util.mxSwingConstants;
 import com.mxgraph.util.mxConstants;
 import java.awt.Color;
 import java.awt.Component;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import javax.swing.JSplitPane;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
@@ -29,8 +31,11 @@ import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
+import uk.nhs.digital.safetycase.data.PersistableFilter;
 import uk.nhs.digital.safetycase.ui.PersistableEditor;
 import uk.nhs.digital.safetycase.data.Process;
+import uk.nhs.digital.safetycase.data.ProcessStep;
+import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 
 /**
  *
@@ -121,11 +126,45 @@ public class ProcessEditor
         
     }
 
+    // "Edit existing" functionality modelled on that for "Bowtie". Some differences:
+    // 1. A bowtie has a central hazard. There is no "central" process step and there is already a foreign
+    //      key relationship between the process and its steps.
+    // 2. *At present* ProcessStep instances are created connected to the Process, but no relationships are
+    //      made that connect them to one another - those connections exist only in the graph.
+    // 3. There isn't any "obvious" way to distinguish between connection types in the way that there is with
+    //      a bowtie where we have well-defined semantics for cause->control->hazard->mitigating control->effect
+    //      relationships.
+    // 4. But we do have an idea of flow, and "next step".
+    //
+    // Initial answer:
+    // - don't try to make relationships between the ProcessStep instances. Keep it as it is with a collection
+    //      of steps owned by a process
+    // - treat these as with the Persistable instances in the bowtie, except that they're just a collection with
+    //      no links between them
+    //  - rationale is:
+    //          a. "Decision" steps have open semantics. They can be "do a or b", "yes or no", "Liverpool or
+    //              Newcastle" or any other choice. 
+    //          b. Processes can rejoin. So rules for handling connection semantics may be complex and are in any
+    //              case unexplored.
+    //          c. Probably safer just now to identify a particular process.
+    //          d. Relationships that are needed between steps can be added manually.
+    //
     void setSelectedProcess(int i) {
         try {
             PersistableFactory<Process> pfp = MetaFactory.getInstance().getFactory("Process");
             Process process = pfp.get(i);
             editor.setProcessId(process.getId(), process.getAttributeValue("GraphXml"));
+            
+            PersistableFactory<ProcessStep> pfs = MetaFactory.getInstance().getFactory("ProcessStep");
+            ArrayList<PersistableFilter> filter = new ArrayList<>();
+            filter.add(new PersistableFilter("ProjectID", process.getAttributeValue("ProjectID")));
+            filter.add(new PersistableFilter("ProcessID", process.getAttributeValue("ProcessID")));
+            Collection<ProcessStep> steps = pfs.getEntries(filter);
+            HashMap<String,DiagramEditorElement> existingSteps = new HashMap<>();
+            for (ProcessStep ps : steps) {
+                existingSteps.put(ps.getAttributeValue("GraphCellId"), new DiagramEditorElement(ps));
+            }
+            editor.setExistingSteps(existingSteps);
         }
         catch (Exception e) {
             e.printStackTrace();
