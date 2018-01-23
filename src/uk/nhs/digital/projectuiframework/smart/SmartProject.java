@@ -38,6 +38,7 @@ public class SmartProject
     private DefaultMutableTreeNode root = null;
     private static final String[] PROJECTCOMPONENTS = {"Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role", "Report"};
     private static final String[] PROJECTEDITORS = {"Process", "Hazard", "Cause", "Effect", "Control", "Location", "Role", "Report"};
+    private static final String[] PROJECTNEWABLES = {"Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role"};
     private static final String PROJECTNAME = "SMART";
     private MetaFactory metaFactory = null;
     private int currentProjectId = -1;
@@ -61,16 +62,27 @@ public class SmartProject
         
         Project p = null;
         DefaultMutableTreeNode d = (DefaultMutableTreeNode)t.getLastPathComponent();
-        if (!d.isLeaf()) {
-            return null;
-        }
         String s = null;
         String eclass = null;
-        try {
-            s = (String)d.getUserObject();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+        if (!d.isLeaf()) {
+            s = d.getUserObject().toString();
+            if (!s.contentEquals("Systems")) {
+                boolean found = false;
+                for (String comp : PROJECTNEWABLES) {
+                    if (s.contentEquals(comp)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                    return null;
+            }
+        } else {
+            try {
+                s = (String) d.getUserObject();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         if (s == null) {
             java.lang.System.err.println("DEVELOPMENT: Could not identify where user clicked");
@@ -295,10 +307,17 @@ public class SmartProject
         DefaultMutableTreeNode node = n;
         try {
             while (node != null) {
-                Persistable p = (Persistable)node.getUserObject();
-                String id = p.getAttributeValue("ProjectID");
-                if (id != null)
-                    return Integer.parseInt(id);
+                if (!(node.getUserObject() instanceof java.lang.String)) {
+                    Persistable p = (Persistable)node.getUserObject();
+                    String id = null;
+                    if (p.getDatabaseObjectName().contentEquals("Project")) {
+                        return p.getId();
+                    } else {
+                        id = p.getAttributeValue("ProjectID");
+                    }
+                    if (id != null)
+                        return Integer.parseInt(id);
+                }
                 node = (DefaultMutableTreeNode)node.getParent();
             }
         }

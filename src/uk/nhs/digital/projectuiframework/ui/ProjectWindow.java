@@ -16,6 +16,7 @@
  *  
  */
 package uk.nhs.digital.projectuiframework.ui;
+import com.sun.glass.events.MouseEvent;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.ProjectHelper;
 import java.io.File;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -159,9 +161,40 @@ public class ProjectWindow extends javax.swing.JFrame {
 
     public javax.swing.JTabbedPane getMainWindowTabbedPane() { return mainWindowTabbedPane; }
     
+    public void newObjectRequested(TreePath p) 
+    {
+        String n = p.getPathComponent(1).toString();
+        Project proj = null;
+        for (Project ap : projects.values()) {
+            if (n.contentEquals(ap.getName())) {
+                proj = ap;
+                break;
+            }
+        }
+        if (proj == null) {
+            return;
+        }
+        int id = proj.getProjectID((DefaultMutableTreeNode) p.getLastPathComponent());
+        if (id == -1) {
+            return;
+        }
+        proj.setCurrentProjectID(id);
+        EditorComponent ec = ec = proj.getEditorComponent(p);
+        if (ec == null)
+            return;
+        mainWindowTabbedPane.setSelectedComponent(mainWindowTabbedPane.add(ec.getTitle(), ec.getComponent()));
+        mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
+    }
+    
     private void projectTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectTreeMouseClicked
         
 
+        if ((evt.getButton() == MouseEvent.BUTTON_RIGHT) || (evt.getButton() == java.awt.event.MouseEvent.BUTTON3)) {
+            if (evt.getClickCount() == 1) {
+                (new ProjectTreePopupMenu(this)).show(projectTree, evt.getX(), evt.getY());
+                return;
+            }
+        }
         if (evt.getClickCount() == 2 && !evt.isConsumed()) {
             evt.consume();
             EditorComponent ec = null;
