@@ -48,6 +48,7 @@ public class HtmlEditorPanel
 //        viewerPanel = new uk.nhs.digital.safetycase.ui.ekit.HtmlViewerPanel();
         viewer = new EkitCore(false, null, null, null, null, null, true, false, true, true, "en", "UK", false, false, true, false, TOOLBAR, true, false);
         viewer.getTextPane().setEditable(false);
+        viewer.getTextPane().setHighlighter(null);
         editButton.setText("Edit");
         editButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,6 +106,7 @@ public class HtmlEditorPanel
         if (s == null)
             return;
        viewer.setDocumentText(s);
+       viewer.getTextPane().setEditable(false);
     }
 
     public String getBodyText() { return viewer.getDocumentBody(); }

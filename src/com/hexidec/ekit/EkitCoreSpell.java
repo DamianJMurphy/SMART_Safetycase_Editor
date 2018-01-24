@@ -54,7 +54,7 @@ public class EkitCoreSpell extends EkitCore implements SpellCheckListener
 	private JSpellDialog spellDialog;
 
     public EkitCoreSpell(JDialog parent, NotificationTarget n) {
-        this(false, null, null, null, null, null, true, false, true, true, "en", "UK", false, false, true, true, EkitCore.PANEL_TOOLBAR, false);
+        this(false, null, null, null, null, null, true, false, true, true, "en", "UK", false, false, true, true, EkitCore.PANEL_TOOLBAR, true);
         parentDialog = parent;
         notificationTarget = n;
     }

@@ -10,7 +10,8 @@ High-level
     editors (e.g. clone an existing hazard into a new context when making a bowtie from a new
     process model)
 
-- Reports
+- Reports. HTML editor integrated. Needs user refinement. Need to add report generator itself
+    to assemble report content from the project data. Also to include the graphs.
 
 - DQ checking and issues system
 
