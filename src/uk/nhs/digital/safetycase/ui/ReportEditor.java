@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.safetycase.data.Project;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
@@ -100,6 +101,7 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
     private static String SYSTEM_REPORT = null;
     private static String HAZARD_REPORT = null;
 
+    
     /**
      * Creates new form ReportsEditor
      */
@@ -130,21 +132,15 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
         introPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         titleTextField = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        introductionTextArea = new javax.swing.JTextArea();
+        introductionEditor = new uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel();
         crmPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        crmTextArea = new javax.swing.JTextArea();
+        crmTextArea = new uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel();
         safetySystemPanel = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        safetyTextArea = new javax.swing.JTextArea();
+        safetyTextArea = new uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel();
         qaPanel = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        qaTextArea = new javax.swing.JTextArea();
+        qaTextArea = new uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel();
         configPanel = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        configTextArea = new javax.swing.JTextArea();
+        configTextArea = new uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel();
         buttonBar = new javax.swing.JToolBar();
         newButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
@@ -153,14 +149,6 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
 
         jLabel1.setText("Title");
 
-        jLabel2.setText("Introduction");
-
-        introductionTextArea.setColumns(20);
-        introductionTextArea.setLineWrap(true);
-        introductionTextArea.setRows(5);
-        introductionTextArea.setWrapStyleWord(true);
-        jScrollPane5.setViewportView(introductionTextArea);
-
         javax.swing.GroupLayout introPanelLayout = new javax.swing.GroupLayout(introPanel);
         introPanel.setLayout(introPanelLayout);
         introPanelLayout.setHorizontalGroup(
@@ -168,128 +156,74 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
             .addGroup(introPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(introPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(introductionEditor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(introPanelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(titleTextField))
-                    .addGroup(introPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE))
+                        .addComponent(titleTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 665, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         introPanelLayout.setVerticalGroup(
             introPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(introPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, introPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(introPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(titleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(introductionEditor, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE))
         );
 
         sectionsPanel.addTab("Introduction", introPanel);
-
-        crmTextArea.setColumns(20);
-        crmTextArea.setLineWrap(true);
-        crmTextArea.setRows(5);
-        crmTextArea.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(crmTextArea);
 
         javax.swing.GroupLayout crmPanelLayout = new javax.swing.GroupLayout(crmPanel);
         crmPanel.setLayout(crmPanelLayout);
         crmPanelLayout.setHorizontalGroup(
             crmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(crmPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(crmTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
         );
         crmPanelLayout.setVerticalGroup(
             crmPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(crmPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(crmTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
         sectionsPanel.addTab("Clinical risk management", crmPanel);
-
-        safetyTextArea.setColumns(20);
-        safetyTextArea.setLineWrap(true);
-        safetyTextArea.setRows(5);
-        safetyTextArea.setWrapStyleWord(true);
-        jScrollPane2.setViewportView(safetyTextArea);
 
         javax.swing.GroupLayout safetySystemPanelLayout = new javax.swing.GroupLayout(safetySystemPanel);
         safetySystemPanel.setLayout(safetySystemPanelLayout);
         safetySystemPanelLayout.setHorizontalGroup(
             safetySystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(safetySystemPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(safetyTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
         );
         safetySystemPanelLayout.setVerticalGroup(
             safetySystemPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(safetySystemPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(safetyTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
         sectionsPanel.addTab("Safety system", safetySystemPanel);
-
-        qaTextArea.setColumns(20);
-        qaTextArea.setLineWrap(true);
-        qaTextArea.setRows(5);
-        qaTextArea.setWrapStyleWord(true);
-        jScrollPane3.setViewportView(qaTextArea);
 
         javax.swing.GroupLayout qaPanelLayout = new javax.swing.GroupLayout(qaPanel);
         qaPanel.setLayout(qaPanelLayout);
         qaPanelLayout.setHorizontalGroup(
             qaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(qaPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(qaTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
         );
         qaPanelLayout.setVerticalGroup(
             qaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(qaPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(qaTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
         sectionsPanel.addTab("QA and Development", qaPanel);
-
-        configTextArea.setColumns(20);
-        configTextArea.setLineWrap(true);
-        configTextArea.setRows(5);
-        configTextArea.setWrapStyleWord(true);
-        jScrollPane4.setViewportView(configTextArea);
 
         javax.swing.GroupLayout configPanelLayout = new javax.swing.GroupLayout(configPanel);
         configPanel.setLayout(configPanelLayout);
         configPanelLayout.setHorizontalGroup(
             configPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(configPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(configTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 732, Short.MAX_VALUE)
         );
         configPanelLayout.setVerticalGroup(
             configPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(configPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(configTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
         sectionsPanel.addTab("Config management", configPanel);
@@ -376,7 +310,7 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
         body.append(TITLE_END);
         body.append(INTRO_SECTION);
         body.append(P_START);
-        body.append(introductionTextArea.getText());
+        body.append(introductionEditor.getBodyText());
         body.append(P_END);
         body.append(SYSTEM_DEFINITION_SECTION);
         body.append(P_START);
@@ -384,19 +318,19 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
         body.append(P_END);
         body.append(CLINICAL_RISK_MANAGEMENT_SECTION);        
         body.append(P_START);
-        body.append(crmTextArea.getText());
+        body.append(crmTextArea.getBodyText());
         body.append(P_END);
         body.append(QA_OCUMENT_APPROVAL);
         body.append(P_START);
-        body.append(qaTextArea.getText());
+        body.append(qaTextArea.getBodyText());
         body.append(P_END);
         body.append(SUMMARY_SAFETY_STATEMENT);
         body.append(P_START);
-        body.append(safetyTextArea.getText());
+        body.append(safetyTextArea.getBodyText());
         body.append(P_END);
         body.append(CONFIG_CONTROL);
         body.append(P_START);
-        body.append(configTextArea.getText());
+        body.append(configTextArea.getBodyText());
         body.append(P_END);
 
         String data = HTML.replace("__HTMLBODY__", body.toString());
@@ -423,7 +357,7 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
 
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
         titleTextField.setText("");
-        introductionTextArea.setText("");
+        introductionEditor.setText("");
         configTextArea.setText("");
         crmTextArea.setText("");
         qaTextArea.setText("");
@@ -452,7 +386,7 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
             newreport = true;
         }
         report.setAttribute("Title", titleTextField.getText());
-        report.setAttribute("Introduction", introductionTextArea.getText());
+        report.setAttribute("Introduction", introductionEditor.getText());
         report.setAttribute("CCMdetails", configTextArea.getText());
         report.setAttribute("CRMdetails", crmTextArea.getText());
         report.setAttribute("QAADdetails", qaTextArea.getText());
@@ -560,25 +494,19 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar buttonBar;
     private javax.swing.JPanel configPanel;
-    private javax.swing.JTextArea configTextArea;
+    private uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel configTextArea;
     private javax.swing.JPanel crmPanel;
-    private javax.swing.JTextArea crmTextArea;
+    private uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel crmTextArea;
     private javax.swing.JButton deleteButton;
     public static javax.swing.JButton exportButton;
     private javax.swing.JPanel introPanel;
-    private javax.swing.JTextArea introductionTextArea;
+    private uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel introductionEditor;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JButton newButton;
     private javax.swing.JPanel qaPanel;
-    private javax.swing.JTextArea qaTextArea;
+    private uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel qaTextArea;
     private javax.swing.JPanel safetySystemPanel;
-    private javax.swing.JTextArea safetyTextArea;
+    private uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel safetyTextArea;
     private javax.swing.JButton saveButton;
     private javax.swing.JTabbedPane sectionsPanel;
     private javax.swing.JTextField titleTextField;
@@ -594,7 +522,7 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
             report = (Report) p;
             proj = (Project)MetaFactory.getInstance().getFactory("Project").get(report.getAttribute("ProjectID").getIntValue());
             titleTextField.setText(report.getAttributeValue("Title"));
-            introductionTextArea.setText(report.getAttributeValue("Introduction"));
+            introductionEditor.setText(report.getAttributeValue("Introduction"));
             configTextArea.setText(report.getAttributeValue("CCMdetails"));
             crmTextArea.setText(report.getAttributeValue("CRMdetails"));
             qaTextArea.setText(report.getAttributeValue("QAADdetails"));
