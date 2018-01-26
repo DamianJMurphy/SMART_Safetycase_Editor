@@ -34,6 +34,8 @@ public interface Project {
     public static final int DELETE = 3;
     
     EditorComponent getEditorComponent(TreePath t);
+    String checkNewFromPopupMenu(TreePath t);
+
 
     String getName();
     void setName(String n);
@@ -54,6 +56,5 @@ public interface Project {
     int getProjectID(DefaultMutableTreeNode n);
     int getCurrentProjectID();
     void setCurrentProjectID(int id);
-    void editorEvent(int e, Object o);
-    
+    void editorEvent(int e, Object o);    
 }

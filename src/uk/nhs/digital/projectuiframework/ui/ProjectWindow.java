@@ -179,6 +179,11 @@ public class ProjectWindow extends javax.swing.JFrame {
             return;
         }
         proj.setCurrentProjectID(id);
+        String check = proj.checkNewFromPopupMenu(p); 
+        if (check != null) {
+            JOptionPane.showMessageDialog(rootPane, check, "Can't make a new one of these here", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
         EditorComponent ec = ec = proj.getEditorComponent(p);
         if (ec == null)
             return;

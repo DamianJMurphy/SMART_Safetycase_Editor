@@ -41,12 +41,10 @@ import uk.nhs.digital.safetycase.data.ValueSet;
 public class ControlEditor extends javax.swing.JPanel 
          implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
-    private final String[] controlcolumns = {"Name", "Type", "State"};
     private final String[] linkcolumns = {"Type", "ID", "Name", "Comment"};
 
     private EditorComponent editorComponent = null;
     private Control control = null;
-    private ArrayList<Control> controls = new ArrayList<>();
     private ArrayList<Condition> conditions = new ArrayList<>();
     private int newObjectProjectId = -1;
     /**
@@ -54,9 +52,7 @@ public class ControlEditor extends javax.swing.JPanel
      */
     public ControlEditor() {
         initComponents();
-        DefaultTableModel effectModel = new DefaultTableModel(controlcolumns, 0);
         DefaultTableModel linkModel = new DefaultTableModel(linkcolumns, 0);
-        controlsTable.setModel(effectModel);
         linksTable.setModel(linkModel);
         try {
             ValueSet controlType = MetaFactory.getInstance().getValueSet("ControlType");
@@ -95,13 +91,6 @@ public class ControlEditor extends javax.swing.JPanel
 
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        controlsPanel = new javax.swing.JPanel();
-        jToolBar1 = new javax.swing.JToolBar();
-        newButton = new javax.swing.JButton();
-        editButton = new javax.swing.JButton();
-        deleteButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        controlsTable = new javax.swing.JTable();
         editorPanel = new javax.swing.JPanel();
         linksPanel = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -136,71 +125,6 @@ public class ControlEditor extends javax.swing.JPanel
             }
         ));
         jScrollPane2.setViewportView(jTable1);
-
-        controlsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Controls"));
-
-        jToolBar1.setRollover(true);
-
-        newButton.setText("New");
-        newButton.setFocusable(false);
-        newButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        newButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        newButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(newButton);
-
-        editButton.setText("Edit");
-        editButton.setFocusable(false);
-        editButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(editButton);
-
-        deleteButton.setText("Delete");
-        deleteButton.setFocusable(false);
-        deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(deleteButton);
-
-        controlsTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(controlsTable);
-
-        javax.swing.GroupLayout controlsPanelLayout = new javax.swing.GroupLayout(controlsPanel);
-        controlsPanel.setLayout(controlsPanelLayout);
-        controlsPanelLayout.setHorizontalGroup(
-            controlsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-        );
-        controlsPanelLayout.setVerticalGroup(
-            controlsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(controlsPanelLayout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE))
-        );
 
         editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         editorPanel.setEnabled(false);
@@ -314,7 +238,7 @@ public class ControlEditor extends javax.swing.JPanel
                     .addGroup(editorPanelLayout.createSequentialGroup()
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         editorPanelLayout.setVerticalGroup(
@@ -344,158 +268,75 @@ public class ControlEditor extends javax.swing.JPanel
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(discardButton)
-                    .addComponent(saveButton))
-                .addGap(0, 18, Short.MAX_VALUE)
-                .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(saveButton)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(controlsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(controlsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
-        editorPanel.setEnabled(true);
-        controlsTable.clearSelection();
-        typeComboBox.setSelectedIndex(-1);
-        conditionComboBox.setSelectedIndex(-1);
-        stateComboBox.setSelectedIndex(-1);
-        nameTextField.setText("");
-        descriptionTextArea.setText("");
-        clinicalJustificationTextArea.setText("");
-        DefaultTableModel linkModel = new DefaultTableModel(linkcolumns, 0);
-        linksTable.setModel(linkModel);
-    }//GEN-LAST:event_newButtonActionPerformed
-
-    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        int selected = controlsTable.getSelectedRow();
-        if (selected == -1)
+    private void doDelete() {
+                
+        if (control == null)
             return;
-        editorPanel.setEnabled(true);
-        Control c = controls.get(selected);
-        nameTextField.setText(c.getAttributeValue("Name"));
-        int d = Integer.parseInt(c.getAttributeValue("ConditionID"));
-        for (int i = 0; i < conditions.size(); i++) {
-            if (conditions.get(i).getId() == d) {
-                conditionComboBox.setSelectedIndex(i);
-                break;
+        
+        for (Relationship r : control.getRelationships("Effect")) {
+            if (r.getManagementClass() != null) {
+                JOptionPane.showMessageDialog(this, "Cause still connected to a Bowtie diagram. Remove from the diagram then delete.", "Cause in use", JOptionPane.ERROR_MESSAGE);
+                return;
             }
         }
-        String s = c.getAttributeValue("Type");
-        for (int j = 0; j < typeComboBox.getItemCount(); j++) {
-            if (s.contentEquals(typeComboBox.getItemAt(j))) {
-                typeComboBox.setSelectedIndex(j);
-                break;
+        for (Relationship r : control.getRelationships("Hazard")) {
+            if (r.getManagementClass() != null) {
+                JOptionPane.showMessageDialog(this, "Control still connected to a Bowtie diagram. Remove from the diagram then delete.", "Control in use", JOptionPane.ERROR_MESSAGE);
+                return;
             }
         }
-        s = c.getAttributeValue("State");
-        for (int j = 0; j < stateComboBox.getItemCount(); j++) {
-            if (s.contentEquals(stateComboBox.getItemAt(j))) {
-                stateComboBox.setSelectedIndex(j);
-                break;
-            }
-        }
-        descriptionTextArea.setText(c.getAttributeValue("Description"));
-        clinicalJustificationTextArea.setText(c.getAttributeValue("ClinicalJustification"));
-        try {
-            HashMap<String,ArrayList<Relationship>> rels = c.getRelationshipsForLoad();
-            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            for (String t : rels.keySet()) {
-                ArrayList<Relationship> a = rels.get(t);
-                for (Relationship r : a) {
-                    String[] row = new String[linkcolumns.length];
-                    row[0] = t;
-                    row[1] = Integer.toString(r.getTarget());
-                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                    row[3] = r.getComment();
-                    dtm.addRow(row);
-                }
-            }
-            linksTable.setModel(dtm);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }//GEN-LAST:event_editButtonActionPerformed
-
-    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-         int current = controlsTable.getSelectedRow();
-        if (current == -1)
-            return;
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Delete this Control ?", "Warning", JOptionPane.YES_NO_OPTION);
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Would You Like to Delete this Control?", "Warning", JOptionPane.YES_NO_OPTION);
         if (dialogResult == JOptionPane.NO_OPTION) {
             return;
         }
-        
         try {
-            Control c = controls.get(current);
-            MetaFactory.getInstance().getFactory(c.getDatabaseObjectName()).delete(c);
-            controls.remove(current);
-            ((DefaultTableModel)controlsTable.getModel()).removeRow(current);
-            editorComponent.notifyEditorEvent(Project.DELETE, c);
+            MetaFactory.getInstance().getFactory(control.getDatabaseObjectName()).delete(control);
+            editorComponent.notifyEditorEvent(Project.DELETE, control);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
-
-    }//GEN-LAST:event_deleteButtonActionPerformed
-
+        }        
+    }
+    
+    
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         if (conditionComboBox.getSelectedIndex() == -1)
             conditionComboBox.setSelectedIndex(0);
         if (typeComboBox.getSelectedIndex() == -1)
             typeComboBox.setSelectedIndex(0);
-        Control c = null;
-        int selected = controlsTable.getSelectedRow();
-        if (selected == -1)
-            c = new Control();
-        else
-            c = controls.get(selected);
-        c.setAttribute("Name", nameTextField.getText());
-        c.setAttribute("Description", descriptionTextArea.getText());
-        c.setAttribute("ClinicalJustification", clinicalJustificationTextArea.getText());
-        c.setAttribute("Type", (String)typeComboBox.getSelectedItem());
-        c.setAttribute("State", (String)stateComboBox.getSelectedItem());
-        c.setAttribute("ConditionID", conditions.get(conditionComboBox.getSelectedIndex()).getId());
+        control.setAttribute("Name", nameTextField.getText());
+        control.setAttribute("Description", descriptionTextArea.getText());
+        control.setAttribute("ClinicalJustification", clinicalJustificationTextArea.getText());
+        control.setAttribute("Type", (String)typeComboBox.getSelectedItem());
+        control.setAttribute("State", (String)stateComboBox.getSelectedItem());
+        control.setAttribute("ConditionID", conditions.get(conditionComboBox.getSelectedIndex()).getId());
         if (newObjectProjectId == -1)
-            c.setAttribute("ProjectID", Integer.parseInt(control.getAttributeValue("ProjectID")));
+            control.setAttribute("ProjectID", Integer.parseInt(control.getAttributeValue("ProjectID")));
         else 
-            c.setAttribute("ProjectID",newObjectProjectId);
+            control.setAttribute("ProjectID",newObjectProjectId);
         try {
-            MetaFactory.getInstance().getFactory(c.getDatabaseObjectName()).put(c);
-            String[] row = new String[controlcolumns.length];
-            row[0] = c.getAttributeValue("Name");
-            row[1] = c.getAttributeValue("Type");
-            row[2] = c.getAttributeValue("State");
-            DefaultTableModel dtm = ((DefaultTableModel)controlsTable.getModel());
-            if (selected == -1) {
-                controls.add(c);
-                dtm.addRow(row);
-                controlsTable.setRowSelectionInterval(controls.size() - 1, controls.size() - 1);
-                editorComponent.notifyEditorEvent(Project.ADD, c);
-            } else {
-                dtm.removeRow(selected);
-                dtm.insertRow(selected, row);                
-                editorComponent.notifyEditorEvent(Project.UPDATE, c);
-            }
+            MetaFactory.getInstance().getFactory(control.getDatabaseObjectName()).put(control);
+            editorComponent.notifyEditorEvent(Project.UPDATE, control);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -503,26 +344,17 @@ public class ControlEditor extends javax.swing.JPanel
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
-        typeComboBox.setSelectedIndex(-1);
-        conditionComboBox.setSelectedIndex(-1);
-        stateComboBox.setSelectedIndex(-1);
-        nameTextField.setText("");
-        descriptionTextArea.setText("");
-        clinicalJustificationTextArea.setText("");
+        setPersistableObject(control);
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
-       int selected = controlsTable.getSelectedRow();
-        if (selected == -1)
-            return;
-        Control c = controls.get(selected);
         JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
-        linkEditor.add(new LinkEditor(c).setParent(linkEditor));
+        linkEditor.add(new LinkEditor(control).setParent(linkEditor));
         linkEditor.pack();
         linkEditor.setVisible(true);
 
         try {
-            HashMap<String,ArrayList<Relationship>> rels = c.getRelationshipsForLoad();
+            HashMap<String,ArrayList<Relationship>> rels = control.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
@@ -546,12 +378,8 @@ public class ControlEditor extends javax.swing.JPanel
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea clinicalJustificationTextArea;
     private javax.swing.JComboBox<String> conditionComboBox;
-    private javax.swing.JPanel controlsPanel;
-    private javax.swing.JTable controlsTable;
-    private javax.swing.JButton deleteButton;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton discardButton;
-    private javax.swing.JButton editButton;
     private javax.swing.JButton editLinksButton;
     private javax.swing.JPanel editorPanel;
     private javax.swing.JLabel jLabel1;
@@ -560,71 +388,78 @@ public class ControlEditor extends javax.swing.JPanel
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable1;
-    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPanel linksPanel;
     private javax.swing.JTable linksTable;
     private javax.swing.JTextField nameTextField;
-    private javax.swing.JButton newButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JComboBox<String> stateComboBox;
     private javax.swing.JComboBox<String> typeComboBox;
     // End of variables declaration//GEN-END:variables
 
+    private void newControl() {
+        JOptionPane.showMessageDialog(this, "Controls should be created via the Hazard Bowtie editor.", "Context!", JOptionPane.ERROR_MESSAGE);
+        
+        
+//         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+//         linksTable.setModel(dtm);
+//        editorPanel.setEnabled(true);
+//        conditionsComboBox.setSelectedIndex(-1);
+//       nameTextField.setText("");
+//        descriptionTextArea.setText("");        
+        
+    }
+    
     @Override
     public void setPersistableObject(Persistable p) {
         if (p == null) {
-            newButtonActionPerformed(null);
+            JOptionPane.showMessageDialog(this, "Controls should be created via the Hazard Bowtie editor.", "Context!", JOptionPane.ERROR_MESSAGE);
             return;
         }
-      int selected = -1;
-      try {
-          control = (Control)p;
-          int populated = -1;
-            DefaultTableModel dtm = new DefaultTableModel(controlcolumns, 0);
-            DefaultTableModel ld = new DefaultTableModel(linkcolumns, 0);
-            linksTable.setModel(ld);
-            ArrayList<Persistable> ctrl = MetaFactory.getInstance().getChildren(control.getDatabaseObjectName(), "ProjectID", Integer.parseInt(control.getAttributeValue("ProjectID")));
-            for (int i = 0; i < ctrl.size(); i++) {
-                Control c = (Control)ctrl.get(i);
-                if (c.isDeleted())
-                    continue;
-                populated++;
-                controls.add(c);
-                String[] row = new String[controlcolumns.length];
-                row[0] = c.getAttributeValue("Name");
-                row[1] = c.getAttributeValue("Type");
-                row[2] = c.getAttributeValue("State");
-                if (p.getId() == c.getId()) {
-                    selected = populated;
-                }
-                dtm.addRow(row);
-            }    
-            controlsTable.setModel(dtm);
-            if (selected != -1)
-                controlsTable.setRowSelectionInterval(selected, selected);
-          
-      }
-      catch (Exception e) {
-          e.printStackTrace();
-      }
+        control = (Control)p;
+        nameTextField.setText(control.getAttributeValue("Name"));
+        clinicalJustificationTextArea.setText(control.getAttributeValue("ClinicalJustification"));
+        descriptionTextArea.setText(control.getAttributeValue("Description"));
+        int d = Integer.parseInt(control.getAttributeValue("ConditionID"));
+        for (int i = 0; i < conditions.size(); i++) {
+            if (conditions.get(i).getId() == d) {
+                conditionComboBox.setSelectedIndex(i);
+                break;
+            }
+        }
+        String s = control.getAttributeValue("Type");
+        for (int j = 0; j < typeComboBox.getItemCount(); j++) {
+            if (s.contentEquals(typeComboBox.getItemAt(j))) {
+                typeComboBox.setSelectedIndex(j);
+                break;
+            }
+        }
+        s = control.getAttributeValue("State");
+        for (int j = 0; j < stateComboBox.getItemCount(); j++) {
+            if (s.contentEquals(stateComboBox.getItemAt(j))) {
+                stateComboBox.setSelectedIndex(j);
+                break;
+            }
+        }        
         try {
             HashMap<String,ArrayList<Relationship>> rels = control.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
                 for (Relationship r : a) {
-                    String[] row = new String[linkcolumns.length];
-                    row[0] = t;
-                    row[1] = Integer.toString(r.getTarget());
-                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                    row[3] = r.getComment();
-                    dtm.addRow(row);
+                    String m = r.getManagementClass();
+                    if ((m == null) || (!m.contentEquals("Diagram"))) {                    
+                        String[] row = new String[linkcolumns.length];
+                        row[0] = t;
+                        row[1] = Integer.toString(r.getTarget());
+                        row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
+                        row[3] = r.getComment();
+                        dtm.addRow(row);
+                    }
                 }
             }
             linksTable.setModel(dtm);

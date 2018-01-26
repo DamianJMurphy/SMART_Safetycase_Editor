@@ -731,12 +731,15 @@ public class HazardEditor extends javax.swing.JPanel
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
                 for (Relationship r : a) {
-                    String[] row = new String[linkcolumns.length];
-                    row[0] = t;
-                    row[1] = Integer.toString(r.getTarget());
-                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                    row[3] = r.getComment();
-                    dtm.addRow(row);
+                    String m = r.getManagementClass();
+                    if ((m == null) || (!m.contentEquals("Diagram"))) {
+                        String[] row = new String[linkcolumns.length];
+                        row[0] = t;
+                        row[1] = Integer.toString(r.getTarget());
+                        row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
+                        row[3] = r.getComment();
+                        dtm.addRow(row);
+                    }
                 }
             }
             linksTable.setModel(dtm);

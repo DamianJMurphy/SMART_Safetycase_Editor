@@ -106,6 +106,10 @@ public class SmartProject
         if (eclass == null) {
             java.lang.System.err.println("DEVELOPMENT: Could not identify where user clicked: " + s);
             return null;            
+        } else {
+            String check = checkCreatableViaForm(eclass);
+            if (check != null)
+                return null;
         }
         EditorComponent ec = null;
         eclass = java.lang.System.getProperty(EDITORCLASSROOT + eclass);
@@ -144,12 +148,17 @@ public class SmartProject
     public EditorComponent getEditorComponent(TreePath t) {
         Persistable p = null;
         try {
-            // TODO NEXT: This will only work for leaf nodes that contain Persistable instances.
+            // This will only work for leaf nodes that contain Persistable instances.
             // That isn't true for a "Project" (which may be OK) or for a case where there are
             // no instances of the Persistable of that type. So detect this and instantiate an
             // editor with no content to the EditorComponent which should do the same thing as
             // if the "New" button had been clicked.
             p = (Persistable)((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject();
+            if (p == null) {
+                String check = checkNewFromPopupMenu(t);
+                if (check != null)
+                    return null;
+            }
         }
         catch (ClassCastException e) {
             return resolveNonContainedComponent(t);
@@ -434,5 +443,34 @@ public class SmartProject
             d.add(dmtn);
         }
         dmtn = new DefaultMutableTreeNode("Issues");
+    }
+
+    @Override
+    public String checkNewFromPopupMenu(TreePath t) {
+        String s = null;    
+        Persistable p = null;
+        Object o = ((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject();
+        if (o instanceof uk.nhs.digital.safetycase.data.Persistable) {
+            s = ((Persistable)o).getDatabaseObjectName();
+        } else {
+            s = (String)o.toString();
+        }
+        return checkCreatableViaForm(s);
+    }
+    
+    private String checkCreatableViaForm(String s) {
+        if (s.contentEquals("Cause")) {
+            return "Create new Causes in context using the Bowtie editor";
+        }
+        if (s.contentEquals("Control")) {
+            return "Create new Controls (and mitigations for Effects) in context using the Bowtie editor";
+        }
+        if (s.contentEquals("Effect")) {
+            return "Create new Effects in context using the Bowtie editor";
+        }
+         if (s.contentEquals("Hazard")) {
+            return "Create new Hazards in context using the Bowtie editor";
+        }       
+        return null;        
     }
 }

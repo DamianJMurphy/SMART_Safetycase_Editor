@@ -41,12 +41,10 @@ import uk.nhs.digital.safetycase.data.ValueSet;
 public class EffectEditor extends javax.swing.JPanel 
         implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
-    private final String[] effectcolumns = {"Name", "Type"};
     private final String[] linkcolumns = {"Type", "ID", "Name", "Comment"};
 
     private EditorComponent editorComponent = null;
     private Effect effect = null;
-    private ArrayList<Effect> effects = new ArrayList<>();
     private ArrayList<Condition> conditions = new ArrayList<>();
     private int newObjectProjectId = -1;
 
@@ -55,9 +53,7 @@ public class EffectEditor extends javax.swing.JPanel
      */
     public EffectEditor() {
         initComponents();
-        DefaultTableModel effectModel = new DefaultTableModel(effectcolumns, 0);
         DefaultTableModel linkModel = new DefaultTableModel(linkcolumns, 0);
-        effectsTable.setModel(effectModel);
         linksTable.setModel(linkModel);
         try {
             ValueSet effectType = MetaFactory.getInstance().getValueSet("EffectType");
@@ -88,13 +84,6 @@ public class EffectEditor extends javax.swing.JPanel
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        existingEffectsPanel = new javax.swing.JPanel();
-        effectsToolBar = new javax.swing.JToolBar();
-        newButton = new javax.swing.JButton();
-        editButton = new javax.swing.JButton();
-        deleteButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        effectsTable = new javax.swing.JTable();
         editorPanel = new javax.swing.JPanel();
         linksPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -111,72 +100,6 @@ public class EffectEditor extends javax.swing.JPanel
         descriptionTextArea = new javax.swing.JTextArea();
         saveButton = new javax.swing.JButton();
         discardButton = new javax.swing.JButton();
-
-        existingEffectsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Effects"));
-
-        effectsToolBar.setRollover(true);
-
-        newButton.setText("New");
-        newButton.setFocusable(false);
-        newButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        newButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        newButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newButtonActionPerformed(evt);
-            }
-        });
-        effectsToolBar.add(newButton);
-
-        editButton.setText("Edit");
-        editButton.setFocusable(false);
-        editButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editButtonActionPerformed(evt);
-            }
-        });
-        effectsToolBar.add(editButton);
-
-        deleteButton.setText("Delete");
-        deleteButton.setFocusable(false);
-        deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteButtonActionPerformed(evt);
-            }
-        });
-        effectsToolBar.add(deleteButton);
-
-        effectsTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(effectsTable);
-
-        javax.swing.GroupLayout existingEffectsPanelLayout = new javax.swing.GroupLayout(existingEffectsPanel);
-        existingEffectsPanel.setLayout(existingEffectsPanelLayout);
-        existingEffectsPanelLayout.setHorizontalGroup(
-            existingEffectsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(effectsToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1)
-        );
-        existingEffectsPanelLayout.setVerticalGroup(
-            existingEffectsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(existingEffectsPanelLayout.createSequentialGroup()
-                .addComponent(effectsToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 8, Short.MAX_VALUE))
-        );
 
         editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         editorPanel.setEnabled(false);
@@ -301,8 +224,9 @@ public class EffectEditor extends javax.swing.JPanel
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
                     .addComponent(discardButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -311,109 +235,25 @@ public class EffectEditor extends javax.swing.JPanel
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(existingEffectsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(existingEffectsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
-        editorPanel.setEnabled(true);
-        effectsTable.clearSelection();
-        typeComboBox.setSelectedIndex(-1);
-        conditionComboBox.setSelectedIndex(-1);
-        nameTextField.setText("");
-        descriptionTextArea.setText("");
-    }//GEN-LAST:event_newButtonActionPerformed
-
-    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        int current = effectsTable.getSelectedRow();
-        if (current == -1)
-            return;
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Delete this Effect ?", "Warning", JOptionPane.YES_NO_OPTION);
-        if (dialogResult == JOptionPane.NO_OPTION) {
-            return;
-        }
-        
-        try {
-            Effect eff = effects.get(current);
-            MetaFactory.getInstance().getFactory(eff.getDatabaseObjectName()).delete(eff);
-            effects.remove(current);
-            ((DefaultTableModel)effectsTable.getModel()).removeRow(current);
-            editorComponent.notifyEditorEvent(Project.DELETE, eff);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }//GEN-LAST:event_deleteButtonActionPerformed
-
-    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        int selected = effectsTable.getSelectedRow();
-        if (selected == -1)
-            return;
-        editorPanel.setEnabled(true);
-        Effect fx = effects.get(selected);
-        nameTextField.setText(fx.getAttributeValue("Name"));
-        int d = Integer.parseInt(fx.getAttributeValue("ConditionID"));
-        for (int i = 0; i < conditions.size(); i++) {
-            if (conditions.get(i).getId() == d) {
-                conditionComboBox.setSelectedIndex(i);
-                break;
-            }
-        }
-        String s = fx.getAttributeValue("Type");
-        for (int j = 0; j < typeComboBox.getItemCount(); j++) {
-            if (s.contentEquals(typeComboBox.getItemAt(j))) {
-                typeComboBox.setSelectedIndex(j);
-                break;
-            }
-        }
-        descriptionTextArea.setText(fx.getAttributeValue("Description"));
-        try {
-            HashMap<String,ArrayList<Relationship>> rels = fx.getRelationshipsForLoad();
-            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            for (String t : rels.keySet()) {
-                ArrayList<Relationship> a = rels.get(t);
-                for (Relationship r : a) {
-                    String[] row = new String[linkcolumns.length];
-                    row[0] = t;
-                    row[1] = Integer.toString(r.getTarget());
-                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                    row[3] = r.getComment();
-                    dtm.addRow(row);
-                }
-            }
-            linksTable.setModel(dtm);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }//GEN-LAST:event_editButtonActionPerformed
-
     private void linksEditorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linksEditorButtonActionPerformed
-       int selected = effectsTable.getSelectedRow();
-        if (selected == -1)
-            return;
-        Effect fx = effects.get(selected);
         JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
-        linkEditor.add(new LinkEditor(fx).setParent(linkEditor));
+        linkEditor.add(new LinkEditor(effect).setParent(linkEditor));
         linkEditor.pack();
         linkEditor.setVisible(true);
 
         try {
-            HashMap<String,ArrayList<Relationship>> rels = fx.getRelationshipsForLoad();
+            HashMap<String,ArrayList<Relationship>> rels = effect.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
@@ -436,10 +276,7 @@ public class EffectEditor extends javax.swing.JPanel
     }//GEN-LAST:event_linksEditorButtonActionPerformed
 
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
-        typeComboBox.setSelectedIndex(-1);
-        conditionComboBox.setSelectedIndex(-1);
-        nameTextField.setText("");
-        descriptionTextArea.setText("");
+        setPersistableObject(effect);
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
@@ -447,36 +284,17 @@ public class EffectEditor extends javax.swing.JPanel
             conditionComboBox.setSelectedIndex(0);
         if (typeComboBox.getSelectedIndex() == -1)
             typeComboBox.setSelectedIndex(0);
-        Effect f = null;
-        int selected = effectsTable.getSelectedRow();
-        if (selected == -1)
-            f = new Effect();
-        else
-            f = effects.get(selected);
-        f.setAttribute("Name", nameTextField.getText());
-        f.setAttribute("Description", descriptionTextArea.getText());
-        f.setAttribute("Type", (String)typeComboBox.getSelectedItem());
-        f.setAttribute("ConditionID", conditions.get(conditionComboBox.getSelectedIndex()).getId());
+//        f.setAttribute("Name", nameTextField.getText());
+        effect.setAttribute("Description", descriptionTextArea.getText());
+        effect.setAttribute("Type", (String)typeComboBox.getSelectedItem());
+        effect.setAttribute("ConditionID", conditions.get(conditionComboBox.getSelectedIndex()).getId());
         if (newObjectProjectId == -1)
-            f.setAttribute("ProjectID", Integer.parseInt(effect.getAttributeValue("ProjectID")));
+            effect.setAttribute("ProjectID", Integer.parseInt(effect.getAttributeValue("ProjectID")));
         else 
-            f.setAttribute("ProjectID",newObjectProjectId);
+            effect.setAttribute("ProjectID",newObjectProjectId);
         try {
-            MetaFactory.getInstance().getFactory(f.getDatabaseObjectName()).put(f);
-            String[] row = new String[effectcolumns.length];
-            row[0] = f.getAttributeValue("Name");
-            row[1] = f.getAttributeValue("Type");
-            DefaultTableModel dtm = ((DefaultTableModel)effectsTable.getModel());
-            if (selected == -1) {
-                effects.add(f);
-                dtm.addRow(row);
-                effectsTable.setRowSelectionInterval(effects.size() - 1, effects.size() - 1);
-                editorComponent.notifyEditorEvent(Project.ADD, f);
-            } else {
-                dtm.removeRow(selected);
-                dtm.insertRow(selected, row);                
-                editorComponent.notifyEditorEvent(Project.UPDATE, f);
-            }
+            MetaFactory.getInstance().getFactory(effect.getDatabaseObjectName()).put(effect);
+            editorComponent.notifyEditorEvent(Project.UPDATE, effect);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -487,51 +305,42 @@ public class EffectEditor extends javax.swing.JPanel
     @Override
     public void setPersistableObject(Persistable p) {
         if (p == null) {
-            newButtonActionPerformed(null);
+            JOptionPane.showMessageDialog(this, "Effects should be created via the Hazard Bowtie editor.", "Context!", JOptionPane.ERROR_MESSAGE);
             return;
         }
-      int selected = -1;
-      int populated = -1;
-      try {
-          effect = (Effect)p;
-            DefaultTableModel dtm = new DefaultTableModel(effectcolumns, 0);
-            DefaultTableModel ld = new DefaultTableModel(linkcolumns, 0);
-            linksTable.setModel(ld);
-            ArrayList<Persistable> eff = MetaFactory.getInstance().getChildren(effect.getDatabaseObjectName(), "ProjectID", Integer.parseInt(effect.getAttributeValue("ProjectID")));
-            for (int i = 0; i < eff.size(); i++) {
-                Effect ex = (Effect)eff.get(i);
-                if (ex.isDeleted())
-                    continue;
-                populated++;
-                effects.add(ex);
-                String[] row = new String[effectcolumns.length];
-                row[0] = ex.getAttributeValue("Name");
-                row[1] = ex.getAttributeValue("Type");
-                if (p.getId() == ex.getId()) {
-                    selected = populated;
-                }
-                dtm.addRow(row);
-            }    
-            effectsTable.setModel(dtm);
-            if (selected != -1)
-                effectsTable.setRowSelectionInterval(selected, selected);
-          
-      }
-      catch (Exception e) {
-          e.printStackTrace();
-      }
+        effect = (Effect)p;
+        nameTextField.setText(effect.getAttributeValue("Name"));
+        descriptionTextArea.setText(effect.getAttributeValue("Description"));
+        int d = Integer.parseInt(effect.getAttributeValue("ConditionID"));
+        for (int i = 0; i < conditions.size(); i++) {
+            if (conditions.get(i).getId() == d) {
+                conditionComboBox.setSelectedIndex(i);
+                break;
+            }
+        }
+        String s = effect.getAttributeValue("Type");
+        for (int j = 0; j < typeComboBox.getItemCount(); j++) {
+            if (s.contentEquals(typeComboBox.getItemAt(j))) {
+                typeComboBox.setSelectedIndex(j);
+                break;
+            }
+        }
+        
         try {
             HashMap<String,ArrayList<Relationship>> rels = effect.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
                 for (Relationship r : a) {
-                    String[] row = new String[linkcolumns.length];
-                    row[0] = t;
-                    row[1] = Integer.toString(r.getTarget());
-                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                    row[3] = r.getComment();
-                    dtm.addRow(row);
+                    String m = r.getManagementClass();
+                    if ((m == null) || (!m.contentEquals("Diagram"))) {                    
+                        String[] row = new String[linkcolumns.length];
+                        row[0] = t;
+                        row[1] = Integer.toString(r.getTarget());
+                        row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
+                        row[3] = r.getComment();
+                        dtm.addRow(row);
+                    }
                 }
             }
             linksTable.setModel(dtm);
@@ -555,26 +364,19 @@ public class EffectEditor extends javax.swing.JPanel
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> conditionComboBox;
-    private javax.swing.JButton deleteButton;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton discardButton;
-    private javax.swing.JButton editButton;
     private javax.swing.JPanel editorPanel;
-    private javax.swing.JTable effectsTable;
-    private javax.swing.JToolBar effectsToolBar;
-    private javax.swing.JPanel existingEffectsPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton linksEditorButton;
     private javax.swing.JPanel linksPanel;
     private javax.swing.JTable linksTable;
     private javax.swing.JTextField nameTextField;
-    private javax.swing.JButton newButton;
     private javax.swing.JButton saveButton;
     private javax.swing.JComboBox<String> typeComboBox;
     // End of variables declaration//GEN-END:variables

@@ -41,10 +41,9 @@ public class CauseEditor extends javax.swing.JPanel
 {
     private EditorComponent editorComponent = null;
     private ArrayList<Condition> conditions = new ArrayList<>();
-    private ArrayList<Cause> causes = new ArrayList<>();
     private Cause cause = null;
     
-    private final String[] causecolumns = {"Name", "Description"};
+ 
     private final String[] linkcolumns = {"Type", "ID", "Name", "Comment"};
     private int newObjectProjectId = -1;
     /**
@@ -52,9 +51,7 @@ public class CauseEditor extends javax.swing.JPanel
      */
     public CauseEditor() {
         initComponents();
-        DefaultTableModel dtm = new DefaultTableModel(causecolumns, 0);
-        causesTable.setModel(dtm);
-        dtm = new DefaultTableModel(linkcolumns, 0);
+        DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
         linksTable.setModel(dtm);
         try {
             Collection<Persistable> conds = MetaFactory.getInstance().getFactory("Condition").getEntries();
@@ -78,18 +75,11 @@ public class CauseEditor extends javax.swing.JPanel
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        cuasesPanel = new javax.swing.JPanel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        causesTable = new javax.swing.JTable();
-        jToolBar1 = new javax.swing.JToolBar();
-        newButton = new javax.swing.JButton();
-        editButton = new javax.swing.JButton();
-        deleteButton = new javax.swing.JButton();
         editorPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        conditionsComboBox = new javax.swing.JComboBox<String>();
+        conditionsComboBox = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
@@ -99,77 +89,7 @@ public class CauseEditor extends javax.swing.JPanel
         linksTable = new javax.swing.JTable();
         saveButton = new javax.swing.JButton();
         discardButton = new javax.swing.JButton();
-
-        cuasesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Cause"));
-
-        causesTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane5.setViewportView(causesTable);
-
-        jToolBar1.setRollover(true);
-
-        newButton.setText("New");
-        newButton.setFocusable(false);
-        newButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        newButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        newButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(newButton);
-
-        editButton.setText("Edit");
-        editButton.setFocusable(false);
-        editButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(editButton);
-
-        deleteButton.setText("Delete");
-        deleteButton.setFocusable(false);
-        deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(deleteButton);
-
-        javax.swing.GroupLayout cuasesPanelLayout = new javax.swing.GroupLayout(cuasesPanel);
-        cuasesPanel.setLayout(cuasesPanelLayout);
-        cuasesPanelLayout.setHorizontalGroup(
-            cuasesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cuasesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(cuasesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        cuasesPanelLayout.setVerticalGroup(
-            cuasesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cuasesPanelLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        deleteButton = new javax.swing.JButton();
 
         editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -210,7 +130,7 @@ public class CauseEditor extends javax.swing.JPanel
         linksPanel.setLayout(linksPanelLayout);
         linksPanelLayout.setHorizontalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 577, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(editLinksButton)
@@ -239,6 +159,13 @@ public class CauseEditor extends javax.swing.JPanel
             }
         });
 
+        deleteButton.setText("Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
         editorPanel.setLayout(editorPanelLayout);
         editorPanelLayout.setHorizontalGroup(
@@ -255,12 +182,15 @@ public class CauseEditor extends javax.swing.JPanel
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 328, Short.MAX_VALUE)
+                    .addComponent(jLabel4)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editorPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(discardButton))
+                        .addComponent(discardButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(deleteButton)
+                        .addGap(2, 2, 2))
                     .addComponent(jScrollPane2))
                 .addContainerGap())
         );
@@ -282,7 +212,8 @@ public class CauseEditor extends javax.swing.JPanel
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
-                    .addComponent(discardButton))
+                    .addComponent(discardButton)
+                    .addComponent(deleteButton))
                 .addGap(11, 11, 11)
                 .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -294,69 +225,27 @@ public class CauseEditor extends javax.swing.JPanel
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cuasesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(cuasesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        int selected = causesTable.getSelectedRow();
-        if (selected == -1)
-            return;
-        editorPanel.setEnabled(true);
-        Cause c = causes.get(selected);
-        nameTextField.setText(c.getAttributeValue("Name"));
-        int d = Integer.parseInt(c.getAttributeValue("ConditionID"));
-        for (int i = 0; i < conditions.size(); i++) {
-            if (conditions.get(i).getId() == d) {
-                conditionsComboBox.setSelectedIndex(i);
-                break;
-            }
-        } 
-        descriptionTextArea.setText(c.getAttributeValue("Description"));
-        
-        try {
-            HashMap<String,ArrayList<Relationship>> rels = c.getRelationshipsForLoad();
-            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            for (String t : rels.keySet()) {
-                ArrayList<Relationship> a = rels.get(t);
-                for (Relationship r : a) {
-                    String[] row = new String[linkcolumns.length];
-                    row[0] = t;
-                    row[1] = Integer.toString(r.getTarget());
-                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                    row[3] = r.getComment();
-                    dtm.addRow(row);
-                }
-            }
-            linksTable.setModel(dtm);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }//GEN-LAST:event_editButtonActionPerformed
-
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
-        int selected = causesTable.getSelectedRow();
-        if (selected == -1)
-            return;
-        Cause c = causes.get(selected);
+        
         JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
-        linkEditor.add(new LinkEditor(c).setParent(linkEditor));
+        linkEditor.add(new LinkEditor(cause).setParent(linkEditor));
         linkEditor.pack();
         linkEditor.setVisible(true);
 
         try {
-            HashMap<String,ArrayList<Relationship>> rels = c.getRelationshipsForLoad();
+            HashMap<String,ArrayList<Relationship>> rels = cause.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
@@ -377,55 +266,32 @@ public class CauseEditor extends javax.swing.JPanel
 
     }//GEN-LAST:event_editLinksButtonActionPerformed
 
-    private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
-         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-         linksTable.setModel(dtm);
-        editorPanel.setEnabled(true);
-        causesTable.clearSelection();
-        conditionsComboBox.setSelectedIndex(-1);
-       nameTextField.setText("");
-        descriptionTextArea.setText("");
-    }//GEN-LAST:event_newButtonActionPerformed
-
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
-        nameTextField.setText("");
-        conditionsComboBox.setSelectedIndex(-1);
-        descriptionTextArea.setText("");
+        setPersistableObject(cause);
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        if (conditionsComboBox.getSelectedIndex() == -1)
-            conditionsComboBox.setSelectedIndex(0);
-        Cause c = null;
-        int selected = causesTable.getSelectedRow();
-        if (selected == -1)
-            c = new Cause();
-        else
-            c = causes.get(selected);
-        c.setAttribute("Name", nameTextField.getText());
-        c.setAttribute("Description", descriptionTextArea.getText());
-        c.setAttribute("ConditionID", conditions.get(conditionsComboBox.getSelectedIndex()).getId());
+        boolean created = false;
+        if (cause == null) {
+            JOptionPane.showMessageDialog(this, "Causes should be created via the Hazard Bowtie editor.", "Context!", JOptionPane.ERROR_MESSAGE);
+            return;
+//            cause = new Cause();
+//            created = true;
+        }
+        // Only set the name if we're creating the cause. Otherwise do it via the
+        // bowtie editor
+        if (created)
+            cause.setAttribute("Name", nameTextField.getText());
+        cause.setAttribute("Description", descriptionTextArea.getText());
+        cause.setAttribute("ConditionID", conditions.get(conditionsComboBox.getSelectedIndex()).getId());
         
         if (newObjectProjectId == -1)
-            c.setAttribute("ProjectID", Integer.parseInt(cause.getAttributeValue("ProjectID")));
+            cause.setAttribute("ProjectID", Integer.parseInt(cause.getAttributeValue("ProjectID")));
         else 
-            c.setAttribute("ProjectID",newObjectProjectId);
+            cause.setAttribute("ProjectID",newObjectProjectId);
         try {
-            MetaFactory.getInstance().getFactory(c.getDatabaseObjectName()).put(c);
-            String[] row = new String[causecolumns.length];
-            row[0] = c.getAttributeValue("Name");
-            row[1] = c.getAttributeValue("Description");
-            DefaultTableModel dtm = ((DefaultTableModel)causesTable.getModel());
-            if (selected == -1) {
-                causes.add(c);
-                dtm.addRow(row);
-                causesTable.setRowSelectionInterval(causes.size() - 1, causes.size() - 1);
-                editorComponent.notifyEditorEvent(Project.ADD, c);
-            } else {
-                dtm.removeRow(selected);
-                dtm.insertRow(selected, row);                
-                editorComponent.notifyEditorEvent(Project.UPDATE, c);
-            }
+            MetaFactory.getInstance().getFactory(cause.getDatabaseObjectName()).put(cause);
+            editorComponent.notifyEditorEvent((created) ? Project.ADD : Project.UPDATE, cause);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -433,34 +299,55 @@ public class CauseEditor extends javax.swing.JPanel
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        int current = causesTable.getSelectedRow();
-        if (current == -1)
+        doDelete();
+    }//GEN-LAST:event_deleteButtonActionPerformed
+    
+    private void doDelete() {
+                
+        if (cause == null)
             return;
+        
+        for (Relationship r : cause.getRelationships("Control")) {
+            if (r.getManagementClass() != null) {
+                JOptionPane.showMessageDialog(this, "Cause still connected to a Bowtie diagram. Remove from the diagram then delete.", "Cause in use", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        for (Relationship r : cause.getRelationships("Hazard")) {
+            if (r.getManagementClass() != null) {
+                JOptionPane.showMessageDialog(this, "Cause still connected to a Bowtie diagram. Remove from the diagram then delete.", "Cause in use", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
         int dialogResult = JOptionPane.showConfirmDialog(null, "Would You Like to Delete this Cause?", "Warning", JOptionPane.YES_NO_OPTION);
         if (dialogResult == JOptionPane.NO_OPTION) {
             return;
         }
         try {
-            Cause c = causes.get(current);
-            MetaFactory.getInstance().getFactory(c.getDatabaseObjectName()).delete(c);
-            causes.remove(current);
-            ((DefaultTableModel)causesTable.getModel()).removeRow(current);
-            editorComponent.notifyEditorEvent(Project.DELETE, c);
+            MetaFactory.getInstance().getFactory(cause.getDatabaseObjectName()).delete(cause);
+            editorComponent.notifyEditorEvent(Project.DELETE, cause);
         }
         catch (Exception e) {
             e.printStackTrace();
-        }
-    }//GEN-LAST:event_deleteButtonActionPerformed
+        }        
+    }
     
-
+    private void newCause() {
+        JOptionPane.showMessageDialog(this, "Causes should be created via the Hazard Bowtie editor.", "Context!", JOptionPane.ERROR_MESSAGE);
+        
+        
+//         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+//         linksTable.setModel(dtm);
+//        editorPanel.setEnabled(true);
+//        conditionsComboBox.setSelectedIndex(-1);
+//       nameTextField.setText("");
+//        descriptionTextArea.setText("");        
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable causesTable;
     private javax.swing.JComboBox<String> conditionsComboBox;
-    private javax.swing.JPanel cuasesPanel;
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton discardButton;
-    private javax.swing.JButton editButton;
     private javax.swing.JButton editLinksButton;
     private javax.swing.JPanel editorPanel;
     private javax.swing.JLabel jLabel1;
@@ -468,12 +355,9 @@ public class CauseEditor extends javax.swing.JPanel
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPanel linksPanel;
     private javax.swing.JTable linksTable;
     private javax.swing.JTextField nameTextField;
-    private javax.swing.JButton newButton;
     private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 
@@ -481,52 +365,34 @@ public class CauseEditor extends javax.swing.JPanel
     public void setPersistableObject(Persistable p) 
     {
         if (p == null) {
-            newButtonActionPerformed(null);
-            return;
+            JOptionPane.showMessageDialog(this, "Causes should be created via the Hazard Bowtie editor.", "Context!", JOptionPane.ERROR_MESSAGE);
+            return;            
         }
-        int selected = -1;
-        int populated = -1;
-        try {
-            cause = (Cause)p;
-            DefaultTableModel dtm = new DefaultTableModel(causecolumns, 0);
-            DefaultTableModel ld = new DefaultTableModel(linkcolumns, 0);
-            linksTable.setModel(ld);
-            ArrayList<Persistable> haz = MetaFactory.getInstance().getChildren(cause.getDatabaseObjectName(), "ProjectID", Integer.parseInt(cause.getAttributeValue("ProjectID")));
-            for (int i = 0; i < haz.size(); i++) {
-                Cause c = (Cause)haz.get(i);
-                if (c.isDeleted())
-                    continue;
-                populated++;
-                causes.add(c);
-                String[] row = new String[causecolumns.length];
-                row[0] = c.getAttributeValue("Name");
-                row[1] = c.getAttributeValue("Description");
-                if (p.getId() == c.getId()) {
-                    selected = populated;
-                }
-                dtm.addRow(row);
-            }    
-            causesTable.setModel(dtm);
-            if (selected != -1)
-                causesTable.setRowSelectionInterval(selected, selected);
+        cause = (Cause)p;
+        nameTextField.setText(cause.getAttributeValue("Name"));
+        int d = Integer.parseInt(cause.getAttributeValue("ConditionID"));
+        for (int i = 0; i < conditions.size(); i++) {
+            if (conditions.get(i).getId() == d) {
+                conditionsComboBox.setSelectedIndex(i);
+                break;
+            }
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        
+        descriptionTextArea.setText(cause.getAttributeValue("Description"));
         try {
             HashMap<String,ArrayList<Relationship>> rels = cause.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
                 for (Relationship r : a) {
-                    String[] row = new String[linkcolumns.length];
-                    row[0] = t;
-                    row[1] = Integer.toString(r.getTarget());
-                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                    row[3] = r.getComment();
-                    dtm.addRow(row);
+                    String m = r.getManagementClass();
+                    if ((m == null) || (!m.contentEquals("Diagram"))) {    
+                        String[] row = new String[linkcolumns.length];
+                        row[0] = t;
+                        row[1] = Integer.toString(r.getTarget());
+                        row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
+                        row[3] = r.getComment();
+                        dtm.addRow(row);
+                    }
                 }
             }
             linksTable.setModel(dtm);
