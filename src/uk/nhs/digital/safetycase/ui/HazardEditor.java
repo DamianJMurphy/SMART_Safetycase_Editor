@@ -46,9 +46,9 @@ public class HazardEditor extends javax.swing.JPanel
     private ArrayList<Hazard> hazards = new ArrayList<>();
     private Hazard hazard = null;
     
-    private final String[] hazardcolumns = {"Summary", "Status"};
     private final String[] linkcolumns = {"Type", "ID", "Name", "Comment"};
     private int newObjectProjectId = -1;
+    private boolean create;
     /**
      * Creates new form HazardEditor
      */
@@ -71,9 +71,7 @@ public class HazardEditor extends javax.swing.JPanel
         catch (Exception e) {
             e.printStackTrace();
         }
-        DefaultTableModel dtm = new DefaultTableModel(hazardcolumns, 0);
-        hazardsTable.setModel(dtm);
-        dtm = new DefaultTableModel(linkcolumns, 0);
+        DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
         linksTable.setModel(dtm);
         
     }
@@ -87,13 +85,6 @@ public class HazardEditor extends javax.swing.JPanel
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        hazardsPanel = new javax.swing.JPanel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        hazardsTable = new javax.swing.JTable();
-        jToolBar1 = new javax.swing.JToolBar();
-        newButton = new javax.swing.JButton();
-        editButton = new javax.swing.JButton();
-        deleteButton = new javax.swing.JButton();
         editorPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         summaryTextField = new javax.swing.JTextField();
@@ -127,77 +118,6 @@ public class HazardEditor extends javax.swing.JPanel
         linksTable = new javax.swing.JTable();
         saveButton = new javax.swing.JButton();
         discardButton = new javax.swing.JButton();
-
-        hazardsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazards"));
-
-        hazardsTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane5.setViewportView(hazardsTable);
-
-        jToolBar1.setRollover(true);
-
-        newButton.setText("New");
-        newButton.setFocusable(false);
-        newButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        newButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        newButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(newButton);
-
-        editButton.setText("Edit");
-        editButton.setFocusable(false);
-        editButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        editButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(editButton);
-
-        deleteButton.setText("Delete");
-        deleteButton.setFocusable(false);
-        deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteButtonActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(deleteButton);
-
-        javax.swing.GroupLayout hazardsPanelLayout = new javax.swing.GroupLayout(hazardsPanel);
-        hazardsPanel.setLayout(hazardsPanelLayout);
-        hazardsPanelLayout.setHorizontalGroup(
-            hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(hazardsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        hazardsPanelLayout.setVerticalGroup(
-            hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(hazardsPanelLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -444,88 +364,32 @@ public class HazardEditor extends javax.swing.JPanel
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(hazardsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(hazardsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        int selected = hazardsTable.getSelectedRow();
-        if (selected == -1)
-            return;
-        editorPanel.setEnabled(true);
-        Hazard h = hazards.get(selected);
-        summaryTextField.setText(h.getAttributeValue("Name"));
-        int d = Integer.parseInt(h.getAttributeValue("ConditionID"));
-        for (int i = 0; i < conditions.size(); i++) {
-            if (conditions.get(i).getId() == d) {
-                conditionsComboBox.setSelectedIndex(i);
-                break;
-            }
-        }
-        String s = h.getAttributeValue("Status");
-        for (int j = 0; j < statusComboBox.getItemCount(); j++) {
-            if (s.contentEquals(statusComboBox.getItemAt(j))) {
-                statusComboBox.setSelectedIndex(j);
-                break;
-            }
-        }
-        initialSeveritySpinner.setValue(Integer.parseInt(h.getAttributeValue("InitialSeverity")));
-        residualSeveritySpinner.setValue(Integer.parseInt(h.getAttributeValue("ResidualSeverity")));
-        initialLikelihoodSpinner.setValue(Integer.parseInt(h.getAttributeValue("InitialLikelihood")));
-        residualLikelihoodSpinner.setValue(Integer.parseInt(h.getAttributeValue("ResidualLikelihood")));
-        initialRiskRatingSpinner.setValue(Integer.parseInt(h.getAttributeValue("InitialRiskRating")));
-        residualRiskRatingSpinner.setValue(Integer.parseInt(h.getAttributeValue("ResidualRiskRating")));
-        
-        descriptionTextArea.setText(h.getAttributeValue("Description"));
-        clinicalJustificationTextArea.setText(h.getAttributeValue("ClinicalJustification"));
-        
-        try {
-            HashMap<String,ArrayList<Relationship>> rels = h.getRelationshipsForLoad();
-            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            for (String t : rels.keySet()) {
-                ArrayList<Relationship> a = rels.get(t);
-                for (Relationship r : a) {
-                    // Suppress "diagram editor management" relationships so they don't clutter up the view
-                    if ((r.getManagementClass() != null) && (r.getManagementClass().contentEquals("Diagram"))) {
-                        continue;
-                    }
-                    String[] row = new String[linkcolumns.length];
-                    row[0] = t;
-                    row[1] = Integer.toString(r.getTarget());
-                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                    row[3] = r.getComment();
-                    dtm.addRow(row);
-                }
-            }
-            linksTable.setModel(dtm);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }//GEN-LAST:event_editButtonActionPerformed
-
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
-        int selected = hazardsTable.getSelectedRow();
-        if (selected == -1)
+        
+        if (hazard == null) {
+            JOptionPane.showMessageDialog(this, "Save this Hazard first, before adding links", "Save first", JOptionPane.INFORMATION_MESSAGE);
             return;
-        Hazard h = hazards.get(selected);
+        }
+        
         JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
-        linkEditor.add(new LinkEditor(h).setParent(linkEditor));
+        linkEditor.add(new LinkEditor(hazard).setParent(linkEditor));
         linkEditor.pack();
         linkEditor.setVisible(true);
 
         try {
-            HashMap<String,ArrayList<Relationship>> rels = h.getRelationshipsForLoad();
+            HashMap<String,ArrayList<Relationship>> rels = hazard.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
@@ -546,21 +410,6 @@ public class HazardEditor extends javax.swing.JPanel
 
     }//GEN-LAST:event_editLinksButtonActionPerformed
 
-    private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
-        hazardsTable.clearSelection();
-        summaryTextField.setText("");
-        conditionsComboBox.setSelectedIndex(-1);
-        statusComboBox.setSelectedIndex(-1);
-        descriptionTextArea.setText("");
-        clinicalJustificationTextArea.setText("");
-        initialLikelihoodSpinner.setValue(0);
-        initialSeveritySpinner.setValue(0);
-        initialRiskRatingSpinner.setValue(0);
-        residualLikelihoodSpinner.setValue(0);
-        residualSeveritySpinner.setValue(0);
-        residualRiskRatingSpinner.setValue(0);
-    }//GEN-LAST:event_newButtonActionPerformed
-
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
         summaryTextField.setText("");
         conditionsComboBox.setSelectedIndex(-1);
@@ -580,83 +429,45 @@ public class HazardEditor extends javax.swing.JPanel
             conditionsComboBox.setSelectedIndex(0);
         if (statusComboBox.getSelectedIndex() == -1)
             statusComboBox.setSelectedIndex(0);
-        Hazard h = null;
-        int selected = hazardsTable.getSelectedRow();
-        if (selected == -1)
-            h = new Hazard();
-        else
-            h = hazards.get(selected);
-        h.setAttribute("Name", summaryTextField.getText());
-        h.setAttribute("Description", descriptionTextArea.getText());
-        h.setAttribute("ClinicalJustification", clinicalJustificationTextArea.getText());
-        h.setAttribute("Status", (String)statusComboBox.getSelectedItem());
-        h.setAttribute("ConditionID", conditions.get(conditionsComboBox.getSelectedIndex()).getId());
-        h.setAttribute("InitialSeverity", ((Integer)initialSeveritySpinner.getValue()).intValue());
-        h.setAttribute("InitialLikelihood", ((Integer)initialLikelihoodSpinner.getValue()).intValue());
-        h.setAttribute("InitialRiskRating", ((Integer)initialRiskRatingSpinner.getValue()).intValue());
-        h.setAttribute("ResidualSeverity", ((Integer)residualSeveritySpinner.getValue()).intValue());
-        h.setAttribute("ResidualLikelihood", ((Integer)residualLikelihoodSpinner.getValue()).intValue());
-        h.setAttribute("ResidualRiskRating", ((Integer)residualRiskRatingSpinner.getValue()).intValue());
+        if (hazard == null) {
+            hazard = new Hazard();
+            hazard.setAttribute("Name", summaryTextField.getText());
+        }
+        hazard.setAttribute("Description", descriptionTextArea.getText());
+        hazard.setAttribute("ClinicalJustification", clinicalJustificationTextArea.getText());
+        hazard.setAttribute("Status", (String)statusComboBox.getSelectedItem());
+        hazard.setAttribute("ConditionID", conditions.get(conditionsComboBox.getSelectedIndex()).getId());
+        hazard.setAttribute("InitialSeverity", ((Integer)initialSeveritySpinner.getValue()).intValue());
+        hazard.setAttribute("InitialLikelihood", ((Integer)initialLikelihoodSpinner.getValue()).intValue());
+        hazard.setAttribute("InitialRiskRating", ((Integer)initialRiskRatingSpinner.getValue()).intValue());
+        hazard.setAttribute("ResidualSeverity", ((Integer)residualSeveritySpinner.getValue()).intValue());
+        hazard.setAttribute("ResidualLikelihood", ((Integer)residualLikelihoodSpinner.getValue()).intValue());
+        hazard.setAttribute("ResidualRiskRating", ((Integer)residualRiskRatingSpinner.getValue()).intValue());
         if (newObjectProjectId == -1)
-            h.setAttribute("ProjectID", Integer.parseInt(hazard.getAttributeValue("ProjectID")));
+            hazard.setAttribute("ProjectID", Integer.parseInt(hazard.getAttributeValue("ProjectID")));
         else 
-            h.setAttribute("ProjectID",newObjectProjectId);
+            hazard.setAttribute("ProjectID",newObjectProjectId);
         try {
-            MetaFactory.getInstance().getFactory(h.getDatabaseObjectName()).put(h);
-            String[] row = new String[hazardcolumns.length];
-            row[0] = h.getAttributeValue("Name");
-            row[1] = h.getAttributeValue("Status");
-            DefaultTableModel dtm = ((DefaultTableModel)hazardsTable.getModel());
-            if (selected == -1) {
-                hazards.add(h);
-                dtm.addRow(row);
-                hazardsTable.setRowSelectionInterval(hazards.size() - 1, hazards.size() - 1);
-                editorComponent.notifyEditorEvent(Project.ADD, h);
+            MetaFactory.getInstance().getFactory(hazard.getDatabaseObjectName()).put(hazard);
+            if (create) {
+                editorComponent.notifyEditorEvent(Project.ADD, hazard);
             } else {
-                dtm.removeRow(selected);
-                dtm.insertRow(selected, row);                
-                editorComponent.notifyEditorEvent(Project.UPDATE, h);
+                editorComponent.notifyEditorEvent(Project.UPDATE, hazard);
             }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }//GEN-LAST:event_saveButtonActionPerformed
-
-    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        int current = hazardsTable.getSelectedRow();
-        if (current == -1)
-            return;
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Delete this Hazard ?", "Warning", JOptionPane.YES_NO_OPTION);
-        if (dialogResult == JOptionPane.NO_OPTION) {
-            return;
-        }
-        
-        try {
-            Hazard h = hazards.get(current);
-            MetaFactory.getInstance().getFactory(h.getDatabaseObjectName()).delete(h);
-            hazards.remove(current);
-            ((DefaultTableModel)hazardsTable.getModel()).removeRow(current);
-            editorComponent.notifyEditorEvent(Project.DELETE, h);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }//GEN-LAST:event_deleteButtonActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea clinicalJustificationTextArea;
     private javax.swing.JComboBox<String> conditionsComboBox;
-    private javax.swing.JButton deleteButton;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton discardButton;
-    private javax.swing.JButton editButton;
     private javax.swing.JButton editLinksButton;
     private javax.swing.JPanel editorPanel;
-    private javax.swing.JPanel hazardsPanel;
-    private javax.swing.JTable hazardsTable;
     private javax.swing.JSpinner initialLikelihoodSpinner;
     private javax.swing.JPanel initialPanel;
     private javax.swing.JSpinner initialRiskRatingSpinner;
@@ -675,11 +486,8 @@ public class HazardEditor extends javax.swing.JPanel
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPanel linksPanel;
     private javax.swing.JTable linksTable;
-    private javax.swing.JButton newButton;
     private javax.swing.JSpinner residualLikelihoodSpinner;
     private javax.swing.JPanel residualPanel;
     private javax.swing.JSpinner residualRiskRatingSpinner;
@@ -689,38 +497,75 @@ public class HazardEditor extends javax.swing.JPanel
     private javax.swing.JTextField summaryTextField;
     // End of variables declaration//GEN-END:variables
 
+    private void clearHazard() {
+        summaryTextField.setText("");
+        conditionsComboBox.setSelectedIndex(-1);
+        statusComboBox.setSelectedIndex(-1);
+        descriptionTextArea.setText("");
+        clinicalJustificationTextArea.setText("");
+        initialLikelihoodSpinner.setValue(0);
+        initialSeveritySpinner.setValue(0);
+        initialRiskRatingSpinner.setValue(0);
+        residualLikelihoodSpinner.setValue(0);
+        residualSeveritySpinner.setValue(0);
+        residualRiskRatingSpinner.setValue(0);        
+    }
     @Override
     public void setPersistableObject(Persistable p) 
     {
         if (p == null) {
-            newButtonActionPerformed(null);
+            create = true;
+            clearHazard();
             return;
         }
         int selected = -1;
         int populated = -1;
         try {
-            hazard = (Hazard)p;
-            DefaultTableModel dtm = new DefaultTableModel(hazardcolumns, 0);
-            DefaultTableModel ld = new DefaultTableModel(linkcolumns, 0);
-            linksTable.setModel(ld);
-            ArrayList<Persistable> haz = MetaFactory.getInstance().getChildren(hazard.getDatabaseObjectName(), "ProjectID", Integer.parseInt(hazard.getAttributeValue("ProjectID")));
-            for (int i = 0; i < haz.size(); i++) {
-                Hazard h = (Hazard)haz.get(i);
-                if (h.isDeleted())
-                    continue;
-                populated++;
-                hazards.add(h);
-                String[] row = new String[hazardcolumns.length];
-                row[0] = h.getAttributeValue("Name");
-                row[1] = h.getAttributeValue("Status");
-                if (p.getId() == h.getId()) {
-                    selected = populated;
+            hazard = (Hazard) p;
+            summaryTextField.setText(hazard.getAttributeValue("Name"));
+            int d = Integer.parseInt(hazard.getAttributeValue("ConditionID"));
+            for (int i = 0; i < conditions.size(); i++) {
+                if (conditions.get(i).getId() == d) {
+                    conditionsComboBox.setSelectedIndex(i);
+                    break;
                 }
-                dtm.addRow(row);
-            }    
-            hazardsTable.setModel(dtm);
-            if (selected != -1)
-                hazardsTable.setRowSelectionInterval(selected, selected);
+            }
+            String s = hazard.getAttributeValue("Status");
+            for (int j = 0; j < statusComboBox.getItemCount(); j++) {
+                if (s.contentEquals(statusComboBox.getItemAt(j))) {
+                    statusComboBox.setSelectedIndex(j);
+                    break;
+                }
+            }
+            initialSeveritySpinner.setValue(Integer.parseInt(hazard.getAttributeValue("InitialSeverity")));
+            residualSeveritySpinner.setValue(Integer.parseInt(hazard.getAttributeValue("ResidualSeverity")));
+            initialLikelihoodSpinner.setValue(Integer.parseInt(hazard.getAttributeValue("InitialLikelihood")));
+            residualLikelihoodSpinner.setValue(Integer.parseInt(hazard.getAttributeValue("ResidualLikelihood")));
+            initialRiskRatingSpinner.setValue(Integer.parseInt(hazard.getAttributeValue("InitialRiskRating")));
+            residualRiskRatingSpinner.setValue(Integer.parseInt(hazard.getAttributeValue("ResidualRiskRating")));
+
+            descriptionTextArea.setText(hazard.getAttributeValue("Description"));
+            clinicalJustificationTextArea.setText(hazard.getAttributeValue("ClinicalJustification"));
+/*
+            HashMap<String, ArrayList<Relationship>> rels = hazard.getRelationshipsForLoad();
+            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+            for (String t : rels.keySet()) {
+                ArrayList<Relationship> a = rels.get(t);
+                for (Relationship r : a) {
+                    // Suppress "diagram editor management" relationships so they don't clutter up the view
+                    if ((r.getManagementClass() != null) && (r.getManagementClass().contentEquals("Diagram"))) {
+                        continue;
+                    }
+                    String[] row = new String[linkcolumns.length];
+                    row[0] = t;
+                    row[1] = Integer.toString(r.getTarget());
+                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
+                    row[3] = r.getComment();
+                    dtm.addRow(row);
+                }
+            }
+            linksTable.setModel(dtm);
+*/
         }
         catch (Exception e) {
             e.printStackTrace();

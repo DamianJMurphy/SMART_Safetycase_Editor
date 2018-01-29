@@ -43,6 +43,11 @@ public class BowtieEditorPopupMenu extends JPopupMenu
 		boolean selected = !editor.getGraphComponent().getGraph()
 				.isSelectionEmpty();
                 
+                if (selected) {
+                    add(editor.bind("Details", new BowtieObjectDetailsAction(editor.getGraphComponent().getGraph().getSelectionCell()),
+                             "/com/mxgraph/examples/swing/images/collapse.gif"));
+                    addSeparator();
+                }
 		add(editor.bind(mxResources.get("undo"), new HistoryAction(true),
 				"/com/mxgraph/examples/swing/images/undo.gif"));
 

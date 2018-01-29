@@ -43,7 +43,7 @@ public class SmartProject
     private MetaFactory metaFactory = null;
     private int currentProjectId = -1;
     
-    private static final String EDITORCLASSROOT = "uk.nhs.digital.safetycase.ui.";
+    public static final String EDITORCLASSROOT = "uk.nhs.digital.safetycase.ui.";
     private DefaultTreeModel treeModel = null;
     
     private static SmartProject project = null;
@@ -468,9 +468,6 @@ public class SmartProject
         if (s.contentEquals("Effect")) {
             return "Create new Effects in context using the Bowtie editor";
         }
-         if (s.contentEquals("Hazard")) {
-            return "Create new Hazards in context using the Bowtie editor";
-        }       
         return null;        
     }
 }
