@@ -22,6 +22,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
+import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 
 /**
  *
@@ -36,6 +37,8 @@ public interface Project {
     EditorComponent getEditorComponent(TreePath t);
     String checkNewFromPopupMenu(TreePath t);
 
+    void setProjectWindow(ProjectWindow pw);
+    ProjectWindow getProjectWindow();
 
     String getName();
     void setName(String n);

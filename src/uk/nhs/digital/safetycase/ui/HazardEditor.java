@@ -18,21 +18,33 @@
 package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import uk.nhs.digital.projectuiframework.Project;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
+import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
+import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
+import uk.nhs.digital.projectuiframework.ui.UndockTabComponent;
 import uk.nhs.digital.safetycase.data.Condition;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.data.ValueSet;
+import uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor;
 
 /**
  *
@@ -116,6 +128,7 @@ public class HazardEditor extends javax.swing.JPanel
         editLinksButton = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
+        bowtieButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         discardButton = new javax.swing.JButton();
 
@@ -249,22 +262,32 @@ public class HazardEditor extends javax.swing.JPanel
         ));
         jScrollPane4.setViewportView(linksTable);
 
+        bowtieButton.setText("Bowtie");
+        bowtieButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bowtieButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout linksPanelLayout = new javax.swing.GroupLayout(linksPanel);
         linksPanel.setLayout(linksPanelLayout);
         linksPanelLayout.setHorizontalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 712, Short.MAX_VALUE)
+            .addGroup(linksPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(editLinksButton)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bowtieButton))
         );
         linksPanelLayout.setVerticalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(linksPanelLayout.createSequentialGroup()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editLinksButton)
+                .addGroup(linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(editLinksButton)
+                    .addComponent(bowtieButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -459,9 +482,79 @@ public class HazardEditor extends javax.swing.JPanel
             e.printStackTrace();
         }
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void bowtieButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bowtieButtonActionPerformed
+
+        if (hazard == null) {
+            JOptionPane.showMessageDialog(this, "Save this Hazard first, before editing the Bowtie", "Save first", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
+        BowtieGraphEditor bge = new BowtieGraphEditor();
+        String xml = hazard.getAttributeValue("GraphXml");
+        bge.setHazardId(hazard.getId(), xml);
+        if ((xml != null) && (xml.trim().length() > 0)) {
+            HashMap<String,DiagramEditorElement> ex = getExistingBowtie(xml);
+            if (ex != null)
+                bge.setExistingBowtie(ex);
+        }
+        JTabbedPane tp = null;
+        ProjectWindow pw = SmartProject.getProject().getProjectWindow();
+        tp = pw.getMainWindowTabbedPane();
+        EditorComponent ec = new EditorComponent(bge, "Bowtie:" + hazard.getAttributeValue("Name"), SmartProject.getProject());
+//        ExternalEditorView editorView = new ExternalEditorView(bge, hazard.getAttributeValue("Name"), tp);
+        tp.setSelectedComponent(tp.add(ec.getTitle(), ec.getComponent()));
+        tp.setTabComponentAt(tp.getSelectedIndex(), new UndockTabComponent(tp));  
+    }//GEN-LAST:event_bowtieButtonActionPerformed
     
+    private HashMap<String,DiagramEditorElement> getExistingBowtie(String xml)
+    {
+        try {
+        HashMap<String, DiagramEditorElement> bowtieElements = new HashMap<>();
+        bowtieElements.put(hazard.getAttributeValue("GraphCellId"), new DiagramEditorElement(hazard));
+        HashMap<String, ArrayList<Relationship>> hrels = hazard.getRelationshipsForLoad();
+        if (hrels == null) {
+            return null;
+        }
+
+        for (ArrayList<Relationship> a : hrels.values()) {
+            for (Relationship r : a) {
+                if ((r.getManagementClass() != null) && (r.getManagementClass().contentEquals("Diagram"))) {
+                    Persistable p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                    bowtieElements.put(p.getAttributeValue("GraphCellId"), new DiagramEditorElement(p));
+                }
+            }
+        }
+        // Get the graph xml from the hazard, and use the same process that the "save" function does to
+        // tie everything together
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        StringReader sr = new StringReader(xml);
+        InputSource is = new InputSource(sr);
+        Element d = db.parse(is).getDocumentElement();
+        NodeList nl = d.getElementsByTagName("mxCell");
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element cell = (Element) nl.item(i);
+            if (cell.hasAttribute("edge")) {
+                String s = cell.getAttribute("source");
+                String t = cell.getAttribute("target");
+                DiagramEditorElement bt = bowtieElements.get(s);
+//                    bt.fromCell = Integer.parseInt(s);
+//                    bt.toCell = Integer.parseInt(t);
+                bt.connections.add(t);
+            }
+        }
+        return bowtieElements;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bowtieButton;
     private javax.swing.JTextArea clinicalJustificationTextArea;
     private javax.swing.JComboBox<String> conditionsComboBox;
     private javax.swing.JTextArea descriptionTextArea;

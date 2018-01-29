@@ -68,14 +68,16 @@ public class BowtieSaveHandler
                 hazard = hf.get(bge.getHazardId());
 
             ps = bge.getProcessStep();
-            if (ps == null)
+            if ((ps == null) && (hazard == null))
                 return;
-            processStepId = ps.getId();
+            if (ps != null)
+                processStepId = ps.getId();
             String xml = getXml(ge);
 
             HashMap<String,DiagramEditorElement> existingBowtie = null; 
             int projectid = -1;
             if (hazard == null) {
+                // Note: this branch should only be true if ps != null...
                 hazard = new Hazard();
                 process = pf.get(ps.getAttribute("ProcessID").getIntValue());
                 projectid = process.getAttribute("ProjectID").getIntValue();
@@ -145,6 +147,8 @@ public class BowtieSaveHandler
     private void createProcessStepHazardRelationship(Hazard h, int psid) 
             throws Exception
     {
+        if (psid == -1)
+            return;
         PersistableFactory<ProcessStep> psf = MetaFactory.getInstance().getFactory("ProcessStep"); 
         ProcessStep ps = psf.get(psid);
         ArrayList<Relationship> rels = ps.getRelationships("Hazard");

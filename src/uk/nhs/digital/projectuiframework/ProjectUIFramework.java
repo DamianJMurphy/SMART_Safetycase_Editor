@@ -54,6 +54,7 @@ public class ProjectUIFramework {
         
         try {
             smart = ProjectHelper.createProject();
+            smart.setProjectWindow(p);
             MetaFactory.getInstance().setUIProject(smart);
 //            p.addProject(smart.getName(), smart);
             p.setTreeModel(smart.getTreeModel(), smart.getName(), smart);

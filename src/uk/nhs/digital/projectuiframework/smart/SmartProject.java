@@ -26,6 +26,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
+import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.safetycase.data.*;
 
 /**
@@ -47,6 +48,7 @@ public class SmartProject
     private DefaultTreeModel treeModel = null;
     
     private static SmartProject project = null;
+    private ProjectWindow projectWindow;
     
     public SmartProject()
             throws Exception
@@ -470,4 +472,12 @@ public class SmartProject
         }
         return null;        
     }
+
+    @Override
+    public void setProjectWindow(ProjectWindow pw) {
+        projectWindow = pw;
+    }
+    
+    @Override
+    public ProjectWindow getProjectWindow() { return projectWindow; }
 }
