@@ -18,6 +18,9 @@ High-level
 
 Functional
 
+- TODO NEXT: Need a way to add Process step to hazard relationships manually when Hazards are either not
+    created via the Process editor "Hazards" popup menu item, or when the user wants to link
+    more than one process step to the same Hazard.
 
 - Go through and tidy up the editor forms
 

@@ -26,6 +26,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import uk.nhs.digital.projectuiframework.Project;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.Attribute;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -60,6 +62,7 @@ public class ProcessSaveHandler
             parseSteps(xml, pge.getProcessId());
             process.setAttribute("GraphXml", new Attribute(xml));
             pf.put(process);
+            SmartProject.getProject().editorEvent(Project.UPDATE, process);
             
        }
 // Re-add this later

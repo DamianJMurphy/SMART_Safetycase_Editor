@@ -207,7 +207,7 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
                 p.setAttribute("ProjectID", editor.getNewObjectProjectId()); 
             PersistableFactory<uk.nhs.digital.safetycase.data.Process> pfp = mf.getFactory("Process");
             pfp.put(p);
-            if (editor.getNewObjectProjectId() == -1)
+            if (processid == -1)
                 editor.getEditorComponent().notifyEditorEvent(Project.ADD, p);
             else
                 editor.getEditorComponent().notifyEditorEvent(Project.UPDATE, p);
