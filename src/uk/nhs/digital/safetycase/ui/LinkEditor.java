@@ -40,6 +40,7 @@ public class LinkEditor extends javax.swing.JPanel {
     private final String[] dbtarget = {"Hazard","Control","Effect","Condition","System","Role","Location","Process","ProcessStep"};
     private ArrayList<Persistable> targetInstances = null;
     private JDialog parent = null;
+    private Relationship editedRelationship = null;
     /**
      * Creates new form LinkEditor
      */
@@ -73,7 +74,7 @@ public class LinkEditor extends javax.swing.JPanel {
         relationshipsTable.setModel(dtm);
     }
 
-    LinkEditor setParent(JDialog p) {
+    public LinkEditor setParent(JDialog p) {
         parent = p;
         return this;
     }
@@ -301,6 +302,7 @@ public class LinkEditor extends javax.swing.JPanel {
     }//GEN-LAST:event_closeButtonActionPerformed
 
     private void targetTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetTypeComboBoxActionPerformed
+ 
         String selected = (String)targetTypeComboBox.getSelectedItem();
         String dbtype = null;
         for (int i = 0; i < targets.length; i++) {
@@ -318,8 +320,11 @@ public class LinkEditor extends javax.swing.JPanel {
                 id = Integer.parseInt(focus.getAttributeValue("ProjectID"));
             }
             targetInstances = MetaFactory.getInstance().getChildren(dbtype, "ProjectID", id);
-            if (targetInstances == null) 
+            if (targetInstances == null) {
+                DefaultListModel dlm = new DefaultListModel();
+                targetList.setModel(dlm);
                 return;
+            }
             DefaultListModel dlm = new DefaultListModel();
             for (Persistable p : targetInstances) {
                 dlm.addElement(p.getTitle());
@@ -341,9 +346,9 @@ public class LinkEditor extends javax.swing.JPanel {
         int selected = relationshipsTable.getSelectedRow();
         if (selected == -1)
             return;
-        Relationship r = tableMap.get(selected);
-        targetTypeComboBox.setSelectedItem(r.getTargetType());
-        commentTextArea.setText(r.getComment());
+        editedRelationship = tableMap.get(selected);
+        targetTypeComboBox.setSelectedItem(editedRelationship.getTargetType());
+        commentTextArea.setText(editedRelationship.getComment());
         try {
             int id = -1;
             if (focus.getDatabaseObjectName().contentEquals("ProcessStep")) {
@@ -352,7 +357,7 @@ public class LinkEditor extends javax.swing.JPanel {
             } else {
                 id = Integer.parseInt(focus.getAttributeValue("ProjectID"));
             }
-            targetInstances = MetaFactory.getInstance().getChildren(r.getTargetType(), "ProjectID", id);
+            targetInstances = MetaFactory.getInstance().getChildren(editedRelationship.getTargetType(), "ProjectID", id);
             if (targetInstances == null) 
                 return;
             DefaultListModel dlm = new DefaultListModel();
@@ -360,7 +365,7 @@ public class LinkEditor extends javax.swing.JPanel {
             int i = 0;
             for (Persistable p : targetInstances) {
                 dlm.addElement(p.getTitle());
-                if (p.getId() == r.getTarget())
+                if (p.getId() == editedRelationship.getTarget())
                     select = i;
                 i++;                
             }
@@ -379,6 +384,7 @@ public class LinkEditor extends javax.swing.JPanel {
             return;
         Relationship r = tableMap.get(selected);
         try {
+            editedRelationship = null;
             focus.deleteRelationship(r);
             MetaFactory.getInstance().getFactory(focus.getDatabaseObjectName()).put(focus);
             ((DefaultTableModel)relationshipsTable.getModel()).removeRow(selected);
@@ -393,29 +399,44 @@ public class LinkEditor extends javax.swing.JPanel {
         targetList.setModel(new DefaultListModel());
         commentTextArea.setText("");
         linkDetailPanel.setEnabled(false);
+        editedRelationship = null;
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        
         int selectedTarget = targetList.getSelectedIndex();
         if (selectedTarget == -1)
             return;
         Persistable target = targetInstances.get(selectedTarget);
-        Relationship r = new Relationship(focus.getId(), target.getId(), target.getDatabaseObjectName());
-        r.setComment(commentTextArea.getText());
-        try {
-            focus.addRelationship(r);
-            MetaFactory.getInstance().getFactory(focus.getDatabaseObjectName()).put(focus);
-            String[] row = new String[columns.length];
-            tableMap.add(r);
-            row[0] = r.getTargetType();
-            row[1] = Integer.toString(r.getTarget());
-            row[2] = target.getAttributeValue("Name");
-            row[3] = r.getComment();
-            ((DefaultTableModel)relationshipsTable.getModel()).addRow(row);
+        if (editedRelationship != null) {
+            // Update the relationship (call Database.save()) and the relationships table view
+            editedRelationship.setComment(commentTextArea.getText());
+            ((DefaultTableModel)relationshipsTable.getModel()).setValueAt(commentTextArea.getText(), relationshipsTable.getSelectedRow(), 3);
+            try {
+                MetaFactory.getInstance().getDatabase().save(editedRelationship);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }            
+        } else {
+            Relationship r = new Relationship(focus.getId(), target.getId(), target.getDatabaseObjectName());
+            r.setComment(commentTextArea.getText());
+            try {
+                focus.addRelationship(r);
+                MetaFactory.getInstance().getFactory(focus.getDatabaseObjectName()).put(focus);
+                String[] row = new String[columns.length];
+                tableMap.add(r);
+                row[0] = r.getTargetType();
+                row[1] = Integer.toString(r.getTarget());
+                row[2] = target.getAttributeValue("Name");
+                row[3] = r.getComment();
+                ((DefaultTableModel)relationshipsTable.getModel()).addRow(row);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        editedRelationship = null;
     }//GEN-LAST:event_saveButtonActionPerformed
 
 

@@ -17,7 +17,12 @@
  */
 package uk.nhs.digital.safetycase.ui.processeditor;
 
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
+import uk.nhs.digital.safetycase.data.MetaFactory;
+import uk.nhs.digital.safetycase.data.Persistable;
+import uk.nhs.digital.safetycase.data.ProcessStep;
+import uk.nhs.digital.safetycase.data.Relationship;
 
 /**
  *
@@ -26,6 +31,10 @@ import javax.swing.table.DefaultTableModel;
 public class OtherLinksPanel extends javax.swing.JPanel {
 
     private static final String[] COLUMNS = {"Name", "Comment"};
+    private ProcessStep processStep = null;
+    private String type = null;
+    private ArrayList<Relationship> rels = null;
+    
     /**
      * Creates new form OtherLinksPanel
      */
@@ -35,6 +44,28 @@ public class OtherLinksPanel extends javax.swing.JPanel {
         linksTable.setModel(dtm);
     }
 
+    void setDisplay(ProcessStep ps, String t) {
+        processStep = ps;
+        type = t;
+        try {
+            rels = ps.getRelationships(type);
+            DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
+            if (rels != null) {
+                for (Relationship r : rels) {
+                    String[] row = new String[COLUMNS.length];
+                    Persistable p = MetaFactory.getInstance().getFactory(type).get(r.getTarget());
+                    row[0] = p.getAttributeValue("Name");
+                    row[1] = r.getComment();
+                    dtm.addRow(row);
+                }
+            }
+            linksTable.setModel(dtm);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -44,32 +75,8 @@ public class OtherLinksPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jToolBar1 = new javax.swing.JToolBar();
-        newLinkButton = new javax.swing.JButton();
-        editLinkButton = new javax.swing.JButton();
-        deleteLinkButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
-
-        jToolBar1.setRollover(true);
-
-        newLinkButton.setText("New");
-        newLinkButton.setFocusable(false);
-        newLinkButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        newLinkButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(newLinkButton);
-
-        editLinkButton.setText("Edit");
-        editLinkButton.setFocusable(false);
-        editLinkButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        editLinkButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(editLinkButton);
-
-        deleteLinkButton.setText("Delete");
-        deleteLinkButton.setFocusable(false);
-        deleteLinkButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteLinkButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(deleteLinkButton);
 
         linksTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -88,25 +95,19 @@ public class OtherLinksPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(31, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton deleteLinkButton;
-    private javax.swing.JButton editLinkButton;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTable linksTable;
-    private javax.swing.JButton newLinkButton;
     // End of variables declaration//GEN-END:variables
 }

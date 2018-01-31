@@ -468,7 +468,7 @@ public class Database {
         return t;
     }
     
-    Relationship save(Relationship r)
+    public Relationship save(Relationship r)
             throws Exception
     {
         if (r == null)

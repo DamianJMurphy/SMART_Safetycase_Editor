@@ -1,5 +1,7 @@
 High-level
 
+- ERROR HANDLING AND REPORTING
+
 - Need to add a housekeeping/purge function to get rid of "deleted" (i.e. records marked with a
     deleted date but still extant in the database) relationships, and another one for persistable
     objects. Probably constrained to current project.
@@ -18,9 +20,7 @@ High-level
 
 Functional
 
-- TODO NEXT: Need a way to add Process step to hazard relationships manually when Hazards are either not
-    created via the Process editor "Hazards" popup menu item, or when the user wants to link
-    more than one process step to the same Hazard.
+- ProjectTree. Remove Cause/Effect/Control nodes from Project and move to underneath an individual Hazard
 
 - Go through and tidy up the editor forms
 

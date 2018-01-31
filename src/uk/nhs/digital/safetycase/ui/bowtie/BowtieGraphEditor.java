@@ -35,6 +35,7 @@ import com.mxgraph.util.mxXmlUtils;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
 import java.awt.event.MouseEvent;
+import java.awt.print.PageFormat;
 import java.util.HashMap;
 import javax.swing.SwingUtilities;
 import uk.nhs.digital.safetycase.data.ProcessStep;
@@ -112,6 +113,10 @@ public class BowtieGraphEditor extends BasicGraphEditor
 	public BowtieGraphEditor(String appTitle, mxGraphComponent component)
 	{
 		super(appTitle, component);
+                PageFormat format = new PageFormat();
+                format.setOrientation(PageFormat.LANDSCAPE);
+                component.setPageFormat(format);
+                component.setAutoExtend(true);
 		final mxGraph graph = graphComponent.getGraph();
 
 		// Creates the shapes palette
