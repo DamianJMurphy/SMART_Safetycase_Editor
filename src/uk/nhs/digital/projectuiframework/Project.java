@@ -44,6 +44,7 @@ public interface Project {
     void setName(String n);
     
     DefaultMutableTreeNode getProjectRoot();
+    DefaultMutableTreeNode getTreeNode(Object o) throws Exception;
     DefaultTreeModel getTreeModel();
 
     void initialise() throws Exception;

@@ -24,6 +24,8 @@ Functional
 
 - Go through and tidy up the editor forms
 
+- TODO: Probably need to detect name collisions within a set of child nodes in the tree.
+
 
 
 Done (Design or implementation decisions)

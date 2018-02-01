@@ -47,14 +47,15 @@ import uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor;
 public class BowtieSaveHandler 
         extends AbstractSaveHandler
 {
-    private final ArrayList<Persistable> added = new ArrayList<>();
-    private final ArrayList<Persistable> updated = new ArrayList<>();
-    private final ArrayList<Persistable> removed = new ArrayList<>();
+//    private final ArrayList<Persistable> added = new ArrayList<>();
+//    private final ArrayList<Persistable> updated = new ArrayList<>();
+//    private final ArrayList<Persistable> removed = new ArrayList<>();
     
     @Override
     public void handle(BasicGraphEditor ge) 
             throws Exception 
     {
+        boolean existingHazard = false;
         try {
             int processStepId = -1;
             BowtieGraphEditor bge = (BowtieGraphEditor)ge;
@@ -84,11 +85,12 @@ public class BowtieSaveHandler
                 hazard.setAttribute("ProjectID", projectid);
                 hazard.setAttribute("ConditionID", 0);
                 hazard.setAttribute("Status", "New");
-                added.add(hazard);                
+  //              added.add(hazard);                
             } else {
+                existingHazard = true;
                 projectid = hazard.getAttribute("ProjectID").getIntValue();
                 existingBowtie = bge.getExistingBowtie();
-                updated.add(hazard);
+//                updated.add(hazard);
             }
             NodeList cells = parseHazard(xml, hazard);
             HashMap<String,DiagramEditorElement> bowtieElements = parseBowtie(cells, projectid);
@@ -109,12 +111,13 @@ public class BowtieSaveHandler
                             btupdate.object = bt.object;
                             if (!btupdate.object.getAttributeValue("Name").contentEquals(btupdate.name)) {
                                 btupdate.object.setAttribute("Name", btupdate.name);
-                                updated.add(btupdate.object);
+//                                updated.add(btupdate.object);
                             }
                         }
-                    } else {
-                        removed.add(bt.object);
-                    }
+                    } 
+//                    else {
+//                        removed.add(bt.object);
+//                    }
                 }
             } else {
                 createProcessStepHazardRelationship(hazard, processStepId);
@@ -124,6 +127,12 @@ public class BowtieSaveHandler
             bge.setHazardId(hazard.getId(), xml);
             System.out.println(xml);
             SmartProject sp = SmartProject.getProject();
+            if (existingHazard) {
+                sp.editorEvent(Project.UPDATE, hazard);
+            } else {
+                sp.editorEvent(Project.ADD, hazard);
+            }
+/*
             for (Persistable n : added) {
 //                MetaFactory.getInstance().getFactory(n.getDatabaseObjectName()).refresh(n.getId());
                 sp.editorEvent(Project.ADD, n);
@@ -135,6 +144,7 @@ public class BowtieSaveHandler
             for (Persistable n : removed) {
                 sp.editorEvent(Project.DELETE, n);
             }
+*/
         } 
         catch (BrokenConnectionException bce) {
             System.err.println("TODO: Notify user that the diagram has a broken link and has not been saved: " + bce.getMessage());
@@ -370,8 +380,8 @@ public class BowtieSaveHandler
             p = new Effect();
             p.setAttribute("Type", "New");
         }
-        if (p != null)
-            added.add(p);
+//        if (p != null)
+//            added.add(p);
         return p;
     }
     

@@ -38,6 +38,7 @@ public class SmartProject
 {
     private DefaultMutableTreeNode root = null;
     private static final String[] PROJECTCOMPONENTS = {"Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role", "Report"};
+    private static final String[] PROJECTOTHERCOMPONENTS = { "Care Settings", "Role", "Report"};
     private static final String[] PROJECTEDITORS = {"Process", "Hazard", "Cause", "Effect", "Control", "Location", "Role", "Report"};
     private static final String[] PROJECTNEWABLES = {"Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role"};
     private static final String PROJECTNAME = "SMART";
@@ -251,7 +252,10 @@ public class SmartProject
                     populateSystemFunctions(sn, s.getId());
                 }
             }
-            for (String s : PROJECTCOMPONENTS) {
+            populateProjectComponent("Process", p, proj.getId());
+            p.add(populateHazard(proj.getId()));
+            
+            for (String s : PROJECTOTHERCOMPONENTS) {
                 populateProjectComponent(s, p, proj.getId());
             }
             DefaultMutableTreeNode issuesNode = new DefaultMutableTreeNode("Issues (not implemented for demonstration)");
@@ -265,6 +269,54 @@ public class SmartProject
         ((DefaultMutableTreeNode)treeModel.getRoot()).add(root);
     }
 
+    private DefaultMutableTreeNode populateSingleHazard(Hazard h)
+    {
+        DefaultMutableTreeNode node = new DefaultMutableTreeNode(h.getTitle());
+        DefaultMutableTreeNode hz = new DefaultMutableTreeNode(h.getTitle());
+        hz.setUserObject(h);
+        node.add(hz);
+        populateHazardDependents("Cause", node, h);
+        populateHazardDependents("Control", node, h);
+        populateHazardDependents("Effect", node, h);
+        return node;
+    }
+
+    private DefaultMutableTreeNode populateHazard(int id)
+    {
+        DefaultMutableTreeNode hazardsNode = new DefaultMutableTreeNode("Hazard");
+
+        ArrayList<Persistable> list = metaFactory.getChildren("Hazard", "ProjectID", id);
+        if (list != null) {            
+            for (Persistable p : list) {
+                Hazard hz = (Hazard)p;
+                hazardsNode.add(populateSingleHazard(hz));
+            }
+        }
+        return hazardsNode;
+    }
+    
+    private void populateHazardDependents(String type, DefaultMutableTreeNode hazardnode, Hazard h)
+    {
+        DefaultMutableTreeNode node = new DefaultMutableTreeNode(type);
+        hazardnode.add(node);
+        try {
+            ArrayList<Relationship> rels = h.getRelationships(type);
+            if (rels == null)
+                return;
+            for (Relationship r : rels) {
+                if ((r.getManagementClass() != null) && r.getManagementClass().contentEquals("Diagram")) {
+                    Persistable p = MetaFactory.getInstance().getFactory(type).get(r.getTarget());
+                    DefaultMutableTreeNode n = new DefaultMutableTreeNode(p.getTitle());
+                    n.setUserObject(p);
+                    node.add(n);
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     private void populateProjectComponent(String type, DefaultMutableTreeNode n, int id)
     {
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(type);
@@ -349,6 +401,61 @@ public class SmartProject
     }
 
     @Override
+    public DefaultMutableTreeNode getTreeNode(Object o)
+            throws Exception
+    {
+        if (o == null)
+            return null;
+        Persistable p = null;
+        try {
+            p = (Persistable)o;
+        }
+        catch (ClassCastException cce) {
+            throw new Exception("Object must be an instance of Persistable", cce);
+        }
+        // For anything not in "HazardCauseControlEffect" just make a DefaultMutableTreeNode with a name of p.getTitle()
+        // and with p as the user object.
+        // Otherwise, identify the hazard and make a full node for that, by calling populateSingleHazard()
+        
+        // TODO BUGFIX: There seems to be a propblem in this where a node created from adding a hazard via the
+        // process editor link makes additional instances of the hazard view... needs investigating, and see if
+        // it also happens when created with bowtie only.
+        //
+        // NOT HERE. *This* looks OK, problem seems to be misidentifying where to add the subtree this makes.
+
+        if ("HazardCauseControlEffect".contains(p.getDatabaseObjectName())) {
+            Hazard h = null;
+            if (p.getDatabaseObjectName().contentEquals("Hazard")) {
+                h = (Hazard)p;
+            }  else {
+                // Find the hazard, and set h to it
+                Collection<Hazard> hazards = MetaFactory.getInstance().getFactory("Hazard").getEntries();
+                for (Hazard hz : hazards) {
+                    ArrayList<Relationship> rels = hz.getRelationships(p.getDatabaseObjectName());
+                    if (rels != null) {
+                        for (Relationship r : rels) {
+                            if (r.getTarget() == p.getId()) {
+                                h = hz;
+                                break;
+                            }
+                        }
+                    }
+                    if (h != null)
+                        break;
+                }
+            }                 
+            if (h == null)
+                return null;
+            return populateSingleHazard(h);
+        } else {
+            DefaultMutableTreeNode node = new DefaultMutableTreeNode(p.getTitle());
+            node.setUserObject(o);
+            return node;
+        }
+    }
+    
+    
+    @Override
     public void editorEvent(int ev, Object o) {
         Persistable p = (Persistable)o;
         DefaultMutableTreeNode containerNode = null;
@@ -361,7 +468,9 @@ public class SmartProject
         } else if (p.getDatabaseObjectName().contentEquals("Project")) {
             search = "Projects";
             updateroot = true;
-        }else {
+        } else if ("HazardCauseControlEffect".contains(p.getDatabaseObjectName())) {
+            search = "Hazard";
+        } else {    
             search = p.getDatabaseObjectName();
         }
 
@@ -390,6 +499,11 @@ public class SmartProject
             }
         }
         nodes = projectNode.depthFirstEnumeration();
+        
+        // BUG. For something *under* a Hazard, this will identify the container node, but the
+        // subsequent code will get a complete hazard subtree and add it to the container node
+        // we find here.
+        
         while (nodes.hasMoreElements()) {
             DefaultMutableTreeNode d = (DefaultMutableTreeNode)nodes.nextElement();
             if ((d.getUserObject() instanceof java.lang.String) && (((String)d.getUserObject()).contentEquals(search))) {
@@ -400,14 +514,25 @@ public class SmartProject
         if (containerNode == null)
             return;
         
+        DefaultMutableTreeNode eventNode = null;
+        try {
+            eventNode = getTreeNode(p);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        
         // TODO: On add, inserting first breaks the "select index in the existing table" (though not for existing entries). FIX.
         switch (ev) {
             case uk.nhs.digital.projectuiframework.Project.ADD:
-                DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode(p.getTitle());
-                dmtn.setUserObject(o);
-                treeModel.insertNodeInto(dmtn, containerNode, containerNode.getChildCount());
+//                DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode(p.getTitle());
+//                dmtn.setUserObject(o);
+//                treeModel.insertNodeInto(dmtn, containerNode, containerNode.getChildCount());
+                treeModel.insertNodeInto(eventNode, containerNode, containerNode.getChildCount());
                 if (p.getDatabaseObjectName().contentEquals("Project"))
-                    fillOutNewProject(dmtn);
+//                    fillOutNewProject(dmtn);
+                    fillOutNewProject(eventNode);
                 break;
             case uk.nhs.digital.projectuiframework.Project.DELETE:
                 for (int i = 0; i < containerNode.getChildCount(); i++) {
@@ -420,17 +545,85 @@ public class SmartProject
                 }
                 break;
             case uk.nhs.digital.projectuiframework.Project.UPDATE:    
+                // Find the node we're replacing in the container node, by type and name
                 for (int i = 0; i < containerNode.getChildCount(); i++) {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode)containerNode.getChildAt(i);
-                    Persistable pr = (Persistable)node.getUserObject();
-                    if (pr.getTitle().contentEquals(p.getTitle()) && (pr.getId() == p.getId())) {
+                    if (node.toString().contentEquals(eventNode.toString())) {
                         treeModel.removeNodeFromParent(node);
-                        DefaultMutableTreeNode d = new DefaultMutableTreeNode(p.getTitle());
-                        d.setUserObject(p);
-                        treeModel.insertNodeInto(d, containerNode, i);
+                        treeModel.insertNodeInto(eventNode, containerNode, i);
                         break;
                     }
                 }
+/*
+                if (p.getDatabaseObjectName().contentEquals("Hazard")) {
+                            // TODO FIXME: this is broken for Hazards. It assumes that under an individal hazard node
+                            // the user objects are persistable. Only the hazard detail node has a persistable user
+                            // object - the others are string user objects as the containers for cause, control and effect
+                            // and *these* cause the next level Persistable cast to fail.
+
+                            // IF UPDATING A HAZARD:
+                            // "containerNode" will hold a string "Hazard", child nodes will be *either* a Hazard (unpopulated
+                            // with causes etc, or a string with the hazard title. So don't cast to Persistable at first,
+                            // do the comparison with the output of "toString()" on the node, and p.getTitle(). If we match,
+                            // then if the user object is just a string (populated hazard with dependent nodes) then we replace 
+                            // the tree node of the *child* of that with p. Otherwise it'll be a hazard and can be replaced
+                            // directly.
+                    for (int i = 0; i < containerNode.getChildCount(); i++) {
+                        DefaultMutableTreeNode node = (DefaultMutableTreeNode)containerNode.getChildAt(i);
+                        Object userObject = node.getUserObject();
+                        Persistable pr = null;
+                        String title = null;
+                        if ((userObject == null) || (userObject instanceof java.lang.String)) {
+                            title = node.toString();
+                        } else {
+                            pr = (Persistable)userObject;
+                            title = pr.getTitle();
+                        }
+                        if (title.contentEquals(p.getTitle())) {
+                            
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < containerNode.getChildCount(); i++) {
+                        DefaultMutableTreeNode node = (DefaultMutableTreeNode)containerNode.getChildAt(i);
+                        Persistable pr = null;
+                        try {
+                            pr = (Persistable)node.getUserObject();
+                        }
+                        catch (ClassCastException cce) {
+                            // This is a string... which is probably one of the class groups underneath "Hazard"
+                            // So get the child nodes...
+                            //
+
+                            boolean gotchild = false;
+                            for (int j = 0; i < node.getChildCount(); j++) {
+                                DefaultMutableTreeNode childnode = (DefaultMutableTreeNode)node.getChildAt(j);
+                                pr = (Persistable)childnode.getUserObject();
+                                if (pr.getTitle().contentEquals(p.getTitle()) && (pr.getId() == p.getId())) {
+                                    treeModel.removeNodeFromParent(childnode);
+                                    DefaultMutableTreeNode d = new DefaultMutableTreeNode(p.getTitle());
+                                    d.setUserObject(p);
+                                    treeModel.insertNodeInto(d, node, i);
+                                    if (pr.getDatabaseObjectName().contentEquals("Hazard")) {
+                                        node.setUserObject(pr.getTitle());
+                                    }
+                                    gotchild = true;
+                                    break;
+                                }
+                            }
+                            if (gotchild)
+                                break;
+                        }
+                        if (pr.getTitle().contentEquals(p.getTitle()) && (pr.getId() == p.getId())) {
+                            treeModel.removeNodeFromParent(node);
+                            DefaultMutableTreeNode d = new DefaultMutableTreeNode(p.getTitle());
+                            d.setUserObject(p);
+                            treeModel.insertNodeInto(d, containerNode, i);
+                            break;
+                        }
+                    }
+                }
+*/
                 break;
             default:
                 return;
