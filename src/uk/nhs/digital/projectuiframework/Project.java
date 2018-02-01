@@ -18,6 +18,7 @@
 package uk.nhs.digital.projectuiframework;
 
 import java.io.File;
+import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -42,6 +43,8 @@ public interface Project {
 
     String getName();
     void setName(String n);
+    
+    ImageIcon getIcon(Object o);
     
     DefaultMutableTreeNode getProjectRoot();
     DefaultMutableTreeNode getTreeNode(Object o) throws Exception;

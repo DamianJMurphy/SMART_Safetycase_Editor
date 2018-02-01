@@ -27,6 +27,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import uk.nhs.digital.safetycase.ui.LibraryEditorDialog;
 import uk.nhs.digital.safetycase.ui.ProjectEditor;
@@ -45,6 +46,9 @@ public class ProjectWindow extends javax.swing.JFrame {
         initComponents();
     }
 
+    public void setTreeCellRenderer(TreeCellRenderer r) {
+        projectTree.setCellRenderer(r);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is alwathrow new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.ys

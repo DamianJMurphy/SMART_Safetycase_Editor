@@ -17,16 +17,22 @@
  */
 package uk.nhs.digital.projectuiframework.smart;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
+import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 import uk.nhs.digital.safetycase.data.*;
 
 /**
@@ -36,6 +42,18 @@ import uk.nhs.digital.safetycase.data.*;
 public class SmartProject 
         implements uk.nhs.digital.projectuiframework.Project
 {
+    public static final String ISSUEREPORT_ICON = "/uk/nhs/digital/projectuiframework/smart/bell.png";
+    public static final String SAFETYREPORT_ICON = "/uk/nhs/digital/projectuiframework/smart/diagram.gif";
+    public static final String SYSTEM_ICON = "/uk/nhs/digital/projectuiframework/smart/workplace.png";
+    public static final String FUNCTION_ICON = "/uk/nhs/digital/projectuiframework/smart/wrench.png";
+    public static final String PROCESS_ICON = "/uk/nhs/digital/projectuiframework/smart/gear.png";
+    public static final String HAZARD_ICON = "/uk/nhs/digital/safetycase/ui/bowtie/hazard.png";
+    public static final String CAUSE_ICON = "/uk/nhs/digital/safetycase/ui/bowtie/cause.png";
+    public static final String CONTROL_ICON = "/uk/nhs/digital/safetycase/ui/bowtie/control.jpg";
+    public static final String EFFECT_ICON = "/uk/nhs/digital/safetycase/ui/bowtie/effect.png";
+    public static final String ROLE_ICON = "/uk/nhs/digital/projectuiframework/smart/dude3.png";
+    public static final String LOCATION_ICON = "/uk/nhs/digital/projectuiframework/smart/earth.png";
+    
     private DefaultMutableTreeNode root = null;
     private static final String[] PROJECTCOMPONENTS = {"Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role", "Report"};
     private static final String[] PROJECTOTHERCOMPONENTS = { "Care Settings", "Role", "Report"};
@@ -50,6 +68,7 @@ public class SmartProject
     
     private static SmartProject project = null;
     private ProjectWindow projectWindow;
+    private final HashMap<String,ImageIcon> icons = new HashMap<>();
     
     public SmartProject()
             throws Exception
@@ -59,6 +78,17 @@ public class SmartProject
         project = this;
     }
  
+    private ImageIcon getIcon(String s, ProjectTreeCellRenderer r) {
+        try {
+            ImageIcon icon = ResourceUtils.getImageIcon(s);
+            icon = new ImageIcon(icon.getImage().getScaledInstance(r.getDefaultLeafIcon().getIconWidth(), r.getDefaultLeafIcon().getIconWidth(), Image.SCALE_DEFAULT));
+            return icon;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }       
+    }
     public static final SmartProject getProject() { return project; }
     
     private EditorComponent resolveNonContainedComponent(TreePath t) {
@@ -401,6 +431,22 @@ public class SmartProject
     }
 
     @Override
+    public ImageIcon getIcon(Object o) 
+    {
+        if (o == null)
+            return null;
+        Persistable p = null;
+        try {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode)o;
+            p = (Persistable)node.getUserObject();
+        }
+        catch (ClassCastException cce) {
+            return null;
+        }
+        return icons.get(p.getDatabaseObjectName());
+    }
+    
+    @Override
     public DefaultMutableTreeNode getTreeNode(Object o)
             throws Exception
     {
@@ -669,6 +715,19 @@ public class SmartProject
     @Override
     public void setProjectWindow(ProjectWindow pw) {
         projectWindow = pw;
+        ProjectTreeCellRenderer r = new ProjectTreeCellRenderer(this);
+        icons.put("Report", getIcon(SAFETYREPORT_ICON, r));
+        icons.put("System", getIcon(SYSTEM_ICON, r));
+        icons.put("SystemFunction", getIcon(FUNCTION_ICON, r));
+        icons.put("Process", getIcon(PROCESS_ICON, r));
+        icons.put("Hazard", getIcon(HAZARD_ICON, r));
+        icons.put("Cause", getIcon(CAUSE_ICON, r));
+        icons.put("Control", getIcon(CONTROL_ICON, r));
+        icons.put("Effect", getIcon(EFFECT_ICON, r));
+        icons.put("Role", getIcon(ROLE_ICON, r));
+        icons.put("Location", getIcon(LOCATION_ICON, r));
+        
+        pw.setTreeCellRenderer(r);
     }
     
     @Override
