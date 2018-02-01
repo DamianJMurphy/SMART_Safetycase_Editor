@@ -20,9 +20,13 @@ High-level
 
 Functional
 
-- ProjectTree. Remove Cause/Effect/Control nodes from Project and move to underneath an individual Hazard
-
 - Go through and tidy up the editor forms
+
+- TODO NEXT:
+    1. ProjectTreeCellRenderer extending DefaultTreeCellRenderer (add a method to the Project interface to
+        get a reference to an icon, and add it to a JLabel, when getTreeCellRendererComponent() is called
+        which we'll override).
+    2. Get rid of the processes list from the ProcessEditor. It should be a single-object editor.
 
 - TODO: Probably need to detect name collisions within a set of child nodes in the tree.
 
