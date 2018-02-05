@@ -118,7 +118,7 @@ public class AddHazardAction
                                         return;
                                     }
                                 }
-                                ExternalEditorView editorView = new ExternalEditorView(bte.getComponent(), "Hazards", tp);
+                                ExternalEditorView editorView = new ExternalEditorView(bte.getComponent(), p.getAttributeValue("Name") + ":Hazards", tp);
                                 break;
                             }
                         }

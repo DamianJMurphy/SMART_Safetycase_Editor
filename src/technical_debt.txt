@@ -23,6 +23,11 @@ Functional
 - Go through and tidy up the editor forms
 
 - TODO NEXT: Get rid of the processes list from the ProcessEditor. It should be a single-object editor.
+    Make SingleProcessEditorForm a persistable editor and have that called when user selects a process
+        from the tree. Will need to implement populator for process details *and* process steps but only
+        allow process step description to be edited from the form. Implement the handler for the "Process
+        Editor..." button to launch the ProcessGraphicalEditor (just like the BowtieGraphicalEditor is
+        launched from a button in the Hazard editor form)
 
 - TODO: Probably need to detect name collisions within a set of child nodes in the tree.
 

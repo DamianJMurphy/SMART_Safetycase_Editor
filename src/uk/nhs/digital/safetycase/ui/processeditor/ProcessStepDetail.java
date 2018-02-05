@@ -58,14 +58,16 @@ public class ProcessStepDetail extends javax.swing.JPanel {
         try { 
             ArrayList<Relationship> hazards = processStep.getRelationships("Hazard");
             DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
-            for (Relationship r : hazards) {
-                Hazard h = (Hazard)MetaFactory.getInstance().getFactory("Hazard").get(r.getTarget());
-                String[] row = new String[COLUMNS.length];
-                row[0] = h.getAttributeValue("Name");
-                row[1] = h.getAttributeValue("Status");
-                row[2] = h.getAttributeValue("InitialRiskRating");
-                row[3] = h.getAttributeValue("ResidualRiskRating");
-                dtm.addRow(row);
+            if (hazards != null) {
+                for (Relationship r : hazards) {
+                    Hazard h = (Hazard)MetaFactory.getInstance().getFactory("Hazard").get(r.getTarget());
+                    String[] row = new String[COLUMNS.length];
+                    row[0] = h.getAttributeValue("Name");
+                    row[1] = h.getAttributeValue("Status");
+                    row[2] = h.getAttributeValue("InitialRiskRating");
+                    row[3] = h.getAttributeValue("ResidualRiskRating");
+                    dtm.addRow(row);
+                }
             }
             hazardsTable.setModel(dtm);
             systemLinksPanel.setDisplay(processStep, "System");

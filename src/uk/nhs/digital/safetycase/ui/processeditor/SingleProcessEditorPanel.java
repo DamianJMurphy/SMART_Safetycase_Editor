@@ -17,10 +17,26 @@
  */
 package uk.nhs.digital.safetycase.ui.processeditor;
 
-import javax.swing.JDialog;
-import uk.nhs.digital.projectuiframework.Project;
-import uk.nhs.digital.safetycase.data.MetaFactory;
+import uk.nhs.digital.safetycase.data.Process;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
+import uk.nhs.digital.safetycase.ui.LinkEditor;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+import javax.swing.table.DefaultTableModel;
+import uk.nhs.digital.projectuiframework.Project;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.EditorComponent;
+import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
+import uk.nhs.digital.projectuiframework.ui.UndockTabComponent;
+import uk.nhs.digital.safetycase.data.MetaFactory;
+import uk.nhs.digital.safetycase.data.PersistableFilter;
+import uk.nhs.digital.safetycase.data.ProcessStep;
+import uk.nhs.digital.safetycase.data.Relationship;
+import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 
 /**
  *
@@ -28,9 +44,12 @@ import uk.nhs.digital.safetycase.data.PersistableFactory;
  */
 public class SingleProcessEditorPanel extends javax.swing.JPanel {
 
+    private final String[] linkcolumns = {"Type", "ID", "Name", "Comment"};
     private JDialog parent = null;
-    private ProcessEditor editor = null;
+//    private ProcessEditor editor = null;
     private int processid = -1;
+    private Process process = null;
+    private int newObjectProjectId = -1;
     /**
      * Creates new form SingleProcessEditorPanel
      */
@@ -38,7 +57,12 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
         initComponents();
     }
     
-    void setProcessId(int i) { processid = i; }
+    void setProcessId(int i) 
+            throws Exception
+    { 
+        processid = i; 
+        populateLinks();
+    }
     
     SingleProcessEditorPanel setParent(JDialog p) {
         parent = p;
@@ -46,10 +70,10 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
     }
     
     
-    SingleProcessEditorPanel setEditor(ProcessEditor p) { 
-        editor = p; 
-        return this;
-    }
+//    SingleProcessEditorPanel setEditor(ProcessEditor p) { 
+//        editor = p; 
+//        return this;
+//    }
     
     void setData(String n, String v, String s, String d) {
         nameTextField.setText(n);
@@ -58,6 +82,33 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
         descriptionTextArea.setText(d);        
     }
     
+    void populateLinks() 
+            throws Exception
+    {
+        if (processid == -1)
+            return;
+        if (process == null)
+            process = (Process)MetaFactory.getInstance().getFactory("Process").get(processid);
+            HashMap<String,ArrayList<Relationship>> rels = process.getRelationshipsForLoad();
+            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+            if (rels != null) {
+                for (String t : rels.keySet()) {
+                    ArrayList<Relationship> a = rels.get(t);
+                    for (Relationship r : a) {
+                        String m = r.getManagementClass();
+                        if ((m == null) || (!m.contentEquals("Diagram"))) {                    
+                            String[] row = new String[linkcolumns.length];
+                            row[0] = t;
+                            row[1] = Integer.toString(r.getTarget());
+                            row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
+                            row[3] = r.getComment();
+                            dtm.addRow(row);
+                        }
+                    }
+                }
+            }
+            linksTable.setModel(dtm);        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -77,8 +128,13 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
         deleteButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-        okButton = new javax.swing.JButton();
+        discardButton = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
+        linksPanel = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        linksTable = new javax.swing.JTable();
+        linksEditorButton = new javax.swing.JButton();
+        processEditorButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -101,17 +157,65 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
             }
         });
 
-        cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+        discardButton.setText("Discard");
+        discardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
+                discardButtonActionPerformed(evt);
             }
         });
 
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
+        saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
+                saveButtonActionPerformed(evt);
+            }
+        });
+
+        linksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Links"));
+
+        linksTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(linksTable);
+
+        linksEditorButton.setText("Links...");
+        linksEditorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linksEditorButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout linksPanelLayout = new javax.swing.GroupLayout(linksPanel);
+        linksPanel.setLayout(linksPanelLayout);
+        linksPanelLayout.setHorizontalGroup(
+            linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 713, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(linksEditorButton)
+                .addContainerGap())
+        );
+        linksPanelLayout.setVerticalGroup(
+            linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(linksPanelLayout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(linksEditorButton)
+                .addGap(0, 12, Short.MAX_VALUE))
+        );
+
+        processEditorButton.setText("Process Editor...");
+        processEditorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                processEditorButtonActionPerformed(evt);
             }
         });
 
@@ -127,21 +231,26 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(versionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(sourceTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
-                            .addComponent(nameTextField)))
+                        .addGap(39, 39, 39)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(versionTextField)
+                                .addGap(313, 313, 313))
+                            .addComponent(nameTextField)
+                            .addComponent(sourceTextField)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(deleteButton)
+                        .addGap(167, 167, 167)
+                        .addComponent(processEditorButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton)))
+                        .addComponent(discardButton))
+                    .addComponent(linksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -167,82 +276,143 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(deleteButton)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(cancelButton)
-                        .addComponent(okButton)))
+                        .addComponent(discardButton)
+                        .addComponent(saveButton))
+                    .addComponent(processEditorButton))
+                .addGap(18, 18, 18)
+                .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        parent.dispose();
-    }//GEN-LAST:event_cancelButtonActionPerformed
+    private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
+        setData(process.getAttributeValue("Name"), process.getAttributeValue("Version"), process.getAttributeValue("Source"), 
+                    process.getAttributeValue("Description"));
+    }//GEN-LAST:event_discardButtonActionPerformed
 
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-
-        
-        uk.nhs.digital.safetycase.data.Process p = null;
-        if (processid == -1) {
-                p = new uk.nhs.digital.safetycase.data.Process();
-        } else {
-            try {
-                MetaFactory mf = MetaFactory.getInstance();
-                PersistableFactory<uk.nhs.digital.safetycase.data.Process> pfp = mf.getFactory("Process");
-                p = pfp.get(processid);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-            
-        } 
-        p.setAttribute("Name", nameTextField.getText());
-        p.setAttribute("Version", versionTextField.getText());
-        p.setAttribute("Source", sourceTextField.getText());
-        p.setAttribute("Description", descriptionTextArea.getText());
+    void setNewObjectProjectId(int i) {
+        newObjectProjectId = i;
+    }
+    
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        boolean create = false;
+        if (process == null) {
+            process = new Process();
+            process.setAttribute("Name",nameTextField.getText());
+            create = true;
+        }
+        process.setAttribute("Name",nameTextField.getText());
+        process.setAttribute("Version", versionTextField.getText());
+        process.setAttribute("Source", sourceTextField.getText());
+        process.setAttribute("Description", descriptionTextArea.getText());
+        if (newObjectProjectId == -1)
+            process.setAttribute("ProjectID", Integer.parseInt(process.getAttributeValue("ProjectID")));
+        else 
+            process.setAttribute("ProjectID",newObjectProjectId);
         try {
-            MetaFactory mf = MetaFactory.getInstance();
-            if (editor.getNewObjectProjectId() == -1)
-                p.setAttribute("ProjectID", mf.getUIProject().getCurrentProjectID());
-            else 
-                p.setAttribute("ProjectID", editor.getNewObjectProjectId()); 
-            PersistableFactory<uk.nhs.digital.safetycase.data.Process> pfp = mf.getFactory("Process");
-            pfp.put(p);
-            if (processid == -1)
-                editor.getEditorComponent().notifyEditorEvent(Project.ADD, p);
-            else
-                editor.getEditorComponent().notifyEditorEvent(Project.UPDATE, p);
-            parent.dispose();
-            return;
+            MetaFactory.getInstance().getFactory(process.getDatabaseObjectName()).put(process);
+            if (create) {
+                SmartProject.getProject().editorEvent(Project.ADD, process);
+            } else {
+                SmartProject.getProject().editorEvent(Project.UPDATE, process);
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        if (editor != null) {
-            editor.setPersistableObject(p);
-            if (processid == -1)
-                editor.getEditorComponent().notifyEditorEvent(Project.ADD, p);
-            else
-                editor.getEditorComponent().notifyEditorEvent(Project.UPDATE, p);
-        }
-        parent.dispose();
-    }//GEN-LAST:event_okButtonActionPerformed
+        
+    }//GEN-LAST:event_saveButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        // TODO add your handling code here:
+        if (process == null)
+            return;
+        try {
+            MetaFactory.getInstance().getFactory("Process").delete(process);
+            SmartProject.getProject().editorEvent(Project.DELETE, process);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void linksEditorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linksEditorButtonActionPerformed
+        JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
+        linkEditor.add(new LinkEditor(process).setParent(linkEditor));
+        linkEditor.pack();
+        linkEditor.setVisible(true);
+
+        try {
+            HashMap<String,ArrayList<Relationship>> rels = process.getRelationshipsForLoad();
+            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+            for (String t : rels.keySet()) {
+                ArrayList<Relationship> a = rels.get(t);
+                for (Relationship r : a) {
+                    String[] row = new String[linkcolumns.length];
+                    row[0] = t;
+                    row[1] = Integer.toString(r.getTarget());
+                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
+                    row[3] = r.getComment();
+                    dtm.addRow(row);
+                }
+            }
+            linksTable.setModel(dtm);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_linksEditorButtonActionPerformed
+
+    private void processEditorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processEditorButtonActionPerformed
+
+        if (process == null) {
+            JOptionPane.showMessageDialog(this, "Save this Process first, before editing the process steps", "Save first", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        try {
+            ProcessGraphEditor pge = new ProcessGraphEditor();
+            String xml = process.getAttributeValue("GraphXml");
+            pge.setProcessId(process.getId(), xml);
+            PersistableFactory<ProcessStep> pfs = MetaFactory.getInstance().getFactory("ProcessStep");
+            ArrayList<PersistableFilter> filter = new ArrayList<>();
+            filter.add(new PersistableFilter("ProjectID", process.getAttributeValue("ProjectID")));
+            filter.add(new PersistableFilter("ProcessID", process.getAttributeValue("ProcessID")));
+            Collection<ProcessStep> steps = pfs.getEntries(filter);
+            HashMap<String, DiagramEditorElement> existingSteps = new HashMap<>();
+            for (ProcessStep ps : steps) {
+                existingSteps.put(ps.getAttributeValue("GraphCellId"), new DiagramEditorElement(ps));
+            }
+            pge.setExistingSteps(existingSteps);
+
+            JTabbedPane tp = null;
+            ProjectWindow pw = SmartProject.getProject().getProjectWindow();
+            tp = pw.getMainWindowTabbedPane();
+            EditorComponent ec = new EditorComponent(pge, "Process:" + process.getAttributeValue("Name"), SmartProject.getProject()); 
+            tp.setSelectedComponent(tp.add(ec.getTitle(), ec.getComponent()));
+            tp.setTabComponentAt(tp.getSelectedIndex(), new UndockTabComponent(tp));              
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_processEditorButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelButton;
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextArea descriptionTextArea;
+    private javax.swing.JButton discardButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton linksEditorButton;
+    private javax.swing.JPanel linksPanel;
+    private javax.swing.JTable linksTable;
     private javax.swing.JTextField nameTextField;
-    private javax.swing.JButton okButton;
+    private javax.swing.JButton processEditorButton;
+    private javax.swing.JButton saveButton;
     private javax.swing.JTextField sourceTextField;
     private javax.swing.JTextField versionTextField;
     // End of variables declaration//GEN-END:variables

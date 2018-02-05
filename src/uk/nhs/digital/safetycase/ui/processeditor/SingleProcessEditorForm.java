@@ -17,9 +17,11 @@
  */
 package uk.nhs.digital.safetycase.ui.processeditor;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.swing.JDialog;
+import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
@@ -30,13 +32,18 @@ import uk.nhs.digital.safetycase.data.ProcessStep;
  *
  * @author damian
  */
-public class SingleProcessEditorForm extends javax.swing.JPanel {
+public class SingleProcessEditorForm 
+        extends javax.swing.JPanel 
+        implements uk.nhs.digital.safetycase.ui.PersistableEditor
+{
 
     private JDialog parent = null;
-    private ProcessEditor editor = null;
+//    private ProcessEditor editor = null;
     
     private Process process = null;
     private ArrayList<ProcessStep> steps = null;
+    private int newObjectProjectId = -1;
+    private EditorComponent editorComponent = null;
     /**
      * Creates new form SingleProcessEditorForm
      */
@@ -56,6 +63,12 @@ public class SingleProcessEditorForm extends javax.swing.JPanel {
         }
     }
 
+    public SingleProcessEditorForm()
+            throws Exception
+    {
+        initComponents();
+    }
+    
     SingleProcessEditorForm setParent(JDialog p) {
         parent = p;
         processEditor.setParent(p);
@@ -63,11 +76,11 @@ public class SingleProcessEditorForm extends javax.swing.JPanel {
     }
     
     
-    SingleProcessEditorForm setEditor(ProcessEditor p) { 
-        editor = p; 
-        processEditor.setEditor(p);
-        return this;
-    }    
+//    SingleProcessEditorForm setEditor(ProcessEditor p) { 
+//        editor = p; 
+//        processEditor.setEditor(p);
+//        return this;
+//    }    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -78,14 +91,14 @@ public class SingleProcessEditorForm extends javax.swing.JPanel {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        processEditor = new uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorPanel();
         stepList = new uk.nhs.digital.safetycase.ui.processeditor.ProcessEditorStepList();
+        processEditor = new uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorPanel();
 
         setLayout(new java.awt.CardLayout());
 
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane1.setLeftComponent(processEditor);
         jSplitPane1.setRightComponent(stepList);
+        jSplitPane1.setLeftComponent(processEditor);
 
         add(jSplitPane1, "card2");
     }// </editor-fold>//GEN-END:initComponents
@@ -96,4 +109,35 @@ public class SingleProcessEditorForm extends javax.swing.JPanel {
     private uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorPanel processEditor;
     private uk.nhs.digital.safetycase.ui.processeditor.ProcessEditorStepList stepList;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void setPersistableObject(Persistable p) {
+        try {
+            process = (Process)p;
+            processEditor.setProcessId(process.getId());
+            processEditor.setData(process.getAttributeValue("Name"), process.getAttributeValue("Version"), 
+                    process.getAttributeValue("Source"), process.getAttributeValue("Description"));
+            processEditor.populateLinks();
+            ArrayList<Persistable> ps = MetaFactory.getInstance().getChildren("ProcessStep", "ProcessID", process.getId());
+            stepList.populateList(ps);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Component getComponent() {
+        return this;
+    }
+
+    @Override
+    public void setEditorComponent(EditorComponent ed) {
+        editorComponent = ed;
+    }
+
+    @Override
+    public void setNewObjectProjectId(int i) {
+        newObjectProjectId = i;
+    }
 }
