@@ -83,7 +83,7 @@ public class BowtieSaveHandler
                 process = pf.get(ps.getAttribute("ProcessID").getIntValue());
                 projectid = process.getAttribute("ProjectID").getIntValue();
                 hazard.setAttribute("ProjectID", projectid);
-                hazard.setAttribute("ConditionID", 0);
+                hazard.setAttribute("GroupingType", "Generic");
                 hazard.setAttribute("Status", "New");
   //              added.add(hazard);                
             } else {
@@ -264,7 +264,7 @@ public class BowtieSaveHandler
                    }
                    p.setAttribute("Name", bt.name);
                    p.setAttribute("GraphCellId", bt.cellId);
-                   p.setAttribute("ConditionID", 0);
+                   p.setAttribute("GroupingType", "Generic");
                    p.setAttribute("ProjectID", projectid);
                    bt.object = p;
                    MetaFactory.getInstance().getFactory(bt.type).put(p);
@@ -380,8 +380,9 @@ public class BowtieSaveHandler
             p = new Effect();
             p.setAttribute("Type", "New");
         }
-//        if (p != null)
-//            added.add(p);
+        if (p != null)
+            p.setAttribute("GroupingType", "Generic");
+        
         return p;
     }
     

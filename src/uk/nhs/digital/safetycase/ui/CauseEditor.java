@@ -19,15 +19,14 @@ package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.Cause;
-import uk.nhs.digital.safetycase.data.Condition;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.Relationship;
@@ -40,7 +39,6 @@ public class CauseEditor extends javax.swing.JPanel
     implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
     private EditorComponent editorComponent = null;
-    private ArrayList<Condition> conditions = new ArrayList<>();
     private Cause cause = null;
     
  
@@ -54,11 +52,13 @@ public class CauseEditor extends javax.swing.JPanel
         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
         linksTable.setModel(dtm);
         try {
-            Collection<Persistable> conds = MetaFactory.getInstance().getFactory("Condition").getEntries();
-            for (Persistable p : conds) {
-                Condition c = (Condition)p;
-                conditions.add(c);
-                conditionsComboBox.addItem(c.getTitle());
+            ArrayList<String> conds = MetaFactory.getInstance().getFactory("Cause").getDistinctSet("GroupingType");
+            if (conds.isEmpty()) {
+                conditionsComboBox.addItem("Generic");
+            } else {
+                for (String s : conds) {
+                    conditionsComboBox.addItem(s);
+                }
             }
         }
         catch (Exception e) {
@@ -96,6 +96,8 @@ public class CauseEditor extends javax.swing.JPanel
         jLabel1.setText("Name");
 
         jLabel2.setText("Condition");
+
+        conditionsComboBox.setEditable(true);
 
         jLabel4.setText("Description");
 
@@ -283,12 +285,12 @@ public class CauseEditor extends javax.swing.JPanel
         if (created)
             cause.setAttribute("Name", nameTextField.getText());
         cause.setAttribute("Description", descriptionTextArea.getText());
-        cause.setAttribute("ConditionID", conditions.get(conditionsComboBox.getSelectedIndex()).getId());
+        cause.setAttribute("GroupingType", (String)conditionsComboBox.getSelectedItem());
         
-        if (newObjectProjectId == -1)
-            cause.setAttribute("ProjectID", Integer.parseInt(cause.getAttributeValue("ProjectID")));
-        else 
-            cause.setAttribute("ProjectID",newObjectProjectId);
+//        if (newObjectProjectId == -1)
+//            cause.setAttribute("ProjectID", Integer.parseInt(cause.getAttributeValue("ProjectID")));
+//        else 
+            cause.setAttribute("ProjectID",SmartProject.getProject().getCurrentProjectID());
         try {
             MetaFactory.getInstance().getFactory(cause.getDatabaseObjectName()).put(cause);
             editorComponent.notifyEditorEvent((created) ? Project.ADD : Project.UPDATE, cause);
@@ -370,9 +372,9 @@ public class CauseEditor extends javax.swing.JPanel
         }
         cause = (Cause)p;
         nameTextField.setText(cause.getAttributeValue("Name"));
-        int d = Integer.parseInt(cause.getAttributeValue("ConditionID"));
-        for (int i = 0; i < conditions.size(); i++) {
-            if (conditions.get(i).getId() == d) {
+        
+        for (int i = 0; i < conditionsComboBox.getModel().getSize(); i++) {
+            if (conditionsComboBox.getItemAt(i).contentEquals(cause.getAttributeValue("GroupingType"))) {
                 conditionsComboBox.setSelectedIndex(i);
                 break;
             }

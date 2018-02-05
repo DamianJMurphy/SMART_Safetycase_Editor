@@ -24,7 +24,7 @@ package uk.nhs.digital.safetycase.data;
 public class Cause 
         extends Persistable
 {
-    private static final String[] FIELDS = {"ConditionID", "ProjectID", "Description", "Name", "GraphCellId"};
+    private static final String[] FIELDS = {"ProjectID", "Description", "Name", "GraphCellId", "GroupingType"};
     
     public Cause() 
     {

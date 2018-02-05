@@ -24,14 +24,14 @@ package uk.nhs.digital.safetycase.data;
 public class Hazard 
         extends Persistable
 {
-    private static final String[] TEXTFIELDS = {"Description", "Status", "Name", "ClinicalJustification", "GraphXml"};
+    private static final String[] TEXTFIELDS = {"Description", "Status", "Name", "ClinicalJustification", "GraphXml", "GroupingType"};
     
-    private static final String[] INTEGERFIELDS = {"ConditionID", "ProjectID","InitialSeverity", "InitialLikelihood","InitialRiskRating",
+    private static final String[] INTEGERFIELDS = {"ProjectID","InitialSeverity", "InitialLikelihood","InitialRiskRating",
             "ResidualSeverity", "ResidualLikelihood", "ResidualRiskRating", "GraphCellId"};
     
-    private static final String[] FIELDS = {"Description", "Status", "Summary", "ClinicalJustification", "ConditionID", "ProjectID",
+    private static final String[] FIELDS = {"Description", "Status", "Summary", "ClinicalJustification", "ProjectID",
                                             "InitialSeverity", "InitialLikelihood","InitialRiskRating",
-                                            "ResidualSeverity", "ResidualLikelihood", "ResidualRiskRating"};
+                                            "ResidualSeverity", "ResidualLikelihood", "ResidualRiskRating", "GroupingType"};
     
     public Hazard() 
     {

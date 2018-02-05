@@ -305,10 +305,10 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
         process.setAttribute("Version", versionTextField.getText());
         process.setAttribute("Source", sourceTextField.getText());
         process.setAttribute("Description", descriptionTextArea.getText());
-        if (newObjectProjectId == -1)
-            process.setAttribute("ProjectID", Integer.parseInt(process.getAttributeValue("ProjectID")));
-        else 
-            process.setAttribute("ProjectID",newObjectProjectId);
+//        if (newObjectProjectId == -1)
+//            process.setAttribute("ProjectID", Integer.parseInt(process.getAttributeValue("ProjectID")));
+//        else 
+            process.setAttribute("ProjectID",SmartProject.getProject().getCurrentProjectID());
         try {
             MetaFactory.getInstance().getFactory(process.getDatabaseObjectName()).put(process);
             if (create) {

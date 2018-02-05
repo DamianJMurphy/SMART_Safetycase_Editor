@@ -21,14 +21,15 @@ package uk.nhs.digital.safetycase.data;
  *
  * @author damian
  */
-public class SystemFunction        extends Persistable
+public class SystemFunction
+        extends Persistable
 {
-    private static final String[] FIELDS = {"Name", "SystemID", "ParentSystemFunctionID", "Description"};
+    private static final String[] FIELDS = {"Name", "ParentSystemFunctionID", "Description"};
     
     public SystemFunction() 
     {
         dbObjectName = "SystemFunction";
-        referenceData = true;
+        referenceData = false;
         for (String s: FIELDS) {
             if (s.contains("ID"))
                 writableAttributes.put(s, new Attribute(-1));

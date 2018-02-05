@@ -19,25 +19,17 @@ package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
-import uk.nhs.digital.safetycase.data.Condition;
 import uk.nhs.digital.safetycase.data.System;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
 import uk.nhs.digital.safetycase.data.SystemFunction;
-import uk.nhs.digital.safetycase.data.ValueSet;
 
 /**
  *
@@ -416,9 +408,9 @@ public class SystemEditor extends javax.swing.JPanel
         sys.setAttribute("Name", nameTextField.getText());
         sys.setAttribute("Description", descriptionTextArea.getText());
         sys.setAttribute("Mnemonic", mnemonicTextField.getText());
-        if (newObjectProjectId == -1)
-            sys.setAttribute("ProjectID", system.getAttribute("ProjectID").getIntValue());
-        else
+//        if (newObjectProjectId == -1)
+//            sys.setAttribute("ProjectID", system.getAttribute("ProjectID").getIntValue());
+//        else
             sys.setAttribute("ProjectID",newObjectProjectId);
         if (parentSystemList.getSelectedIndex() != -1) {
             System sp = systems.get(parentSystemList.getSelectedIndex());

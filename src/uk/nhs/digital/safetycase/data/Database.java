@@ -77,6 +77,29 @@ public class Database {
         }
     }
     
+    ArrayList<String> getDistinctSet(String t, String f)
+            throws Exception
+    {
+        ArrayList<String> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("select distinct ");
+        sql.append(f);
+        sql.append(" from ");
+        sql.append(t);
+        sql.append(" order by ");
+        sql.append(f);
+        try (Statement s = connection.createStatement()) {
+            if (!s.execute(sql.toString())) {
+                throw new Exception("Cannot read allowed relationship types");
+            }
+            try (ResultSet r = s.getResultSet()) {
+                while (r.next()) {
+                   list.add(r.getString(f));
+                }
+            }
+        }
+        return list;
+    }
+    
     public void loadAllowedRelationships()
             throws Exception
     {

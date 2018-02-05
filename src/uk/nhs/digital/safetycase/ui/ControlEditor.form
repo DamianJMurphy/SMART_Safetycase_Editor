@@ -78,7 +78,7 @@
                               <Component id="stateComboBox" pref="584" max="32767" attributes="0"/>
                               <Component id="typeComboBox" alignment="1" max="32767" attributes="0"/>
                               <Component id="nameTextField" alignment="1" max="32767" attributes="0"/>
-                              <Component id="conditionComboBox" max="32767" attributes="0"/>
+                              <Component id="conditionsComboBox" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
@@ -124,7 +124,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="conditionComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="conditionsComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -257,8 +257,9 @@
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JComboBox" name="conditionComboBox">
+        <Component class="javax.swing.JComboBox" name="conditionsComboBox">
           <Properties>
+            <Property name="editable" type="boolean" value="true"/>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
             </Property>

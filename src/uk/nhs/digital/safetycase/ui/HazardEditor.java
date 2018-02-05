@@ -38,7 +38,6 @@ import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.projectuiframework.ui.UndockTabComponent;
-import uk.nhs.digital.safetycase.data.Condition;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -54,7 +53,6 @@ public class HazardEditor extends javax.swing.JPanel
     implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
     private EditorComponent editorComponent = null;
-    private ArrayList<Condition> conditions = new ArrayList<>();
     private ArrayList<Hazard> hazards = new ArrayList<>();
     private Hazard hazard = null;
     
@@ -73,11 +71,13 @@ public class HazardEditor extends javax.swing.JPanel
                 String s = statii.next();
                 statusComboBox.addItem(s);
             }
-            Collection<Persistable> conds = MetaFactory.getInstance().getFactory("Condition").getEntries();
-            for (Persistable p : conds) {
-                Condition c = (Condition)p;
-                conditions.add(c);
-                conditionsComboBox.addItem(c.getTitle());
+            ArrayList<String> conds = MetaFactory.getInstance().getFactory("Hazard").getDistinctSet("GroupingType");
+            if (conds.isEmpty()) {
+                conditionsComboBox.addItem("Generic");
+            } else {
+                for (String s : conds) {
+                    conditionsComboBox.addItem(s);
+                }
             }
         }
         catch (Exception e) {
@@ -137,6 +137,8 @@ public class HazardEditor extends javax.swing.JPanel
         jLabel1.setText("Summary");
 
         jLabel2.setText("Condition");
+
+        conditionsComboBox.setEditable(true);
 
         jLabel3.setText("Status");
 
@@ -448,8 +450,6 @@ public class HazardEditor extends javax.swing.JPanel
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        if (conditionsComboBox.getSelectedIndex() == -1)
-            conditionsComboBox.setSelectedIndex(0);
         if (statusComboBox.getSelectedIndex() == -1)
             statusComboBox.setSelectedIndex(0);
         if (hazard == null) {
@@ -459,17 +459,17 @@ public class HazardEditor extends javax.swing.JPanel
         hazard.setAttribute("Description", descriptionTextArea.getText());
         hazard.setAttribute("ClinicalJustification", clinicalJustificationTextArea.getText());
         hazard.setAttribute("Status", (String)statusComboBox.getSelectedItem());
-        hazard.setAttribute("ConditionID", conditions.get(conditionsComboBox.getSelectedIndex()).getId());
+        hazard.setAttribute("GroupingType", (String)conditionsComboBox.getSelectedItem());
         hazard.setAttribute("InitialSeverity", ((Integer)initialSeveritySpinner.getValue()).intValue());
         hazard.setAttribute("InitialLikelihood", ((Integer)initialLikelihoodSpinner.getValue()).intValue());
         hazard.setAttribute("InitialRiskRating", ((Integer)initialRiskRatingSpinner.getValue()).intValue());
         hazard.setAttribute("ResidualSeverity", ((Integer)residualSeveritySpinner.getValue()).intValue());
         hazard.setAttribute("ResidualLikelihood", ((Integer)residualLikelihoodSpinner.getValue()).intValue());
         hazard.setAttribute("ResidualRiskRating", ((Integer)residualRiskRatingSpinner.getValue()).intValue());
-        if (newObjectProjectId == -1)
-            hazard.setAttribute("ProjectID", Integer.parseInt(hazard.getAttributeValue("ProjectID")));
-        else 
-            hazard.setAttribute("ProjectID",newObjectProjectId);
+//        if (newObjectProjectId == -1)
+//            hazard.setAttribute("ProjectID", Integer.parseInt(hazard.getAttributeValue("ProjectID")));
+//        else 
+            hazard.setAttribute("ProjectID",SmartProject.getProject().getCurrentProjectID());
         try {
             MetaFactory.getInstance().getFactory(hazard.getDatabaseObjectName()).put(hazard);
             if (create) {
@@ -616,9 +616,8 @@ public class HazardEditor extends javax.swing.JPanel
         try {
             hazard = (Hazard) p;
             summaryTextField.setText(hazard.getAttributeValue("Name"));
-            int d = Integer.parseInt(hazard.getAttributeValue("ConditionID"));
-            for (int i = 0; i < conditions.size(); i++) {
-                if (conditions.get(i).getId() == d) {
+            for (int i = 0; i < conditionsComboBox.getModel().getSize(); i++) {
+                if (conditionsComboBox.getItemAt(i).contentEquals(hazard.getAttributeValue("GroupingType"))) {
                     conditionsComboBox.setSelectedIndex(i);
                     break;
                 }

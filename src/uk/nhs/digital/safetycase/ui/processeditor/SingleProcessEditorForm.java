@@ -112,6 +112,8 @@ public class SingleProcessEditorForm
 
     @Override
     public void setPersistableObject(Persistable p) {
+        if (p == null)
+            return;
         try {
             process = (Process)p;
             processEditor.setProcessId(process.getId());

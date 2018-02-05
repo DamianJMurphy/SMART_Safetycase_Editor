@@ -51,6 +51,14 @@ public class PersistableFactory <T extends Persistable> {
 
     public String getDbObjectType() { return dbObjectTemplate.getDatabaseObjectName(); }
     
+    public ArrayList<String> getDistinctSet(String t)
+            throws Exception
+    {
+        return database.getDistinctSet(typeName, t);
+    }
+            
+    
+    
     public Collection<T> getEntries() { return instances.values(); }
     
     public Collection<T> getEntries(ArrayList<PersistableFilter> filter)

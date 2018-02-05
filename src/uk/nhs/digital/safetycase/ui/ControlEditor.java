@@ -19,15 +19,14 @@ package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
-import uk.nhs.digital.safetycase.data.Condition;
 import uk.nhs.digital.safetycase.data.Control;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -45,7 +44,6 @@ public class ControlEditor extends javax.swing.JPanel
 
     private EditorComponent editorComponent = null;
     private Control control = null;
-    private ArrayList<Condition> conditions = new ArrayList<>();
     private int newObjectProjectId = -1;
     /**
      * Creates new form ControlEditor
@@ -67,11 +65,13 @@ public class ControlEditor extends javax.swing.JPanel
                 String s = cstates.next();
                 stateComboBox.addItem(s);
             }
-            Collection<Persistable> conds = MetaFactory.getInstance().getFactory("Condition").getEntries();
-            for (Persistable p : conds) {
-                Condition c = (Condition)p;
-                conditions.add(c);
-                conditionComboBox.addItem(c.getTitle());
+            ArrayList<String> conds = MetaFactory.getInstance().getFactory("Control").getDistinctSet("GroupingType");
+            if (conds.isEmpty()) {
+                conditionsComboBox.addItem("Generic");
+            } else {
+                for (String s : conds) {
+                    conditionsComboBox.addItem(s);
+                }
             }
         }
         catch (Exception e) {
@@ -104,7 +104,7 @@ public class ControlEditor extends javax.swing.JPanel
         nameTextField = new javax.swing.JTextField();
         typeComboBox = new javax.swing.JComboBox<>();
         stateComboBox = new javax.swing.JComboBox<>();
-        conditionComboBox = new javax.swing.JComboBox<>();
+        conditionsComboBox = new javax.swing.JComboBox<>();
         jScrollPane4 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
         saveButton = new javax.swing.JButton();
@@ -179,6 +179,8 @@ public class ControlEditor extends javax.swing.JPanel
 
         jLabel5.setText("Description");
 
+        conditionsComboBox.setEditable(true);
+
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
@@ -224,7 +226,7 @@ public class ControlEditor extends javax.swing.JPanel
                             .addComponent(stateComboBox, 0, 584, Short.MAX_VALUE)
                             .addComponent(typeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(nameTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(conditionComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editorPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -259,7 +261,7 @@ public class ControlEditor extends javax.swing.JPanel
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(conditionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(conditionsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -320,8 +322,6 @@ public class ControlEditor extends javax.swing.JPanel
     
     
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        if (conditionComboBox.getSelectedIndex() == -1)
-            conditionComboBox.setSelectedIndex(0);
         if (typeComboBox.getSelectedIndex() == -1)
             typeComboBox.setSelectedIndex(0);
         control.setAttribute("Name", nameTextField.getText());
@@ -329,11 +329,11 @@ public class ControlEditor extends javax.swing.JPanel
         control.setAttribute("ClinicalJustification", clinicalJustificationTextArea.getText());
         control.setAttribute("Type", (String)typeComboBox.getSelectedItem());
         control.setAttribute("State", (String)stateComboBox.getSelectedItem());
-        control.setAttribute("ConditionID", conditions.get(conditionComboBox.getSelectedIndex()).getId());
-        if (newObjectProjectId == -1)
-            control.setAttribute("ProjectID", Integer.parseInt(control.getAttributeValue("ProjectID")));
-        else 
-            control.setAttribute("ProjectID",newObjectProjectId);
+        control.setAttribute("GroupingType", (String)conditionsComboBox.getSelectedItem());
+//        if (newObjectProjectId == -1)
+//            control.setAttribute("ProjectID", Integer.parseInt(control.getAttributeValue("ProjectID")));
+//        else 
+            control.setAttribute("ProjectID",SmartProject.getProject().getCurrentProjectID());
         try {
             MetaFactory.getInstance().getFactory(control.getDatabaseObjectName()).put(control);
             editorComponent.notifyEditorEvent(Project.UPDATE, control);
@@ -377,7 +377,7 @@ public class ControlEditor extends javax.swing.JPanel
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea clinicalJustificationTextArea;
-    private javax.swing.JComboBox<String> conditionComboBox;
+    private javax.swing.JComboBox<String> conditionsComboBox;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton discardButton;
     private javax.swing.JButton editLinksButton;
@@ -424,10 +424,9 @@ public class ControlEditor extends javax.swing.JPanel
         nameTextField.setText(control.getAttributeValue("Name"));
         clinicalJustificationTextArea.setText(control.getAttributeValue("ClinicalJustification"));
         descriptionTextArea.setText(control.getAttributeValue("Description"));
-        int d = Integer.parseInt(control.getAttributeValue("ConditionID"));
-        for (int i = 0; i < conditions.size(); i++) {
-            if (conditions.get(i).getId() == d) {
-                conditionComboBox.setSelectedIndex(i);
+        for (int i = 0; i < conditionsComboBox.getModel().getSize(); i++) {
+            if (conditionsComboBox.getItemAt(i).contentEquals(control.getAttributeValue("GroupingType"))) {
+                conditionsComboBox.setSelectedIndex(i);
                 break;
             }
         }
