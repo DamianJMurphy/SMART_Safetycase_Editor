@@ -53,6 +53,7 @@ public class SmartProject
     public static final String EFFECT_ICON = "/uk/nhs/digital/safetycase/ui/bowtie/effect.png";
     public static final String ROLE_ICON = "/uk/nhs/digital/projectuiframework/smart/dude3.png";
     public static final String LOCATION_ICON = "/uk/nhs/digital/projectuiframework/smart/earth.png";
+    public static final String VIEW_ICON = "/uk/nhs/digital/projectuiframework/smart/view.png";
     
     private DefaultMutableTreeNode root = null;
     private static final String[] PROJECTCOMPONENTS = {"Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role", "Report"};
@@ -148,7 +149,7 @@ public class SmartProject
         eclass = java.lang.System.getProperty(EDITORCLASSROOT + eclass);
         try {
             uk.nhs.digital.safetycase.ui.PersistableEditor pe = (uk.nhs.digital.safetycase.ui.PersistableEditor)Class.forName(eclass).newInstance();
-            ec = new EditorComponent(pe.getComponent(), s, this);
+            ec = new EditorComponent(pe.getComponent(), "New " + s, this);
             pe.setEditorComponent(ec);
             pe.setPersistableObject(null);
             pe.setNewObjectProjectId(getSelectedProject(t));
@@ -204,7 +205,7 @@ public class SmartProject
         try {
             uk.nhs.digital.safetycase.ui.PersistableEditor pe = (uk.nhs.digital.safetycase.ui.PersistableEditor)Class.forName(eclass).newInstance();
             pe.setPersistableObject(p);
-            ec = new EditorComponent(pe.getComponent(), p.getTitle(), this);
+            ec = new EditorComponent(pe.getComponent(), s + ":" + p.getTitle(), this);
             pe.setEditorComponent(ec);
         }
         catch (Exception e) {
@@ -288,6 +289,8 @@ public class SmartProject
             for (String s : PROJECTOTHERCOMPONENTS) {
                 populateProjectComponent(s, p, proj.getId());
             }
+            DefaultMutableTreeNode viewsNode = populateViewsNode();
+            p.add(viewsNode);
             DefaultMutableTreeNode issuesNode = new DefaultMutableTreeNode("Issues (not implemented for demonstration)");
             p.add(issuesNode);
             // TO DO: Data quality check reports and issues need to be added here, but the
@@ -299,6 +302,11 @@ public class SmartProject
         ((DefaultMutableTreeNode)treeModel.getRoot()).add(root);
     }
 
+    private DefaultMutableTreeNode populateViewsNode() 
+    {
+        return new DefaultMutableTreeNode("Views (currently being implemented)");
+    }
+    
     private DefaultMutableTreeNode populateSingleHazard(Hazard h)
     {
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(h.getTitle());
@@ -463,12 +471,6 @@ public class SmartProject
         // and with p as the user object.
         // Otherwise, identify the hazard and make a full node for that, by calling populateSingleHazard()
         
-        // TODO BUGFIX: There seems to be a propblem in this where a node created from adding a hazard via the
-        // process editor link makes additional instances of the hazard view... needs investigating, and see if
-        // it also happens when created with bowtie only.
-        //
-        // NOT HERE. *This* looks OK, problem seems to be misidentifying where to add the subtree this makes.
-
         if ("HazardCauseControlEffect".contains(p.getDatabaseObjectName())) {
             Hazard h = null;
             if (p.getDatabaseObjectName().contentEquals("Hazard")) {
@@ -546,9 +548,6 @@ public class SmartProject
         }
         nodes = projectNode.depthFirstEnumeration();
         
-        // BUG. For something *under* a Hazard, this will identify the container node, but the
-        // subsequent code will get a complete hazard subtree and add it to the container node
-        // we find here.
         
         while (nodes.hasMoreElements()) {
             DefaultMutableTreeNode d = (DefaultMutableTreeNode)nodes.nextElement();
@@ -572,12 +571,8 @@ public class SmartProject
         // TODO: On add, inserting first breaks the "select index in the existing table" (though not for existing entries). FIX.
         switch (ev) {
             case uk.nhs.digital.projectuiframework.Project.ADD:
-//                DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode(p.getTitle());
-//                dmtn.setUserObject(o);
-//                treeModel.insertNodeInto(dmtn, containerNode, containerNode.getChildCount());
                 treeModel.insertNodeInto(eventNode, containerNode, containerNode.getChildCount());
                 if (p.getDatabaseObjectName().contentEquals("Project"))
-//                    fillOutNewProject(dmtn);
                     fillOutNewProject(eventNode);
                 break;
             case uk.nhs.digital.projectuiframework.Project.DELETE:
@@ -600,76 +595,6 @@ public class SmartProject
                         break;
                     }
                 }
-/*
-                if (p.getDatabaseObjectName().contentEquals("Hazard")) {
-                            // TODO FIXME: this is broken for Hazards. It assumes that under an individal hazard node
-                            // the user objects are persistable. Only the hazard detail node has a persistable user
-                            // object - the others are string user objects as the containers for cause, control and effect
-                            // and *these* cause the next level Persistable cast to fail.
-
-                            // IF UPDATING A HAZARD:
-                            // "containerNode" will hold a string "Hazard", child nodes will be *either* a Hazard (unpopulated
-                            // with causes etc, or a string with the hazard title. So don't cast to Persistable at first,
-                            // do the comparison with the output of "toString()" on the node, and p.getTitle(). If we match,
-                            // then if the user object is just a string (populated hazard with dependent nodes) then we replace 
-                            // the tree node of the *child* of that with p. Otherwise it'll be a hazard and can be replaced
-                            // directly.
-                    for (int i = 0; i < containerNode.getChildCount(); i++) {
-                        DefaultMutableTreeNode node = (DefaultMutableTreeNode)containerNode.getChildAt(i);
-                        Object userObject = node.getUserObject();
-                        Persistable pr = null;
-                        String title = null;
-                        if ((userObject == null) || (userObject instanceof java.lang.String)) {
-                            title = node.toString();
-                        } else {
-                            pr = (Persistable)userObject;
-                            title = pr.getTitle();
-                        }
-                        if (title.contentEquals(p.getTitle())) {
-                            
-                        }
-                    }
-                } else {
-                    for (int i = 0; i < containerNode.getChildCount(); i++) {
-                        DefaultMutableTreeNode node = (DefaultMutableTreeNode)containerNode.getChildAt(i);
-                        Persistable pr = null;
-                        try {
-                            pr = (Persistable)node.getUserObject();
-                        }
-                        catch (ClassCastException cce) {
-                            // This is a string... which is probably one of the class groups underneath "Hazard"
-                            // So get the child nodes...
-                            //
-
-                            boolean gotchild = false;
-                            for (int j = 0; i < node.getChildCount(); j++) {
-                                DefaultMutableTreeNode childnode = (DefaultMutableTreeNode)node.getChildAt(j);
-                                pr = (Persistable)childnode.getUserObject();
-                                if (pr.getTitle().contentEquals(p.getTitle()) && (pr.getId() == p.getId())) {
-                                    treeModel.removeNodeFromParent(childnode);
-                                    DefaultMutableTreeNode d = new DefaultMutableTreeNode(p.getTitle());
-                                    d.setUserObject(p);
-                                    treeModel.insertNodeInto(d, node, i);
-                                    if (pr.getDatabaseObjectName().contentEquals("Hazard")) {
-                                        node.setUserObject(pr.getTitle());
-                                    }
-                                    gotchild = true;
-                                    break;
-                                }
-                            }
-                            if (gotchild)
-                                break;
-                        }
-                        if (pr.getTitle().contentEquals(p.getTitle()) && (pr.getId() == p.getId())) {
-                            treeModel.removeNodeFromParent(node);
-                            DefaultMutableTreeNode d = new DefaultMutableTreeNode(p.getTitle());
-                            d.setUserObject(p);
-                            treeModel.insertNodeInto(d, containerNode, i);
-                            break;
-                        }
-                    }
-                }
-*/
                 break;
             default:
                 return;
@@ -686,6 +611,29 @@ public class SmartProject
         dmtn = new DefaultMutableTreeNode("Issues");
     }
 
+    @Override
+    public boolean checkShowPopup(TreePath t) {
+        TreePath path = t;
+        if (t.getPathCount() < 5)
+            return false;
+        try {
+            do {
+                Object o = ((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
+                if (o instanceof java.lang.String) {
+                    if (((String) o).contains("Views"))
+                        return false;
+                    if (((String) o).contains("Issues"))
+                        return false;
+                }
+                path = path.getParentPath();
+            } while(path != null);
+        }
+        catch (Exception e) {
+            return false;
+        }
+       return true;
+    }
+    
     @Override
     public String checkNewFromPopupMenu(TreePath t) {
         String s = null;    

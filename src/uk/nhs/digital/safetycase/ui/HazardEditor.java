@@ -18,14 +18,18 @@
 package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
+import java.awt.Image;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SpinnerListModel;
+import javax.swing.SpinnerModel;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -38,6 +42,7 @@ import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.projectuiframework.ui.UndockTabComponent;
+import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -52,6 +57,9 @@ import uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor;
 public class HazardEditor extends javax.swing.JPanel 
     implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
+    private static final String RISK_MATRIX_IMAGE = "/uk/nhs/digital/safetycase/ui/risk_matrix_image.jpg";
+    private static final int RISK_MATRIX_X = 722;
+    private static final int RISK_MATRIX_Y = 186;
     private EditorComponent editorComponent = null;
     private ArrayList<Hazard> hazards = new ArrayList<>();
     private Hazard hazard = null;
@@ -59,11 +67,50 @@ public class HazardEditor extends javax.swing.JPanel
     private final String[] linkcolumns = {"Type", "ID", "Name", "Comment"};
     private int newObjectProjectId = -1;
     private boolean create;
+    
+    private static ImageIcon riskMatrixImageIcon = null;
+    private static final SpinnerListModel initialSeveritySpinnerModel = new SpinnerListModel();
+    private static final SpinnerListModel initialLikelihoodSpinnerModel = new SpinnerListModel();
+    private static final SpinnerListModel residualSeveritySpinnerModel = new SpinnerListModel();
+    private static final SpinnerListModel residualLikelihoodSpinnerModel = new SpinnerListModel();
+
+    
+    static {
+        try {
+            riskMatrixImageIcon = ResourceUtils.getImageIcon(RISK_MATRIX_IMAGE);
+            riskMatrixImageIcon = new ImageIcon(riskMatrixImageIcon.getImage().getScaledInstance(RISK_MATRIX_X, RISK_MATRIX_Y, Image.SCALE_DEFAULT));
+            ArrayList<String> severity = new ArrayList<>();
+            for (String s : Hazard.SEVERITIES)
+                severity.add(s);
+            ArrayList<String> likelihood = new ArrayList<>();
+            for (String s : Hazard.LIKELIHOODS)
+                likelihood.add(s);
+            initialSeveritySpinnerModel.setList(severity);
+            initialLikelihoodSpinnerModel.setList(likelihood);
+            severity = new ArrayList<>();
+            for (String s : Hazard.SEVERITIES)
+                severity.add(s);  
+            likelihood = new ArrayList<>();
+            for (String s : Hazard.LIKELIHOODS)
+                likelihood.add(s);            
+            residualSeveritySpinnerModel.setList(severity);
+            residualLikelihoodSpinnerModel.setList(likelihood);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     /**
      * Creates new form HazardEditor
      */
     public HazardEditor() {
         initComponents();
+        riskMatrixImageLabel.setIcon(riskMatrixImageIcon);
+        initialSeveritySpinner.setModel(initialSeveritySpinnerModel);
+        initialLikelihoodSpinner.setModel(initialLikelihoodSpinnerModel);
+        residualSeveritySpinner.setModel(residualSeveritySpinnerModel);
+        residualLikelihoodSpinner.setModel(residualLikelihoodSpinnerModel);
         try {
             ValueSet hazardStatus = MetaFactory.getInstance().getValueSet("HazardStatus");
             Iterator<String> statii = hazardStatus.iterator();
@@ -116,14 +163,14 @@ public class HazardEditor extends javax.swing.JPanel
         jLabel8 = new javax.swing.JLabel();
         initialSeveritySpinner = new javax.swing.JSpinner();
         initialLikelihoodSpinner = new javax.swing.JSpinner();
-        initialRiskRatingSpinner = new javax.swing.JSpinner();
+        initialRiskRatingTextField = new javax.swing.JTextField();
         residualPanel = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         residualSeveritySpinner = new javax.swing.JSpinner();
         residualLikelihoodSpinner = new javax.swing.JSpinner();
-        residualRiskRatingSpinner = new javax.swing.JSpinner();
+        residualRiskRatingTextField = new javax.swing.JTextField();
         linksPanel = new javax.swing.JPanel();
         editLinksButton = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -131,6 +178,8 @@ public class HazardEditor extends javax.swing.JPanel
         bowtieButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         discardButton = new javax.swing.JButton();
+        riskMatrixImageLabel = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
 
         editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -164,6 +213,18 @@ public class HazardEditor extends javax.swing.JPanel
 
         jLabel8.setText("Risk rating");
 
+        initialSeveritySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                initialSeveritySpinnerStateChanged(evt);
+            }
+        });
+
+        initialLikelihoodSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                initialLikelihoodSpinnerStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout initialPanelLayout = new javax.swing.GroupLayout(initialPanel);
         initialPanel.setLayout(initialPanelLayout);
         initialPanelLayout.setHorizontalGroup(
@@ -175,11 +236,11 @@ public class HazardEditor extends javax.swing.JPanel
                     .addComponent(jLabel7)
                     .addComponent(jLabel8))
                 .addGap(26, 26, 26)
-                .addGroup(initialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(initialSeveritySpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
-                    .addComponent(initialLikelihoodSpinner)
-                    .addComponent(initialRiskRatingSpinner))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(initialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(initialLikelihoodSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+                    .addComponent(initialSeveritySpinner)
+                    .addComponent(initialRiskRatingTextField))
+                .addContainerGap())
         );
         initialPanelLayout.setVerticalGroup(
             initialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -195,8 +256,8 @@ public class HazardEditor extends javax.swing.JPanel
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(initialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(initialRiskRatingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(19, Short.MAX_VALUE))
+                    .addComponent(initialRiskRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         residualPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Residual ratings"));
@@ -206,6 +267,20 @@ public class HazardEditor extends javax.swing.JPanel
         jLabel10.setText("Likelihood");
 
         jLabel11.setText("Risk rating");
+
+        residualSeveritySpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                residualSeveritySpinnerStateChanged(evt);
+            }
+        });
+
+        residualLikelihoodSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                residualLikelihoodSpinnerStateChanged(evt);
+            }
+        });
+
+        residualRiskRatingTextField.setText("jTextField1");
 
         javax.swing.GroupLayout residualPanelLayout = new javax.swing.GroupLayout(residualPanel);
         residualPanel.setLayout(residualPanelLayout);
@@ -218,11 +293,11 @@ public class HazardEditor extends javax.swing.JPanel
                     .addComponent(jLabel10)
                     .addComponent(jLabel11))
                 .addGap(32, 32, 32)
-                .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(residualSeveritySpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
-                    .addComponent(residualLikelihoodSpinner)
-                    .addComponent(residualRiskRatingSpinner))
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(residualLikelihoodSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(residualSeveritySpinner)
+                    .addComponent(residualRiskRatingTextField))
+                .addContainerGap())
         );
         residualPanelLayout.setVerticalGroup(
             residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -238,8 +313,8 @@ public class HazardEditor extends javax.swing.JPanel
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(residualRiskRatingSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(19, Short.MAX_VALUE))
+                    .addComponent(residualRiskRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         linksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Links"));
@@ -275,7 +350,7 @@ public class HazardEditor extends javax.swing.JPanel
         linksPanel.setLayout(linksPanelLayout);
         linksPanelLayout.setHorizontalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 712, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 712, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(linksPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(editLinksButton)
@@ -307,6 +382,8 @@ public class HazardEditor extends javax.swing.JPanel
             }
         });
 
+        jLabel12.setText("Risk matrix");
+
         javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
         editorPanel.setLayout(editorPanelLayout);
         editorPanelLayout.setHorizontalGroup(
@@ -314,7 +391,8 @@ public class HazardEditor extends javax.swing.JPanel
             .addGroup(editorPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(linksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(riskMatrixImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 722, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(linksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(editorPanelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -325,25 +403,28 @@ public class HazardEditor extends javax.swing.JPanel
                         .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(editorPanelLayout.createSequentialGroup()
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(initialPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, editorPanelLayout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(35, 35, 35)
-                                .addComponent(statusComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(statusComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(initialPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane3)
                             .addGroup(editorPanelLayout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(residualPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editorPanelLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(discardButton)))))
+                                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editorPanelLayout.createSequentialGroup()
+                                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(discardButton))
+                                    .addComponent(residualPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addComponent(jLabel12))
                 .addContainerGap())
         );
         editorPanelLayout.setVerticalGroup(
@@ -365,20 +446,21 @@ public class HazardEditor extends javax.swing.JPanel
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(riskMatrixImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addComponent(initialPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addComponent(residualPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
-                            .addComponent(saveButton)
-                            .addComponent(discardButton))
-                        .addGap(11, 11, 11)))
+                    .addComponent(initialPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(residualPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveButton)
+                    .addComponent(discardButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -387,17 +469,17 @@ public class HazardEditor extends javax.swing.JPanel
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -441,12 +523,12 @@ public class HazardEditor extends javax.swing.JPanel
         statusComboBox.setSelectedIndex(-1);
         descriptionTextArea.setText("");
         clinicalJustificationTextArea.setText("");
-        initialLikelihoodSpinner.setValue(0);
-        initialSeveritySpinner.setValue(0);
-        initialRiskRatingSpinner.setValue(0);
-        residualLikelihoodSpinner.setValue(0);
-        residualSeveritySpinner.setValue(0);
-        residualRiskRatingSpinner.setValue(0);
+        initialLikelihoodSpinner.setValue(Hazard.translateLikelihood(0));
+        initialSeveritySpinner.setValue(Hazard.translateSeverity(0));
+        initialRiskRatingTextField.setText(Integer.toString(Hazard.getRating(0, 0)));
+        residualLikelihoodSpinner.setValue(Hazard.translateLikelihood(0));
+        residualSeveritySpinner.setValue(Hazard.translateSeverity(0));
+        residualRiskRatingTextField.setText(Integer.toString(Hazard.getRating(0, 0)));
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
@@ -460,12 +542,12 @@ public class HazardEditor extends javax.swing.JPanel
         hazard.setAttribute("ClinicalJustification", clinicalJustificationTextArea.getText());
         hazard.setAttribute("Status", (String)statusComboBox.getSelectedItem());
         hazard.setAttribute("GroupingType", (String)conditionsComboBox.getSelectedItem());
-        hazard.setAttribute("InitialSeverity", ((Integer)initialSeveritySpinner.getValue()).intValue());
-        hazard.setAttribute("InitialLikelihood", ((Integer)initialLikelihoodSpinner.getValue()).intValue());
-        hazard.setAttribute("InitialRiskRating", ((Integer)initialRiskRatingSpinner.getValue()).intValue());
-        hazard.setAttribute("ResidualSeverity", ((Integer)residualSeveritySpinner.getValue()).intValue());
-        hazard.setAttribute("ResidualLikelihood", ((Integer)residualLikelihoodSpinner.getValue()).intValue());
-        hazard.setAttribute("ResidualRiskRating", ((Integer)residualRiskRatingSpinner.getValue()).intValue());
+        hazard.setAttribute("InitialSeverity", Hazard.getSeverity((String)initialSeveritySpinner.getValue()));
+        hazard.setAttribute("InitialLikelihood", Hazard.getLikelihood((String)initialLikelihoodSpinner.getValue()));
+        hazard.setAttribute("InitialRiskRating", (Integer.parseInt(initialRiskRatingTextField.getText())));
+        hazard.setAttribute("ResidualSeverity", Hazard.getLikelihood((String)residualLikelihoodSpinner.getValue()));
+        hazard.setAttribute("ResidualLikelihood", Hazard.getSeverity((String)residualSeveritySpinner.getValue()));
+        hazard.setAttribute("ResidualRiskRating", (Integer.parseInt(residualRiskRatingTextField.getText())));
 //        if (newObjectProjectId == -1)
 //            hazard.setAttribute("ProjectID", Integer.parseInt(hazard.getAttributeValue("ProjectID")));
 //        else 
@@ -506,6 +588,24 @@ public class HazardEditor extends javax.swing.JPanel
         tp.setSelectedComponent(tp.add(ec.getTitle(), ec.getComponent()));
         tp.setTabComponentAt(tp.getSelectedIndex(), new UndockTabComponent(tp));  
     }//GEN-LAST:event_bowtieButtonActionPerformed
+
+    private void initialSeveritySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_initialSeveritySpinnerStateChanged
+        initialRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)initialLikelihoodSpinner.getValue(), (String)initialSeveritySpinner.getValue())));
+    }//GEN-LAST:event_initialSeveritySpinnerStateChanged
+
+    private void initialLikelihoodSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_initialLikelihoodSpinnerStateChanged
+        
+        initialRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)initialLikelihoodSpinner.getValue(), (String)initialSeveritySpinner.getValue())));
+        
+    }//GEN-LAST:event_initialLikelihoodSpinnerStateChanged
+
+    private void residualSeveritySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_residualSeveritySpinnerStateChanged
+        residualRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)residualLikelihoodSpinner.getValue(), (String)residualSeveritySpinner.getValue())));
+    }//GEN-LAST:event_residualSeveritySpinnerStateChanged
+
+    private void residualLikelihoodSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_residualLikelihoodSpinnerStateChanged
+        residualRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)residualLikelihoodSpinner.getValue(), (String)residualSeveritySpinner.getValue())));
+    }//GEN-LAST:event_residualLikelihoodSpinnerStateChanged
     
     private HashMap<String,DiagramEditorElement> getExistingBowtie(String xml)
     {
@@ -563,11 +663,12 @@ public class HazardEditor extends javax.swing.JPanel
     private javax.swing.JPanel editorPanel;
     private javax.swing.JSpinner initialLikelihoodSpinner;
     private javax.swing.JPanel initialPanel;
-    private javax.swing.JSpinner initialRiskRatingSpinner;
+    private javax.swing.JTextField initialRiskRatingTextField;
     private javax.swing.JSpinner initialSeveritySpinner;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -583,25 +684,16 @@ public class HazardEditor extends javax.swing.JPanel
     private javax.swing.JTable linksTable;
     private javax.swing.JSpinner residualLikelihoodSpinner;
     private javax.swing.JPanel residualPanel;
-    private javax.swing.JSpinner residualRiskRatingSpinner;
+    private javax.swing.JTextField residualRiskRatingTextField;
     private javax.swing.JSpinner residualSeveritySpinner;
+    private javax.swing.JLabel riskMatrixImageLabel;
     private javax.swing.JButton saveButton;
     private javax.swing.JComboBox<String> statusComboBox;
     private javax.swing.JTextField summaryTextField;
     // End of variables declaration//GEN-END:variables
 
     private void clearHazard() {
-        summaryTextField.setText("");
-        conditionsComboBox.setSelectedIndex(-1);
-        statusComboBox.setSelectedIndex(-1);
-        descriptionTextArea.setText("");
-        clinicalJustificationTextArea.setText("");
-        initialLikelihoodSpinner.setValue(0);
-        initialSeveritySpinner.setValue(0);
-        initialRiskRatingSpinner.setValue(0);
-        residualLikelihoodSpinner.setValue(0);
-        residualSeveritySpinner.setValue(0);
-        residualRiskRatingSpinner.setValue(0);        
+        this.discardButtonActionPerformed(null);
     }
     @Override
     public void setPersistableObject(Persistable p) 
@@ -629,12 +721,12 @@ public class HazardEditor extends javax.swing.JPanel
                     break;
                 }
             }
-            initialSeveritySpinner.setValue(Integer.parseInt(hazard.getAttributeValue("InitialSeverity")));
-            residualSeveritySpinner.setValue(Integer.parseInt(hazard.getAttributeValue("ResidualSeverity")));
-            initialLikelihoodSpinner.setValue(Integer.parseInt(hazard.getAttributeValue("InitialLikelihood")));
-            residualLikelihoodSpinner.setValue(Integer.parseInt(hazard.getAttributeValue("ResidualLikelihood")));
-            initialRiskRatingSpinner.setValue(Integer.parseInt(hazard.getAttributeValue("InitialRiskRating")));
-            residualRiskRatingSpinner.setValue(Integer.parseInt(hazard.getAttributeValue("ResidualRiskRating")));
+            initialSeveritySpinner.setValue(Hazard.translateSeverity(hazard.getAttribute("InitialSeverity").getIntValue()));
+            residualSeveritySpinner.setValue(Hazard.translateSeverity(hazard.getAttribute("ResidualSeverity").getIntValue()));
+            initialLikelihoodSpinner.setValue(Hazard.translateLikelihood(hazard.getAttribute("InitialLikelihood").getIntValue()));
+            residualLikelihoodSpinner.setValue(Hazard.translateLikelihood(hazard.getAttribute("ResidualLikelihood").getIntValue()));
+            initialRiskRatingTextField.setText(hazard.getAttributeValue("InitialRiskRating"));
+            residualRiskRatingTextField.setText(hazard.getAttributeValue("ResidualRiskRating"));
 
             descriptionTextArea.setText(hazard.getAttributeValue("Description"));
             clinicalJustificationTextArea.setText(hazard.getAttributeValue("ClinicalJustification"));

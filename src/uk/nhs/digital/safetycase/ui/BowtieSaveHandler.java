@@ -84,7 +84,7 @@ public class BowtieSaveHandler
                 projectid = process.getAttribute("ProjectID").getIntValue();
                 hazard.setAttribute("ProjectID", projectid);
                 hazard.setAttribute("GroupingType", "Generic");
-                hazard.setAttribute("Status", "New");
+                hazard.setAttribute("Status", "Select...");
   //              added.add(hazard);                
             } else {
                 existingHazard = true;
@@ -256,11 +256,11 @@ public class BowtieSaveHandler
                        throw new Exception("Unknown Bowtie Element type " + bt.type);
                    }
                    if (bt.type.contentEquals("Effect")) {
-                       p.setAttribute("Type", "New");
+                       p.setAttribute("Type", "Select...");
                    }
                    if (bt.type.contentEquals("Control")) {
-                       p.setAttribute("Type", "New");
-                       p.setAttribute("State", "New");
+                       p.setAttribute("Type", "Select...");
+                       p.setAttribute("State", "Select...");
                    }
                    p.setAttribute("Name", bt.name);
                    p.setAttribute("GraphCellId", bt.cellId);
@@ -373,12 +373,12 @@ public class BowtieSaveHandler
             p = new Cause();
         if (t.contentEquals("Control")) {
             p = new Control();
-            p.setAttribute("Type", "New");
-            p.setAttribute("State", "New");
+            p.setAttribute("Type", "Select...");
+            p.setAttribute("State", "Select...");
         }
         if (t.contentEquals("Effect")) {
             p = new Effect();
-            p.setAttribute("Type", "New");
+            p.setAttribute("Type", "Select...");
         }
         if (p != null)
             p.setAttribute("GroupingType", "Generic");
@@ -406,7 +406,7 @@ public class BowtieSaveHandler
                 h.setAttribute("Name", name);
                 h.setAttribute("GraphCellId", Integer.parseInt(id));
                 h.setAttribute("GraphXml", xml);
-                h.setAttribute("Status", "New");
+                h.setAttribute("Status", "Select...");
             }
         }
         return nl;

@@ -37,6 +37,7 @@ public interface Project {
     
     EditorComponent getEditorComponent(TreePath t);
     String checkNewFromPopupMenu(TreePath t);
+    boolean checkShowPopup(TreePath t);
 
     void setProjectWindow(ProjectWindow pw);
     ProjectWindow getProjectWindow();

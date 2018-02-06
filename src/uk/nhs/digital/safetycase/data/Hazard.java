@@ -33,6 +33,43 @@ public class Hazard
                                             "InitialSeverity", "InitialLikelihood","InitialRiskRating",
                                             "ResidualSeverity", "ResidualLikelihood", "ResidualRiskRating", "GroupingType"};
     
+    public static final String[] SEVERITIES = {"Minor", "Significant", "Considerable", "Major", "Catastrophic"};
+    public static final String[] LIKELIHOODS = {"Very Low", "Low", "Medium", "High", "Very High"};
+    public static final int[][] RATINGS = {{1,1,2,2,3},{1,2,2,3,4},{2,2,3,3,4},{2,3,3,4,5},{3,4,4,5,5}};  
+    
+    public static int getRating(String likelihood, String severity) 
+    {
+        int l = getLikelihood(likelihood);
+        int s = getSeverity(severity);
+        int r = RATINGS[s][l];
+        return r;
+    }
+    public static int getRating(int l, int s) {
+        int r = RATINGS[s][l];
+        return r;        
+    }
+    
+    public static String translateSeverity(int s) {
+        return SEVERITIES[s];
+    }
+    public static String translateLikelihood(int l) {
+        return LIKELIHOODS[l];
+    }
+    public static int getSeverity(String s) {
+        for (int i = 0; i < SEVERITIES.length; i++) {
+            if (SEVERITIES[i].contentEquals(s))
+                return i;
+        }
+        return -1;
+    }
+    public static int getLikelihood(String s) {
+        for (int i = 0; i < LIKELIHOODS.length; i++) {
+            if (LIKELIHOODS[i].contentEquals(s))
+                return i;
+        }
+        return -1;
+    }
+    
     public Hazard() 
     {
         dbObjectName = "Hazard";

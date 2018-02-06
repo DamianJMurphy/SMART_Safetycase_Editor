@@ -25,7 +25,9 @@ public class Control
         extends Persistable
 {
 
-    private static final String[] FIELDS = {"ProjectID", "Description", "Type", "State", "Name", "ClinicalJustification", "GraphCellId", "GroupingType"};
+    private static final String[] FIELDS = {"ProjectID", "Description", "Type", "State", "Name", 
+                                                "ClinicalJustification", "GraphCellId", 
+                                                "Evidence", "GroupingType"};
     
     public Control() 
     {

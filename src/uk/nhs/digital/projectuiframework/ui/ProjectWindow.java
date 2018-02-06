@@ -199,9 +199,34 @@ public class ProjectWindow extends javax.swing.JFrame {
     
     private void projectTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectTreeMouseClicked
         
-
+        String p = null;
+        try {
+            p = (String)projectTree.getSelectionPath().getPathComponent(1).toString();
+        }
+        catch (NullPointerException e) {
+            TreePath tp = projectTree.getPathForLocation(evt.getX(), evt.getY());
+            if (tp == null)
+                return;
+            p = tp.getPathComponent(1).toString();
+        }
+        Project proj = null;
+        for (Project ap : projects.values()) {
+            if (p.contentEquals(ap.getName())) {
+                proj = ap;
+                break;
+            }
+        }
+        if (proj == null) {
+            return;
+        }
+        
         if ((evt.getButton() == MouseEvent.BUTTON_RIGHT) || (evt.getButton() == java.awt.event.MouseEvent.BUTTON3)) {
             if (evt.getClickCount() == 1) {
+                TreePath pmp = projectTree.getPathForLocation(evt.getX(), evt.getY());
+                if (pmp != null) {
+                    if (!proj.checkShowPopup(pmp))
+                        return;
+                }
                 (new ProjectTreePopupMenu(this)).show(projectTree, evt.getX(), evt.getY());
                 return;
             }
@@ -210,18 +235,6 @@ public class ProjectWindow extends javax.swing.JFrame {
             evt.consume();
             EditorComponent ec = null;
             if (projectTree.getSelectionPath().getPathCount() == 2) // root and the one we can see
-                return;
-//            if (!((DefaultMutableTreeNode)projectTree.getSelectionPath().getLastPathComponent()).isLeaf())
-//                return;
-            String p = (String)projectTree.getSelectionPath().getPathComponent(1).toString();
-            Project proj = null;
-            for (Project ap : projects.values()) {
-                if (p.contentEquals(ap.getName())) {
-                    proj = ap;
-                    break;
-                }
-            }
-            if (proj == null)
                 return;
             int id = proj.getProjectID((DefaultMutableTreeNode)projectTree.getSelectionPath().getLastPathComponent());
             proj.setCurrentProjectID(id);
