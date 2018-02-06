@@ -24,6 +24,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
+import uk.nhs.digital.projectuiframework.ui.ViewComponent;
 
 /**
  *
@@ -36,6 +37,7 @@ public interface Project {
     public static final int DELETE = 3;
     
     EditorComponent getEditorComponent(TreePath t);
+    ViewComponent getViewComponent(TreePath t);
     String checkNewFromPopupMenu(TreePath t);
     boolean checkShowPopup(TreePath t);
 

@@ -17,14 +17,13 @@
  */
 package uk.nhs.digital.projectuiframework.smart;
 
+import java.awt.Component;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -32,8 +31,10 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
+import uk.nhs.digital.projectuiframework.ui.ViewComponent;
 import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 import uk.nhs.digital.safetycase.data.*;
+import uk.nhs.digital.safetycase.ui.views.ViewConstructor;
 
 /**
  *
@@ -114,7 +115,9 @@ public class SmartProject
         } else {
             try {
                 s = (String) d.getUserObject();
-            } catch (Exception e) {
+            } 
+            catch (ClassCastException cce) {}
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -304,7 +307,11 @@ public class SmartProject
 
     private DefaultMutableTreeNode populateViewsNode() 
     {
-        return new DefaultMutableTreeNode("Views (currently being implemented)");
+        DefaultMutableTreeNode views = new DefaultMutableTreeNode("Views");
+        DefaultMutableTreeNode hazardTypeView = new DefaultMutableTreeNode();
+        hazardTypeView.setUserObject(new ViewComponent("HazardTypes", "uk.nhs.digital.safetycase.ui.views.HazardTypeView"));
+        views.add(hazardTypeView);
+        return views;
     }
     
     private DefaultMutableTreeNode populateSingleHazard(Hazard h)
@@ -444,14 +451,18 @@ public class SmartProject
         if (o == null)
             return null;
         Persistable p = null;
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode)o;
         try {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)o;
             p = (Persistable)node.getUserObject();
+            return icons.get(p.getDatabaseObjectName());
         }
-        catch (ClassCastException cce) {
-            return null;
+        catch (ClassCastException cce) {}
+        try {
+            ViewComponent v = (ViewComponent)node.getUserObject();
+            return icons.get("View");
         }
-        return icons.get(p.getDatabaseObjectName());
+        catch (ClassCastException cce) {}
+        return null;
     }
     
     @Override
@@ -674,10 +685,34 @@ public class SmartProject
         icons.put("Effect", getIcon(EFFECT_ICON, r));
         icons.put("Role", getIcon(ROLE_ICON, r));
         icons.put("Location", getIcon(LOCATION_ICON, r));
-        
+        icons.put("View", getIcon(VIEW_ICON, r));
         pw.setTreeCellRenderer(r);
     }
     
     @Override
     public ProjectWindow getProjectWindow() { return projectWindow; }
+
+    @Override
+    public ViewComponent getViewComponent(TreePath t) 
+    {
+        ViewComponent view = null;
+        DefaultMutableTreeNode dmtn = (DefaultMutableTreeNode)t.getLastPathComponent();
+        try {
+            view = (ViewComponent)dmtn.getUserObject();
+        }
+        catch (ClassCastException cce) {
+            return null;
+        }
+        try {
+            Component c = (Component)(Class.forName(view.getClassName()).newInstance());
+            view.setComponent(c);
+            ((ViewConstructor)c).setProjectID(currentProjectId);
+            view.setProject(this);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return view;
+    }
 }

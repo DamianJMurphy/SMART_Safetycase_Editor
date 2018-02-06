@@ -31,6 +31,7 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import uk.nhs.digital.safetycase.ui.LibraryEditorDialog;
 import uk.nhs.digital.safetycase.ui.ProjectEditor;
+import uk.nhs.digital.safetycase.ui.views.ViewConstructor;
 /**
  *
  * @author damian
@@ -71,6 +72,8 @@ public class ProjectWindow extends javax.swing.JFrame {
         libraryMenuItem = new javax.swing.JMenuItem();
         undeleteMenuItem = new javax.swing.JMenuItem();
         importMenuItem = new javax.swing.JMenuItem();
+        helpMenu = new javax.swing.JMenu();
+        helpAboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
@@ -139,6 +142,13 @@ public class ProjectWindow extends javax.swing.JFrame {
         toolsMenu.add(importMenuItem);
 
         mainMenu.add(toolsMenu);
+
+        helpMenu.setText("Help");
+
+        helpAboutMenuItem.setText("About");
+        helpMenu.add(helpAboutMenuItem);
+
+        mainMenu.add(helpMenu);
 
         setJMenuBar(mainMenu);
 
@@ -241,11 +251,20 @@ public class ProjectWindow extends javax.swing.JFrame {
             TreePath t = projectTree.getSelectionPath();
             ec = proj.getEditorComponent(t);
             if (ec == null) {
-                if (projectTree.isCollapsed(t))
-                    projectTree.expandPath(t);
-                else
-                    projectTree.collapsePath(t);
-                return;
+                // See if we have a ViewComponent instead... add getViewComponent(TreePath t) to Project
+                // and implement it... only if *that* returns null do we to the "isCollapsed()" code.
+                //
+                ViewComponent view = proj.getViewComponent(t);
+                if (view == null) {
+                    if (projectTree.isCollapsed(t))
+                        projectTree.expandPath(t);
+                    else
+                        projectTree.collapsePath(t);
+                    return;
+                }
+               mainWindowTabbedPane.setSelectedComponent(mainWindowTabbedPane.add(view.getTitle(), view.getComponent()));
+               mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));                    
+               return;
             }
             for (int i = 0; i < mainWindowTabbedPane.getTabCount(); i++) {
                 if (ec.getTitle().contentEquals((mainWindowTabbedPane.getTitleAt(i)))) {
@@ -338,6 +357,8 @@ public class ProjectWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem helpAboutMenuItem;
+    private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem importMenuItem;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuItem libraryMenuItem;
