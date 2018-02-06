@@ -280,8 +280,6 @@ public class HazardEditor extends javax.swing.JPanel
             }
         });
 
-        residualRiskRatingTextField.setText("jTextField1");
-
         javax.swing.GroupLayout residualPanelLayout = new javax.swing.GroupLayout(residualPanel);
         residualPanel.setLayout(residualPanelLayout);
         residualPanelLayout.setHorizontalGroup(
