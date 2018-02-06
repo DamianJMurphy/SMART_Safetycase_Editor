@@ -102,6 +102,32 @@ CREATE TABLE PUBLIC.Project (
                 CONSTRAINT Project_pk PRIMARY KEY (ProjectID)
 );
 
+CREATE TABLE PUBLIC.SystemFunction (
+                SystemFunctionID IDENTITY NOT NULL,
+                Name VARCHAR(256) NOT NULL,
+                ParentSystemFunctionID INTEGER,
+                CreatedDate DATE NOT NULL,
+                LastUpdatedDate DATE,
+                DeletedDate DATE,
+                Description VARCHAR(1024),
+                GraphCellId INTEGER DEFAULT -1 NOT NULL,
+                ProjectID INTEGER NOT NULL,
+                CONSTRAINT SystemFunction_pk PRIMARY KEY (SystemFunctionID)
+);
+
+CREATE TABLE PUBLIC.SystemFunctionRelationship (
+                SystemFunctionRelationshipID IDENTITY NOT NULL,
+                RelatedObjectID INTEGER NOT NULL,
+                SystemFunctionID INTEGER NOT NULL,
+                RelatedObjectType VARCHAR(256) NOT NULL,
+                Comment VARCHAR(1024),
+                CreatedDate DATE NOT NULL,
+                LastUpdatedDate DATE,
+                DeletedDate DATE,
+                ManagementClass VARCHAR(64),
+                CONSTRAINT SystemFunctionRelationship_pk PRIMARY KEY (SystemFunctionRelationshipID)
+);
+
 CREATE TABLE PUBLIC.Report (
                 ReportID IDENTITY NOT NULL,
                 ProjectID INTEGER NOT NULL,
@@ -169,20 +195,8 @@ CREATE TABLE PUBLIC.SystemRelationship (
                 LastUpdatedDate DATE,
                 DeletedDate DATE,
                 SystemID INTEGER NOT NULL,
+                ManagementClass VARCHAR(64),
                 CONSTRAINT SystemRelationship_pk PRIMARY KEY (SystemRelationshipID)
-);
-
-CREATE TABLE PUBLIC.SystemFunction (
-                SystemFunctionID IDENTITY NOT NULL,
-                Name VARCHAR(256) NOT NULL,
-                SystemID INTEGER NOT NULL,
-                ParentSystemFunctionID INTEGER,
-                CreatedDate DATE NOT NULL,
-                LastUpdatedDate DATE,
-                DeletedDate DATE,
-                Description VARCHAR(1024),
-                GraphCellId INTEGER DEFAULT -1 NOT NULL,
-                CONSTRAINT SystemFunction_pk PRIMARY KEY (SystemFunctionID)
 );
 
 CREATE TABLE PUBLIC.DataQualityCheckRun (
@@ -262,21 +276,8 @@ CREATE TABLE PUBLIC.ProcessStepRelationship (
                 CONSTRAINT ProcessStepRelationship_pk PRIMARY KEY (ProcessStepRelationshipID)
 );
 
-CREATE TABLE PUBLIC.Condition (
-                ConditionID IDENTITY NOT NULL,
-                Name VARCHAR(256) NOT NULL,
-                ParentConditionID INTEGER,
-                Category VARCHAR(64),
-                CreatedDate DATE NOT NULL,
-                LastUpdatedDate DATE,
-                DeletedDate DATE,
-                Description VARCHAR(1024),
-                CONSTRAINT Condition_pk PRIMARY KEY (ConditionID)
-);
-
 CREATE TABLE PUBLIC.Effect (
                 EffectID IDENTITY NOT NULL,
-                ConditionID INTEGER NOT NULL,
                 ProjectID INTEGER NOT NULL,
                 CreatedDate DATE NOT NULL,
                 LastUpdatedDate DATE,
@@ -285,6 +286,7 @@ CREATE TABLE PUBLIC.Effect (
                 Description VARCHAR(1024),
                 Type VARCHAR(256) NOT NULL,
                 GraphCellId INTEGER DEFAULT -1 NOT NULL,
+                GroupingType VARCHAR(256) NOT NULL,
                 CONSTRAINT Effect_pk PRIMARY KEY (EffectID)
 );
 
@@ -301,29 +303,16 @@ CREATE TABLE PUBLIC.EffectRelationship (
                 CONSTRAINT EffectRelationship_pk PRIMARY KEY (EffectRelationshipID)
 );
 
-CREATE TABLE PUBLIC.ConditionRelationship (
-                ConditionRelationshipID IDENTITY NOT NULL,
-                ConditionID INTEGER NOT NULL,
-                RelatedObjectID INTEGER NOT NULL,
-                RelatedObjectType VARCHAR(256) NOT NULL,
-                Comment VARCHAR(1024),
-                CreatedDate DATE NOT NULL,
-                LastUpdatedDate DATE,
-                DeletedDate DATE,
-                ManagementClass VARCHAR(64),
-                CONSTRAINT ConditionRelationship_pk PRIMARY KEY (ConditionRelationshipID)
-);
-
 CREATE TABLE PUBLIC.Cause (
                 CauseID IDENTITY NOT NULL,
                 Description VARCHAR(1024),
-                ConditionID INTEGER NOT NULL,
                 ProjectID INTEGER NOT NULL,
                 CreatedDate DATE NOT NULL,
                 LastUpdatedDate DATE,
                 DeletedDate DATE,
                 Name VARCHAR(256) NOT NULL,
                 GraphCellId INTEGER DEFAULT -1 NOT NULL,
+                GroupingType VARCHAR(256) NOT NULL,
                 CONSTRAINT Cause_pk PRIMARY KEY (CauseID)
 );
 
@@ -342,7 +331,6 @@ CREATE TABLE PUBLIC.CauseRelationship (
 
 CREATE TABLE PUBLIC.Control (
                 ControlID IDENTITY NOT NULL,
-                ConditionID INTEGER NOT NULL,
                 Name VARCHAR(256) NOT NULL,
                 ClinicalJustification VARCHAR(1024),
                 CreatedDate DATE NOT NULL,
@@ -353,6 +341,7 @@ CREATE TABLE PUBLIC.Control (
                 Type VARCHAR(64) NOT NULL,
                 State VARCHAR(64) NOT NULL,
                 GraphCellId INTEGER DEFAULT -1 NOT NULL,
+                GroupingType VARCHAR(256) NOT NULL,
                 CONSTRAINT Control_pk PRIMARY KEY (ControlID)
 );
 
@@ -371,7 +360,6 @@ CREATE TABLE PUBLIC.ControlRelationship (
 
 CREATE TABLE PUBLIC.Hazard (
                 HazardID IDENTITY NOT NULL,
-                ConditionID INTEGER NOT NULL,
                 CreatedDate DATE NOT NULL,
                 LastUpdatedDate DATE,
                 DeletedDate DATE,
@@ -388,6 +376,7 @@ CREATE TABLE PUBLIC.Hazard (
                 Status VARCHAR(64) NOT NULL,
                 GraphXml VARCHAR(65536) DEFAULT null,
                 GraphCellId INTEGER DEFAULT -1 NOT NULL,
+                GroupingType VARCHAR(256) NOT NULL,
                 CONSTRAINT Hazard_pk PRIMARY KEY (HazardID)
 );
 
@@ -518,9 +507,15 @@ REFERENCES PUBLIC.Project (ProjectID)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE PUBLIC.SystemFunction ADD CONSTRAINT System_SystemFunction_fk
-FOREIGN KEY (SystemID)
-REFERENCES PUBLIC.System (SystemID)
+ALTER TABLE PUBLIC.SystemFunction ADD CONSTRAINT Project_SystemFunction_fk
+FOREIGN KEY (ProjectID)
+REFERENCES PUBLIC.Project (ProjectID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE PUBLIC.SystemFunctionRelationship ADD CONSTRAINT SystemFunction_SystemFunctionRelationship_fk
+FOREIGN KEY (SystemFunctionID)
+REFERENCES PUBLIC.SystemFunction (SystemFunctionID)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
@@ -554,36 +549,6 @@ REFERENCES PUBLIC.ProcessStep (ProcessStepID)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
-ALTER TABLE PUBLIC.Hazard ADD CONSTRAINT Condition_Hazard_fk
-FOREIGN KEY (ConditionID)
-REFERENCES PUBLIC.Condition (ConditionID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE PUBLIC.Control ADD CONSTRAINT Condition_Control_fk
-FOREIGN KEY (ConditionID)
-REFERENCES PUBLIC.Condition (ConditionID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE PUBLIC.Cause ADD CONSTRAINT Condition_Cause_fk
-FOREIGN KEY (ConditionID)
-REFERENCES PUBLIC.Condition (ConditionID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE PUBLIC.ConditionRelationship ADD CONSTRAINT Condition_ConditionRelationship_fk
-FOREIGN KEY (ConditionID)
-REFERENCES PUBLIC.Condition (ConditionID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
-ALTER TABLE PUBLIC.Effect ADD CONSTRAINT Condition_Effect_fk
-FOREIGN KEY (ConditionID)
-REFERENCES PUBLIC.Condition (ConditionID)
-ON DELETE NO ACTION
-ON UPDATE NO ACTION;
-
 ALTER TABLE PUBLIC.EffectRelationship ADD CONSTRAINT Effect_EffectRelationship_fk
 FOREIGN KEY (EffectID)
 REFERENCES PUBLIC.Effect (EffectID)
@@ -607,96 +572,3 @@ FOREIGN KEY (HazardID)
 REFERENCES PUBLIC.Hazard (HazardID)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
-insert into condition (name, parentconditionid, category, createddate, lastupdateddate, deleteddate, description)
-values ('Generic', -1, 'General', CURRENT_DATE, null, null, 'Generic/unspecified condition');
-
-
-insert into condition (name, parentconditionid, category, createddate, lastupdateddate, deleteddate, description)
-values ('Test condition 1', -1, 'General', CURRENT_DATE, null, null, 'Condition to satisfay FK constraints in other tables.');
-
-
-insert into condition (name, parentconditionid, category, createddate, lastupdateddate, deleteddate, description)
-values ('Test condition 2', -1, 'General', CURRENT_DATE, null, null, 'Condition to satisfay FK constraints in other tables.');
-
-insert into condition (name, parentconditionid, category, createddate, lastupdateddate, deleteddate, description)
-values ('Child condition 1', 1, 'Child', CURRENT_DATE, null, null, 'Test child condition');
-
-insert into project (CreatedDate, LastUpdatedDate, DeletedDate, Name, Description, Owner, Customer)
-values (CURRENT_DATE, null, null, 'Development project 1', 'Project record to support application development', 'developer', 'developer');
-
-insert into hazardstatus (Status, AddedDate, DeprecatedDate) values ('Work in progress', CURRENT_DATE, null);
-insert into hazardstatus (Status, AddedDate, DeprecatedDate) values ('Controlled', CURRENT_DATE, null);
-insert into hazardstatus (Status, AddedDate, DeprecatedDate) values ('Mitigated', CURRENT_DATE, null);
-insert into hazardstatus (Status, AddedDate, DeprecatedDate) values ('Controlled and mitigated', CURRENT_DATE, null);
-insert into hazardstatus (Status, AddedDate, DeprecatedDate) values ('Accepted', CURRENT_DATE, null);
-insert into hazardstatus (Status, AddedDate, DeprecatedDate) values ('New', CURRENT_DATE, null);
-
-insert into effecttype (Type, AddedDate, DeprecatedDate) values ('New', CURRENT_DATE, null);
-insert into controltype (Type, AddedDate, DeprecatedDate) values ('New', CURRENT_DATE, null);
-insert into controlstate (State, AddedDate, DeprecatedDate) values ('New', CURRENT_DATE, null);
-
-
-insert into effecttype (Type, AddedDate, DeprecatedDate) values ('Test effect', CURRENT_DATE, null);
-
-insert into controltype (Type, AddedDate, DeprecatedDate) values ('Test control', CURRENT_DATE, null);
-
-insert into controlstate (State, AddedDate, DeprecatedDate) values ('Active', CURRENT_DATE, null);
-
-
-insert into RelationshipSemantics (SourceObjectType, TargetObjectType, AddedDate, DeprecatedDate, Summary, Description) values ('ProcessStep', 'Hazard', CURRENT_DATE, null, 'exposes', 'ProcessStep exposes Hazard');
-insert into RelationshipSemantics (SourceObjectType, TargetObjectType, AddedDate, DeprecatedDate, Summary, Description) values ('Hazard', 'Location', CURRENT_DATE, null, 'at', 'Hazard at Location');
-insert into RelationshipSemantics (SourceObjectType, TargetObjectType, AddedDate, DeprecatedDate, Summary, Description) values ('Hazard', 'Role', CURRENT_DATE, null, 'due to', 'Hazard due to Role');
-insert into RelationshipSemantics (SourceObjectType, TargetObjectType, AddedDate, DeprecatedDate, Summary, Description) values ('Hazard', 'System', CURRENT_DATE, null, 'in', 'Hazard in System');
-insert into RelationshipSemantics (SourceObjectType, TargetObjectType, AddedDate, DeprecatedDate, Summary, Description) values ('Hazard', 'SystemFunction', CURRENT_DATE, null, 'in', 'Hazard in SystemFunction');
-insert into RelationshipSemantics (SourceObjectType, TargetObjectType, AddedDate, DeprecatedDate, Summary, Description) values ('Cause', 'Hazard', CURRENT_DATE, null, 'causes', 'Causes Hazard');
-insert into RelationshipSemantics (SourceObjectType, TargetObjectType, AddedDate, DeprecatedDate, Summary, Description) values ('Cause', 'Cause', CURRENT_DATE, null, 'causes', 'Causes cause');
-insert into RelationshipSemantics (SourceObjectType, TargetObjectType, AddedDate, DeprecatedDate, Summary, Description) values ('Effect', 'Hazard', CURRENT_DATE, null, 'of', 'Effect of Hazard');
-insert into RelationshipSemantics (SourceObjectType, TargetObjectType, AddedDate, DeprecatedDate, Summary, Description) values ('Effect', 'Effect', CURRENT_DATE, null, 'of', 'Effect of Effect');
-
-insert into ProcessStepType (Type, AddedDate, DeprecatedDate) values ('Start', CURRENT_DATE, null);
-insert into ProcessStepType (Type, AddedDate, DeprecatedDate) values ('Activity', CURRENT_DATE, null);
-insert into ProcessStepType (Type, AddedDate, DeprecatedDate) values ('Decision', CURRENT_DATE, null);
-insert into ProcessStepType (Type, AddedDate, DeprecatedDate) values ('Stop', CURRENT_DATE, null);
-
-insert into Location (Name, ParentLocationID, ProjectID, CreatedDate, LastUpdatedDate, DeletedDate, Description, Mnemonic)
-	values ('Test Location 1', -1, 0, CURRENT_DATE, null, null, 'Test location for development', 'TST');
-	
-insert into Role (Name, ProjectID, Category, CreatedDate, LastUpdatedDate, DeletedDate, Description)
-	values ('Test role 1', 0,'developer', CURRENT_DATE, null, null, 'Test role for development');
-	
-insert into system (Name, ParentSystemID, ProjectID, CreatedDate, LastUpdatedDate, DeletedDate, Description, Version, Mnemonic)
-	values ('Test system 1', -1, 0, CURRENT_DATE, null, null, 'Test system for development', '0.00a', 'JOHNNY');
-
-insert into system (Name, ParentSystemID, ProjectID, CreatedDate, LastUpdatedDate, DeletedDate, Description, Version, Mnemonic, GraphXml, GraphCellId)
-	values ('Test subsystem 1a', 0, 0, CURRENT_DATE, null, null, 'Test subsystem for development', '0.00b', 'JOHNNY', null, -1);
-	
-insert into systemfunction (Name, SystemID, ParentSystemFunctionID, CreatedDate, LastUpdatedDate, DeletedDate, Description, GraphCellId)
-	values ('Test system function 1', 0, -1, CURRENT_DATE, null, null, 'Test system function for development', -1);
-
-
-insert into dataqualityissueresolutiontype (ResolutionType, AddedDate, DeprecatedDate) values ('Development', CURRENT_DATE, null);	
-insert into dataqualityissueresolutiontype (ResolutionType, AddedDate, DeprecatedDate) values ('Not resolved', CURRENT_DATE, null);	
-insert into dataqualityissueresolutiontype (ResolutionType, AddedDate, DeprecatedDate) values ('Fixed', CURRENT_DATE, null);	
-insert into dataqualityissueresolutiontype (ResolutionType, AddedDate, DeprecatedDate) values ('Work in progress', CURRENT_DATE, null);	
-insert into dataqualityissueresolutiontype (ResolutionType, AddedDate, DeprecatedDate) values ('External risk', CURRENT_DATE, null);
-insert into dataqualityissueresolutiontype (ResolutionType, AddedDate, DeprecatedDate) values ('Acceptable risk', CURRENT_DATE, null);
-insert into dataqualityissueresolutiontype (ResolutionType, AddedDate, DeprecatedDate) values ('Pending other system developments', CURRENT_DATE, null);	
-
-insert into Process (Name, ProjectID, CreatedDate, LastUpdatedDate, DeletedDate, Description, Version, Source, CreatedBy, LastEditedBy, GraphXml)
-			values ('Dev Process 1', 0, CURRENT_DATE, null, null, 'Test and development process', '0.00a', 'Thin air', 'damian', 'damian', null)
-			
-			
-      
-
-insert into LibraryType (ObjectType) values ('Location')
-insert into LibraryType (ObjectType) values ('Role')
-insert into LibraryType (ObjectType) values ('Hazard')
-insert into LibraryType (ObjectType) values ('Control')
-insert into LibraryType (ObjectType) values ('Cause')
-insert into LibraryType (ObjectType) values ('Effect')
-insert into LibraryType (ObjectType) values ('Condition')
-insert into LibraryType (ObjectType) values ('System')
-
-
-
-
