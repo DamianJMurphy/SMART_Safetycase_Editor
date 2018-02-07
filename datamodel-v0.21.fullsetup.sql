@@ -102,6 +102,34 @@ CREATE TABLE PUBLIC.Project (
                 CONSTRAINT Project_pk PRIMARY KEY (ProjectID)
 );
 
+CREATE TABLE PUBLIC.IssuesLog (
+                IssuesLogID IDENTITY NOT NULL,
+                Name VARCHAR(256) NOT NULL,
+                CreatedDate DATE NOT NULL,
+                LastUpdatedDate DATE,
+                DeletedDate DATE,
+                Description VARCHAR(1024) NOT NULL,
+                Resolution VARCHAR(1024),
+                ProjectID INTEGER NOT NULL,
+                GroupingType VARCHAR(256) NOT NULL,
+                ResolutionType VARCHAR(256),
+                ResolvedDate DATE,
+                CONSTRAINT Issues_Log_pk PRIMARY KEY (IssuesLogID)
+);
+
+CREATE TABLE PUBLIC.IssuesLogRelationship (
+                IssuesLogRelationshipID IDENTITY NOT NULL,
+                IssuesLogID INTEGER NOT NULL,
+                RelatedObjectID INTEGER NOT NULL,
+                RelatedObjectType VARCHAR(256) NOT NULL,
+                Comment VARCHAR(1024),
+                CreatedDate DATE NOT NULL,
+                LastUpdatedDate DATE,
+                DeletedDate DATE,
+                ManagementClass VARCHAR(64),
+                CONSTRAINT IssuesLogRelationship_pk PRIMARY KEY (IssuesLogRelationshipID)
+);
+
 CREATE TABLE PUBLIC.SystemFunction (
                 SystemFunctionID IDENTITY NOT NULL,
                 Name VARCHAR(256) NOT NULL,
@@ -514,6 +542,18 @@ REFERENCES PUBLIC.Project (ProjectID)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
 
+ALTER TABLE PUBLIC.IssuesLog ADD CONSTRAINT Project_IssuesLog_fk
+FOREIGN KEY (ProjectID)
+REFERENCES PUBLIC.Project (ProjectID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
+ALTER TABLE PUBLIC.IssuesLogRelationship ADD CONSTRAINT IssuesLog_IssuesLogRelationship_fk
+FOREIGN KEY (IssuesLogID)
+REFERENCES PUBLIC.IssuesLog (IssuesLogID)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION;
+
 ALTER TABLE PUBLIC.SystemFunctionRelationship ADD CONSTRAINT SystemFunction_SystemFunctionRelationship_fk
 FOREIGN KEY (SystemFunctionID)
 REFERENCES PUBLIC.SystemFunction (SystemFunctionID)
@@ -573,7 +613,6 @@ FOREIGN KEY (HazardID)
 REFERENCES PUBLIC.Hazard (HazardID)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION;
-
 
 insert into project (CreatedDate, LastUpdatedDate, DeletedDate, Name, Description, Owner, Customer)
 values (CURRENT_DATE, null, null, 'Development project 1', 'Project record to support application development', 'developer', 'developer');
