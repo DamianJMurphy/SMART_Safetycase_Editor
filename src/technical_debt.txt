@@ -8,10 +8,6 @@ High-level
 
 - System/subsystem/function graphical editor in the style of the bowtie/process interfaces
 
-- Library including "Condition" editor/maintenance facility, and integration with the graphical
-    editors (e.g. clone an existing hazard into a new context when making a bowtie from a new
-    process model)
-
 - Reports. HTML editor integrated. Needs user refinement. Need to add report generator itself
     to assemble report content from the project data. Also to include the graphs.
 
@@ -22,22 +18,20 @@ Functional
 
 - Go through and tidy up the editor forms
 
-- TODO NEXT: Get rid of the processes list from the ProcessEditor. It should be a single-object editor.
-    Make SingleProcessEditorForm a persistable editor and have that called when user selects a process
-        from the tree. Will need to implement populator for process details *and* process steps but only
-        allow process step description to be edited from the form. Implement the handler for the "Process
-        Editor..." button to launch the ProcessGraphicalEditor (just like the BowtieGraphicalEditor is
-        launched from a button in the Hazard editor form)
+- TODO NEXT: Issues Log Editor form and database 
+
+- TODO SECOND: Move "Role" under "Care setting" in the project tree, refactor the update notification,
+    remove the "lists" from the top of the Care Setting and Role editors. Consider whether to
+    handle Care setting/role relationships using a relationship table or a foreign key relationship
+    with LocationID in a Role.
+
+- TODO: Add "About" screen (Hannah to provide some content)
+
+- TODO: Integrate Sharif's system/function editor
 
 - TODO: Probably need to detect name collisions within a set of child nodes in the tree.
 
 
-
-Done (Design or implementation decisions)
-
-- Do we need the "Bowtie Diagram" relationships ?  Yes we do, but the user doesn't need to see
-    them. "Diagram" management class relationships suppressed in the UI. "Connection*" class
-    and anything added manually are displayed.
 
 
 

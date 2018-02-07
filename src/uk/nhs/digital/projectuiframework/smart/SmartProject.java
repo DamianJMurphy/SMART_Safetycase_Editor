@@ -34,6 +34,8 @@ import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.projectuiframework.ui.ViewComponent;
 import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 import uk.nhs.digital.safetycase.data.*;
+import uk.nhs.digital.safetycase.ui.IssuesLogEditor;
+import uk.nhs.digital.safetycase.ui.PersistableEditor;
 import uk.nhs.digital.safetycase.ui.views.ViewConstructor;
 
 /**
@@ -55,6 +57,7 @@ public class SmartProject
     public static final String ROLE_ICON = "/uk/nhs/digital/projectuiframework/smart/dude3.png";
     public static final String LOCATION_ICON = "/uk/nhs/digital/projectuiframework/smart/earth.png";
     public static final String VIEW_ICON = "/uk/nhs/digital/projectuiframework/smart/view.png";
+    public static final String ISSUE_LOG_ICON = "/uk/nhs/digital/safetycase/ui/issueslog.png";
     
     private DefaultMutableTreeNode root = null;
     private static final String[] PROJECTCOMPONENTS = {"Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role", "Report"};
@@ -122,7 +125,7 @@ public class SmartProject
             }
         }
         if (s == null) {
-            java.lang.System.err.println("DEVELOPMENT: Could not identify where user clicked");
+//            java.lang.System.err.println("DEVELOPMENT: Could not identify where user clicked");
             return null;
         } else {
             if (s.contentEquals("Projects")) {
@@ -183,6 +186,23 @@ public class SmartProject
     
     @Override
     public EditorComponent getEditorComponent(TreePath t) {
+        if (t.getLastPathComponent().toString().contentEquals("Issues Log")) {
+           if (((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject() instanceof java.lang.String) {
+                EditorComponent ec = null;
+                try {
+                    PersistableEditor ile = new IssuesLogEditor();
+                    EditorComponent ecl = new EditorComponent(ile.getComponent(), "Issues Log", this);
+                    ile.setEditorComponent(ec);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    JLabel l = new JLabel("Editor for Issues Log not found");
+                    ec = new EditorComponent(l, "Issues Log", this);
+                }   
+                return ec;
+               
+           }
+        }
         Persistable p = null;
         try {
             // This will only work for leaf nodes that contain Persistable instances.
@@ -294,7 +314,7 @@ public class SmartProject
             }
             DefaultMutableTreeNode viewsNode = populateViewsNode(proj.getId());
             p.add(viewsNode);
-            DefaultMutableTreeNode issuesNode = new DefaultMutableTreeNode("Issues (not implemented for demonstration)");
+            DefaultMutableTreeNode issuesNode = new DefaultMutableTreeNode("Issues Log");
             p.add(issuesNode);
             // TO DO: Data quality check reports and issues need to be added here, but the
             // users need some understanding of this first, and we might not do it properly
@@ -466,6 +486,8 @@ public class SmartProject
             return icons.get("View");
         }
         catch (ClassCastException cce) {}
+        if (o.toString().contentEquals("Issues Log"))
+            return icons.get("Issues Log");
         return null;
     }
     
@@ -690,6 +712,7 @@ public class SmartProject
         icons.put("Role", getIcon(ROLE_ICON, r));
         icons.put("Location", getIcon(LOCATION_ICON, r));
         icons.put("View", getIcon(VIEW_ICON, r));
+        icons.put("Issues Log", getIcon(ISSUE_LOG_ICON, r));
         pw.setTreeCellRenderer(r);
     }
     

@@ -55,8 +55,8 @@ public class MetaFactory {
             factories.put("Process", pfProcess);
             PersistableFactory<ProcessStep> pfProcessStep = new PersistableFactory<>(database, "ProcessStep");
             factories.put("ProcessStep", pfProcessStep);
-//            PersistableFactory<Condition> pfCondition = new PersistableFactory<>(database, "Condition");
-//            factories.put("Condition", pfCondition);
+            PersistableFactory<IssuesLog> pfIssuesLog = new PersistableFactory<>(database, "IssuesLog");
+            factories.put("IssuesLog", pfIssuesLog);
             PersistableFactory<Effect> pfEffect = new PersistableFactory<>(database, "Effect");
             factories.put("Effect", pfEffect);
             PersistableFactory<Cause> pfCause = new PersistableFactory<>(database, "Cause");
