@@ -29,6 +29,7 @@ public class ViewComponent {
     private String title = null;
     private String className = null;
     private Project project = null;
+    private int projectId = -1;
     
     public static final int UNDEFINED = 0;
     public static final int CLOSE = 1;
@@ -45,6 +46,9 @@ public class ViewComponent {
     public Project getProject() { return project; }
     public Component getComponent() { return viewerPanel; }
     public String getTitle() { return title; }
+    public void setProjectId(int i) { projectId = i; }
+    public int getProjectId() { return projectId; }
+    
     
     @Override
     public String toString() { return getTitle(); }    

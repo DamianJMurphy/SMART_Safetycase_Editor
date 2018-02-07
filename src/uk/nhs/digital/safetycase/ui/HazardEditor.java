@@ -293,8 +293,8 @@ public class HazardEditor extends javax.swing.JPanel
                 .addGap(32, 32, 32)
                 .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(residualLikelihoodSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
-                    .addComponent(residualSeveritySpinner)
-                    .addComponent(residualRiskRatingTextField))
+                    .addComponent(residualRiskRatingTextField)
+                    .addComponent(residualSeveritySpinner))
                 .addContainerGap())
         );
         residualPanelLayout.setVerticalGroup(
@@ -499,12 +499,15 @@ public class HazardEditor extends javax.swing.JPanel
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
                 for (Relationship r : a) {
-                    String[] row = new String[linkcolumns.length];
-                    row[0] = t;
-                    row[1] = Integer.toString(r.getTarget());
-                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                    row[3] = r.getComment();
-                    dtm.addRow(row);
+                    String m = r.getManagementClass();
+                    if ((m == null) || (!m.contentEquals("Diagram"))) {                    
+                        String[] row = new String[linkcolumns.length];
+                        row[0] = t;
+                        row[1] = Integer.toString(r.getTarget());
+                        row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
+                        row[3] = r.getComment();
+                        dtm.addRow(row);
+                    }
                 }
             }
             linksTable.setModel(dtm);

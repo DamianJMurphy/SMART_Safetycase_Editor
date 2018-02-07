@@ -329,8 +329,8 @@
                       <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="residualLikelihoodSpinner" pref="223" max="32767" attributes="0"/>
-                          <Component id="residualSeveritySpinner" alignment="0" max="32767" attributes="0"/>
                           <Component id="residualRiskRatingTextField" alignment="0" max="32767" attributes="0"/>
+                          <Component id="residualSeveritySpinner" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>

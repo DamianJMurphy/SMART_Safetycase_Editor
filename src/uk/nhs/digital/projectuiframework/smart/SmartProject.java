@@ -292,7 +292,7 @@ public class SmartProject
             for (String s : PROJECTOTHERCOMPONENTS) {
                 populateProjectComponent(s, p, proj.getId());
             }
-            DefaultMutableTreeNode viewsNode = populateViewsNode();
+            DefaultMutableTreeNode viewsNode = populateViewsNode(proj.getId());
             p.add(viewsNode);
             DefaultMutableTreeNode issuesNode = new DefaultMutableTreeNode("Issues (not implemented for demonstration)");
             p.add(issuesNode);
@@ -305,11 +305,13 @@ public class SmartProject
         ((DefaultMutableTreeNode)treeModel.getRoot()).add(root);
     }
 
-    private DefaultMutableTreeNode populateViewsNode() 
+    private DefaultMutableTreeNode populateViewsNode(int pid) 
     {
         DefaultMutableTreeNode views = new DefaultMutableTreeNode("Views");
         DefaultMutableTreeNode hazardTypeView = new DefaultMutableTreeNode();
-        hazardTypeView.setUserObject(new ViewComponent("HazardTypes", "uk.nhs.digital.safetycase.ui.views.HazardTypeView"));
+        ViewComponent vc = new ViewComponent("HazardTypes", "uk.nhs.digital.safetycase.ui.views.HazardTypeView");
+        vc.setProjectId(pid);
+        hazardTypeView.setUserObject(vc);
         views.add(hazardTypeView);
         return views;
     }
@@ -430,7 +432,9 @@ public class SmartProject
             }
         }
         catch (Exception e) {
-            return -1;
+            // TODO: This will blow up if it isn't a ViewComponent... but that is OK for now
+            ViewComponent vc = (ViewComponent)node.getUserObject();
+            return vc.getProjectId();
         }
         return -1;
     }
