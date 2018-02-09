@@ -188,18 +188,18 @@ public class SmartProject
     public EditorComponent getEditorComponent(TreePath t) {
         if (t.getLastPathComponent().toString().contentEquals("Issues Log")) {
            if (((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject() instanceof java.lang.String) {
-                EditorComponent ec = null;
+               EditorComponent ecl = null;
                 try {
                     PersistableEditor ile = new IssuesLogEditor();
-                    EditorComponent ecl = new EditorComponent(ile.getComponent(), "Issues Log", this);
-                    ile.setEditorComponent(ec);
+                    ecl = new EditorComponent(ile.getComponent(), "Issues Log", this);
+                    ile.setEditorComponent(ecl);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                     JLabel l = new JLabel("Editor for Issues Log not found");
-                    ec = new EditorComponent(l, "Issues Log", this);
+                    ecl = new EditorComponent(l, "Issues Log", this);
                 }   
-                return ec;
+                return ecl;
                
            }
         }
