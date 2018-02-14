@@ -146,6 +146,11 @@ public class ProjectWindow extends javax.swing.JFrame {
         helpMenu.setText("Help");
 
         helpAboutMenuItem.setText("About");
+        helpAboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                helpAboutMenuItemActionPerformed(evt);
+            }
+        });
         helpMenu.add(helpAboutMenuItem);
 
         mainMenu.add(helpMenu);
@@ -302,6 +307,11 @@ public class ProjectWindow extends javax.swing.JFrame {
         LibraryEditorDialog lde = new LibraryEditorDialog(JOptionPane.getFrameForComponent(this), true);
         lde.setVisible(true);
     }//GEN-LAST:event_libraryMenuItemActionPerformed
+
+    private void helpAboutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_helpAboutMenuItemActionPerformed
+        HelpAboutDialog had = new HelpAboutDialog(this, true, lastProjectAdded.getHelpAboutIcon());
+        had.setVisible(true);
+    }//GEN-LAST:event_helpAboutMenuItemActionPerformed
 
     public void addProject(String n, Project p) {
         lastProjectAdded = p;

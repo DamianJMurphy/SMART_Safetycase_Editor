@@ -39,20 +39,34 @@ public class Hazard
     
     public static int getRating(String likelihood, String severity) 
     {
-        int l = getLikelihood(likelihood);
-        int s = getSeverity(severity);
-        int r = RATINGS[s][l];
-        return r;
+        try {
+            int l = getLikelihood(likelihood);
+            int s = getSeverity(severity);
+            int r = RATINGS[s][l];
+            return r;
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+            return -1;
+        }
     }
     public static int getRating(int l, int s) {
-        int r = RATINGS[s][l];
-        return r;        
+        try {
+            int r = RATINGS[s][l];
+            return r;
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+            return -1;
+        }
     }
     
     public static String translateSeverity(int s) {
+        if (s == -1)
+            return "Not set";
         return SEVERITIES[s];
     }
     public static String translateLikelihood(int l) {
+        if (l == -1)
+            return "Not set";
         return LIKELIHOODS[l];
     }
     public static int getSeverity(String s) {

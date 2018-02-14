@@ -80,17 +80,21 @@ public class HazardEditor extends javax.swing.JPanel
             riskMatrixImageIcon = ResourceUtils.getImageIcon(RISK_MATRIX_IMAGE);
             riskMatrixImageIcon = new ImageIcon(riskMatrixImageIcon.getImage().getScaledInstance(RISK_MATRIX_X, RISK_MATRIX_Y, Image.SCALE_DEFAULT));
             ArrayList<String> severity = new ArrayList<>();
+            severity.add("Not set");
             for (String s : Hazard.SEVERITIES)
                 severity.add(s);
             ArrayList<String> likelihood = new ArrayList<>();
+            likelihood.add("Not set");
             for (String s : Hazard.LIKELIHOODS)
                 likelihood.add(s);
             initialSeveritySpinnerModel.setList(severity);
             initialLikelihoodSpinnerModel.setList(likelihood);
             severity = new ArrayList<>();
+            severity.add("Not set");
             for (String s : Hazard.SEVERITIES)
                 severity.add(s);  
             likelihood = new ArrayList<>();
+            likelihood.add("Not set");
             for (String s : Hazard.LIKELIHOODS)
                 likelihood.add(s);            
             residualSeveritySpinnerModel.setList(severity);

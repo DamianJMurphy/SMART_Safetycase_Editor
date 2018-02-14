@@ -48,6 +48,7 @@ public interface Project {
     void setName(String n);
     
     ImageIcon getIcon(Object o);
+    ImageIcon getHelpAboutIcon();
     
     DefaultMutableTreeNode getProjectRoot();
     DefaultMutableTreeNode getTreeNode(Object o) throws Exception;

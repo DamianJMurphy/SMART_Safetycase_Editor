@@ -65,6 +65,7 @@ public class BowtieEditor
         mxConstants.W3C_SHADOWCOLOR = "#D3D3D3";
         table = new HazardListForm(this);
         editor = new BowtieGraphEditor();
+        editor.setHazardListForm(table);
         this.setTopComponent(table);
         this.setBottomComponent(editor);        
     }

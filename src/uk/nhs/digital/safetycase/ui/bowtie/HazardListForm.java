@@ -17,6 +17,7 @@
  */
 package uk.nhs.digital.safetycase.ui.bowtie;
 
+import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.safetycase.data.Hazard;
 
@@ -38,6 +39,25 @@ public class HazardListForm extends javax.swing.JPanel {
         hazardsTable.setModel(dtm);
     }
 
+    public void updateHazard(Hazard h) {
+        if (h == null)
+            return;
+        boolean matched = false;
+        DefaultTableModel dtm = (DefaultTableModel)hazardsTable.getModel();
+        Vector<Vector<String>> v = dtm.getDataVector();
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            Vector<String> row = v.elementAt(i);
+            if (row.elementAt(0).contentEquals(Integer.toString(h.getId()))) {
+                row.setElementAt(h.getAttributeValue("Name"), 1);
+                dtm.setValueAt(h.getAttributeValue("Name"), i, i);
+                matched = true;
+                break;
+            }
+        }
+        if (!matched)
+            addHazard(h);
+    }
+    
     public void addHazard(Hazard h) {
         if (h == null)
             return;

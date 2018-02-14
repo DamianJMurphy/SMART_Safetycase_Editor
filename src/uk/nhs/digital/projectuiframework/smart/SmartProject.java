@@ -59,6 +59,8 @@ public class SmartProject
     public static final String VIEW_ICON = "/uk/nhs/digital/projectuiframework/smart/view.png";
     public static final String ISSUE_LOG_ICON = "/uk/nhs/digital/safetycase/ui/issueslog.png";
     
+    public static final String HELP_ABOUT_ICON = "/uk/nhs/digital/projectuiframework/smart/smart_splash_demo.jpg";
+    
     private DefaultMutableTreeNode root = null;
     private static final String[] PROJECTCOMPONENTS = {"Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role", "Report"};
     private static final String[] PROJECTOTHERCOMPONENTS = { "Care Settings", "Role", "Report"};
@@ -74,6 +76,7 @@ public class SmartProject
     private static SmartProject project = null;
     private ProjectWindow projectWindow;
     private final HashMap<String,ImageIcon> icons = new HashMap<>();
+    private ImageIcon helpAboutIcon = null;
     
     public SmartProject()
             throws Exception
@@ -723,6 +726,13 @@ public class SmartProject
         icons.put("Location", getIcon(LOCATION_ICON, r));
         icons.put("View", getIcon(VIEW_ICON, r));
         icons.put("Issues Log", getIcon(ISSUE_LOG_ICON, r));
+        
+        try {
+            helpAboutIcon = ResourceUtils.getImageIcon(HELP_ABOUT_ICON);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         pw.setTreeCellRenderer(r);
     }
     
@@ -751,5 +761,10 @@ public class SmartProject
             return null;
         }
         return view;
+    }
+
+    @Override
+    public ImageIcon getHelpAboutIcon() {
+        return helpAboutIcon;
     }
 }
