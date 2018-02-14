@@ -29,7 +29,7 @@ public class Role
     public Role() 
     {
         dbObjectName = "Role";
-        referenceData = true;
+        referenceData = false;
         for (String s: FIELDS) {
             writableAttributes.put(s, new Attribute(""));
         }

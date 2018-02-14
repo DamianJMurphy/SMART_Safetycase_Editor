@@ -19,10 +19,7 @@ Functional
 - Go through and tidy up the editor forms
 
 
-- TODO: Move "Role" under "Care setting" in the project tree, refactor the update notification,
-    remove the "lists" from the top of the Care Setting and Role editors. Consider whether to
-    handle Care setting/role relationships using a relationship table or a foreign key relationship
-    with LocationID in a Role.
+- TODO: Remove "list" from care setting editor
 
 - TODO SECOND: Integrate Sharif's system/function editor
 

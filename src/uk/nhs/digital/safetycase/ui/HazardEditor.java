@@ -704,7 +704,6 @@ public class HazardEditor extends javax.swing.JPanel
             clearHazard();
             return;
         }
-        int selected = -1;
         int populated = -1;
         try {
             hazard = (Hazard) p;

@@ -19,7 +19,9 @@ package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.DefaultListModel;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
@@ -27,6 +29,7 @@ import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.Location;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
+import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.data.Role;
 
 /**
@@ -36,9 +39,8 @@ import uk.nhs.digital.safetycase.data.Role;
 public class RoleEditor extends javax.swing.JPanel
         implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
-    private final String[] columns = {"Name", "Category", "Description"};
+    private static final String[] LINKCOLUMNS = {"Type", "Name", "Comment"};
     private Role role = null;
-    private ArrayList<Role> projectRoles = new ArrayList<>();
     private EditorComponent editorComponent = null;
     private int newObjectProjectId = -1;
 
@@ -47,6 +49,8 @@ public class RoleEditor extends javax.swing.JPanel
      */
     public RoleEditor() {
         initComponents();
+        DefaultTableModel dtm = new DefaultTableModel(LINKCOLUMNS, 0);
+        linksTable.setModel(dtm);
     }
 
     /**
@@ -58,12 +62,6 @@ public class RoleEditor extends javax.swing.JPanel
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        existingRolesPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        rolesTable = new javax.swing.JTable();
-        newButton = new javax.swing.JButton();
-        editButton = new javax.swing.JButton();
-        deleteButton = new javax.swing.JButton();
         editorPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -74,71 +72,10 @@ public class RoleEditor extends javax.swing.JPanel
         descriptionTextArea = new javax.swing.JTextArea();
         saveButton = new javax.swing.JButton();
         discardButton = new javax.swing.JButton();
-
-        existingRolesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Roles"));
-
-        rolesTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(rolesTable);
-
-        newButton.setText("New");
-        newButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newButtonActionPerformed(evt);
-            }
-        });
-
-        editButton.setText("Edit");
-        editButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editButtonActionPerformed(evt);
-            }
-        });
-
-        deleteButton.setText("Delete");
-        deleteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout existingRolesPanelLayout = new javax.swing.GroupLayout(existingRolesPanel);
-        existingRolesPanel.setLayout(existingRolesPanelLayout);
-        existingRolesPanelLayout.setHorizontalGroup(
-            existingRolesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(existingRolesPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(existingRolesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, existingRolesPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(newButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8)
-                        .addComponent(deleteButton)))
-                .addContainerGap())
-        );
-        existingRolesPanelLayout.setVerticalGroup(
-            existingRolesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(existingRolesPanelLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-                .addGroup(existingRolesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(newButton)
-                    .addComponent(editButton)
-                    .addComponent(deleteButton))
-                .addContainerGap())
-        );
+        jLabel4 = new javax.swing.JLabel();
+        editLinksButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        linksTable = new javax.swing.JTable();
 
         editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         editorPanel.setEnabled(false);
@@ -168,6 +105,28 @@ public class RoleEditor extends javax.swing.JPanel
             }
         });
 
+        jLabel4.setText("Linked to");
+
+        editLinksButton.setText("Edit links");
+        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editLinksButtonActionPerformed(evt);
+            }
+        });
+
+        linksTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(linksTable);
+
         javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
         editorPanel.setLayout(editorPanelLayout);
         editorPanelLayout.setHorizontalGroup(
@@ -175,19 +134,26 @@ public class RoleEditor extends javax.swing.JPanel
             .addGroup(editorPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nameTextField)
-                    .addComponent(categoryTextField)
+                    .addComponent(jScrollPane1)
                     .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(discardButton)))
+                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nameTextField)
+                            .addComponent(categoryTextField)
+                            .addGroup(editorPanelLayout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                                .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(discardButton))))
+                    .addGroup(editorPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(editLinksButton)))
                 .addContainerGap())
         );
         editorPanelLayout.setVerticalGroup(
@@ -204,16 +170,21 @@ public class RoleEditor extends javax.swing.JPanel
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(editorPanelLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel3)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel3))
                     .addGroup(editorPanelLayout.createSequentialGroup()
                         .addGap(13, 13, 13)
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(saveButton)
                                 .addComponent(discardButton))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(18, 18, 18)
+                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(editLinksButton)
+                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -222,106 +193,71 @@ public class RoleEditor extends javax.swing.JPanel
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(existingRolesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(existingRolesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
-        editorPanel.setEnabled(true);
-        descriptionTextArea.setText("");
-        nameTextField.setText("");
-        categoryTextField.setText("");
-        rolesTable.clearSelection();
-        rolesTable.clearSelection();
-    }//GEN-LAST:event_newButtonActionPerformed
-
-    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        int current = rolesTable.getSelectedRow();
-        if (current == -1)
-            return;
-        editorPanel.setEnabled(true);
-        Role r = projectRoles.get(current);
-        nameTextField.setText(r.getAttributeValue("Name"));
-        categoryTextField.setText(r.getAttributeValue("Category"));
-        descriptionTextArea.setText(r.getAttributeValue("Description"));
-    }//GEN-LAST:event_editButtonActionPerformed
-
-    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-        int current = rolesTable.getSelectedRow();
-        if (current == -1)
-            return;
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Delete this Role ?", "Warning", JOptionPane.YES_NO_OPTION);
-        if (dialogResult == JOptionPane.NO_OPTION) {
-            return;
-        }
-        
-        try {
-            Role r = projectRoles.get(current);
-            MetaFactory.getInstance().getFactory(r.getDatabaseObjectName()).delete(r);
-            projectRoles.remove(current);
-            ((DefaultTableModel)rolesTable.getModel()).removeRow(current);
-            editorComponent.notifyEditorEvent(Project.DELETE, r);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }//GEN-LAST:event_deleteButtonActionPerformed
-
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
         descriptionTextArea.setText("");
         nameTextField.setText("");
         categoryTextField.setText("");
+        DefaultTableModel dtm = new DefaultTableModel(LINKCOLUMNS, 0);
+        linksTable.setModel(dtm);
     }//GEN-LAST:event_discardButtonActionPerformed
 
+    
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         
-        Role r = null;
-        int selected = rolesTable.getSelectedRow();
-        if (selected == -1)
-                r = new Role();
-        else 
-                r = projectRoles.get(selected);
-        r.setAttribute("Name", nameTextField.getText());
-        r.setAttribute("Category", categoryTextField.getText());
-        r.setAttribute("Description", descriptionTextArea.getText());
+        boolean created = false;
+        if (role == null) {
+                role = new Role();
+                created = true;
+        }
+        role.setAttribute("Name", nameTextField.getText());
+        role.setAttribute("Category", categoryTextField.getText());
+        role.setAttribute("Description", descriptionTextArea.getText());
         if (newObjectProjectId == -1)
-            r.setAttribute("ProjectID", Integer.parseInt(role.getAttributeValue("ProjectID")));
+            role.setAttribute("ProjectID", Integer.parseInt(role.getAttributeValue("ProjectID")));
         else 
-            r.setAttribute("ProjectID",newObjectProjectId);
+            role.setAttribute("ProjectID",newObjectProjectId);
         try {
-            MetaFactory.getInstance().getFactory(r.getDatabaseObjectName()).put(r);
-            projectRoles.add(r);
-            DefaultTableModel dtm = (DefaultTableModel)rolesTable.getModel();
-            String[] row = new String[columns.length];
-            row[0] = r.getAttributeValue("Name");
-            row[1] = r.getAttributeValue("Category");
-            row[2] = r.getAttributeValue("Description");
-            if (selected == -1) {
-                dtm.addRow(row);  
-                editorComponent.notifyEditorEvent(Project.ADD, r);
+            MetaFactory.getInstance().getFactory(role.getDatabaseObjectName()).put(role);
+            if (created) {
+                editorComponent.notifyEditorEvent(Project.ADD, role);
             } else {
-                dtm.removeRow(selected);
-                dtm.insertRow(selected, row);
-                editorComponent.notifyEditorEvent(Project.UPDATE, r);
+                editorComponent.notifyEditorEvent(Project.UPDATE, role);
             }                
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-
+        // Check to see if the Role has at least one link to a Location, if not
+        // display a warning that one needs to be added.
+        ArrayList<Relationship> r = role.getRelationships("Location");
+        if ((r == null) || (r.isEmpty())) {
+            JOptionPane.showMessageDialog(this, "Role has no links to Care Settings, at least one must be added before this Role is valid for a report", "Add link to Care Setting", JOptionPane.INFORMATION_MESSAGE);            
+        }
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
+        if (role == null) {
+            JOptionPane.showMessageDialog(this, "Save this Role first, before adding links", "Save first", JOptionPane.INFORMATION_MESSAGE);
+            return;            
+        }
+        JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
+        linkEditor.add(new LinkEditor(role).setParent(linkEditor));
+        linkEditor.pack();
+        linkEditor.setVisible(true);
+        setPersistableObject(role);
+    }//GEN-LAST:event_editLinksButtonActionPerformed
 
     @Override
     public void setEditorComponent(EditorComponent ed) {
@@ -331,37 +267,31 @@ public class RoleEditor extends javax.swing.JPanel
     @Override
     public void setPersistableObject(Persistable p) {
         if (p == null) {
-           newButtonActionPerformed(null);
+           discardButtonActionPerformed(null);
            return;
         }
-        int selected = -1;
         try {
             role = (Role)p;
-            DefaultTableModel dtm = new DefaultTableModel(columns, 0);
-            ArrayList<Persistable> roles = MetaFactory.getInstance().getChildren(role.getDatabaseObjectName(), "ProjectID", Integer.parseInt(role.getAttributeValue("ProjectID")));
-            if (roles != null) {
-                int i = 0;
-                for (Persistable s : roles) {
-                    Role r = (Role)s;
-                    if (r.isDeleted())
-                        continue;    
-                    if (r.getId() == role.getId())
-                        selected = i;
-                    projectRoles.add(r);
-                    String[] row = new String[columns.length];
-                    row[0] = r.getAttributeValue("Name");
-                    row[1] = r.getAttributeValue("Category");
-                    row[2] = r.getAttributeValue("Description");
-                    dtm.addRow(row);
-                    i++;
+            descriptionTextArea.setText(role.getAttributeValue("Description"));
+            nameTextField.setText(role.getAttributeValue("Name"));
+            categoryTextField.setText(role.getAttributeValue("Category"));
+            DefaultTableModel dtm = new DefaultTableModel(LINKCOLUMNS, 0);
+            HashMap<String,ArrayList<Relationship>> rels = role.getRelationshipsForLoad();
+            if (rels != null) {
+                for (String t : rels.keySet()) {
+                    ArrayList<Relationship> a = rels.get(t);
+                    if (a == null)
+                        continue;
+                    for (Relationship r : a) {
+                        String[] row = new String[LINKCOLUMNS.length];
+                        row[0] = t;
+                        row[1] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
+                        row[2] = r.getComment();
+                        dtm.addRow(row);
+                    }
                 }
             }
-            rolesTable.setModel(dtm);
-            if (selected != -1) {
-                rolesTable.clearSelection();
-                rolesTable.setRowSelectionInterval(selected, selected);
-            }
-            
+            linksTable.setModel(dtm);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -376,20 +306,18 @@ public class RoleEditor extends javax.swing.JPanel
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField categoryTextField;
-    private javax.swing.JButton deleteButton;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton discardButton;
-    private javax.swing.JButton editButton;
+    private javax.swing.JButton editLinksButton;
     private javax.swing.JPanel editorPanel;
-    private javax.swing.JPanel existingRolesPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable linksTable;
     private javax.swing.JTextField nameTextField;
-    private javax.swing.JButton newButton;
-    private javax.swing.JTable rolesTable;
     private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 
