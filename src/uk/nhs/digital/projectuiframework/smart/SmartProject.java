@@ -641,11 +641,21 @@ public class SmartProject
     private void fillOutNewProject(DefaultMutableTreeNode d) {
         DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode("Systems");
         d.add(dmtn);
-        for (String s : PROJECTCOMPONENTS) {
-            dmtn = new DefaultMutableTreeNode(s);
-            d.add(dmtn);
-        }
-        dmtn = new DefaultMutableTreeNode("Issues");
+        dmtn = new DefaultMutableTreeNode("Process");
+        d.add(dmtn);
+        dmtn = new DefaultMutableTreeNode("Hazard");
+        d.add(dmtn);
+        dmtn = new DefaultMutableTreeNode("Care settings");
+        d.add(dmtn);
+        dmtn = new DefaultMutableTreeNode("Role");
+        d.add(dmtn);
+        dmtn = new DefaultMutableTreeNode("Report");
+        d.add(dmtn);
+        dmtn = new DefaultMutableTreeNode("Views");
+        d.add(dmtn);
+        dmtn = new DefaultMutableTreeNode("Issues Log");
+        d.add(dmtn);
+        
     }
 
     @Override

@@ -18,16 +18,15 @@ Functional
 
 - Go through and tidy up the editor forms
 
+- In Bowtie editor, save needs to add or update the list in the top table
 
-- TODO: Remove "list" from care setting editor
-
-- TODO SECOND: Integrate Sharif's system/function editor
+- TODO NEXT: Integrate Sharif's system/function editor
 
 - TODO: Add "About" screen (Hannah to provide some content)
 
 - TODO: Probably need to detect name collisions within a set of child nodes in the tree.
 
-TODO: SmartProject.java: fillOutNewProject() should make  a project tree consistent with the one in initialise()
+
 
 
 

@@ -23,6 +23,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.Location;
 import uk.nhs.digital.safetycase.data.MetaFactory;
@@ -58,12 +59,6 @@ public class LocationEditor extends javax.swing.JPanel
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        existingLocationsPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        locationsTable = new javax.swing.JTable();
-        deleteLocationButton = new javax.swing.JButton();
-        editLocationButton = new javax.swing.JButton();
-        newLocationButton = new javax.swing.JButton();
         editorPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -77,72 +72,6 @@ public class LocationEditor extends javax.swing.JPanel
         jLabel4 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
         mnemonicTextField = new javax.swing.JTextField();
-
-        existingLocationsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Care settings"));
-
-        locationsTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(locationsTable);
-
-        deleteLocationButton.setText("Delete");
-        deleteLocationButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteLocationButtonActionPerformed(evt);
-            }
-        });
-
-        editLocationButton.setText("Edit");
-        editLocationButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editLocationButtonActionPerformed(evt);
-            }
-        });
-
-        newLocationButton.setText("New");
-        newLocationButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newLocationButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout existingLocationsPanelLayout = new javax.swing.GroupLayout(existingLocationsPanel);
-        existingLocationsPanel.setLayout(existingLocationsPanelLayout);
-        existingLocationsPanelLayout.setHorizontalGroup(
-            existingLocationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(existingLocationsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(existingLocationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(existingLocationsPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(newLocationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editLocationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteLocationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        existingLocationsPanelLayout.setVerticalGroup(
-            existingLocationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(existingLocationsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(existingLocationsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(deleteLocationButton)
-                    .addComponent(editLocationButton)
-                    .addComponent(newLocationButton))
-                .addContainerGap())
-        );
 
         editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         editorPanel.setEnabled(false);
@@ -241,73 +170,17 @@ public class LocationEditor extends javax.swing.JPanel
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(existingLocationsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(existingLocationsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void newLocationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newLocationButtonActionPerformed
-        editorPanel.setEnabled(true);
-        descriptionTextArea.setText("");
-        nameTextField.setText("");
-        mnemonicTextField.setText("");
-        locationsList.clearSelection();
-        locationsTable.clearSelection();
-    }//GEN-LAST:event_newLocationButtonActionPerformed
-
-    private void editLocationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLocationButtonActionPerformed
-        int current = locationsTable.getSelectedRow();
-        if (current == -1)
-            return;
-        editorPanel.setEnabled(true);
-        locationsList.clearSelection();
-        Location l = projectLocs.get(current);
-        nameTextField.setText(l.getAttributeValue("Name"));
-        mnemonicTextField.setText(l.getAttributeValue("Mnemonic"));
-        descriptionTextArea.setText(l.getAttributeValue("Description"));
-        int parent = Integer.parseInt(l.getAttributeValue("ParentLocationID"));
-        if (parent != -1) {
-            for (int i = 0; i < projectLocs.size(); i++) {
-                Location p = projectLocs.get(i);
-                if (p.getId() == parent) {
-                    locationsList.setSelectedIndex(i);
-                    break;
-                }
-            }
-        }
-    }//GEN-LAST:event_editLocationButtonActionPerformed
-
-    private void deleteLocationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteLocationButtonActionPerformed
-        int current = locationsTable.getSelectedRow();
-        if (current == -1)
-            return;
-        int dialogResult = JOptionPane.showConfirmDialog(null, "Delete this Care setting ?", "Warning", JOptionPane.YES_NO_OPTION);
-        if (dialogResult == JOptionPane.NO_OPTION) {
-            return;
-        }
-        
-        try {
-            Location l = projectLocs.get(current);
-            MetaFactory.getInstance().getFactory(l.getDatabaseObjectName()).delete(l);
-            projectLocs.remove(current);
-            ((DefaultTableModel)locationsTable.getModel()).removeRow(current);
-            editorComponent.notifyEditorEvent(Project.DELETE, l);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }//GEN-LAST:event_deleteLocationButtonActionPerformed
 
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
         descriptionTextArea.setText("");
@@ -318,47 +191,33 @@ public class LocationEditor extends javax.swing.JPanel
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
     
-        Location l = null;
-        int selected = locationsTable.getSelectedRow();
-        if (selected == -1)
-            l = new Location();
-        else
-            l = projectLocs.get(selected);
-        l.setAttribute("Name", nameTextField.getText());
-        l.setAttribute("Mnemonic", mnemonicTextField.getText());
-        l.setAttribute("Description", descriptionTextArea.getText());
+        boolean created = false;
+        if (location == null) {
+            location = new Location();
+            created = true;
+        }
+        location.setAttribute("Name", nameTextField.getText());
+        location.setAttribute("Mnemonic", mnemonicTextField.getText());
+        location.setAttribute("Description", descriptionTextArea.getText());
         if (newObjectProjectId == -1)
-            l.setAttribute("ProjectID", Integer.parseInt(location.getAttributeValue("ProjectID")));
+            location.setAttribute("ProjectID", Integer.parseInt(location.getAttributeValue("ProjectID")));
         else 
-            l.setAttribute("ProjectID",newObjectProjectId);
+            location.setAttribute("ProjectID",newObjectProjectId);
         int parent = locationsList.getSelectedIndex();
         if (locationsList.getSelectedIndex() != -1) {
             Location p = projectLocs.get(parent);
-            l.setAttribute("ParentLocationID", p.getId());
+            location.setAttribute("ParentLocationID", p.getId());
+        } else {
+            location.setAttribute("ParentLocationID", -1);
         }
         try {
-            MetaFactory.getInstance().getFactory(l.getDatabaseObjectName()).put(l);
-            projectLocs.add(l);
-            if (selected == -1)
-                ((DefaultListModel)locationsList.getModel()).addElement(l.getAttributeValue("Name"));
-            DefaultTableModel dtm = (DefaultTableModel)locationsTable.getModel();
-            String[] row = new String[columns.length];
-            row[0] = l.getAttributeValue("Name");
-            row[1] = l.getAttributeValue("Mnemonic");
-            row[2] = l.getAttributeValue("Description");
-            if (parent == -1) {
-                row[3] = "None";
+            MetaFactory.getInstance().getFactory(location.getDatabaseObjectName()).put(location);
+            if (created) {
+                editorComponent.notifyEditorEvent(Project.ADD, location);
+                projectLocs.add(location);
+                ((DefaultListModel)locationsList.getModel()).addElement(location.getAttributeValue("Name"));
             } else {
-                Location parentLoc = (Location)MetaFactory.getInstance().getFactory(location.getDatabaseObjectName()).get(parent);
-                row[3] = parentLoc.getAttributeValue("Name");
-            }
-            if (selected == -1) {
-                dtm.addRow(row);
-                editorComponent.notifyEditorEvent(Project.ADD, l);
-            } else {
-                dtm.removeRow(selected);
-                dtm.insertRow(selected, row);                
-                editorComponent.notifyEditorEvent(Project.UPDATE, l);
+                editorComponent.notifyEditorEvent(Project.UPDATE, location);
             }
         }
         catch (Exception e) {
@@ -366,56 +225,63 @@ public class LocationEditor extends javax.swing.JPanel
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    @Override
-    public void setPersistableObject(Persistable p) {
-        DefaultTableModel dtm = new DefaultTableModel(columns, 0);
-        if (p == null) {
-            locationsTable.setModel(dtm);
-            newLocationButtonActionPerformed(null);
+    private void displayLocation() {
+        if (location == null) {
+            discardButtonActionPerformed(null);
             return;
         }
-        int selected = -1;
+        descriptionTextArea.setText(location.getAttributeValue("Description"));
+        nameTextField.setText(location.getAttributeValue("Name"));
+        mnemonicTextField.setText(location.getAttributeValue("Mnemonic"));
+        if (location.getAttribute("ParentLocationID").getIntValue() == -1) {
+            locationsList.clearSelection();        
+        } else {
+            for (int i = 0; i < projectLocs.size(); i++) {
+                if (projectLocs.get(i).getId() == location.getAttribute("ParentLocationID").getIntValue()) {
+                    locationsList.setSelectedIndex(i);
+                    break;
+                }
+            }
+        }
+    }
+    
+    @Override
+    public void setPersistableObject(Persistable p) {
+        loadPotentialParents();
+        if (p == null) {
+            discardButtonActionPerformed(null);
+            return;
+        }
         try {
             location = (Location)p;
-            DefaultListModel dlm = new DefaultListModel();
-            ArrayList<Persistable> locs = MetaFactory.getInstance().getChildren(location.getDatabaseObjectName(), "ProjectID", Integer.parseInt(location.getAttributeValue("ProjectID")));
-            int i = -1;
-            if (locs != null) {
-                for (Persistable s : locs) {
-                    if (s.isDeleted())
-                        continue;
-                    i++;
-                    Location l = (Location)s;
-                    if (l.getId() == location.getId())
-                        selected = i;
-                    projectLocs.add(l);
-                    dlm.addElement(l.getAttributeValue("Name"));
-                    String[] row = new String[columns.length];
-                    row[0] = l.getAttributeValue("Name");
-                    row[1] = l.getAttributeValue("Mnemonic");
-                    row[2] = l.getAttributeValue("Description");
-                    int parent = Integer.parseInt(l.getAttributeValue("ParentLocationID"));
-                    if (parent == -1) {
-                        row[3] = "None";
-                    } else {
-                        Location parentLoc = (Location)MetaFactory.getInstance().getFactory(location.getDatabaseObjectName()).get(parent);
-                        row[3] = parentLoc.getAttributeValue("Name");
-                    }
-                    dtm.addRow(row);
-                }                    
-            }
-            locationsTable.setModel(dtm);
-            if (selected != -1) {
-                locationsTable.clearSelection();
-                locationsTable.setRowSelectionInterval(selected, selected);
-            }
-            locationsList.setModel(dlm);
+            displayLocation();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         
     }
 
+    private void loadPotentialParents() {
+        try {
+            projectLocs.clear();
+            DefaultListModel dlm = new DefaultListModel();
+            ArrayList<Persistable> locs = MetaFactory.getInstance().getChildren("Location", "ProjectID", SmartProject.getProject().getCurrentProjectID());
+            if (locs != null) {
+                for (Persistable s : locs) {
+                    if (s.isDeleted())
+                        continue;
+                    Location l = (Location)s;
+                    projectLocs.add(l);
+                    dlm.addElement(l.getAttributeValue("Name"));
+                }                    
+            }
+            locationsList.setModel(dlm);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     @Override
     public Component getComponent() {
         return this;
@@ -428,24 +294,18 @@ public class LocationEditor extends javax.swing.JPanel
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton deleteLocationButton;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton discardButton;
-    private javax.swing.JButton editLocationButton;
     private javax.swing.JPanel editorPanel;
-    private javax.swing.JPanel existingLocationsPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList<String> locationsList;
-    private javax.swing.JTable locationsTable;
     private javax.swing.JTextField mnemonicTextField;
     private javax.swing.JTextField nameTextField;
-    private javax.swing.JButton newLocationButton;
     private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 
