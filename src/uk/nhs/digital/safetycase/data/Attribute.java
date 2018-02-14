@@ -28,6 +28,7 @@ public class Attribute {
     public static final int STRING = 2;
     
     protected boolean empty = true;
+    protected boolean isDate = false;
     
     protected String stringValue = null;
     protected Integer intValue = null;
@@ -41,6 +42,9 @@ public class Attribute {
         empty = false;
         intValue = i; 
     }
+    
+    public boolean getIsDate() { return isDate; }
+    public void setIsDate(boolean b) { isDate = b; }
     
     @Override
     public String toString() {

@@ -576,7 +576,10 @@ public class Database {
         for (String s : t.getWritableAttributeNames()) {
             Attribute a = t.getAttribute(s);
             if (a.getType() == Attribute.STRING) {
-                sb.append(Database.prepareString(a.toString()));
+                if (a.getIsDate())
+                    sb.append(Database.prepareDate(a.toString()));
+                else
+                    sb.append(Database.prepareString(a.toString()));
             } else {
                 sb.append(a.toString());
             }
@@ -607,9 +610,16 @@ public class Database {
             sb.append(" = ");
             Attribute a = t.getAttribute(s);
             if (a.getType() == Attribute.STRING) {
-                sb.append(Database.prepareString(a.toString()));
+                if (a.getIsDate())
+                    sb.append(Database.prepareDate(a.toString()));
+                else
+                    sb.append(Database.prepareString(a.toString()));
             } else {
-                sb.append(a.toString());
+                if (a.getIsDate() && a.empty) {
+                    sb.append("null");
+                } else {
+                    sb.append(a.toString());
+                }
             }
             sb.append(", ");
         }
@@ -698,6 +708,15 @@ public class Database {
         
         sb.append("'");
         return sb.toString();
+    }
+    
+    public static final String prepareDate(String s) 
+            throws Exception
+    {
+        if ((s == null) || (s.trim().length() == 0))
+            return null;
+        Date d = DATEONLY.parse(s);
+        return prepareDate(d);
     }
     
     public static final String prepareDate(Date d) {

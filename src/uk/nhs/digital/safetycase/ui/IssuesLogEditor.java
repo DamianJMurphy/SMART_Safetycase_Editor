@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -31,7 +33,7 @@ public class IssuesLogEditor
         implements PersistableEditor
 {
     private static final String[] ISSUESCOLUMNS = {"Name", "Created", "Type", "Reolution Type"};
-    private static final String[] LINKSCOLUMNS = {"Type", "Name"};
+    private static final String[] LINKSCOLUMNS = {"Type", "Name", "Comment"};
     private EditorComponent editorComponent = null;
     private int newObjectProjectId = -1;
     private ArrayList<IssuesLog> logEntries = new ArrayList<>();
@@ -73,6 +75,16 @@ public class IssuesLogEditor
             issuesTable.setModel(dtm);
             dtm = new DefaultTableModel(LINKSCOLUMNS, 0);
             linksTable.setModel(dtm);
+            Collection<Persistable> log = MetaFactory.getInstance().getFactory("IssuesLog").getEntries();
+            if (log == null)
+                return;
+            for (Persistable l : log) {
+                IssuesLog issue = (IssuesLog)l;
+                logEntries.add(issue);
+            }
+            populateIssuesTable();
+            clearIssuesDisplay();
+            
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -130,6 +142,11 @@ public class IssuesLogEditor
         jScrollPane2.setViewportView(issuesTable);
 
         closedIssuesCheckbox.setText("Also show closed issues");
+        closedIssuesCheckbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closedIssuesCheckboxActionPerformed(evt);
+            }
+        });
 
         currentProjectOnlyCheckbox.setSelected(true);
         currentProjectOnlyCheckbox.setText("Show issues for current project only");
@@ -152,6 +169,11 @@ public class IssuesLogEditor
         jLabel1.setText("Linked to");
 
         editLinksButton.setText("Edit links");
+        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editLinksButtonActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Name");
 
@@ -353,16 +375,18 @@ public class IssuesLogEditor
         currentIssue.setAttribute("Resolution", resolutionTextArea.getText());
         currentIssue.setAttribute("ProjectID", SmartProject.getProject().getCurrentProjectID());
         if (currentIssue.getAttributeValue("ResolvedDate").length() == 0) {
-            if (((String)resolutionTypeComboBox.getSelectedItem()).length() == 0) {
+            if (((String)resolutionTypeComboBox.getSelectedItem()).length() != 0) {
                 currentIssue.setAttribute("ResolvedDate", DATEFORMAT.format(new Date()));
             }
         }
+        currentIssue.getAttribute("ResolvedDate").setIsDate(true);
         try {
             MetaFactory.getInstance().getFactory("IssuesLog").put(currentIssue);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+        populateIssuesTable();
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void unresolveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unresolveButtonActionPerformed
@@ -371,23 +395,30 @@ public class IssuesLogEditor
         resolutionDateTextField.setText("");
     }//GEN-LAST:event_unresolveButtonActionPerformed
 
-    @Override
-    public void setPersistableObject(Persistable p) {
-        try {
-            Collection<Persistable> log = MetaFactory.getInstance().getFactory("IssuesLog").getEntries();
-            if (log == null)
-                return;
-            for (Persistable l : log) {
-                IssuesLog issue = (IssuesLog)l;
-                logEntries.add(issue);
-            }
-            populateIssuesTable();
-            clearIssuesDisplay();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void closedIssuesCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closedIssuesCheckboxActionPerformed
+        populateIssuesTable();
+    }//GEN-LAST:event_closedIssuesCheckboxActionPerformed
+
+    private void populateLinksTable() {
+        
     }
+    
+    private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
+        if (currentIssue == null) {
+            JOptionPane.showMessageDialog(this, "Save this Issue first, before adding links", "Save first", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
+        JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
+        currentIssue.getAttribute("ResolvedDate").setIsDate(true);
+        linkEditor.add(new LinkEditor(currentIssue).setParent(linkEditor));
+        linkEditor.pack();
+        linkEditor.setVisible(true);
+        populateIssuesDisplay(currentIssue);
+    }//GEN-LAST:event_editLinksButtonActionPerformed
+
+    @Override
+    public void setPersistableObject(Persistable p) {}
 
     private void clearIssuesDisplay() {
         nameTextField.setText("");
@@ -400,6 +431,7 @@ public class IssuesLogEditor
     
     private void populateIssuesDisplay(IssuesLog issue) {
         currentIssue = issue;
+        currentIssue.getAttribute("ResolvedDate").setIsDate(true);
         nameTextField.setText(issue.getAttributeValue("Name"));
         typeComboBox.setSelectedItem(issue.getAttributeValue("GroupingType"));
         descriptionTextArea.setText(issue.getAttributeValue("Description"));
@@ -418,6 +450,7 @@ public class IssuesLogEditor
                             String[] row = new String[LINKSCOLUMNS.length];
                             row[0] = t;
                             row[1] = MetaFactory.getInstance().getFactory(t).get(r.getTarget()).getAttributeValue("Name");
+                            row[2] = r.getComment();
                             dtm.addRow(row);
                         }
                     }
@@ -437,7 +470,7 @@ public class IssuesLogEditor
             if (!closedIssuesCheckbox.isSelected()) {
                 if (issue.isDeleted())
                     continue;
-                if (issue.getAttributeValue("ResolvedDate").length() == 0)
+                if (issue.getAttributeValue("ResolvedDate").length() != 0)
                     continue;
             }
             if (!currentProjectOnlyCheckbox.isSelected() || 
@@ -451,6 +484,7 @@ public class IssuesLogEditor
                 displayedEntries.add(issue);
             }
         }
+        issuesTable.setModel(dtm);
     }
     
     @Override

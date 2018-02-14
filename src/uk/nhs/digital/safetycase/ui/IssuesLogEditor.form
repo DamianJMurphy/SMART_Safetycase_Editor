@@ -77,6 +77,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Also show closed issues"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="closedIssuesCheckboxActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="currentProjectOnlyCheckbox">
       <Properties>
@@ -226,6 +229,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Edit links"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editLinksButtonActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
