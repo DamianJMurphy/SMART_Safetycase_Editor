@@ -40,6 +40,7 @@ public class HazardTypeView
     private static final String[] COLUMNS = {"Name", "Status", "Initial rating", "Residual rating"};
     private Project project = null;
     private ArrayList<Hazard> hazards = new ArrayList<>();
+    private ArrayList<Hazard> displayedHazards = new ArrayList<>();
     /**
      * Creates new form HazardTypeView
      */
@@ -56,7 +57,7 @@ public class HazardTypeView
                 int sel = hazardsTable.getSelectedRow();
                 if (sel == -1)
                     return;
-                Hazard h = hazards.get(sel);
+                Hazard h = displayedHazards.get(sel);
                 populateHazardPanel(h);
             }
         });
@@ -335,10 +336,11 @@ public class HazardTypeView
             return;
         
         DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
-        
+        displayedHazards.clear();
         for (Hazard h : hazards) {
             String t = h.getAttributeValue("GroupingType");
             if (t.contentEquals(s)) {
+                displayedHazards.add(h);
                 String[] row = new String[COLUMNS.length];
                 row[0] = h.getAttributeValue("Name");
                 row[1] = h.getAttributeValue("Status");

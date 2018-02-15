@@ -18,7 +18,6 @@ Functional
 
 - Go through and tidy up the editor forms
 
-
 - TODO: Reports
 
 - TODO NEXT: Integrate Sharif's system/function editor

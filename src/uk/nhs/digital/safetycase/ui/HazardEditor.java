@@ -118,9 +118,11 @@ public class HazardEditor extends javax.swing.JPanel
         try {
             ValueSet hazardStatus = MetaFactory.getInstance().getValueSet("HazardStatus");
             Iterator<String> statii = hazardStatus.iterator();
+            statusComboBox.addItem("Select...");
             while(statii.hasNext()) {
                 String s = statii.next();
-                statusComboBox.addItem(s);
+                if (!s.contentEquals("Select..."))
+                    statusComboBox.addItem(s);
             }
             ArrayList<String> conds = MetaFactory.getInstance().getFactory("Hazard").getDistinctSet("GroupingType");
             if (conds.isEmpty()) {
