@@ -18,8 +18,6 @@ Functional
 
 - Go through and tidy up the editor forms
 
-- TODO: Tree updates - particularly from Hazard - not quite complete. Doesn't seem to update name display
-    of containing tree node for a hazard (but actual hazard leaf node name is updated)
 
 - TODO: Reports
 

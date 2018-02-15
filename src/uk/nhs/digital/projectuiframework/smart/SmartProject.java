@@ -627,12 +627,49 @@ public class SmartProject
                 break;
             case uk.nhs.digital.projectuiframework.Project.UPDATE:    
                 // Find the node we're replacing in the container node, by type and name
+                boolean foundByName = false;
                 for (int i = 0; i < containerNode.getChildCount(); i++) {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode)containerNode.getChildAt(i);
                     if (node.toString().contentEquals(eventNode.toString())) {
                         treeModel.removeNodeFromParent(node);
                         treeModel.insertNodeInto(eventNode, containerNode, i);
+                        foundByName = true;
                         break;
+                    }
+                }
+                if (!foundByName) {
+                    // Didn't find by name, probably because the event we're being notified of is a
+                    // change of name. Search by type and id instead
+                    nodes = containerNode.depthFirstEnumeration();
+                    while (nodes.hasMoreElements()) {
+                        DefaultMutableTreeNode node = (DefaultMutableTreeNode)nodes.nextElement();
+                        Object n = node.getUserObject();
+                        if (n instanceof uk.nhs.digital.safetycase.data.Persistable) {
+                            Persistable existing = (Persistable)n;
+                            if (existing.getDatabaseObjectName().contentEquals(p.getDatabaseObjectName())) {
+                                if (existing.getId() == p.getId()) {
+                                    // If this is a Hazard, we need to replace the parent of "node" wiht the
+                                    // event node.
+                                    if (existing.getDatabaseObjectName().contentEquals("Hazard")) {
+                                        node = (DefaultMutableTreeNode)node.getParent();
+                                        int i = treeModel.getIndexOfChild(containerNode, node);
+                                        treeModel.removeNodeFromParent(node);
+                                        treeModel.insertNodeInto(eventNode, containerNode, i);
+                                    } else {
+                                        int i = treeModel.getIndexOfChild(containerNode, node);
+                                        treeModel.removeNodeFromParent(node);
+                                        try {
+                                            treeModel.insertNodeInto(eventNode, containerNode, i);
+                                        }
+                                        catch (ArrayIndexOutOfBoundsException aiobe) {
+                                            containerNode.add(eventNode);
+                                            treeModel.nodeChanged(containerNode);
+                                        }
+                                    }
+                                    break;                                    
+                                }
+                            }
+                        }
                     }
                 }
                 break;
