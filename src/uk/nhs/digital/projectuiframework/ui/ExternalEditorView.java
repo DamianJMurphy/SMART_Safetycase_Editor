@@ -44,6 +44,7 @@ public class ExternalEditorView extends javax.swing.JFrame {
         setSize(600,500);
         setResizable(true);
         getContentPane().add(editorComponent);
+        pack();
         setVisible(true);
     }
 

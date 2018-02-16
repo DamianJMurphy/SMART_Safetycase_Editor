@@ -24,7 +24,11 @@ Functional
 
 - TODO: Rename "Process" to "Care Process"
 
-- TODO: "Delete" buttons need to close the editor forms that they're called from
+- TODO: "Delete" buttons need to close the editor forms that they're called from. When we're
+    docked we can fine the containing JTabbedPane, but when undocked it just goes up to
+    JRootPane and we don't (apparently) see the ExternalEditorView. Need a mechanism to
+    allow the PersistableEditor to determine where it is, and to make a call to put itself
+    away.
 
 - TODO: Double-click on a linked Hazard in the table in Process Step Detail form should launch
     the Hazard editor. This will require making the ProcessStepDetail form a Persistable
