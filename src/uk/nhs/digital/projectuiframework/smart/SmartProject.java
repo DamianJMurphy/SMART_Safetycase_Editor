@@ -578,7 +578,7 @@ public class SmartProject
             DefaultMutableTreeNode peditor = new DefaultMutableTreeNode(proj.getTitle());
             peditor.setUserObject(proj);
             n.add(peditor);
-            fillOutNewProject(n);
+            fillOutNewProject(n, proj.getId());
             treeModel.insertNodeInto(n, plist, 0);
             return;
         }
@@ -666,7 +666,7 @@ public class SmartProject
             case uk.nhs.digital.projectuiframework.Project.ADD:
                 treeModel.insertNodeInto(eventNode, containerNode, containerNode.getChildCount());
                 if (p.getDatabaseObjectName().contentEquals("Project"))
-                    fillOutNewProject(eventNode);
+                    fillOutNewProject(eventNode, p.getId());
                 break;
             case uk.nhs.digital.projectuiframework.Project.DELETE:
                 for (int i = 0; i < containerNode.getChildCount(); i++) {
@@ -738,7 +738,7 @@ public class SmartProject
         }
     }
     
-    private void fillOutNewProject(DefaultMutableTreeNode d) {
+    private void fillOutNewProject(DefaultMutableTreeNode d, int pid) {
         DefaultMutableTreeNode dmtn = null;
         dmtn = new DefaultMutableTreeNode("Systems");
         d.add(dmtn);
@@ -752,8 +752,8 @@ public class SmartProject
         d.add(dmtn);
         dmtn = new DefaultMutableTreeNode("Issues Log");
         d.add(dmtn);
-        dmtn = new DefaultMutableTreeNode("Views");
-        d.add(dmtn);
+        DefaultMutableTreeNode viewsNode = populateViewsNode(pid);        
+        d.add(viewsNode);
         dmtn = new DefaultMutableTreeNode("Report");
         d.add(dmtn);
         

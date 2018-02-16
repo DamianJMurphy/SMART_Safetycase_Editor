@@ -24,6 +24,8 @@ Functional
 
 - TODO: Rename "Process" to "Care Process"
 
+- TODO: "Delete" buttons need to close the editor forms that they're called from
+
 - TODO: Double-click on a linked Hazard in the table in Process Step Detail form should launch
     the Hazard editor. This will require making the ProcessStepDetail form a Persistable
     Editor and running it in an ExternalEditorView (as the Hazard Editor is from the
