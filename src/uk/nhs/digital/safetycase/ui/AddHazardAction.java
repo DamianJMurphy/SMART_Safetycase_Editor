@@ -23,8 +23,10 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.Action;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.safetycase.data.MetaFactory;
@@ -101,6 +103,11 @@ public class AddHazardAction
                     if (steps != null) {
                         for (Persistable p : steps) {
                             if (p.getAttributeValue("GraphCellId").contentEquals(selected.getId())) {
+                                
+                                HazardEditor he = new HazardEditor().setParent((ProcessStep)p);
+                                ExternalEditorView editorView = new ExternalEditorView(he.getComponent(), p.getAttributeValue("Name") + ":Hazards", SmartProject.getProject().getProjectWindow().getMainWindowTabbedPane());
+                                break;
+/*
                                 BowtieEditor bte = new BowtieEditor();
                                 bte.setPersistableObject((ProcessStep)p);
                                 JTabbedPane tp = null;
@@ -119,7 +126,8 @@ public class AddHazardAction
                                     }
                                 }
                                 ExternalEditorView editorView = new ExternalEditorView(bte.getComponent(), p.getAttributeValue("Name") + ":Hazards", tp);
-                                break;
+*/
+//                                break;
                             }
                         }
                     }

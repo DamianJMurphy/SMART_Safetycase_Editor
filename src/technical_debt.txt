@@ -18,9 +18,27 @@ Functional
 
 - Go through and tidy up the editor forms
 
+
+- TODO: Look at putting in a check routine to cascade deletes... maybe. Uncontrolled
+    that could accidentally wipe out an entire project and safe rules will be tricky.
+
+- TODO: Rename "Process" to "Care Process"
+
+- TODO: Double-click on a linked Hazard in the table in Process Step Detail form should launch
+    the Hazard editor. This will require making the ProcessStepDetail form a Persistable
+    Editor and running it in an ExternalEditorView (as the Hazard Editor is from the
+    graphical process step popup menu), because at the moment it is displayed as a modal
+    dialog so wouldn't allow user interaction with the displayed hazard form.
+
+- TODO: Modifications inside the graphical editors:
+    - TODO: See if it is possible to auto-wrap the text in boxes in the graphical editors
+    - TODO: See about a single block of colour and no gradient by default in process editor
+    - TODO: Default shape colours in process editor (yellow for decision, blue for activity)
+
+
 - TODO: Reports
 
-- TODO NEXT: Integrate Sharif's system/function editor
+- TODO: Integrate Sharif's system/function editor
 
 - TODO: Probably need to detect name collisions within a set of child nodes in the tree.
 

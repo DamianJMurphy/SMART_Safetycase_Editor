@@ -25,6 +25,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.Location;
 import uk.nhs.digital.safetycase.data.MetaFactory;
@@ -98,7 +99,7 @@ public class RoleEditor extends javax.swing.JPanel
             }
         });
 
-        discardButton.setText("Discard");
+        discardButton.setText("Delete");
         discardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 discardButtonActionPerformed(evt);
@@ -146,7 +147,7 @@ public class RoleEditor extends javax.swing.JPanel
                             .addComponent(categoryTextField)
                             .addGroup(editorPanelLayout.createSequentialGroup()
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                                 .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(discardButton))))
@@ -206,11 +207,27 @@ public class RoleEditor extends javax.swing.JPanel
     }// </editor-fold>//GEN-END:initComponents
 
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
-        descriptionTextArea.setText("");
-        nameTextField.setText("");
-        categoryTextField.setText("");
-        DefaultTableModel dtm = new DefaultTableModel(LINKCOLUMNS, 0);
-        linksTable.setModel(dtm);
+
+        if (role == null)
+            return;
+        
+        int r = JOptionPane.showConfirmDialog(this, "Really delete this Role ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);        
+        if (r == JOptionPane.CANCEL_OPTION)
+            return;
+        
+        try {
+            MetaFactory.getInstance().getFactory("Role").delete(role);
+            SmartProject.getProject().editorEvent(Project.DELETE, role);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+//        descriptionTextArea.setText("");
+//        nameTextField.setText("");
+//        categoryTextField.setText("");
+//        DefaultTableModel dtm = new DefaultTableModel(LINKCOLUMNS, 0);
+//        linksTable.setModel(dtm);
     }//GEN-LAST:event_discardButtonActionPerformed
 
     

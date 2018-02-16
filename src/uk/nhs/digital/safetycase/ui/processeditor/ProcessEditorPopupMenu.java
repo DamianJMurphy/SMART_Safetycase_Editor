@@ -45,7 +45,7 @@ public class ProcessEditorPopupMenu extends JPopupMenu
                 if (selected) {
                     add(editor.bind("Details", new ProcessStepDetailsAction(editor.getGraphComponent().getGraph().getSelectionCell()),
                         "/com/mxgraph/examples/swing/images/collapse.gif"));
-                    add(editor.bind("Hazards", new AddHazardAction(editor.getGraphComponent().getGraph().getSelectionCell()),
+                    add(editor.bind("Add new Hazard", new AddHazardAction(editor.getGraphComponent().getGraph().getSelectionCell()),
                         "/com/mxgraph/examples/swing/images/maximize.gif"));                    
                     add(editor.bind("Link", new LinkAction(editor.getGraphComponent().getGraph().getSelectionCell()),
 				"/com/mxgraph/examples/swing/images/entity.gif"));

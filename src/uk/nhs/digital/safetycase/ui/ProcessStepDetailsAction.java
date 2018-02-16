@@ -99,7 +99,7 @@ public class ProcessStepDetailsAction
                     if (steps != null) {
                         for (Persistable p : steps) {
                             if (p.getAttributeValue("GraphCellId").contentEquals(selected.getId())) {
-                                JDialog detailEditor = new JDialog(JOptionPane.getFrameForComponent(c), true);
+                                JDialog detailEditor = new JDialog(JOptionPane.getFrameForComponent(c), false);
                                 detailEditor.add(new ProcessStepDetail((ProcessStep)p).setParent(detailEditor));
                                 detailEditor.pack();
                                 detailEditor.setVisible(true);

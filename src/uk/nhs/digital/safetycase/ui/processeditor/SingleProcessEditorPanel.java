@@ -128,7 +128,6 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
         deleteButton = new javax.swing.JButton();
-        discardButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         linksPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -154,13 +153,6 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteButtonActionPerformed(evt);
-            }
-        });
-
-        discardButton.setText("Discard");
-        discardButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                discardButtonActionPerformed(evt);
             }
         });
 
@@ -243,13 +235,12 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(deleteButton)
-                        .addGap(167, 167, 167)
+                        .addGap(248, 248, 248)
                         .addComponent(processEditorButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(discardButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(deleteButton))
                     .addComponent(linksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -274,21 +265,15 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(deleteButton)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(discardButton)
-                        .addComponent(saveButton))
+                        .addComponent(saveButton)
+                        .addComponent(deleteButton))
                     .addComponent(processEditorButton))
                 .addGap(18, 18, 18)
                 .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
-        setData(process.getAttributeValue("Name"), process.getAttributeValue("Version"), process.getAttributeValue("Source"), 
-                    process.getAttributeValue("Description"));
-    }//GEN-LAST:event_discardButtonActionPerformed
 
     void setNewObjectProjectId(int i) {
         newObjectProjectId = i;
@@ -326,6 +311,11 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         if (process == null)
             return;
+
+        int r = JOptionPane.showConfirmDialog(this, "Really delete this Care process ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);        
+        if (r == JOptionPane.CANCEL_OPTION)
+            return;
+        
         try {
             MetaFactory.getInstance().getFactory("Process").delete(process);
             SmartProject.getProject().editorEvent(Project.DELETE, process);
@@ -400,7 +390,6 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextArea descriptionTextArea;
-    private javax.swing.JButton discardButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

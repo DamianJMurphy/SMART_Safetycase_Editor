@@ -89,7 +89,7 @@ public class LocationEditor extends javax.swing.JPanel
 
         jScrollPane2.setViewportView(locationsList);
 
-        discardButton.setText("Discard");
+        discardButton.setText("Delete");
         discardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 discardButtonActionPerformed(evt);
@@ -183,10 +183,27 @@ public class LocationEditor extends javax.swing.JPanel
     }// </editor-fold>//GEN-END:initComponents
 
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
-        descriptionTextArea.setText("");
-        nameTextField.setText("");
-        mnemonicTextField.setText("");
-        locationsList.clearSelection();
+
+        if (location == null)
+            return;
+        
+        int r = JOptionPane.showConfirmDialog(this, "Really delete this Care setting ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);        
+        if (r == JOptionPane.CANCEL_OPTION)
+            return;
+        
+        try {
+            MetaFactory.getInstance().getFactory("Location").delete(location);
+            SmartProject.getProject().editorEvent(Project.DELETE, location);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+
+//        descriptionTextArea.setText("");
+//        nameTextField.setText("");
+//        mnemonicTextField.setText("");
+//        locationsList.clearSelection();
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed

@@ -58,6 +58,7 @@ public class SmartProject
     public static final String LOCATION_ICON = "/uk/nhs/digital/projectuiframework/smart/earth.png";
     public static final String VIEW_ICON = "/uk/nhs/digital/projectuiframework/smart/view.png";
     public static final String ISSUE_LOG_ICON = "/uk/nhs/digital/safetycase/ui/issueslog.png";
+    public static final String PROJECT_ICON = "/uk/nhs/digital/safetycase/ui/project.png";
     
     public static final String HELP_ABOUT_ICON = "/uk/nhs/digital/projectuiframework/smart/smart_splash_demo.jpg";
     
@@ -295,39 +296,60 @@ public class SmartProject
         Collection<Project> projects = pf.getEntries();
                 
         for (Project proj : projects) {
-            DefaultMutableTreeNode p = new DefaultMutableTreeNode(proj.getTitle());
-            p.setUserObject(proj);
-            ArrayList<Persistable> list = metaFactory.getChildren("System", "ProjectID", proj.getId());
-            DefaultMutableTreeNode systemsNode = new DefaultMutableTreeNode("Systems");
-            p.add(systemsNode);
-            if (list != null) {
-                for (Persistable s : list) {                
-                    DefaultMutableTreeNode sn = new DefaultMutableTreeNode(s.getTitle());
-                    uk.nhs.digital.safetycase.data.System sys = (uk.nhs.digital.safetycase.data.System)s;
-                    sn.setUserObject(sys);
-                    systemsNode.add(sn);
-                    populateSystemFunctions(sn, s.getId());
-                }
+            if (!proj.isDeleted()) {
+                DefaultMutableTreeNode p = populateProject(proj);
+                // TO DO: Data quality check reports and issues need to be added here, but the
+                // users need some understanding of this first, and we might not do it properly
+                // for the demo
+                projectsNode.add(p);
             }
-            populateProjectComponent("Process", p, proj.getId());
-            p.add(populateHazard(proj.getId()));
-            
-            for (String s : PROJECTOTHERCOMPONENTS) {
-                populateProjectComponent(s, p, proj.getId());
-            }
-            DefaultMutableTreeNode viewsNode = populateViewsNode(proj.getId());
-            p.add(viewsNode);
-            DefaultMutableTreeNode issuesNode = new DefaultMutableTreeNode("Issues Log");
-            p.add(issuesNode);
-            // TO DO: Data quality check reports and issues need to be added here, but the
-            // users need some understanding of this first, and we might not do it properly
-            // for the demo
-            projectsNode.add(p);
         }
         treeModel = new DefaultTreeModel(new DefaultMutableTreeNode("SMART"));
         ((DefaultMutableTreeNode)treeModel.getRoot()).add(root);
     }
 
+    private DefaultMutableTreeNode populateProject(uk.nhs.digital.safetycase.data.Project proj) {
+        DefaultMutableTreeNode p = new DefaultMutableTreeNode(proj.getTitle());
+        p.setUserObject(proj);
+        DefaultMutableTreeNode peditor = new DefaultMutableTreeNode(proj.getTitle());
+        peditor.setUserObject(proj);
+        p.add(peditor);
+        ArrayList<Persistable> list = metaFactory.getChildren("System", "ProjectID", proj.getId());
+        DefaultMutableTreeNode systemsNode = new DefaultMutableTreeNode("Systems");
+        p.add(systemsNode);
+        if (list != null) {
+            for (Persistable s : list) {
+                DefaultMutableTreeNode sn = new DefaultMutableTreeNode(s.getTitle());
+                uk.nhs.digital.safetycase.data.System sys = (uk.nhs.digital.safetycase.data.System) s;
+                sn.setUserObject(sys);
+                systemsNode.add(sn);
+                try {
+                    populateSystemFunctions(sn, s.getId());
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        populateProjectComponent("Care Settings", p, proj.getId());
+        populateProjectComponent("Role", p, proj.getId());
+        populateProjectComponent("Process", p, proj.getId());
+        p.add(populateHazard(proj.getId()));
+
+//        for (String s : PROJECTOTHERCOMPONENTS) {
+//            populateProjectComponent(s, p, proj.getId());
+//        }
+        DefaultMutableTreeNode issuesNode = new DefaultMutableTreeNode("Issues Log");
+        p.add(issuesNode);
+        
+        DefaultMutableTreeNode viewsNode = populateViewsNode(proj.getId());
+        p.add(viewsNode);
+        
+        populateProjectComponent("Report", p, proj.getId());
+
+        return p;
+    }
+    
     private DefaultMutableTreeNode populateViewsNode(int pid) 
     {
         DefaultMutableTreeNode views = new DefaultMutableTreeNode("Views");
@@ -359,7 +381,8 @@ public class SmartProject
         if (list != null) {            
             for (Persistable p : list) {
                 Hazard hz = (Hazard)p;
-                hazardsNode.add(populateSingleHazard(hz));
+                if (!hz.isDeleted())
+                    hazardsNode.add(populateSingleHazard(hz));
             }
         }
         return hazardsNode;
@@ -479,6 +502,8 @@ public class SmartProject
             return null;
         Persistable p = null;
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)o;
+        if (!node.isLeaf())
+            return null;
         try {
             p = (Persistable)node.getUserObject();
             return icons.get(p.getDatabaseObjectName());
@@ -542,6 +567,34 @@ public class SmartProject
         }
     }
     
+    private void updateProjectNodeInTree(Persistable p, int ev) {
+        
+        uk.nhs.digital.safetycase.data.Project proj = (uk.nhs.digital.safetycase.data.Project)p;
+        
+        DefaultMutableTreeNode plist = (DefaultMutableTreeNode)treeModel.getChild(root, 0);
+        if (ev == uk.nhs.digital.projectuiframework.Project.ADD) {
+            DefaultMutableTreeNode n = new DefaultMutableTreeNode(proj.getTitle());
+            n.setUserObject(proj);
+            DefaultMutableTreeNode peditor = new DefaultMutableTreeNode(proj.getTitle());
+            peditor.setUserObject(proj);
+            n.add(peditor);
+            fillOutNewProject(n);
+            treeModel.insertNodeInto(n, plist, 0);
+            return;
+        }
+        DefaultMutableTreeNode pcontainer = populateProject(proj);
+        for (int i = 0; i < plist.getChildCount(); i++) {
+            DefaultMutableTreeNode pn = (DefaultMutableTreeNode)plist.getChildAt(i);            
+//            pcontainer.add(n);
+            uk.nhs.digital.safetycase.data.Project existing = (uk.nhs.digital.safetycase.data.Project)pn.getUserObject();
+            if (existing.getId() == p.getId()) {
+                treeModel.removeNodeFromParent(pn);
+                if (ev == uk.nhs.digital.projectuiframework.Project.UPDATE)
+                    treeModel.insertNodeInto(pcontainer, plist, i);
+                return;
+            }
+        }
+    }
     
     @Override
     public void editorEvent(int ev, Object o) {
@@ -554,8 +607,8 @@ public class SmartProject
         } else if (p.getDatabaseObjectName().contentEquals("Location")) {
             search = "Care Settings";
         } else if (p.getDatabaseObjectName().contentEquals("Project")) {
-            search = "Projects";
-            updateroot = true;
+            updateProjectNodeInTree(p, ev);
+            return;
         } else if ("HazardCauseControlEffect".contains(p.getDatabaseObjectName())) {
             search = "Hazard";
         } else {    
@@ -618,10 +671,17 @@ public class SmartProject
             case uk.nhs.digital.projectuiframework.Project.DELETE:
                 for (int i = 0; i < containerNode.getChildCount(); i++) {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode)containerNode.getChildAt(i);
-                    Persistable pr = (Persistable)node.getUserObject();
-                    if (pr.getTitle().contentEquals(p.getTitle()) && (pr.getId() == p.getId())) {
-                        treeModel.removeNodeFromParent(node);
-                        break;
+                    if (containerNode.getUserObject().toString().contentEquals("Hazard")) {
+                        if (node.getUserObject().toString().contentEquals(p.getTitle())) {
+                            treeModel.removeNodeFromParent(node);
+                            break;                            
+                        }
+                    } else {
+                        Persistable pr = (Persistable)node.getUserObject();
+                        if (pr.getTitle().contentEquals(p.getTitle()) && (pr.getId() == p.getId())) {
+                            treeModel.removeNodeFromParent(node);
+                            break;
+                        }
                     }
                 }
                 break;
@@ -679,21 +739,22 @@ public class SmartProject
     }
     
     private void fillOutNewProject(DefaultMutableTreeNode d) {
-        DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode("Systems");
-        d.add(dmtn);
-        dmtn = new DefaultMutableTreeNode("Process");
-        d.add(dmtn);
-        dmtn = new DefaultMutableTreeNode("Hazard");
+        DefaultMutableTreeNode dmtn = null;
+        dmtn = new DefaultMutableTreeNode("Systems");
         d.add(dmtn);
         dmtn = new DefaultMutableTreeNode("Care settings");
         d.add(dmtn);
         dmtn = new DefaultMutableTreeNode("Role");
         d.add(dmtn);
-        dmtn = new DefaultMutableTreeNode("Report");
+        dmtn = new DefaultMutableTreeNode("Process");
+        d.add(dmtn);
+        dmtn = new DefaultMutableTreeNode("Hazard");
+        d.add(dmtn);
+        dmtn = new DefaultMutableTreeNode("Issues Log");
         d.add(dmtn);
         dmtn = new DefaultMutableTreeNode("Views");
         d.add(dmtn);
-        dmtn = new DefaultMutableTreeNode("Issues Log");
+        dmtn = new DefaultMutableTreeNode("Report");
         d.add(dmtn);
         
     }
@@ -763,6 +824,7 @@ public class SmartProject
         icons.put("Location", getIcon(LOCATION_ICON, r));
         icons.put("View", getIcon(VIEW_ICON, r));
         icons.put("Issues Log", getIcon(ISSUE_LOG_ICON, r));
+        icons.put("Project", getIcon(PROJECT_ICON, r));
         
         try {
             helpAboutIcon = ResourceUtils.getImageIcon(HELP_ABOUT_ICON);

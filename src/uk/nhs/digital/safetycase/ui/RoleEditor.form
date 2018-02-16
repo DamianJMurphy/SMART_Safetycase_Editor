@@ -63,7 +63,7 @@
                               <Component id="categoryTextField" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Component id="jScrollPane2" min="-2" pref="273" max="-2" attributes="0"/>
-                                  <EmptySpace pref="27" max="32767" attributes="0"/>
+                                  <EmptySpace pref="33" max="32767" attributes="0"/>
                                   <Component id="saveButton" min="-2" pref="89" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="discardButton" min="-2" max="-2" attributes="0"/>
@@ -167,7 +167,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="discardButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Discard"/>
+            <Property name="text" type="java.lang.String" value="Delete"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="discardButtonActionPerformed"/>

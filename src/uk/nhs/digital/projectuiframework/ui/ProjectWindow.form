@@ -4,11 +4,20 @@
   <NonVisualComponents>
     <Menu class="javax.swing.JMenuBar" name="mainMenu">
       <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="66" red="33" type="rgb"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        </Property>
         <Property name="name" type="java.lang.String" value="mainMenu" noResource="true"/>
       </Properties>
       <SubComponents>
         <Menu class="javax.swing.JMenu" name="mainFileMenu">
           <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="File"/>
           </Properties>
           <SubComponents>
@@ -35,6 +44,9 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="toolsMenu">
           <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Tools"/>
           </Properties>
           <SubComponents>
@@ -60,6 +72,9 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="helpMenu">
           <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Help"/>
           </Properties>
           <SubComponents>

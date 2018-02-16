@@ -17,28 +17,50 @@
  */
 package uk.nhs.digital.safetycase.ui;
 
+import java.awt.Component;
 import javax.swing.JDialog;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
+import uk.nhs.digital.safetycase.data.Persistable;
 
 /**
  *
  * @author damian
  */
-public class ProjectEditor extends javax.swing.JPanel {
-
+public class ProjectEditor 
+        extends javax.swing.JPanel 
+        implements uk.nhs.digital.safetycase.ui.PersistableEditor
+{
+    private boolean setViaMenu = false;
+    private boolean create = false;
     private JDialog parent = null;
     private SmartProject smartProject = null;
+    private EditorComponent editorComponent = null;
+    private uk.nhs.digital.safetycase.data.Project project = null;
     /**
      * Creates new form ProjectEditor
      */
-    public ProjectEditor(Project sp) {
+    public ProjectEditor(uk.nhs.digital.projectuiframework.Project sp) {
         initComponents();
+        setViaMenu = true;
+        saveButton.setVisible(false);
+        saveButton.setEnabled(false);
+        deleteButton.setVisible(false);
+        deleteButton.setEnabled(false);
         smartProject = (SmartProject)sp;
         ownerTextField.setText(System.getProperty("user.name"));
     }
 
+    public ProjectEditor() {
+        initComponents();
+        createProjectButton.setVisible(false);
+        createProjectButton.setEnabled(false);
+        cancelCreateButton.setVisible(false);
+        cancelCreateButton.setEnabled(false);
+    }
+    
     public ProjectEditor setParent(JDialog p) 
     { 
         parent = p; 
@@ -64,19 +86,32 @@ public class ProjectEditor extends javax.swing.JPanel {
         descriptionTextArea = new javax.swing.JTextArea();
         cancelCreateButton = new javax.swing.JButton();
         createProjectButton = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
+
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setText("Name");
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 14, -1, -1));
 
         jLabel2.setText("Owner");
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 51, -1, -1));
 
         jLabel3.setText("Customer");
+        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 88, -1, -1));
 
         jLabel4.setText("Description");
+        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 123, -1, -1));
+        add(nameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 12, 348, -1));
+        add(ownerTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 49, 348, -1));
+        add(customerTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 86, 348, -1));
 
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         jScrollPane1.setViewportView(descriptionTextArea);
+
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 123, 348, 103));
 
         cancelCreateButton.setText("Cancel");
         cancelCreateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -84,6 +119,7 @@ public class ProjectEditor extends javax.swing.JPanel {
                 cancelCreateButtonActionPerformed(evt);
             }
         });
+        add(cancelCreateButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 269, -1, -1));
 
         createProjectButton.setText("Create");
         createProjectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -91,58 +127,23 @@ public class ProjectEditor extends javax.swing.JPanel {
                 createProjectButtonActionPerformed(evt);
             }
         });
+        add(createProjectButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(292, 269, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
-                        .addGap(20, 20, 20)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nameTextField)
-                            .addComponent(ownerTextField)
-                            .addComponent(customerTextField)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(createProjectButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelCreateButton)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(ownerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(customerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelCreateButton)
-                    .addComponent(createProjectButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+        add(saveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(393, 232, -1, -1));
+
+        deleteButton.setText("Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+        add(deleteButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 232, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelCreateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelCreateButtonActionPerformed
@@ -150,14 +151,14 @@ public class ProjectEditor extends javax.swing.JPanel {
     }//GEN-LAST:event_cancelCreateButtonActionPerformed
 
     private void createProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createProjectButtonActionPerformed
-        uk.nhs.digital.safetycase.data.Project p = new uk.nhs.digital.safetycase.data.Project();
-        p.setAttribute("Name", nameTextField.getText());
-        p.setAttribute("Owner", ownerTextField.getText());
-        p.setAttribute("Customer", customerTextField.getText());
-        p.setAttribute("Description", descriptionTextArea.getText());
+        project = new uk.nhs.digital.safetycase.data.Project();
+        project.setAttribute("Name", nameTextField.getText());
+        project.setAttribute("Owner", ownerTextField.getText());
+        project.setAttribute("Customer", customerTextField.getText());
+        project.setAttribute("Description", descriptionTextArea.getText());
         try {
-            MetaFactory.getInstance().getFactory(p.getDatabaseObjectName()).put(p);
-            smartProject.editorEvent(Project.ADD, p);
+            MetaFactory.getInstance().getFactory(project.getDatabaseObjectName()).put(project);
+            smartProject.editorEvent(Project.ADD, project);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -165,11 +166,47 @@ public class ProjectEditor extends javax.swing.JPanel {
         parent.dispose();
     }//GEN-LAST:event_createProjectButtonActionPerformed
 
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        boolean created = false;
+        if (project == null) {
+            project = new uk.nhs.digital.safetycase.data.Project();
+            created = true;
+        }
+        project.setAttribute("Name", nameTextField.getText());
+        project.setAttribute("Owner", ownerTextField.getText());
+        project.setAttribute("Customer", customerTextField.getText());
+        project.setAttribute("Description", descriptionTextArea.getText());
+        try {
+            MetaFactory.getInstance().getFactory(project.getDatabaseObjectName()).put(project);
+            if (created)
+                SmartProject.getProject().editorEvent(Project.ADD, project);
+            else
+                SmartProject.getProject().editorEvent(Project.UPDATE, project);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        
+        if (project == null)
+            return;
+        try {
+            MetaFactory.getInstance().getFactory("Project").delete(project);
+            SmartProject.getProject().editorEvent(Project.DELETE, project);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelCreateButton;
     private javax.swing.JButton createProjectButton;
     private javax.swing.JTextField customerTextField;
+    private javax.swing.JButton deleteButton;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -178,5 +215,34 @@ public class ProjectEditor extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JTextField ownerTextField;
+    private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void setPersistableObject(Persistable p) {
+        if (p == null) {
+            create = true;
+            return;
+        }
+        project = (uk.nhs.digital.safetycase.data.Project)p;
+        nameTextField.setText(project.getAttributeValue("Name"));
+        customerTextField.setText(project.getAttributeValue("Customer"));
+        descriptionTextArea.setText(project.getAttributeValue("Description"));
+        ownerTextField.setText(project.getAttributeValue("Owner"));
+    }
+
+    @Override
+    public Component getComponent() {
+        return this;
+    }
+
+    @Override
+    public void setEditorComponent(EditorComponent ed) {
+        editorComponent = ed;
+    }
+
+    @Override
+    public void setNewObjectProjectId(int i) {
+        
+    }
 }

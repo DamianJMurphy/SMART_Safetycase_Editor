@@ -21,7 +21,6 @@ import java.awt.Component;
 import java.awt.Image;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.ImageIcon;
@@ -29,7 +28,6 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SpinnerListModel;
-import javax.swing.SpinnerModel;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,13 +37,13 @@ import org.xml.sax.InputSource;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
-import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.projectuiframework.ui.UndockTabComponent;
 import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
+import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.data.ValueSet;
 import uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor;
@@ -63,6 +61,8 @@ public class HazardEditor extends javax.swing.JPanel
     private EditorComponent editorComponent = null;
     private ArrayList<Hazard> hazards = new ArrayList<>();
     private Hazard hazard = null;
+    
+    private ProcessStep parentProcessStep = null;
     
     private final String[] linkcolumns = {"Type", "ID", "Name", "Comment"};
     private int newObjectProjectId = -1;
@@ -105,10 +105,8 @@ public class HazardEditor extends javax.swing.JPanel
         }
     }
     
-    /**
-     * Creates new form HazardEditor
-     */
-    public HazardEditor() {
+    
+    private void init() {
         initComponents();
         riskMatrixImageLabel.setIcon(riskMatrixImageIcon);
         initialSeveritySpinner.setModel(initialSeveritySpinnerModel);
@@ -138,9 +136,23 @@ public class HazardEditor extends javax.swing.JPanel
         }
         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
         linksTable.setModel(dtm);
-        
+        bowtieButton.setText("Create bowtie");                
+    }
+    /**
+     * Creates new form HazardEditor
+     */
+    public HazardEditor() {
+        init();
     }
 
+    public HazardEditor setParent(ProcessStep ps) {
+        parentProcessStep = ps;
+        initialRiskRatingTextField.setText("-1");
+        residualRiskRatingTextField.setText("-1");
+        create = true;
+        return this;        
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -379,7 +391,7 @@ public class HazardEditor extends javax.swing.JPanel
             }
         });
 
-        discardButton.setText("Discard");
+        discardButton.setText("Delete");
         discardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 discardButtonActionPerformed(evt);
@@ -525,17 +537,22 @@ public class HazardEditor extends javax.swing.JPanel
     }//GEN-LAST:event_editLinksButtonActionPerformed
 
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
-        summaryTextField.setText("");
-        conditionsComboBox.setSelectedIndex(-1);
-        statusComboBox.setSelectedIndex(-1);
-        descriptionTextArea.setText("");
-        clinicalJustificationTextArea.setText("");
-        initialLikelihoodSpinner.setValue(Hazard.translateLikelihood(0));
-        initialSeveritySpinner.setValue(Hazard.translateSeverity(0));
-        initialRiskRatingTextField.setText(Integer.toString(Hazard.getRating(0, 0)));
-        residualLikelihoodSpinner.setValue(Hazard.translateLikelihood(0));
-        residualSeveritySpinner.setValue(Hazard.translateSeverity(0));
-        residualRiskRatingTextField.setText(Integer.toString(Hazard.getRating(0, 0)));
+
+        if (hazard == null)
+            return;
+        
+        int r = JOptionPane.showConfirmDialog(this, "Really delete this Hazard ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);        
+        if (r == JOptionPane.CANCEL_OPTION)
+            return;
+        
+        try {
+            MetaFactory.getInstance().getFactory("Hazard").delete(hazard);
+            SmartProject.getProject().editorEvent(Project.DELETE, hazard);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
@@ -562,9 +579,14 @@ public class HazardEditor extends javax.swing.JPanel
         try {
             MetaFactory.getInstance().getFactory(hazard.getDatabaseObjectName()).put(hazard);
             if (create) {
-                editorComponent.notifyEditorEvent(Project.ADD, hazard);
+                SmartProject.getProject().editorEvent(Project.ADD, hazard);
             } else {
-                editorComponent.notifyEditorEvent(Project.UPDATE, hazard);
+                SmartProject.getProject().editorEvent(Project.UPDATE, hazard);
+            }
+            if (parentProcessStep != null) {
+               Relationship r = new Relationship(parentProcessStep.getId(), hazard.getId(), hazard.getDatabaseObjectName());
+               parentProcessStep.addRelationship(r);
+               MetaFactory.getInstance().getFactory(parentProcessStep.getDatabaseObjectName()).put(parentProcessStep);
             }
         }
         catch (Exception e) {
@@ -700,19 +722,36 @@ public class HazardEditor extends javax.swing.JPanel
     // End of variables declaration//GEN-END:variables
 
     private void clearHazard() {
-        this.discardButtonActionPerformed(null);
+        summaryTextField.setText("");
+        conditionsComboBox.setSelectedIndex(-1);
+        statusComboBox.setSelectedIndex(-1);
+        descriptionTextArea.setText("");
+        clinicalJustificationTextArea.setText("");
+        initialLikelihoodSpinner.setValue(Hazard.translateLikelihood(0));
+        initialSeveritySpinner.setValue(Hazard.translateSeverity(0));
+        initialRiskRatingTextField.setText(Integer.toString(Hazard.getRating(0, 0)));
+        residualLikelihoodSpinner.setValue(Hazard.translateLikelihood(0));
+        residualSeveritySpinner.setValue(Hazard.translateSeverity(0));
+        residualRiskRatingTextField.setText(Integer.toString(Hazard.getRating(0, 0)));
     }
     @Override
     public void setPersistableObject(Persistable p) 
     {
         if (p == null) {
             create = true;
+            bowtieButton.setText("Create bowtie");
             clearHazard();
             return;
         }
         int populated = -1;
         try {
             hazard = (Hazard) p;
+            String g = hazard.getAttributeValue("GraphXml");
+            if ((g == null) || (g.trim().length() == 0))
+                bowtieButton.setText("Create bowtie");
+            else
+                bowtieButton.setText("Edit bowtie");
+
             summaryTextField.setText(hazard.getAttributeValue("Name"));
             for (int i = 0; i < conditionsComboBox.getModel().getSize(); i++) {
                 if (conditionsComboBox.getItemAt(i).contentEquals(hazard.getAttributeValue("GroupingType"))) {

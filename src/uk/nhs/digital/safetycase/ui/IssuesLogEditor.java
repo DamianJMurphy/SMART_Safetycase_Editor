@@ -365,8 +365,10 @@ public class IssuesLogEditor
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        boolean created = false;
         if (currentIssue == null) {
             currentIssue = new IssuesLog();
+            created = true;
         }
         currentIssue.setAttribute("Name", nameTextField.getText());
         currentIssue.setAttribute("GroupingType", (String)typeComboBox.getSelectedItem());
@@ -382,6 +384,8 @@ public class IssuesLogEditor
         currentIssue.getAttribute("ResolvedDate").setIsDate(true);
         try {
             MetaFactory.getInstance().getFactory("IssuesLog").put(currentIssue);
+            if (created)
+                logEntries.add(currentIssue);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -478,6 +482,8 @@ public class IssuesLogEditor
                 String[] row = new String[ISSUESCOLUMNS.length];
                 row[0] = issue.getAttributeValue("Name");
                 row[1] = issue.getAttributeValue("CreatedDate");
+                if ((row[1] == null) || (row[1].trim().length() == 0))
+                        row[1] = "Today";
                 row[2] = issue.getAttributeValue("GroupingType");
                 row[3] = issue.getAttributeValue("ResolutionType");
                 dtm.addRow(row);
