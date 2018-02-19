@@ -194,6 +194,7 @@ public class LocationEditor extends javax.swing.JPanel
         try {
             MetaFactory.getInstance().getFactory("Location").delete(location);
             SmartProject.getProject().editorEvent(Project.DELETE, location);
+            SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
         catch(Exception e) {
             e.printStackTrace();

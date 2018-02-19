@@ -20,11 +20,16 @@ package uk.nhs.digital.safetycase.ui.processeditor;
 import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.EditorComponent;
+import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.Relationship;
+import uk.nhs.digital.safetycase.ui.HazardEditor;
 import uk.nhs.digital.safetycase.ui.LinkEditor;
 
 /**
@@ -36,6 +41,7 @@ public class ProcessStepDetail extends javax.swing.JPanel {
     private static final String[] COLUMNS = {"Name", "Status", "Initial rating", "Residual rating"};
     private JDialog parent = null;
     private ProcessStep processStep = null;
+    private ArrayList<Hazard> hazardList = new ArrayList<>();
     /**
      * Creates new form ProcessStepDetail
      */
@@ -66,6 +72,7 @@ public class ProcessStepDetail extends javax.swing.JPanel {
                     row[1] = h.getAttributeValue("Status");
                     row[2] = h.getAttributeValue("InitialRiskRating");
                     row[3] = h.getAttributeValue("ResidualRiskRating");
+                    hazardList.add(h);
                     dtm.addRow(row);
                 }
             }
@@ -103,12 +110,12 @@ public class ProcessStepDetail extends javax.swing.JPanel {
         hazardsPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         hazardsTable = new javax.swing.JTable();
+        editSelectedHazardButton = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        systemLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
         functionsLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
         locationsLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
         rolesLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
-        closeButton = new javax.swing.JButton();
+        systemLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
         editLinksButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Process step"));
@@ -149,13 +156,24 @@ public class ProcessStepDetail extends javax.swing.JPanel {
         ));
         jScrollPane2.setViewportView(hazardsTable);
 
+        editSelectedHazardButton.setText("Edit selected hazard");
+        editSelectedHazardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editSelectedHazardButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout hazardsPanelLayout = new javax.swing.GroupLayout(hazardsPanel);
         hazardsPanel.setLayout(hazardsPanelLayout);
         hazardsPanelLayout.setHorizontalGroup(
             hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(hazardsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
+                .addGroup(hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, hazardsPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(editSelectedHazardButton)))
                 .addContainerGap())
         );
         hazardsPanelLayout.setVerticalGroup(
@@ -163,25 +181,19 @@ public class ProcessStepDetail extends javax.swing.JPanel {
             .addGroup(hazardsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(editSelectedHazardButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        add(hazardsPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 171, 661, 180));
+        add(hazardsPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 171, 661, 210));
 
-        jTabbedPane1.addTab("Systems", systemLinksPanel);
         jTabbedPane1.addTab("Functions", functionsLinksPanel);
         jTabbedPane1.addTab("Care settings", locationsLinksPanel);
         jTabbedPane1.addTab("Roles", rolesLinksPanel);
+        jTabbedPane1.addTab("Systems", systemLinksPanel);
 
-        add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 360, 661, 180));
-
-        closeButton.setText("Close");
-        closeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closeButtonActionPerformed(evt);
-            }
-        });
-        add(closeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 570, -1, -1));
+        add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 400, 661, 180));
 
         editLinksButton.setText("Links...");
         editLinksButton.addActionListener(new java.awt.event.ActionListener() {
@@ -189,18 +201,8 @@ public class ProcessStepDetail extends javax.swing.JPanel {
                 editLinksButtonActionPerformed(evt);
             }
         });
-        add(editLinksButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 570, -1, -1));
+        add(editLinksButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 590, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
-
-    private void closeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeButtonActionPerformed
-        try {
-            MetaFactory.getInstance().getFactory(processStep.getDatabaseObjectName()).put(processStep);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        parent.dispose();
-    }//GEN-LAST:event_closeButtonActionPerformed
 
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
         JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
@@ -215,11 +217,19 @@ public class ProcessStepDetail extends javax.swing.JPanel {
         processStep.setAttribute("Description", descriptionTextArea.getText());
     }//GEN-LAST:event_descriptionTextAreaFocusLost
 
+    private void editSelectedHazardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editSelectedHazardButtonActionPerformed
+        int row = hazardsTable.getSelectedRow();
+        Hazard h = hazardList.get(row);
+        HazardEditor he = new HazardEditor();
+        he.setPersistableObject(h);
+        EditorComponent ec = new EditorComponent(he, "Hazard:" + h.getTitle(), SmartProject.getProject());
+        ExternalEditorView editorView = new ExternalEditorView(he.getComponent(), ec.getTitle(), SmartProject.getProject().getProjectWindow().getMainWindowTabbedPane());    }//GEN-LAST:event_editSelectedHazardButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton closeButton;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton editLinksButton;
+    private javax.swing.JButton editSelectedHazardButton;
     private uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel functionsLinksPanel;
     private javax.swing.JPanel hazardsPanel;
     private javax.swing.JTable hazardsTable;

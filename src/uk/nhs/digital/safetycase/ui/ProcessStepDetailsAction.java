@@ -25,6 +25,8 @@ import java.util.HashMap;
 import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
@@ -99,10 +101,12 @@ public class ProcessStepDetailsAction
                     if (steps != null) {
                         for (Persistable p : steps) {
                             if (p.getAttributeValue("GraphCellId").contentEquals(selected.getId())) {
-                                JDialog detailEditor = new JDialog(JOptionPane.getFrameForComponent(c), false);
-                                detailEditor.add(new ProcessStepDetail((ProcessStep)p).setParent(detailEditor));
-                                detailEditor.pack();
-                                detailEditor.setVisible(true);
+                                ProcessStepDetail psd = new ProcessStepDetail((ProcessStep)p);
+                                ExternalEditorView editorView = new ExternalEditorView(psd, "Step:" + p.getAttributeValue("Name"), SmartProject.getProject().getProjectWindow().getMainWindowTabbedPane());
+//                                JDialog detailEditor = new JDialog(JOptionPane.getFrameForComponent(c), false);
+//                                detailEditor.add(new ProcessStepDetail((ProcessStep)p).setParent(detailEditor));
+//                                detailEditor.pack();
+//                                detailEditor.setVisible(true);
                                 break;
                             }
                         }

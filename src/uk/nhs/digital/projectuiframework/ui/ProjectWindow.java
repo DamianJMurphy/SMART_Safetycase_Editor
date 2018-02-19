@@ -17,6 +17,7 @@
  */
 package uk.nhs.digital.projectuiframework.ui;
 import com.sun.glass.events.MouseEvent;
+import java.awt.Container;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.ProjectHelper;
 import java.io.File;
@@ -24,6 +25,9 @@ import java.util.HashMap;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -215,6 +219,24 @@ public class ProjectWindow extends javax.swing.JFrame {
             return;
         mainWindowTabbedPane.setSelectedComponent(mainWindowTabbedPane.add(ec.getTitle(), ec.getComponent()));
         mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
+    }
+    
+    public void closeContainer(JPanel p) {
+        Container parent = p;
+        while ((parent = parent.getParent()) != null) {
+            if (parent instanceof javax.swing.JTabbedPane) {
+                JTabbedPane jtp = (JTabbedPane)parent;
+                int i = jtp.indexOfComponent(p);
+                if (i != -1) {
+                    jtp.remove(i);
+                    return;
+                }
+            }
+            if (parent instanceof uk.nhs.digital.projectuiframework.ui.ExternalEditorView) {
+                ((ExternalEditorView) parent).dispose();
+                return;
+            }
+        }
     }
     
     private void projectTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectTreeMouseClicked

@@ -208,6 +208,7 @@ public class RoleEditor extends javax.swing.JPanel
 
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
 
+        // ... TO HERE WHEN DELETE-CLOSE-FORM works
         if (role == null)
             return;
         
@@ -218,6 +219,7 @@ public class RoleEditor extends javax.swing.JPanel
         try {
             MetaFactory.getInstance().getFactory("Role").delete(role);
             SmartProject.getProject().editorEvent(Project.DELETE, role);
+            SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
         catch(Exception e) {
             e.printStackTrace();

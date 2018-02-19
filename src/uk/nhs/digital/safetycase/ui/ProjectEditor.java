@@ -195,6 +195,7 @@ public class ProjectEditor
         try {
             MetaFactory.getInstance().getFactory("Project").delete(project);
             SmartProject.getProject().editorEvent(Project.DELETE, project);
+            SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
         catch(Exception e) {
             e.printStackTrace();
