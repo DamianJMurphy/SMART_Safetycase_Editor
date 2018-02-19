@@ -63,10 +63,10 @@ public class SmartProject
     public static final String HELP_ABOUT_ICON = "/uk/nhs/digital/projectuiframework/smart/smart_splash_demo.jpg";
     
     private DefaultMutableTreeNode root = null;
-    private static final String[] PROJECTCOMPONENTS = {"Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role", "Report"};
+    private static final String[] PROJECTCOMPONENTS = {"Care Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role", "Report"};
     private static final String[] PROJECTOTHERCOMPONENTS = { "Care Settings", "Role", "Report"};
     private static final String[] PROJECTEDITORS = {"Process", "Hazard", "Cause", "Effect", "Control", "Location", "Role", "Report"};
-    private static final String[] PROJECTNEWABLES = {"Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role"};
+    private static final String[] PROJECTNEWABLES = {"Care Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role"};
     private static final String PROJECTNAME = "SMART";
     private MetaFactory metaFactory = null;
     private int currentProjectId = -1;
@@ -114,7 +114,7 @@ public class SmartProject
                     if (s.contentEquals(comp)) {
                         found = true;
                         break;
-                    }
+                    } 
                 }
                 if (!found)
                     return null;
@@ -333,7 +333,7 @@ public class SmartProject
         }
         populateProjectComponent("Care Settings", p, proj.getId());
         populateProjectComponent("Role", p, proj.getId());
-        populateProjectComponent("Process", p, proj.getId());
+        populateProjectComponent("Care Process", p, proj.getId());
         p.add(populateHazard(proj.getId()));
 
 //        for (String s : PROJECTOTHERCOMPONENTS) {
@@ -417,6 +417,8 @@ public class SmartProject
         String s = type;
         if (type.contentEquals("Care Settings"))
             s = "Location";
+        if (type.contentEquals("Care Process"))
+            s = "Process";
         ArrayList<Persistable> list = metaFactory.getChildren(s, "ProjectID", id);
         if (list == null)
             return;
@@ -611,6 +613,8 @@ public class SmartProject
             return;
         } else if ("HazardCauseControlEffect".contains(p.getDatabaseObjectName())) {
             search = "Hazard";
+        } else if (p.getDatabaseObjectName().contentEquals("Process")) {
+            search = "Care Process";
         } else {    
             search = p.getDatabaseObjectName();
         }
@@ -651,6 +655,9 @@ public class SmartProject
         }
         if (containerNode == null)
             return;
+
+        TreePath pathToContainer = new TreePath(containerNode.getPath());
+        boolean expanded = projectWindow.getProjectTree().isExpanded(pathToContainer);
         
         DefaultMutableTreeNode eventNode = null;
         try {
@@ -736,6 +743,8 @@ public class SmartProject
             default:
                 return;
         }
+        if (expanded)
+            projectWindow.getProjectTree().expandPath(pathToContainer);
     }
     
     private void fillOutNewProject(DefaultMutableTreeNode d, int pid) {

@@ -2,39 +2,33 @@ High-level
 
 - ERROR HANDLING AND REPORTING
 
-- Need to add a housekeeping/purge function to get rid of "deleted" (i.e. records marked with a
-    deleted date but still extant in the database) relationships, and another one for persistable
-    objects. Probably constrained to current project.
-
 - System/subsystem/function graphical editor in the style of the bowtie/process interfaces
 
 - Reports. HTML editor integrated. Needs user refinement. Need to add report generator itself
     to assemble report content from the project data. Also to include the graphs.
 
-- DQ checking and issues system
+
+
+NOT FOR MARCH:
+
+- TODO: Modifications inside the graphical editors:
+    - TODO: See if it is possible to auto-wrap the text in boxes in the graphical editors
+- TODO: Look at putting in a check routine to cascade deletes... maybe. Uncontrolled
+    that could accidentally wipe out an entire project and safe rules will be tricky.
+- TODO: Probably need to detect name collisions within a set of child nodes in the tree.
+- TODO: "Undelete" and housekeeping functions from main menu
+- TODO: DQ checking and issues system
+- TODO: Library functions and object copy/paste
 
 
 Functional
 
 - Go through and tidy up the editor forms
 
-
-- TODO: Look at putting in a check routine to cascade deletes... maybe. Uncontrolled
-    that could accidentally wipe out an entire project and safe rules will be tricky.
-
-- TODO: Rename "Process" to "Care Process"
-
-- TODO: Modifications inside the graphical editors:
-    - TODO: See if it is possible to auto-wrap the text in boxes in the graphical editors
-    - TODO: See about a single block of colour and no gradient by default in process editor
-    - TODO: Default shape colours in process editor (yellow for decision, blue for activity)
-
-
 - TODO: Reports
 
 - TODO: Integrate Sharif's system/function editor
 
-- TODO: Probably need to detect name collisions within a set of child nodes in the tree.
 
 
 

@@ -51,6 +51,8 @@ public class ProjectWindow extends javax.swing.JFrame {
         initComponents();
     }
 
+    public JTree getProjectTree() { return projectTree; }
+    
     public void setTreeCellRenderer(TreeCellRenderer r) {
         projectTree.setCellRenderer(r);
     }
