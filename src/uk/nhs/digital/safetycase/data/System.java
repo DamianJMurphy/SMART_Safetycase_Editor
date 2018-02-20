@@ -24,7 +24,7 @@ package uk.nhs.digital.safetycase.data;
 public class System 
         extends Persistable
 {
-    private static final String[] FIELDS = {"Name", "ParentSystemID", "ProjectID", "Description", "Version", "Mnemonic"};
+    private static final String[] FIELDS = {"Name", "ParentSystemID", "ProjectID", "Description", "Version", "Mnemonic", "GraphCellId", "GraphXml"};
     
     public System() 
     {

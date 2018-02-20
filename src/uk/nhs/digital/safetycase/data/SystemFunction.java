@@ -24,7 +24,7 @@ package uk.nhs.digital.safetycase.data;
 public class SystemFunction
         extends Persistable
 {
-    private static final String[] FIELDS = {"Name", "ParentSystemFunctionID", "Description"};
+    private static final String[] FIELDS = {"Name", "ParentSystemFunctionID", "Description", "GraphCellId", "ProjectID"};
     
     public SystemFunction() 
     {

@@ -49,7 +49,7 @@ public class ProjectUIFramework {
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Effect","uk.nhs.digital.safetycase.ui.EffectEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Control","uk.nhs.digital.safetycase.ui.ControlEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Cause","uk.nhs.digital.safetycase.ui.CauseEditor");
-        java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.System","uk.nhs.digital.safetycase.ui.SystemEditor");
+        java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.System","uk.nhs.digital.safetycase.ui.systemeditor.SystemEditorDetails");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Report","uk.nhs.digital.safetycase.ui.ReportEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Project","uk.nhs.digital.safetycase.ui.ProjectEditor");
         ProjectWindow p = new ProjectWindow();

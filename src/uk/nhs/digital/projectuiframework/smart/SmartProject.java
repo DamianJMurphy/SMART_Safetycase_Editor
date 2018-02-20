@@ -314,6 +314,8 @@ public class SmartProject
         DefaultMutableTreeNode peditor = new DefaultMutableTreeNode(proj.getTitle());
         peditor.setUserObject(proj);
         p.add(peditor);
+        p.add(populateSystem(proj.getId()));
+/*
         ArrayList<Persistable> list = metaFactory.getChildren("System", "ProjectID", proj.getId());
         DefaultMutableTreeNode systemsNode = new DefaultMutableTreeNode("Systems");
         p.add(systemsNode);
@@ -331,6 +333,7 @@ public class SmartProject
                 }
             }
         }
+*/
         populateProjectComponent("Care Settings", p, proj.getId());
         populateProjectComponent("Role", p, proj.getId());
         populateProjectComponent("Care Process", p, proj.getId());
@@ -875,4 +878,100 @@ public class SmartProject
     public ImageIcon getHelpAboutIcon() {
         return helpAboutIcon;
     }
+    
+    private DefaultMutableTreeNode populateSystem(int id) {
+        DefaultMutableTreeNode systemsNode = new DefaultMutableTreeNode("Systems");
+
+        ArrayList<Persistable> list = metaFactory.getChildren("System", "ProjectID", id);
+        if (list != null) {
+            for (Persistable p : list) {
+                uk.nhs.digital.safetycase.data.System sy = (uk.nhs.digital.safetycase.data.System) p;
+                int pid = Integer.parseInt(sy.getAttributeValue("ParentSystemID"));
+                if (pid == -1) {
+                    systemsNode.add(populateSystemWithChildren(sy));
+                }
+            }
+        }
+        return systemsNode;
+    }
+
+    private DefaultMutableTreeNode populateSystemWithChildren(uk.nhs.digital.safetycase.data.System s) {
+        DefaultMutableTreeNode node = new DefaultMutableTreeNode(s.getTitle());
+        DefaultMutableTreeNode sy = new DefaultMutableTreeNode(s.getTitle());
+        try {
+            HashMap<String, ArrayList<Relationship>> hrels = s.getRelationshipsForLoad();
+            if (hrels != null) {
+                // to do. check the relation of child systems and system fucntions
+                for (ArrayList<Relationship> a : hrels.values()) {
+                    for (Relationship r : a) {
+                        if ((r.getComment() != null) && (r.getComment().contains("system diagram"))) {
+                            Persistable p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                            DefaultMutableTreeNode subsysnode = new DefaultMutableTreeNode(p.getTitle());
+                            subsysnode.setUserObject(p);
+                            // check for children/sub children realtionship
+                            populateChildrenDependents(subsysnode, p);
+                            sy.add(subsysnode);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            java.lang.System.err.println("Unprocessed Element : " + e.toString());
+            e.printStackTrace();
+        }
+        sy.setUserObject(s);
+        node.add(sy);
+        // populateSystemDependents("SystemFunction", node, s);
+        return node;
+    }
+
+    private void populateChildrenDependents(DefaultMutableTreeNode childnode, Persistable relatedObject)
+            throws Exception {
+
+        PersistableFactory<uk.nhs.digital.safetycase.data.System> pfs = MetaFactory.getInstance().getFactory("System");
+        PersistableFactory<uk.nhs.digital.safetycase.data.SystemFunction> pfsf = MetaFactory.getInstance().getFactory("SystemFunction");
+        Persistable p;
+        try {
+            if (relatedObject.getDatabaseObjectName().equals("System")) {
+                uk.nhs.digital.safetycase.data.System system = pfs.get(relatedObject.getId());
+                HashMap<String, ArrayList<Relationship>> hrels = system.getRelationshipsForLoad();
+                if (hrels != null) {
+                    for (ArrayList<Relationship> a : hrels.values()) {
+                        for (Relationship r : a) {
+                            if ((r.getComment() != null) && (r.getComment().contains("system diagram"))) {
+                                p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                                DefaultMutableTreeNode gcnode = new DefaultMutableTreeNode(p.getDatabaseObjectName());
+                                gcnode.setUserObject(p);
+                                childnode.add(gcnode);
+                                //  find any grand children realtions
+                                populateChildrenDependents(gcnode, p);
+                            }
+                        }
+                    }
+                }
+            }
+            if (relatedObject.getDatabaseObjectName().equals("SystemFunction")) {
+                uk.nhs.digital.safetycase.data.SystemFunction systemfunction = pfsf.get(relatedObject.getId());
+                HashMap<String, ArrayList<Relationship>> hrels = systemfunction.getRelationshipsForLoad();
+                if (hrels != null) {
+                    for (ArrayList<Relationship> a : hrels.values()) {
+                        for (Relationship r : a) {
+                            if ((r.getComment() != null) && (r.getComment().contains("system diagram"))) {
+                                p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                                DefaultMutableTreeNode gcnode = new DefaultMutableTreeNode(p.getDatabaseObjectName());
+                                gcnode.setUserObject(p);
+                                childnode.add(gcnode);
+                                //  find any grand children realtions
+                                populateChildrenDependents(gcnode, p);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+    
 }

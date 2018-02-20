@@ -49,6 +49,18 @@ public class DiagramEditorElement {
             char f = s.charAt(lastslash + 1);
             Character uf = Character.toUpperCase(f);
             type = uf + s.substring(lastslash + 2, s.indexOf("."));
+        }else if (s.contains("systemeditor") && (!s.contains("SystemFunction"))) {
+            // system types are the actual persistable classes
+            int lastslash = s.lastIndexOf("/");
+            char f = s.charAt(lastslash + 1);
+            Character uf = Character.toUpperCase(f);
+            type = uf + s.substring(lastslash + 2, s.indexOf("."));
+        } else if (s.contains("SystemFunction")) {
+            // systemfunction types are the actual persistable classes
+            int lastslash = s.lastIndexOf("/");
+            char f = s.charAt(lastslash+1);
+            Character uf = Character.toUpperCase(f);
+            type = uf + s.substring(lastslash + 2, s.indexOf("."));
         }
     }
     

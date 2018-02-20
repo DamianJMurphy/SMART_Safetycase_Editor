@@ -44,6 +44,9 @@ public class SmartSaveAction
             } else if (geclass.contains("Bowtie")) {
                 BowtieSaveHandler bsh = new BowtieSaveHandler();
                 bsh.handle(editor);
+            } else if (geclass.contains("SystemGraph")) {
+                SystemSaveHandler ssh = new SystemSaveHandler();
+                ssh.handle(editor);
             } else {
                 // Can add more here if we do system/function or project overview editors
                 return;
