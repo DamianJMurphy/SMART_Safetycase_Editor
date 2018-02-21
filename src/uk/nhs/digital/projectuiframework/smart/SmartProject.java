@@ -507,10 +507,13 @@ public class SmartProject
             return null;
         Persistable p = null;
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)o;
-        if (!node.isLeaf())
-            return null;
+//        if (!node.isLeaf())
+//            return null;
         try {
             p = (Persistable)node.getUserObject();
+            String dbo = p.getDatabaseObjectName();
+            if (!dbo.contentEquals("System") && !node.isLeaf())
+                return null;
             return icons.get(p.getDatabaseObjectName());
         }
         catch (ClassCastException cce) {}
@@ -565,6 +568,9 @@ public class SmartProject
             if (h == null)
                 return null;
             return populateSingleHazard(h);
+        } else if (p.getDatabaseObjectName().contentEquals("System")) {
+            uk.nhs.digital.safetycase.data.System sys = (uk.nhs.digital.safetycase.data.System)p;
+            return populateSystemWithChildren(sys);
         } else {
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(p.getTitle());
             node.setUserObject(o);
@@ -686,7 +692,13 @@ public class SmartProject
                             treeModel.removeNodeFromParent(node);
                             break;                            
                         }
-                    } else {
+                    } else if (containerNode.getUserObject().toString().contentEquals("Systems")) {
+                        // containerNode is grandparent of event node, so remove eventNode's parent
+                        if (node.getUserObject().toString().contentEquals(p.getTitle())) {
+                            treeModel.removeNodeFromParent(node);
+                            break;
+                        }
+                    } else  {
                         Persistable pr = (Persistable)node.getUserObject();
                         if (pr.getTitle().contentEquals(p.getTitle()) && (pr.getId() == p.getId())) {
                             treeModel.removeNodeFromParent(node);
@@ -721,6 +733,11 @@ public class SmartProject
                                     // If this is a Hazard, we need to replace the parent of "node" wiht the
                                     // event node.
                                     if (existing.getDatabaseObjectName().contentEquals("Hazard")) {
+                                        node = (DefaultMutableTreeNode)node.getParent();
+                                        int i = treeModel.getIndexOfChild(containerNode, node);
+                                        treeModel.removeNodeFromParent(node);
+                                        treeModel.insertNodeInto(eventNode, containerNode, i);
+                                    } else if (existing.getDatabaseObjectName().contentEquals("System")) {
                                         node = (DefaultMutableTreeNode)node.getParent();
                                         int i = treeModel.getIndexOfChild(containerNode, node);
                                         treeModel.removeNodeFromParent(node);
@@ -885,10 +902,12 @@ public class SmartProject
         ArrayList<Persistable> list = metaFactory.getChildren("System", "ProjectID", id);
         if (list != null) {
             for (Persistable p : list) {
-                uk.nhs.digital.safetycase.data.System sy = (uk.nhs.digital.safetycase.data.System) p;
-                int pid = Integer.parseInt(sy.getAttributeValue("ParentSystemID"));
-                if (pid == -1) {
-                    systemsNode.add(populateSystemWithChildren(sy));
+                if (!p.isDeleted()) {
+                    uk.nhs.digital.safetycase.data.System sy = (uk.nhs.digital.safetycase.data.System) p;
+                    int pid = Integer.parseInt(sy.getAttributeValue("ParentSystemID"));
+                    if (pid == -1) {
+                        systemsNode.add(populateSystemWithChildren(sy));
+                    }
                 }
             }
         }
@@ -898,23 +917,33 @@ public class SmartProject
     private DefaultMutableTreeNode populateSystemWithChildren(uk.nhs.digital.safetycase.data.System s) {
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(s.getTitle());
         DefaultMutableTreeNode sy = new DefaultMutableTreeNode(s.getTitle());
+        sy.setUserObject(s);
         try {
-            HashMap<String, ArrayList<Relationship>> hrels = s.getRelationshipsForLoad();
-            if (hrels != null) {
-                // to do. check the relation of child systems and system fucntions
-                for (ArrayList<Relationship> a : hrels.values()) {
-                    for (Relationship r : a) {
-                        if ((r.getComment() != null) && (r.getComment().contains("system diagram"))) {
-                            Persistable p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                            DefaultMutableTreeNode subsysnode = new DefaultMutableTreeNode(p.getTitle());
-                            subsysnode.setUserObject(p);
-                            // check for children/sub children realtionship
-                            populateChildrenDependents(subsysnode, p);
-                            sy.add(subsysnode);
-                        }
+            ArrayList<Relationship> funcs = s.getRelationships("SystemFunction");
+            if ((funcs != null) && !funcs.isEmpty()) {
+                for (Relationship r : funcs) {
+                    if ((r.getManagementClass() != null) && r.getManagementClass().contentEquals("Diagram")) {
+                        Persistable p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                        DefaultMutableTreeNode subsysnode = new DefaultMutableTreeNode(p.getTitle());
+                        subsysnode.setUserObject(p);
+                        populateChildrenDependents(subsysnode, p);
+                        sy.add(subsysnode);
                     }
                 }
             }
+            ArrayList<Relationship> subsystems = s.getRelationships("System");
+            if ((subsystems != null) && !subsystems.isEmpty()) {
+                for (Relationship r : subsystems) {
+                    if ((r.getManagementClass() != null) && r.getManagementClass().contentEquals("Diagram")) {
+                        Persistable p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                        DefaultMutableTreeNode subsysnode = new DefaultMutableTreeNode(p.getTitle());
+                        subsysnode.setUserObject(p);
+                        populateChildrenDependents(subsysnode, p);
+                        sy.add(subsysnode);
+                    }
+                }                
+            }
+
         } catch (Exception e) {
             java.lang.System.err.println("Unprocessed Element : " + e.toString());
             e.printStackTrace();

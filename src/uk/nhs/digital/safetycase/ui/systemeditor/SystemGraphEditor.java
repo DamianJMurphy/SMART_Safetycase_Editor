@@ -54,11 +54,11 @@ public class SystemGraphEditor extends BasicGraphEditor {
     private static int systemId = -1;
     
     private HashMap<String,DiagramEditorElement> existingSystem = null; 
-     public void setExistingBowtie(HashMap<String,DiagramEditorElement> ex) 
+     public void setExistingGraph(HashMap<String,DiagramEditorElement> ex) 
      {
          existingSystem = ex;
      }
-    public HashMap<String,DiagramEditorElement> getExistingBowtie() { return existingSystem; }
+    public HashMap<String,DiagramEditorElement> getExistingGraph() { return existingSystem; }
     
     public int getSystemId() {
         return systemId;

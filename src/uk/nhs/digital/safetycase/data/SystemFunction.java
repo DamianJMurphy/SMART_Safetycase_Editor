@@ -31,7 +31,7 @@ public class SystemFunction
         dbObjectName = "SystemFunction";
         referenceData = false;
         for (String s: FIELDS) {
-            if (s.contains("ID"))
+            if (s.contains("ID") || s.endsWith("Id"))
                 writableAttributes.put(s, new Attribute(-1));
             else
                 writableAttributes.put(s, new Attribute(""));

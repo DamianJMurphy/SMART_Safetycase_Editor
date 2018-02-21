@@ -26,14 +26,13 @@ Functional
 - Go through and tidy up the editor forms
 
 - TODO NEXT: Integrate Sharif's system/function editor.
-    - UI update needs refactoring/testing
-    - Refactor tree representation - make it work like "Hazard" with its dependents
 
-    - System Create-from-editor-form database create cast error (probably 
-        GraphCellId being assumed to be an int)
+    - UI update needs more testing
 
-    - Replace "Discard" with "Delete". See also refactoring UI update because the
-        refresh blows up with a ClassCastException at SmartProject.java:690 currently.
+        - Full edit set
+            - Add nodes
+            - Delete nodes
+            - More renames
 
     - SystemFunctionEditor also from project tree. No "Delete". "OK" and "Cancel" 
        are fine. Have "Save" for when viewed from tree. 

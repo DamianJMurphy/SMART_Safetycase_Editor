@@ -43,9 +43,9 @@ import uk.nhs.digital.safetycase.ui.systemeditor.SystemGraphEditor;
 public class SystemSaveHandler
         extends AbstractSaveHandler {
 
-    private final ArrayList<Persistable> added = new ArrayList<>();
-    private final ArrayList<Persistable> updated = new ArrayList<>();
-    private final ArrayList<Persistable> removed = new ArrayList<>();
+//    private final ArrayList<Persistable> added = new ArrayList<>();
+//    private final ArrayList<Persistable> updated = new ArrayList<>();
+//    private final ArrayList<Persistable> removed = new ArrayList<>();
 
     private final ArrayList<String> processedElements = new ArrayList<>();
     private System system = null;
@@ -80,7 +80,8 @@ public class SystemSaveHandler
             } else {
                 systemExists = true;
                 projectid = system.getAttribute("ProjectID").getIntValue();
-                existingSystem = sge.getExistingBowtie();
+                // This is returning null when it shouldn't
+                existingSystem = sge.getExistingGraph();
                // updated.add(system);
             }
             //when parsing XMl make sure that we find the root system and not the subsystem.
@@ -107,12 +108,12 @@ public class SystemSaveHandler
                             btupdate.object = bt.object;
                             if (!btupdate.object.getAttributeValue("Name").contentEquals(btupdate.name)) {
                                 btupdate.object.setAttribute("Name", btupdate.name);
-                                updated.add(btupdate.object);
+//                                updated.add(btupdate.object);
                                 bt.object.setAttribute("Name", btupdate.name); // for updating name in the  database
                             }
                         }
                     } else {
-                        removed.add(bt.object);
+//                        removed.add(bt.object);
                     }
                 }
             }
@@ -121,7 +122,7 @@ public class SystemSaveHandler
                 //createSystemSystemFunctionRelationship(system, system.getId());
             }
             saveRootSystem(systemElements, projectid);
-            sge.setExistingBowtie(systemElements);
+            sge.setExistingGraph(systemElements);
             sge.setSystemId(system.getId(), xml);
             java.lang.System.out.println(xml);
             SmartProject sp = SmartProject.getProject();
@@ -745,9 +746,9 @@ public class SystemSaveHandler
 //        if (t.contentEquals("SubFunction")) {
 //            p = new SystemFunction();
 //        }
-        if (p != null) {
-            added.add(p);
-        }
+//        if (p != null) {
+//            added.add(p);
+ //       }
         return p;
     }
 

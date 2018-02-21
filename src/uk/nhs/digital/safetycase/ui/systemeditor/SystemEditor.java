@@ -237,7 +237,7 @@ public class SystemEditor extends javax.swing.JSplitPane
                 }
             }
 
-            editor.setExistingBowtie(systemElements);
+            editor.setExistingGraph(systemElements);
 
         } catch (Exception e) {
             java.lang.System.err.println("Unprocessed Element : " + e.toString());

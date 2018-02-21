@@ -31,7 +31,7 @@ public class System
         dbObjectName = "System";
         referenceData = false;
         for (String s: FIELDS) {
-            if (s.endsWith("ID"))
+            if (s.endsWith("ID") || s.endsWith("Id"))
                 writableAttributes.put(s, new Attribute(-1));
             else
                 writableAttributes.put(s, new Attribute(""));

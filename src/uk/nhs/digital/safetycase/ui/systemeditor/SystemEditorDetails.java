@@ -19,6 +19,7 @@ package uk.nhs.digital.safetycase.ui.systemeditor;
 
 import uk.nhs.digital.safetycase.ui.*;
 import java.awt.Component;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,6 +33,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
@@ -307,15 +313,21 @@ public class SystemEditorDetails extends javax.swing.JPanel
 //            JOptionPane.showMessageDialog(this, "Create System using Bowtie", "Create first", JOptionPane.INFORMATION_MESSAGE);
 //            return;
 //        }
+        boolean created = false;
         if (system == null) {
             system = new System();
             system.setAttribute("Name",nameTextField.getText());
+            created = true;
         }
         system.setAttribute("Description", descriptionTextArea.getText());
         system.setAttribute("Mnemonic", mnemonicTextField.getText());
-        
+        system.setAttribute("ProjectID", SmartProject.getProject().getCurrentProjectID());
         try {
             MetaFactory.getInstance().getFactory(system.getDatabaseObjectName()).put(system);
+            if (created)
+                SmartProject.getProject().editorEvent(Project.ADD, system);
+            else
+                SmartProject.getProject().editorEvent(Project.UPDATE, system);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -349,6 +361,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
 //        SystemEditor sge = new SystemEditor();
         SystemGraphEditor sge = new SystemGraphEditor();
         String xml = system.getAttributeValue("GraphXml");
+        sge.setExistingGraph(getExistingGraph(xml));
         sge.setSystemId(system.getId(), xml);
 //        sge.setPersistableObject(system);
         JTabbedPane tp = null;
@@ -359,6 +372,64 @@ public class SystemEditorDetails extends javax.swing.JPanel
         tp.setTabComponentAt(tp.getSelectedIndex(), new UndockTabComponent(tp));  
     }//GEN-LAST:event_systemEditorButtonActionPerformed
 
+    private HashMap<String,DiagramEditorElement> getExistingGraph(String xml) {
+
+        try { 
+            HashMap<String, DiagramEditorElement> systemElements = new HashMap<>();
+            
+            systemElements.put(system.getAttributeValue("GraphCellId"), new DiagramEditorElement(system));
+            // load sub system and functions for the same system
+
+            //  ArrayList<Relationship> sRels = system.getRelationships("System");
+            //ArrayList<Relationship> sfRels = system.getRelationshipsForClass("SystemFunction");
+            HashMap<String, ArrayList<Relationship>> hrels = system.getRelationshipsForLoad();
+            if (hrels == null) {
+                return null;
+            }
+            // to do. check the relation of child systems and system fucntions
+            for (ArrayList<Relationship> a : hrels.values()) {
+                for (Relationship r : a) {
+                    if ((r.getManagementClass() != null) && (r.getManagementClass().contentEquals("Diagram"))) {
+                        Persistable p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                        systemElements.put(p.getAttributeValue("GraphCellId"), new DiagramEditorElement(p));
+                        // check for children/sub children realtionship
+                        List<Persistable> lp= new ArrayList<>();
+                        List<Persistable> pa = findchildrelations(p, lp);
+                        //List<Persistable> pa = findchildrelations(p.getId(), p.getDatabaseObjectName(), lp);
+                         for (Persistable per : pa) {
+                             systemElements.put(per.getAttributeValue("GraphCellId"), new DiagramEditorElement(per));
+                         }
+                    }
+                }
+            }
+            // Get the graph xml from the system 
+            // tie everything together
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setNamespaceAware(true);
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            StringReader sr = new StringReader(xml);
+            InputSource is = new InputSource(sr);
+            Element d = db.parse(is).getDocumentElement();
+            NodeList nl = d.getElementsByTagName("mxCell");
+            for (int i = 0; i < nl.getLength(); i++) {
+                Element cell = (Element) nl.item(i);
+                if (cell.hasAttribute("edge")) {
+                    String src = cell.getAttribute("source");
+                    String t = cell.getAttribute("target");
+                    DiagramEditorElement bt = systemElements.get(src);
+//                    bt.fromCell = Integer.parseInt(s);
+//                    bt.toCell = Integer.parseInt(t);
+                    bt.connections.add(t);
+                }
+            }
+            return systemElements;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     private void populateFunctionTable(System s) throws Exception {
         systemfunctions = new ArrayList<>();
         DefaultTableModel dtm = new DefaultTableModel(functioncolumns, 0);
