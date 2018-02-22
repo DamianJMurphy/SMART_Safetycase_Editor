@@ -25,6 +25,11 @@ Functional
 
 - Go through and tidy up the editor forms
 
+    BUGFIX: Hazard edit and save without changing name. Can (observed once with
+        re-edited and re-saved instance using the same instance of the hazard
+        editor) result in a second entry for the hazard in the project tree.
+        Database updates are OK.
+
 - TODO NEXT: Integrate Sharif's system/function editor.
 
     - UI update needs more testing
@@ -40,6 +45,21 @@ Functional
     - Full system/subsystem/function/subfunction edit via graphics, save and test
 
 - TODO: Reports
+
+- TODO: System/function editor button for subsystems should be enabled but display
+    a message box telling the user to edit the diagram from the root system
+- TODO: Edit bowtie button move to above "Risk matrix" label, make it full width
+        of form. Make background of button red if no GraphXml
+- TODO: Put risk matrix, initial/residual ratings, status and links panels into
+        a separate panel, titled border "Create bowtie before completing analysis"
+- TODO: Find a "disk" icon and add a "Save All" function to the main menu
+    to the left of "File". And put "Save All..." tool-tip on it. Save all function
+    interrogates open UI forms and "clicks save" for the user
+
+- TODO: Tabs and Links check for naming: Location -> Care Setting
+- TODO: In Care Setting editor, make "parent list" a dropdown, default no selection
+- TODO: Don't show database ids in tables
+- TODO: Link editor link type list
 
     
 

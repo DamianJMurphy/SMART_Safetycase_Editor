@@ -353,11 +353,22 @@ public class SystemEditorDetails extends javax.swing.JPanel
 
     private void systemEditorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_systemEditorButtonActionPerformed
         if (system == null) {
-            JOptionPane.showMessageDialog(this, "Save this system first, before editing the Bowtie", "Save first", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Save this system first, before using the graphical editor", "Save first", JOptionPane.INFORMATION_MESSAGE);
             
             return;
         }       
         
+        if (system.getAttribute("ParentSystemID").getIntValue() != -1) {
+            try {
+                String pname = MetaFactory.getInstance().getFactory("System").get(system.getAttribute("ParentSystemID").getIntValue()).getTitle();
+                JOptionPane.showMessageDialog(this, system.getTitle() + " is a subsystem, edit the diagram from the " + pname + " system instead", "Cannot edit subsystems", JOptionPane.INFORMATION_MESSAGE);                                
+            }
+            catch (Exception e) {
+                JOptionPane.showMessageDialog(this, system.getTitle() + " is a subsystem, edit the diagram from the root system instead", "Cannot edit subsystems", JOptionPane.INFORMATION_MESSAGE);                
+            }
+            return;
+            
+        }
 //        SystemEditor sge = new SystemEditor();
         SystemGraphEditor sge = new SystemGraphEditor();
         String xml = system.getAttributeValue("GraphXml");

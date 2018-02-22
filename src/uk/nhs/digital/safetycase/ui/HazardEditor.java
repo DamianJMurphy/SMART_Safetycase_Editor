@@ -203,7 +203,7 @@ public class HazardEditor extends javax.swing.JPanel
 
         jLabel1.setText("Summary");
 
-        jLabel2.setText("Condition");
+        jLabel2.setText("Type");
 
         conditionsComboBox.setEditable(true);
 
@@ -214,6 +214,7 @@ public class HazardEditor extends javax.swing.JPanel
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
         jScrollPane2.setViewportView(descriptionTextArea);
 
         jLabel5.setText("Clinical justification");
@@ -221,6 +222,7 @@ public class HazardEditor extends javax.swing.JPanel
         clinicalJustificationTextArea.setColumns(20);
         clinicalJustificationTextArea.setLineWrap(true);
         clinicalJustificationTextArea.setRows(5);
+        clinicalJustificationTextArea.setWrapStyleWord(true);
         jScrollPane3.setViewportView(clinicalJustificationTextArea);
 
         initialPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Initial ratings"));
@@ -407,16 +409,10 @@ public class HazardEditor extends javax.swing.JPanel
             .addGroup(editorPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(riskMatrixImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 722, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(linksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(editorPanelLayout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(summaryTextField))
-                    .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(editorPanelLayout.createSequentialGroup()
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
@@ -440,7 +436,16 @@ public class HazardEditor extends javax.swing.JPanel
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(discardButton))
                                     .addComponent(residualPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addComponent(jLabel12))
+                    .addGroup(editorPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(49, 49, 49)
+                        .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(editorPanelLayout.createSequentialGroup()
+                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(riskMatrixImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 722, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(linksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         editorPanelLayout.setVerticalGroup(

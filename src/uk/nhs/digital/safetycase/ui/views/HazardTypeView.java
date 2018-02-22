@@ -190,7 +190,7 @@ public class HazardTypeView
 
         nameTextField.setEditable(false);
 
-        jLabel2.setText("Condition");
+        jLabel2.setText("Type");
 
         conditionTextField.setEditable(false);
 

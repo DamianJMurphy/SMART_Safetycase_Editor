@@ -19,6 +19,7 @@ package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
@@ -97,7 +98,7 @@ public class ProjectEditor
         jLabel2.setText("Owner");
         add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 51, -1, -1));
 
-        jLabel3.setText("Customer");
+        jLabel3.setText("Author");
         add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 88, -1, -1));
 
         jLabel4.setText("Description");
@@ -192,6 +193,10 @@ public class ProjectEditor
         
         if (project == null)
             return;
+        int r = JOptionPane.showConfirmDialog(this, "Really delete this Project ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);        
+        if (r == JOptionPane.CANCEL_OPTION)
+            return;
+        
         try {
             MetaFactory.getInstance().getFactory("Project").delete(project);
             SmartProject.getProject().editorEvent(Project.DELETE, project);
