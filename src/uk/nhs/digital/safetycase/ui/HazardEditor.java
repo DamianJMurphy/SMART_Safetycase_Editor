@@ -146,6 +146,7 @@ public class HazardEditor extends javax.swing.JPanel
      */
     public HazardEditor() {
         init();
+        SmartProject.getProject().addNotificationSubscriber(this);
     }
 
     public HazardEditor setParent(ProcessStep ps) {
@@ -265,7 +266,7 @@ public class HazardEditor extends javax.swing.JPanel
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3)
                             .addGroup(editorPanelLayout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addGap(0, 0, Short.MAX_VALUE))))
@@ -368,10 +369,10 @@ public class HazardEditor extends javax.swing.JPanel
                 .addGroup(initialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(initialRiskRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
-        analysisPanel.add(initialPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 242, -1, -1));
+        analysisPanel.add(initialPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 250, -1, 140));
 
         residualPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Residual ratings"));
 
@@ -425,10 +426,10 @@ public class HazardEditor extends javax.swing.JPanel
                 .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(residualRiskRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
-        analysisPanel.add(residualPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(374, 251, -1, -1));
+        analysisPanel.add(residualPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(374, 250, -1, 140));
 
         jLabel3.setText("Status");
         analysisPanel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(29, 413, -1, -1));
@@ -480,16 +481,16 @@ public class HazardEditor extends javax.swing.JPanel
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(analysisPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(30, Short.MAX_VALUE))
+                    .addComponent(analysisPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(analysisPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -547,6 +548,7 @@ public class HazardEditor extends javax.swing.JPanel
         try {
             MetaFactory.getInstance().getFactory("Hazard").delete(hazard);
             SmartProject.getProject().editorEvent(Project.DELETE, hazard);
+            SmartProject.getProject().removeNotificationSubscriber(this);
             SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
         catch(Exception e) {
@@ -583,6 +585,7 @@ public class HazardEditor extends javax.swing.JPanel
             } else {
                 SmartProject.getProject().editorEvent(Project.UPDATE, hazard);
             }
+            SmartProject.getProject().getProjectWindow().setViewTitle(this, "Hazard:" + hazard.getAttributeValue("Name"));
             if (parentProcessStep != null) {
                Relationship r = new Relationship(parentProcessStep.getId(), hazard.getId(), hazard.getDatabaseObjectName());
                parentProcessStep.addRelationship(r);
@@ -793,6 +796,7 @@ public class HazardEditor extends javax.swing.JPanel
             residualLikelihoodSpinner.setValue(Hazard.translateLikelihood(hazard.getAttribute("ResidualLikelihood").getIntValue()));
             initialRiskRatingTextField.setText(hazard.getAttributeValue("InitialRiskRating"));
             residualRiskRatingTextField.setText(hazard.getAttributeValue("ResidualRiskRating"));
+            SmartProject.getProject().getProjectWindow().setViewTitle(this, hazard.getAttributeValue("Name"));
 
             descriptionTextArea.setText(hazard.getAttributeValue("Description"));
             clinicalJustificationTextArea.setText(hazard.getAttributeValue("ClinicalJustification"));
@@ -860,4 +864,29 @@ public class HazardEditor extends javax.swing.JPanel
     public void setNewObjectProjectId(int i) {
         newObjectProjectId = i;
     }
+    
+    @Override
+    public boolean notification(int evtype, Object o) {
+        
+        if (hazard == null)
+            return false;
+        if (o instanceof uk.nhs.digital.safetycase.data.Hazard) {
+            Hazard c = (Hazard)o;
+            if (c == hazard) {
+                if (evtype == Project.DELETE) {
+                    // Close this form and its container... 
+                    SmartProject.getProject().getProjectWindow().closeContainer(this);
+                    // then return true so that this form can be removed from the
+                    // notifications list
+                    return true;
+                }
+                setPersistableObject(c);
+                if (evtype == Project.SAVE) {
+                    saveButtonActionPerformed(null);
+                }
+            }
+        }
+        return false;
+    }
+    
 }

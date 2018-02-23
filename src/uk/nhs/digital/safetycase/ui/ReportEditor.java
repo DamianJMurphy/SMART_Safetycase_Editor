@@ -547,4 +547,9 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
         newObjectProjectId = i;
     }
 
+    @Override
+    public boolean notification(int evtype, Object o) {
+        return true;
+    }
+
 }

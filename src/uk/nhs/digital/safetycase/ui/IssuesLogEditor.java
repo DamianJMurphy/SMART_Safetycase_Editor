@@ -538,4 +538,12 @@ public class IssuesLogEditor
     private javax.swing.JComboBox<String> typeComboBox;
     private javax.swing.JButton unresolveButton;
     // End of variables declaration//GEN-END:variables
+
+
+    @Override
+    public boolean notification(int evtype, Object o) {
+        
+        return true;
+    }
+
 }

@@ -39,7 +39,6 @@ import uk.nhs.digital.safetycase.data.Process;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor;
-import uk.nhs.digital.safetycase.ui.bowtie.HazardListForm;
 
 /**
  *
@@ -133,9 +132,9 @@ public class BowtieSaveHandler
             } else {
                 sp.editorEvent(Project.ADD, hazard);
             }
-            HazardListForm hlf = bge.getHazardListForm();
-            if (hlf != null)
-                hlf.updateHazard(hazard);
+//            HazardListForm hlf = bge.getHazardListForm();
+//            if (hlf != null)
+//                hlf.updateHazard(hazard);
         } 
         catch (BrokenConnectionException bce) {
             System.err.println("TODO: Notify user that the diagram has a broken link and has not been saved: " + bce.getMessage());

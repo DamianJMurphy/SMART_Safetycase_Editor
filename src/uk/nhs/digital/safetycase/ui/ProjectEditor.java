@@ -251,4 +251,9 @@ public class ProjectEditor
     public void setNewObjectProjectId(int i) {
         
     }
+
+    @Override
+    public boolean notification(int evtype, Object o) {
+        return true;
+    }
 }

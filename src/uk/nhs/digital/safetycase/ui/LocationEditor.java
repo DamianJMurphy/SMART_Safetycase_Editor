@@ -229,6 +229,8 @@ public class LocationEditor extends javax.swing.JPanel
             } else {
                 editorComponent.notifyEditorEvent(Project.UPDATE, location);
             }
+            SmartProject.getProject().getProjectWindow().setViewTitle(this, "Care setting:"  + location.getAttributeValue("Name"));
+            
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -322,4 +324,29 @@ public class LocationEditor extends javax.swing.JPanel
     public void setNewObjectProjectId(int i) {
         newObjectProjectId = i;
     }
+    
+    @Override
+    public boolean notification(int evtype, Object o) {
+        
+        if (location == null)
+            return false;
+        if (o instanceof uk.nhs.digital.safetycase.data.Location) {
+            Location c = (Location)o;
+            if (c == location) {
+                if (evtype == Project.DELETE) {
+                    // Close this form and its container... 
+                    SmartProject.getProject().getProjectWindow().closeContainer(this);
+                    // then return true so that this form can be removed from the
+                    // notifications list
+                    return true;
+                }
+                setPersistableObject(c);
+                if (evtype == Project.SAVE) {
+                    saveButtonActionPerformed(null);
+                }
+            }
+        }
+        return false;
+    }
+    
 }

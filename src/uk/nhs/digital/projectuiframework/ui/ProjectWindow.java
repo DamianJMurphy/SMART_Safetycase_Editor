@@ -223,6 +223,73 @@ public class ProjectWindow extends javax.swing.JFrame {
         mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
     }
     
+    public boolean isDocked(JPanel p) {
+        Container parent = p;
+        while ((parent = parent.getParent()) != null) {
+            if (parent instanceof javax.swing.JTabbedPane) {
+                JTabbedPane jtp = (JTabbedPane)parent;
+                int i = jtp.indexOfComponent(p);
+                if (i != -1) {
+                    return true;
+                }
+            }
+        } 
+        return false;
+    }
+
+    public boolean isUnDocked(JPanel p) {
+        Container parent = p;
+        while ((parent = parent.getParent()) != null) {
+            if (parent instanceof javax.swing.JTabbedPane) {
+                JTabbedPane jtp = (JTabbedPane)parent;
+                int i = jtp.indexOfComponent(p);
+                if (i != -1) {
+                    return false;
+                }
+            }
+            if (parent instanceof uk.nhs.digital.projectuiframework.ui.ExternalEditorView) {
+                return true;
+            }
+        } 
+        return false;
+    }
+    
+    public void setViewTitle(JPanel p, String t) {
+        Container parent = p;
+        while ((parent = parent.getParent()) != null) {
+            if (parent instanceof javax.swing.JTabbedPane) {
+                JTabbedPane jtp = (JTabbedPane)parent;
+                int i = jtp.indexOfComponent(p);
+                if (i != -1) {
+                    jtp.setTitleAt(i, t);
+                    return;
+                }
+            }
+            if (parent instanceof uk.nhs.digital.projectuiframework.ui.ExternalEditorView) {
+                ((ExternalEditorView)parent).setTitle(t);
+                return;
+            }
+        } 
+    }
+    
+    public ExternalEditorView getUndockedWindow(JPanel p) {
+        Container parent = p;
+        while ((parent = parent.getParent()) != null) {
+            if (parent instanceof javax.swing.JTabbedPane) {
+                JTabbedPane jtp = (JTabbedPane)parent;
+                int i = jtp.indexOfComponent(p);
+                if (i != -1) {
+                    return null;
+                }
+            }
+            if (parent instanceof uk.nhs.digital.projectuiframework.ui.ExternalEditorView) {
+                return (ExternalEditorView)parent;
+            }
+        } 
+        return null;
+        
+    }
+    
     public void closeContainer(JPanel p) {
         Container parent = p;
         while ((parent = parent.getParent()) != null) {

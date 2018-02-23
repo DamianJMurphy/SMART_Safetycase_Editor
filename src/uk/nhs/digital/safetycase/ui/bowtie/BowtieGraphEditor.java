@@ -46,10 +46,10 @@ public class BowtieGraphEditor extends BasicGraphEditor
     private static int hazardId = -1;
     private ProcessStep processStep = null;
     private HashMap<String,DiagramEditorElement> existingBowtie = null; 
-    private HazardListForm hazardListForm = null;
+//    private HazardListForm hazardListForm = null;
     
-    public void setHazardListForm(HazardListForm hlf) { hazardListForm = hlf; }
-    public HazardListForm getHazardListForm() { return hazardListForm; }
+//    public void setHazardListForm(HazardListForm hlf) { hazardListForm = hlf; }
+//    public HazardListForm getHazardListForm() { return hazardListForm; }
     public int getHazardId() { return hazardId; }
     public void setExistingBowtie(HashMap<String,DiagramEditorElement> ex) { existingBowtie = ex; }
     public HashMap<String,DiagramEditorElement> getExistingBowtie() { return existingBowtie; }

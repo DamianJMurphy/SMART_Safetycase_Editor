@@ -1,6 +1,6 @@
 /*
  * 
- *   Copyright 2017  NHS Digital
+ *   Copyright 2018  NHS Digital
  * 
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,22 +15,12 @@
  *    limitations under the License.
  *  
  */
-package uk.nhs.digital.safetycase.ui;
-import java.awt.Component;
-import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
-import uk.nhs.digital.projectuiframework.ui.EditorComponent;
-import uk.nhs.digital.safetycase.data.Persistable;
+package uk.nhs.digital.projectuiframework;
 
 /**
  *
  * @author damian
  */
-public interface PersistableEditor 
-        extends DataNotificationSubscriber
-        
-{
-    public void setPersistableObject(Persistable p);
-    public void setEditorComponent(EditorComponent ed);
-    public Component getComponent();
-    public void setNewObjectProjectId(int i);
+public interface DataNotificationSubscriber {
+    boolean notification(int evtype, Object o);
 }

@@ -36,6 +36,8 @@ public interface Project {
     public static final int UPDATE = 2;
     public static final int DELETE = 3;
     
+    public static final int SAVE = 10;
+    
     EditorComponent getEditorComponent(TreePath t);
     ViewComponent getViewComponent(TreePath t);
     String checkNewFromPopupMenu(TreePath t);
@@ -67,5 +69,8 @@ public interface Project {
     int getProjectID(DefaultMutableTreeNode n);
     int getCurrentProjectID();
     void setCurrentProjectID(int id);
-    void editorEvent(int e, Object o);    
+    
+    void editorEvent(int e, Object o);
+    void addNotificationSubscriber(DataNotificationSubscriber n);
+    void removeNotificationSubscriber(DataNotificationSubscriber n);
 }

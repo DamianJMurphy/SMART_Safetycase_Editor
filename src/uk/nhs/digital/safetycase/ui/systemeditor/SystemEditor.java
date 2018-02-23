@@ -347,4 +347,9 @@ public class SystemEditor extends javax.swing.JSplitPane
     public void setNewObjectProjectId(int i) {
         newObjectProjectId = i;
     }
+
+    @Override
+    public boolean notification(int evtype, Object o) {
+        return true;
+    }
 }

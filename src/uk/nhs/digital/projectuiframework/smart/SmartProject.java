@@ -29,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.projectuiframework.ui.ViewComponent;
@@ -78,6 +79,8 @@ public class SmartProject
     private ProjectWindow projectWindow;
     private final HashMap<String,ImageIcon> icons = new HashMap<>();
     private ImageIcon helpAboutIcon = null;
+    
+    private final ArrayList<DataNotificationSubscriber> notificationSubscribers = new ArrayList<>();
     
     public SmartProject()
             throws Exception
@@ -765,6 +768,19 @@ public class SmartProject
         }
         if (expanded)
             projectWindow.getProjectTree().expandPath(pathToContainer);
+        
+        // Do this to stop subscribers removing themselves as a result of the
+        // notification, and causing a concurrency exception.
+        //
+        ArrayList<DataNotificationSubscriber> toBeRemoved = new ArrayList<>();
+        for (DataNotificationSubscriber d : notificationSubscribers) {
+            if (d.notification(ev, o)) {
+                toBeRemoved.add(d);
+            }
+        }
+        for (DataNotificationSubscriber d : toBeRemoved) {
+           notificationSubscribers.remove(o);
+        }
     }
     
     private void fillOutNewProject(DefaultMutableTreeNode d, int pid) {
@@ -1001,6 +1017,20 @@ public class SmartProject
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void addNotificationSubscriber(DataNotificationSubscriber n) {
+        synchronized(this) {
+            notificationSubscribers.add(n);
+        }
+    }
+
+    @Override
+    public void removeNotificationSubscriber(DataNotificationSubscriber n) {
+        synchronized(this) {
+            notificationSubscribers.remove(n);
+        }
     }
     
 }

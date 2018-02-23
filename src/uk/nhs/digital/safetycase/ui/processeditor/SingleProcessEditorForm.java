@@ -21,7 +21,10 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.swing.JDialog;
+import uk.nhs.digital.projectuiframework.Project;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
+import uk.nhs.digital.safetycase.data.Cause;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
@@ -142,4 +145,10 @@ public class SingleProcessEditorForm
     public void setNewObjectProjectId(int i) {
         newObjectProjectId = i;
     }
+    
+    @Override
+    public boolean notification(int evtype, Object o) {
+        return true;
+    }
+    
 }

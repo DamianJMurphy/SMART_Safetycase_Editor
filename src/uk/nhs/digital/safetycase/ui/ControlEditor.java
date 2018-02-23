@@ -494,4 +494,29 @@ public class ControlEditor extends javax.swing.JPanel
     public void setNewObjectProjectId(int i) {
         newObjectProjectId = i;
     }
+    
+    @Override
+    public boolean notification(int evtype, Object o) {
+        
+        if (control == null)
+            return false;
+        if (o instanceof uk.nhs.digital.safetycase.data.Control) {
+            Control c = (Control)o;
+            if (c == control) {
+                if (evtype == Project.DELETE) {
+                    // Close this form and its container... 
+                    SmartProject.getProject().getProjectWindow().closeContainer(this);
+                    // then return true so that this form can be removed from the
+                    // notifications list
+                    return true;
+                }
+                setPersistableObject(c);
+                if (evtype == Project.SAVE) {
+                    saveButtonActionPerformed(null);
+                }
+            }
+        }
+        return false;
+    }
+    
 }

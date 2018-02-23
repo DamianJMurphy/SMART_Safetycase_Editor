@@ -18,18 +18,10 @@
 package uk.nhs.digital.safetycase.ui.systemeditor;
 
 import java.awt.Component;
-import uk.nhs.digital.safetycase.ui.*;
-import uk.nhs.digital.safetycase.ui.processeditor.*;
-import java.awt.Container;
-import java.util.ArrayList;
-import java.util.Collection;
 import javax.swing.JDialog;
-import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
-import uk.nhs.digital.safetycase.data.PersistableFactory;
-import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.data.SystemFunction;
 
 /**
@@ -227,5 +219,10 @@ public class SystemFunctionEditor extends javax.swing.JPanel
     @Override
     public void setNewObjectProjectId(int i) {
         
+    }
+
+    @Override
+    public boolean notification(int evtype, Object o) {
+        return true;
     }
 }

@@ -620,4 +620,9 @@ public class SystemEditorDetails extends javax.swing.JPanel
         
     }
     //</editor-fold>
+
+    @Override
+    public boolean notification(int evtype, Object o) {
+        return true;
+    }
 }
