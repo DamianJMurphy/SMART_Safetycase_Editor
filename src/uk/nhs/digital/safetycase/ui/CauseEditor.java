@@ -42,7 +42,7 @@ public class CauseEditor extends javax.swing.JPanel
     private Cause cause = null;
     
  
-    private final String[] linkcolumns = {"Type", "ID", "Name", "Comment"};
+    private final String[] linkcolumns = {"Type", "Name", "Comment"};
     private int newObjectProjectId = -1;
     /**
      * Creates new form HazardEditor
@@ -228,12 +228,15 @@ public class CauseEditor extends javax.swing.JPanel
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
                 for (Relationship r : a) {
-                    String[] row = new String[linkcolumns.length];
-                    row[0] = t;
-                    row[1] = Integer.toString(r.getTarget());
-                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                    row[3] = r.getComment();
-                    dtm.addRow(row);
+                    String m = r.getManagementClass();
+                    if ((m == null) || (!m.contentEquals("Diagram"))) {                    
+                        Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                        String[] row = new String[linkcolumns.length];
+                        row[0] = tgt.getDisplayName();
+                        row[1] = tgt.getAttributeValue("Name");
+                        row[2] = r.getComment();
+                        dtm.addRow(row);
+                    }
                 }
             }
             linksTable.setModel(dtm);
@@ -354,11 +357,11 @@ public class CauseEditor extends javax.swing.JPanel
                 for (Relationship r : a) {
                     String m = r.getManagementClass();
                     if ((m == null) || (!m.contentEquals("Diagram"))) {    
+                        Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
                         String[] row = new String[linkcolumns.length];
-                        row[0] = t;
-                        row[1] = Integer.toString(r.getTarget());
-                        row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                        row[3] = r.getComment();
+                        row[0] = tgt.getDisplayName();
+                        row[1] = tgt.getAttributeValue("Name");
+                        row[2] = r.getComment();
                         dtm.addRow(row);
                     }
                 }

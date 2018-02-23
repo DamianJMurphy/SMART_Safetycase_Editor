@@ -28,6 +28,7 @@ public abstract class Persistable {
    
     protected int identifier = -1;
     protected String dbObjectName = null;
+    protected String displayName = null;
     protected String editorType = null;
     protected HashMap<String,Attribute> writableAttributes = new HashMap<>();
     protected HashMap<String,Attribute> readOnlyAttributes = new HashMap<>();
@@ -52,6 +53,7 @@ public abstract class Persistable {
     public abstract String[] getFields();
     
     public abstract String getTitle();
+    public String getDisplayName() { return (displayName == null) ? dbObjectName : displayName; }
     
 //    abstract Persistable save() throws Exception;
 //    abstract Persistable load(int i) throws Exception;

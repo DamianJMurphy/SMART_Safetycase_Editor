@@ -46,20 +46,16 @@ Functional
 
 - TODO: Reports
 
-- TODO: System/function editor button for subsystems should be enabled but display
-    a message box telling the user to edit the diagram from the root system
-- TODO: Edit bowtie button move to above "Risk matrix" label, make it full width
-        of form. Make background of button red if no GraphXml
-- TODO: Put risk matrix, initial/residual ratings, status and links panels into
-        a separate panel, titled border "Create bowtie before completing analysis"
+- TODO: Make a central registry of open editor forms that can be used for notifications
+    - including updates, and things like the "Save All" below.
+
 - TODO: Find a "disk" icon and add a "Save All" function to the main menu
     to the left of "File". And put "Save All..." tool-tip on it. Save all function
     interrogates open UI forms and "clicks save" for the user
 
-- TODO: Tabs and Links check for naming: Location -> Care Setting
-- TODO: In Care Setting editor, make "parent list" a dropdown, default no selection
-- TODO: Don't show database ids in tables
-- TODO: Link editor link type list
+- TODO: Link editor link type list - Hannah to provide RelationshipSemantics list
+    - TODO: Make sure the RelationshipSemantics is implemented and works for the 
+            Link editor.
 
     
 

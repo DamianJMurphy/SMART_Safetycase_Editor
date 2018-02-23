@@ -30,6 +30,7 @@ public class Process
     public Process() 
     {
         dbObjectName = "Process";
+        displayName = "Care process";
         referenceData = false;
         for (String s: FIELDS) {
             if (s.contentEquals("ProjectID"))

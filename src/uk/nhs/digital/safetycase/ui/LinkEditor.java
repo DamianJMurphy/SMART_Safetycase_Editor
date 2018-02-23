@@ -33,7 +33,7 @@ import uk.nhs.digital.safetycase.data.Relationship;
 public class LinkEditor extends javax.swing.JPanel {
 
     private Persistable focus = null;
-    private final String[] columns = {"Type", "ID", "Name", "Comment"};
+    private final String[] columns = {"Type", "Name", "Comment"};
     private HashMap<String, ArrayList<Relationship>> relationships = null;
     private ArrayList<Relationship> tableMap = null;
     private final String[] targets = {"Hazard","Control","Effect","System","Role","Care Setting", "Process", "Proces step"};
@@ -57,17 +57,17 @@ public class LinkEditor extends javax.swing.JPanel {
         for (String s : relationships.keySet()) {
             for (Relationship r : relationships.get(s)) {
                 tableMap.add(r);
+                
                 String[] row = new String[columns.length];
-                row[0] = s;
-                row[1] = Integer.toString(r.getTarget());
                 try {
                     Persistable target = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                    row[2] = target.getAttributeValue("Name");
+                    row[0] = target.getDisplayName();
+                    row[1] = target.getAttributeValue("Name");
+                    row[2] = r.getComment();
                 }
                 catch (Exception e) {
                     e.printStackTrace();
                 }
-                row[3] = r.getComment();
                 dtm.addRow(row);
             }            
         }
@@ -339,6 +339,8 @@ public class LinkEditor extends javax.swing.JPanel {
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
         linkDetailPanel.setEnabled(true);
         relationshipsTable.clearSelection();
+        discardButtonActionPerformed(null);
+        editedRelationship = null;
     }//GEN-LAST:event_newButtonActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
@@ -411,7 +413,7 @@ public class LinkEditor extends javax.swing.JPanel {
         if (editedRelationship != null) {
             // Update the relationship (call Database.save()) and the relationships table view
             editedRelationship.setComment(commentTextArea.getText());
-            ((DefaultTableModel)relationshipsTable.getModel()).setValueAt(commentTextArea.getText(), relationshipsTable.getSelectedRow(), 3);
+            ((DefaultTableModel)relationshipsTable.getModel()).setValueAt(commentTextArea.getText(), relationshipsTable.getSelectedRow(), 2);
             try {
                 MetaFactory.getInstance().getDatabase().save(editedRelationship);
             }
@@ -426,10 +428,9 @@ public class LinkEditor extends javax.swing.JPanel {
                 MetaFactory.getInstance().getFactory(focus.getDatabaseObjectName()).put(focus);
                 String[] row = new String[columns.length];
                 tableMap.add(r);
-                row[0] = r.getTargetType();
-                row[1] = Integer.toString(r.getTarget());
-                row[2] = target.getAttributeValue("Name");
-                row[3] = r.getComment();
+                row[0] = target.getDisplayName();
+                row[1] = target.getAttributeValue("Name");
+                row[2] = r.getComment();
                 ((DefaultTableModel)relationshipsTable.getModel()).addRow(row);
             }
             catch (Exception e) {

@@ -385,6 +385,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
 
     private HashMap<String,DiagramEditorElement> getExistingGraph(String xml) {
 
+        if ((xml == null) || (xml.length() == 0))
+            return null;
         try { 
             HashMap<String, DiagramEditorElement> systemElements = new HashMap<>();
             

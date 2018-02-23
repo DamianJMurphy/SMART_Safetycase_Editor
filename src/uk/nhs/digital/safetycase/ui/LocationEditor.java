@@ -19,9 +19,10 @@ package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
@@ -47,7 +48,7 @@ public class LocationEditor extends javax.swing.JPanel
      */
     public LocationEditor() {
         initComponents();
-        locationsList.setModel(new DefaultListModel());
+        parentLocationComboBox.setModel(new DefaultComboBoxModel());
     }
 
     /**
@@ -65,13 +66,12 @@ public class LocationEditor extends javax.swing.JPanel
         jLabel3 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        locationsList = new javax.swing.JList<>();
         discardButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
         mnemonicTextField = new javax.swing.JTextField();
+        parentLocationComboBox = new javax.swing.JComboBox<>();
 
         editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         editorPanel.setEnabled(false);
@@ -85,9 +85,8 @@ public class LocationEditor extends javax.swing.JPanel
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
         jScrollPane3.setViewportView(descriptionTextArea);
-
-        jScrollPane2.setViewportView(locationsList);
 
         discardButton.setText("Delete");
         discardButton.addActionListener(new java.awt.event.ActionListener() {
@@ -111,31 +110,25 @@ public class LocationEditor extends javax.swing.JPanel
             editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(editorPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editorPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(discardButton))
+                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel3)
-                            .addGroup(editorPanelLayout.createSequentialGroup()
+                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
+                        .addComponent(discardButton))
+                    .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, editorPanelLayout.createSequentialGroup()
+                            .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(mnemonicTextField))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(editorPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(49, 49, 49)
-                                .addComponent(nameTextField)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(editorPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE))))
-                .addContainerGap())
+                                .addComponent(jLabel1))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                                .addComponent(mnemonicTextField)))
+                        .addComponent(parentLocationComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         editorPanelLayout.setVerticalGroup(
             editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -143,25 +136,24 @@ public class LocationEditor extends javax.swing.JPanel
                 .addContainerGap()
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel4)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editorPanelLayout.createSequentialGroup()
-                        .addGap(13, 13, 13)
-                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(mnemonicTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(19, 19, 19)
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(discardButton)
-                    .addComponent(saveButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel2)
+                    .addComponent(mnemonicTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(parentLocationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(saveButton)
+                    .addComponent(discardButton))
+                .addGap(16, 16, 16))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -170,8 +162,8 @@ public class LocationEditor extends javax.swing.JPanel
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -221,8 +213,8 @@ public class LocationEditor extends javax.swing.JPanel
             location.setAttribute("ProjectID", Integer.parseInt(location.getAttributeValue("ProjectID")));
         else 
             location.setAttribute("ProjectID",newObjectProjectId);
-        int parent = locationsList.getSelectedIndex();
-        if (locationsList.getSelectedIndex() != -1) {
+        int parent = parentLocationComboBox.getSelectedIndex();
+        if (parentLocationComboBox.getSelectedIndex() != -1) {
             Location p = projectLocs.get(parent);
             location.setAttribute("ParentLocationID", p.getId());
         } else {
@@ -233,7 +225,7 @@ public class LocationEditor extends javax.swing.JPanel
             if (created) {
                 editorComponent.notifyEditorEvent(Project.ADD, location);
                 projectLocs.add(location);
-                ((DefaultListModel)locationsList.getModel()).addElement(location.getAttributeValue("Name"));
+                ((DefaultListModel)parentLocationComboBox.getModel()).addElement(location.getAttributeValue("Name"));
             } else {
                 editorComponent.notifyEditorEvent(Project.UPDATE, location);
             }
@@ -252,11 +244,11 @@ public class LocationEditor extends javax.swing.JPanel
         nameTextField.setText(location.getAttributeValue("Name"));
         mnemonicTextField.setText(location.getAttributeValue("Mnemonic"));
         if (location.getAttribute("ParentLocationID").getIntValue() == -1) {
-            locationsList.clearSelection();        
+            parentLocationComboBox.setSelectedIndex(-1);
         } else {
             for (int i = 0; i < projectLocs.size(); i++) {
                 if (projectLocs.get(i).getId() == location.getAttribute("ParentLocationID").getIntValue()) {
-                    locationsList.setSelectedIndex(i);
+                    parentLocationComboBox.setSelectedIndex(i);
                     break;
                 }
             }
@@ -282,7 +274,7 @@ public class LocationEditor extends javax.swing.JPanel
     private void loadPotentialParents() {
         try {
             projectLocs.clear();
-            DefaultListModel dlm = new DefaultListModel();
+            DefaultComboBoxModel dlm = new DefaultComboBoxModel();
             ArrayList<Persistable> locs = MetaFactory.getInstance().getChildren("Location", "ProjectID", SmartProject.getProject().getCurrentProjectID());
             if (locs != null) {
                 for (Persistable s : locs) {
@@ -293,7 +285,7 @@ public class LocationEditor extends javax.swing.JPanel
                     dlm.addElement(l.getAttributeValue("Name"));
                 }                    
             }
-            locationsList.setModel(dlm);
+            parentLocationComboBox.setModel(dlm);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -319,11 +311,10 @@ public class LocationEditor extends javax.swing.JPanel
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JList<String> locationsList;
     private javax.swing.JTextField mnemonicTextField;
     private javax.swing.JTextField nameTextField;
+    private javax.swing.JComboBox<String> parentLocationComboBox;
     private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 

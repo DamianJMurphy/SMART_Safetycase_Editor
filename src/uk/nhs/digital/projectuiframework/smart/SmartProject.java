@@ -232,12 +232,12 @@ public class SmartProject
         try {
             uk.nhs.digital.safetycase.ui.PersistableEditor pe = (uk.nhs.digital.safetycase.ui.PersistableEditor)Class.forName(eclass).newInstance();
             pe.setPersistableObject(p);
-            ec = new EditorComponent(pe.getComponent(), s + ":" + p.getTitle(), this);
+            ec = new EditorComponent(pe.getComponent(), p.getDisplayName() + ":" + p.getTitle(), this);
             pe.setEditorComponent(ec);
         }
         catch (Exception e) {
             e.printStackTrace();
-            JLabel l = new JLabel("Editor for " + p.getEditorType() + ":" + p.getTitle() + " not found");
+            JLabel l = new JLabel("Editor for " + p.getDisplayName() + ":" + p.getTitle() + " not found");
             ec = new EditorComponent(l, p.getTitle(), this);
         }   
         return ec;

@@ -33,6 +33,7 @@ import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.projectuiframework.ui.UndockTabComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
+import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFilter;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.Relationship;
@@ -44,7 +45,7 @@ import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
  */
 public class SingleProcessEditorPanel extends javax.swing.JPanel {
 
-    private final String[] linkcolumns = {"Type", "ID", "Name", "Comment"};
+    private final String[] linkcolumns = {"Type", "Name", "Comment"};
     private JDialog parent = null;
 //    private ProcessEditor editor = null;
     private int processid = -1;
@@ -98,10 +99,10 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
                         String m = r.getManagementClass();
                         if ((m == null) || (!m.contentEquals("Diagram"))) {                    
                             String[] row = new String[linkcolumns.length];
-                            row[0] = t;
-                            row[1] = Integer.toString(r.getTarget());
-                            row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                            row[3] = r.getComment();
+                            Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()); 
+                            row[0] = tgt.getDisplayName();
+                            row[1] = tgt.getAttributeValue("Name");
+                            row[2] = r.getComment();
                             dtm.addRow(row);
                         }
                     }
@@ -338,10 +339,10 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
                 ArrayList<Relationship> a = rels.get(t);
                 for (Relationship r : a) {
                     String[] row = new String[linkcolumns.length];
-                    row[0] = t;
-                    row[1] = Integer.toString(r.getTarget());
-                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                    row[3] = r.getComment();
+                    Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                    row[0] = tgt.getDisplayName();
+                    row[1] = tgt.getAttributeValue("Name");
+                    row[2] = r.getComment();
                     dtm.addRow(row);
                 }
             }

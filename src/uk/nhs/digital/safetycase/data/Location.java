@@ -29,6 +29,7 @@ public class Location
     public Location() 
     {
         dbObjectName = "Location";
+        displayName = "Care setting";
         referenceData = true;
         for (String s: FIELDS) {
             if (s.contentEquals("ParentLocationID"))
