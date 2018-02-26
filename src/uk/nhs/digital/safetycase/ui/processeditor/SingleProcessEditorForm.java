@@ -54,7 +54,7 @@ public class SingleProcessEditorForm
             throws Exception
     {
         initComponents();
-        
+        SmartProject.getProject().addNotificationSubscriber(this);
         PersistableFactory<Process> pfp = (PersistableFactory<Process>)MetaFactory.getInstance().getFactory("Process");
         if (pid != -1) {
             process = pfp.get(pid);
@@ -148,6 +148,11 @@ public class SingleProcessEditorForm
     
     @Override
     public boolean notification(int evtype, Object o) {
+        if (evtype == Project.SAVE) {
+            processEditor.save();
+            return false;
+        }
+        
         return true;
     }
     

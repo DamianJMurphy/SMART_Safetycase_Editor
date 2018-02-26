@@ -17,6 +17,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.IssuesLog;
@@ -47,6 +48,7 @@ public class IssuesLogEditor
      */
     public IssuesLogEditor() {
         initComponents();
+        SmartProject.getProject().addNotificationSubscriber(this);
         ListSelectionModel lsm = issuesTable.getSelectionModel();
         lsm.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -91,6 +93,18 @@ public class IssuesLogEditor
         }
     }
 
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        SmartProject.getProject().addNotificationSubscriber(this);
+    }
+    
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -542,7 +556,11 @@ public class IssuesLogEditor
 
     @Override
     public boolean notification(int evtype, Object o) {
-        
+        if (evtype == Project.SAVE) {
+            saveButtonActionPerformed(null);
+            return false;
+        }
+
         return true;
     }
 

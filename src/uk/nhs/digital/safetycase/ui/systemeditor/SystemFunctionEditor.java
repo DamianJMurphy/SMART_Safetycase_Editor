@@ -19,6 +19,7 @@ package uk.nhs.digital.safetycase.ui.systemeditor;
 
 import java.awt.Component;
 import javax.swing.JDialog;
+import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -223,6 +224,12 @@ public class SystemFunctionEditor extends javax.swing.JPanel
 
     @Override
     public boolean notification(int evtype, Object o) {
+        
+        if (evtype == Project.SAVE) {
+            okButtonActionPerformed(null);
+            return false;
+        }
+        
         return true;
     }
 }

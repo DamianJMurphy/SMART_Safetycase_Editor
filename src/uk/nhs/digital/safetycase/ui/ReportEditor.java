@@ -34,6 +34,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.Project;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.Database;
@@ -107,18 +108,22 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
      */
     public ReportEditor() throws Exception {
         initComponents();
+        SmartProject.getProject().addNotificationSubscriber(this);
 
-//        java.lang.System.setProperty(Database.CONNECTIONURLPROPERTY, "jdbc:hsqldb:file:C:/SMART/db/safety;shutdown=true");
-//            java.lang.System.setProperty("user", "SA");
-//            java.lang.System.setProperty("password", "");
-//        metaFactory = MetaFactory.getInstance();
-//        metaFactory.initialise();
-//        PersistableFactory<Project> pf = metaFactory.getFactory("Project");
-//        proj = (Project) pf.get(0);
-        //get all the functions of each system and didplay name and description
-        //systemFunctionFactory = metaFactory.getFactory("SystemFunction");
     }
 
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        SmartProject.getProject().addNotificationSubscriber(this);
+    }
+    
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -549,6 +554,12 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
 
     @Override
     public boolean notification(int evtype, Object o) {
+        
+        if (evtype == uk.nhs.digital.projectuiframework.Project.SAVE) {
+            saveButtonActionPerformed(null);
+            return false;
+        }
+        
         return true;
     }
 

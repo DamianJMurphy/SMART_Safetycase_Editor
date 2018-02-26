@@ -52,6 +52,7 @@ public class ProjectEditor
         deleteButton.setEnabled(false);
         smartProject = (SmartProject)sp;
         ownerTextField.setText(System.getProperty("user.name"));
+        SmartProject.getProject().addNotificationSubscriber(this);
     }
 
     public ProjectEditor() {
@@ -60,6 +61,20 @@ public class ProjectEditor
         createProjectButton.setEnabled(false);
         cancelCreateButton.setVisible(false);
         cancelCreateButton.setEnabled(false);
+        SmartProject.getProject().addNotificationSubscriber(this);
+    }
+    
+    
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        SmartProject.getProject().addNotificationSubscriber(this);
+    }
+    
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        SmartProject.getProject().removeNotificationSubscriber(this);
     }
     
     public ProjectEditor setParent(JDialog p) 
@@ -254,6 +269,11 @@ public class ProjectEditor
 
     @Override
     public boolean notification(int evtype, Object o) {
+        if (evtype == Project.SAVE) {
+            saveButtonActionPerformed(null);
+            return false;
+        }
+        
         return true;
     }
 }

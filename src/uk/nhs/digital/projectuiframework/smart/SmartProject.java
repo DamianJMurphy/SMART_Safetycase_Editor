@@ -783,6 +783,14 @@ public class SmartProject
         }
     }
     
+    @Override
+    public void saveAll() 
+    {
+        for (DataNotificationSubscriber d : notificationSubscribers) {
+            d.notification(SAVE, null);
+        }
+    }
+    
     private void fillOutNewProject(DefaultMutableTreeNode d, int pid) {
         DefaultMutableTreeNode dmtn = null;
         dmtn = new DefaultMutableTreeNode("Systems");
@@ -1022,14 +1030,16 @@ public class SmartProject
     @Override
     public void addNotificationSubscriber(DataNotificationSubscriber n) {
         synchronized(this) {
-            notificationSubscribers.add(n);
+            if (!notificationSubscribers.contains(n))
+                notificationSubscribers.add(n);
         }
     }
 
     @Override
     public void removeNotificationSubscriber(DataNotificationSubscriber n) {
         synchronized(this) {
-            notificationSubscribers.remove(n);
+            if (notificationSubscribers.contains(n))
+                notificationSubscribers.remove(n);
         }
     }
     

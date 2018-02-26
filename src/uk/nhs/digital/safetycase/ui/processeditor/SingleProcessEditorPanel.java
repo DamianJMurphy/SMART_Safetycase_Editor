@@ -83,6 +83,10 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
         descriptionTextArea.setText(d);        
     }
     
+    void save() {
+        saveButtonActionPerformed(null);
+    }
+    
     void populateLinks() 
             throws Exception
     {

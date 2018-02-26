@@ -73,4 +73,5 @@ public interface Project {
     void editorEvent(int e, Object o);
     void addNotificationSubscriber(DataNotificationSubscriber n);
     void removeNotificationSubscriber(DataNotificationSubscriber n);
+    void saveAll();
 }

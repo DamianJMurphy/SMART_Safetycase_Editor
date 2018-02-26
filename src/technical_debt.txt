@@ -46,12 +46,9 @@ Functional
 
 - TODO: Reports
 
-- TODO: Make a central registry of open editor forms that can be used for notifications
-    - including updates, and things like the "Save All" below.
+- TODO: Finish calls to and general UI update notifications for all relevant 
+    editor forms and actions.
 
-- TODO: Find a "disk" icon and add a "Save All" function to the main menu
-    to the left of "File". And put "Save All..." tool-tip on it. Save all function
-    interrogates open UI forms and "clicks save" for the user
 
 - TODO: Link editor link type list - Hannah to provide RelationshipSemantics list
     - TODO: Make sure the RelationshipSemantics is implemented and works for the 

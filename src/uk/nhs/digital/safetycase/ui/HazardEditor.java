@@ -149,6 +149,19 @@ public class HazardEditor extends javax.swing.JPanel
         SmartProject.getProject().addNotificationSubscriber(this);
     }
 
+    
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        SmartProject.getProject().addNotificationSubscriber(this);
+    }
+    
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+    
     public HazardEditor setParent(ProcessStep ps) {
         parentProcessStep = ps;
         initialRiskRatingTextField.setText("-1");
@@ -867,7 +880,10 @@ public class HazardEditor extends javax.swing.JPanel
     
     @Override
     public boolean notification(int evtype, Object o) {
-        
+        if (evtype == Project.SAVE) {
+            saveButtonActionPerformed(null);
+            return false;
+        }
         if (hazard == null)
             return false;
         if (o instanceof uk.nhs.digital.safetycase.data.Hazard) {

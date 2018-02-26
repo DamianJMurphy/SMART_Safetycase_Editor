@@ -52,8 +52,20 @@ public class RoleEditor extends javax.swing.JPanel
         initComponents();
         DefaultTableModel dtm = new DefaultTableModel(LINKCOLUMNS, 0);
         linksTable.setModel(dtm);
+        SmartProject.getProject().addNotificationSubscriber(this);
     }
 
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        SmartProject.getProject().addNotificationSubscriber(this);
+    }
+    
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -208,7 +220,6 @@ public class RoleEditor extends javax.swing.JPanel
 
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
 
-        // ... TO HERE WHEN DELETE-CLOSE-FORM works
         if (role == null)
             return;
         
@@ -250,9 +261,9 @@ public class RoleEditor extends javax.swing.JPanel
         try {
             MetaFactory.getInstance().getFactory(role.getDatabaseObjectName()).put(role);
             if (created) {
-                editorComponent.notifyEditorEvent(Project.ADD, role);
+                SmartProject.getProject().editorEvent(Project.ADD, role);
             } else {
-                editorComponent.notifyEditorEvent(Project.UPDATE, role);
+                SmartProject.getProject().editorEvent(Project.UPDATE, role);
             }                
         }
         catch (Exception e) {
@@ -347,6 +358,11 @@ public class RoleEditor extends javax.swing.JPanel
     
     @Override
     public boolean notification(int evtype, Object o) {
+       
+        if (evtype == Project.SAVE) {
+            saveButtonActionPerformed(null);
+            return false;
+        }
         
         if (role == null)
             return false;

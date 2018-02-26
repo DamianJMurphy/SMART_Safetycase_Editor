@@ -53,6 +53,7 @@ public class EffectEditor extends javax.swing.JPanel
     public EffectEditor() {
         initComponents();
         DefaultTableModel linkModel = new DefaultTableModel(linkcolumns, 0);
+        SmartProject.getProject().addNotificationSubscriber(this);
         linksTable.setModel(linkModel);
         try {
             ValueSet effectType = MetaFactory.getInstance().getValueSet("EffectType");
@@ -76,6 +77,18 @@ public class EffectEditor extends javax.swing.JPanel
         
     }
 
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        SmartProject.getProject().addNotificationSubscriber(this);
+    }
+    
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -372,6 +385,10 @@ public class EffectEditor extends javax.swing.JPanel
     
     @Override
     public boolean notification(int evtype, Object o) {
+        if (evtype == Project.SAVE) {
+            saveButtonActionPerformed(null);
+            return false;
+        }
         
         if (effect == null)
             return false;

@@ -76,6 +76,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
     public SystemEditorDetails(Persistable p) {
         initComponents();
         DefaultTableModel dsftm = new DefaultTableModel(functioncolumns, 0);
+        SmartProject.getProject().addNotificationSubscriber(this);
         String psname= "";
         if (p == null) {
             functionsTable.setModel(dsftm);
@@ -623,6 +624,12 @@ public class SystemEditorDetails extends javax.swing.JPanel
 
     @Override
     public boolean notification(int evtype, Object o) {
+        
+        if (evtype == Project.SAVE) {
+            saveButtonActionPerformed(null);
+            return false;
+        }
+        
         return true;
     }
 }

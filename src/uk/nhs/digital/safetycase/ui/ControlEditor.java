@@ -51,6 +51,7 @@ public class ControlEditor extends javax.swing.JPanel
     public ControlEditor() {
         initComponents();
         DefaultTableModel linkModel = new DefaultTableModel(linkcolumns, 0);
+        SmartProject.getProject().addNotificationSubscriber(this);
         linksTable.setModel(linkModel);
         try {
             ValueSet controlType = MetaFactory.getInstance().getValueSet("ControlType");
@@ -80,6 +81,18 @@ public class ControlEditor extends javax.swing.JPanel
         
     }
 
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        SmartProject.getProject().addNotificationSubscriber(this);
+    }
+    
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -497,6 +510,10 @@ public class ControlEditor extends javax.swing.JPanel
     
     @Override
     public boolean notification(int evtype, Object o) {
+        if (evtype == Project.SAVE) {
+            saveButtonActionPerformed(null);
+            return false;
+        }
         
         if (control == null)
             return false;

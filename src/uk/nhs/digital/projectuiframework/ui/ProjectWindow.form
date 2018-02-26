@@ -13,6 +13,16 @@
         <Property name="name" type="java.lang.String" value="mainMenu" noResource="true"/>
       </Properties>
       <SubComponents>
+        <Menu class="javax.swing.JMenu" name="saveAllMenu">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/uk/nhs/digital/projectuiframework/ui/resources/media-floppy.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="menuSelected" listener="javax.swing.event.MenuListener" parameters="javax.swing.event.MenuEvent" handler="saveAllMenuMenuSelected"/>
+          </Events>
+        </Menu>
         <Menu class="javax.swing.JMenu" name="mainFileMenu">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">

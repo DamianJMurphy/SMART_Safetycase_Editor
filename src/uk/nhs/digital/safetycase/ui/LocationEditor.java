@@ -49,7 +49,21 @@ public class LocationEditor extends javax.swing.JPanel
     public LocationEditor() {
         initComponents();
         parentLocationComboBox.setModel(new DefaultComboBoxModel());
+        SmartProject.getProject().addNotificationSubscriber(this);
     }
+    
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        SmartProject.getProject().addNotificationSubscriber(this);
+    }
+    
+    @Override
+    public void removeNotify() {
+        super.removeNotify();
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -225,7 +239,7 @@ public class LocationEditor extends javax.swing.JPanel
             if (created) {
                 editorComponent.notifyEditorEvent(Project.ADD, location);
                 projectLocs.add(location);
-                ((DefaultListModel)parentLocationComboBox.getModel()).addElement(location.getAttributeValue("Name"));
+                ((DefaultComboBoxModel)parentLocationComboBox.getModel()).addElement(location.getAttributeValue("Name"));
             } else {
                 editorComponent.notifyEditorEvent(Project.UPDATE, location);
             }
@@ -288,6 +302,7 @@ public class LocationEditor extends javax.swing.JPanel
                 }                    
             }
             parentLocationComboBox.setModel(dlm);
+            parentLocationComboBox.setSelectedIndex(-1);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -327,6 +342,10 @@ public class LocationEditor extends javax.swing.JPanel
     
     @Override
     public boolean notification(int evtype, Object o) {
+        if (evtype == Project.SAVE) {
+            saveButtonActionPerformed(null);
+            return false;
+        }
         
         if (location == null)
             return false;

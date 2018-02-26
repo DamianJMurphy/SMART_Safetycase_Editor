@@ -70,6 +70,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         projectTree = new javax.swing.JTree();
         mainWindowTabbedPane = new javax.swing.JTabbedPane();
         mainMenu = new javax.swing.JMenuBar();
+        saveAllMenu = new javax.swing.JMenu();
         mainFileMenu = new javax.swing.JMenu();
         mainMenuNew = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -110,6 +111,18 @@ public class ProjectWindow extends javax.swing.JFrame {
         mainMenu.setBackground(new java.awt.Color(51, 102, 255));
         mainMenu.setForeground(new java.awt.Color(255, 255, 255));
         mainMenu.setName("mainMenu"); // NOI18N
+
+        saveAllMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uk/nhs/digital/projectuiframework/ui/resources/media-floppy.png"))); // NOI18N
+        saveAllMenu.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                saveAllMenuMenuSelected(evt);
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+        });
+        mainMenu.add(saveAllMenu);
 
         mainFileMenu.setForeground(new java.awt.Color(255, 255, 255));
         mainFileMenu.setText("File");
@@ -409,6 +422,10 @@ public class ProjectWindow extends javax.swing.JFrame {
         had.setVisible(true);
     }//GEN-LAST:event_helpAboutMenuItemActionPerformed
 
+    private void saveAllMenuMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_saveAllMenuMenuSelected
+       lastProjectAdded.saveAll();
+    }//GEN-LAST:event_saveAllMenuMenuSelected
+
     public void addProject(String n, Project p) {
         lastProjectAdded = p;
         projects.put(n, p);
@@ -476,6 +493,7 @@ public class ProjectWindow extends javax.swing.JFrame {
     private javax.swing.JTabbedPane mainWindowTabbedPane;
     private javax.swing.JTree projectTree;
     private javax.swing.JScrollPane projectTreeScrollPane;
+    private javax.swing.JMenu saveAllMenu;
     private javax.swing.JMenu toolsMenu;
     private javax.swing.JMenuItem undeleteMenuItem;
     // End of variables declaration//GEN-END:variables
