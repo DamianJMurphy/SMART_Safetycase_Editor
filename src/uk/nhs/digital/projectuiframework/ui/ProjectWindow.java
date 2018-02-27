@@ -33,6 +33,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
+import uk.nhs.digital.projectuiframework.InitialTab;
 import uk.nhs.digital.safetycase.ui.LibraryEditorDialog;
 import uk.nhs.digital.safetycase.ui.ProjectEditor;
 import uk.nhs.digital.safetycase.ui.views.ViewConstructor;
@@ -49,6 +50,9 @@ public class ProjectWindow extends javax.swing.JFrame {
      */
     public ProjectWindow() {
         initComponents();
+        String s = System.getProperty("uk.nhs.digital.projectuiframework.initialtabtitle");
+        mainWindowTabbedPane.add(s, new InitialTab());
+        mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
     }
 
     public JTree getProjectTree() { return projectTree; }
@@ -80,6 +84,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         undeleteMenuItem = new javax.swing.JMenuItem();
         importMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
+        showProcessMenuItem = new javax.swing.JMenuItem();
         helpAboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -168,6 +173,14 @@ public class ProjectWindow extends javax.swing.JFrame {
 
         helpMenu.setForeground(new java.awt.Color(255, 255, 255));
         helpMenu.setText("Help");
+
+        showProcessMenuItem.setText("Show process");
+        showProcessMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showProcessMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(showProcessMenuItem);
 
         helpAboutMenuItem.setText("About");
         helpAboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -426,6 +439,12 @@ public class ProjectWindow extends javax.swing.JFrame {
        lastProjectAdded.saveAll();
     }//GEN-LAST:event_saveAllMenuMenuSelected
 
+    private void showProcessMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showProcessMenuItemActionPerformed
+        String s = System.getProperty("uk.nhs.digital.projectuiframework.initialtabtitle");
+        mainWindowTabbedPane.add(s, new InitialTab());
+        mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
+    }//GEN-LAST:event_showProcessMenuItemActionPerformed
+
     public void addProject(String n, Project p) {
         lastProjectAdded = p;
         projects.put(n, p);
@@ -494,6 +513,7 @@ public class ProjectWindow extends javax.swing.JFrame {
     private javax.swing.JTree projectTree;
     private javax.swing.JScrollPane projectTreeScrollPane;
     private javax.swing.JMenu saveAllMenu;
+    private javax.swing.JMenuItem showProcessMenuItem;
     private javax.swing.JMenu toolsMenu;
     private javax.swing.JMenuItem undeleteMenuItem;
     // End of variables declaration//GEN-END:variables

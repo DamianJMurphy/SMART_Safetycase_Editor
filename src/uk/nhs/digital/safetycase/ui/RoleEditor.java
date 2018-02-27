@@ -271,7 +271,8 @@ public class RoleEditor extends javax.swing.JPanel
         }
         // Check to see if the Role has at least one link to a Location, if not
         // display a warning that one needs to be added.
-        ArrayList<Relationship> r = role.getRelationships("Location");
+        SmartProject.getProject().getProjectWindow().setViewTitle(this, "Role:"  + role.getAttributeValue("Name"));
+//        ArrayList<Relationship> r = role.getRelationships("Location");
 //        if ((r == null) || (r.isEmpty())) {
 //            JOptionPane.showMessageDialog(this, "Role has no links to Care Settings, at least one must be added before this Role is valid for a report", "Add link to Care Setting", JOptionPane.INFORMATION_MESSAGE);            
 //        }

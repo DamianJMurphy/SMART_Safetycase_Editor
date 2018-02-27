@@ -52,6 +52,8 @@ public class ProjectUIFramework {
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.System","uk.nhs.digital.safetycase.ui.systemeditor.SystemEditorDetails");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Report","uk.nhs.digital.safetycase.ui.ReportEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Project","uk.nhs.digital.safetycase.ui.ProjectEditor");
+        java.lang.System.setProperty("uk.nhs.digital.projectuiframework.initialtab", "internal:/uk/nhs/digital/projectuiframework/smart/frontpage.pdf");
+        java.lang.System.setProperty("uk.nhs.digital.projectuiframework.initialtabtitle", "SMART");
         ProjectWindow p = new ProjectWindow();
         p.setTitle("NHS Digital SMART Safety Case Editor");
         try {
