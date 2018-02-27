@@ -30,25 +30,13 @@ Functional
         editor) result in a second entry for the hazard in the project tree.
         Database updates are OK.
 
-- TODO NEXT: Integrate Sharif's system/function editor.
-
-    - UI update needs more testing
-
-        - Full edit set
-            - Add nodes
-            - Delete nodes
-            - More renames
-
-    - SystemFunctionEditor also from project tree. No "Delete". "OK" and "Cancel" 
-       are fine. Have "Save" for when viewed from tree. 
-
-    - Full system/subsystem/function/subfunction edit via graphics, save and test
 
 - TODO: Reports
 
-- TODO: Finish calls to and general UI update notifications for all relevant 
-    editor forms and actions.
-
+- TODO NEXT: Views of hazards, plus counts. Accepted, "unacceptable", "unacceptable but
+    accepted due to clinical benefit". "Unacceptable" is residual rating (if present) > 3
+    (put this in as a configurable property for now). "Accepted due to clinical benefit"
+    is Hazard.clinicalJustification != null.
 
 - TODO: Link editor link type list - Hannah to provide RelationshipSemantics list
     - TODO: Make sure the RelationshipSemantics is implemented and works for the 

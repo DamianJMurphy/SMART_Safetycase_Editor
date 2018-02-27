@@ -360,10 +360,15 @@ public class SmartProject
     {
         DefaultMutableTreeNode views = new DefaultMutableTreeNode("Views");
         DefaultMutableTreeNode hazardTypeView = new DefaultMutableTreeNode();
-        ViewComponent vc = new ViewComponent("HazardTypes", "uk.nhs.digital.safetycase.ui.views.HazardTypeView");
+        ViewComponent vc = new ViewComponent("Hazard Types", "uk.nhs.digital.safetycase.ui.views.HazardTypeView");
         vc.setProjectId(pid);
         hazardTypeView.setUserObject(vc);
         views.add(hazardTypeView);
+        DefaultMutableTreeNode hazardAnalysis = new DefaultMutableTreeNode();
+        vc = new ViewComponent("Hazard Analysis", "uk.nhs.digital.safetycase.ui.views.HazardAnalysis");
+        vc.setProjectId(pid);
+        hazardAnalysis.setUserObject(vc);
+        views.add(hazardAnalysis);        
         return views;
     }
     
