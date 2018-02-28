@@ -60,6 +60,7 @@ public class SmartProject
     public static final String VIEW_ICON = "/uk/nhs/digital/projectuiframework/smart/view.png";
     public static final String ISSUE_LOG_ICON = "/uk/nhs/digital/safetycase/ui/issueslog.png";
     public static final String PROJECT_ICON = "/uk/nhs/digital/safetycase/ui/project.png";
+    public static final String ANALYSIS_ICON = "/uk/nhs/digital/projectuiframework/smart/scales.png";
     
     public static final String HELP_ABOUT_ICON = "/uk/nhs/digital/projectuiframework/smart/smart_splash_demo.jpg";
     
@@ -527,6 +528,8 @@ public class SmartProject
         catch (ClassCastException cce) {}
         try {
             ViewComponent v = (ViewComponent)node.getUserObject();
+            if (v.getClassName().contains("Analysis"))
+                return icons.get("Analysis");
             return icons.get("View");
         }
         catch (ClassCastException cce) {}
@@ -883,6 +886,7 @@ public class SmartProject
         icons.put("View", getIcon(VIEW_ICON, r));
         icons.put("Issues Log", getIcon(ISSUE_LOG_ICON, r));
         icons.put("Project", getIcon(PROJECT_ICON, r));
+        icons.put("Analysis", getIcon(ANALYSIS_ICON, r));
         
         try {
             helpAboutIcon = ResourceUtils.getImageIcon(HELP_ABOUT_ICON);

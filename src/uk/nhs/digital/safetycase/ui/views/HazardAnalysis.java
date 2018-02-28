@@ -515,4 +515,5 @@ public class HazardAnalysis
         }
         hazardStates.get(t).add(h);
     }
+
 }

@@ -33,10 +33,13 @@ Functional
 
 - TODO: Reports
 
-- TODO NEXT: Views of hazards, plus counts. Accepted, "unacceptable", "unacceptable but
-    accepted due to clinical benefit". "Unacceptable" is residual rating (if present) > 3
-    (put this in as a configurable property for now). "Accepted due to clinical benefit"
-    is Hazard.clinicalJustification != null.
+- TODO NEXT: Add a "project summary" to the project editor form, underneath the
+    buttons. Update it on notification.
+
+- TODO SECOND: Hazard analysis and types views are populated when they're first
+    created by the SmartProject tree builder. This means that they don't reflect
+    current state when a Hazard is updated. Use the notification mechanism to
+    detect the updates and refresh.
 
 - TODO: Link editor link type list - Hannah to provide RelationshipSemantics list
     - TODO: Make sure the RelationshipSemantics is implemented and works for the 
