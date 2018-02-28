@@ -18,13 +18,19 @@
 package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
+import uk.nhs.digital.safetycase.data.Hazard;
+import uk.nhs.digital.safetycase.data.Location;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
+import uk.nhs.digital.safetycase.data.Relationship;
+import uk.nhs.digital.safetycase.data.Role;
 
 /**
  *
@@ -52,6 +58,7 @@ public class ProjectEditor
         deleteButton.setEnabled(false);
         smartProject = (SmartProject)sp;
         ownerTextField.setText(System.getProperty("user.name"));
+        projectSummaryTextPane.setText("New");
         SmartProject.getProject().addNotificationSubscriber(this);
     }
 
@@ -104,6 +111,9 @@ public class ProjectEditor
         createProjectButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        projectSummaryTextPane = new javax.swing.JTextPane();
 
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -118,16 +128,16 @@ public class ProjectEditor
 
         jLabel4.setText("Description");
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 123, -1, -1));
-        add(nameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 12, 348, -1));
-        add(ownerTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 49, 348, -1));
-        add(customerTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 86, 348, -1));
+        add(nameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 12, 690, -1));
+        add(ownerTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 49, 690, -1));
+        add(customerTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 86, 690, -1));
 
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         jScrollPane1.setViewportView(descriptionTextArea);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 123, 348, 103));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 123, 690, 103));
 
         cancelCreateButton.setText("Cancel");
         cancelCreateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -135,7 +145,7 @@ public class ProjectEditor
                 cancelCreateButtonActionPerformed(evt);
             }
         });
-        add(cancelCreateButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 269, -1, -1));
+        add(cancelCreateButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 260, -1, -1));
 
         createProjectButton.setText("Create");
         createProjectButton.addActionListener(new java.awt.event.ActionListener() {
@@ -143,7 +153,7 @@ public class ProjectEditor
                 createProjectButtonActionPerformed(evt);
             }
         });
-        add(createProjectButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(292, 269, -1, -1));
+        add(createProjectButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 260, -1, -1));
 
         saveButton.setText("Save");
         saveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -151,7 +161,7 @@ public class ProjectEditor
                 saveButtonActionPerformed(evt);
             }
         });
-        add(saveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(393, 232, -1, -1));
+        add(saveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 230, -1, -1));
 
         deleteButton.setText("Delete");
         deleteButton.addActionListener(new java.awt.event.ActionListener() {
@@ -160,6 +170,16 @@ public class ProjectEditor
             }
         });
         add(deleteButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 232, -1, -1));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Project summary"));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        projectSummaryTextPane.setEditable(false);
+        jScrollPane2.setViewportView(projectSummaryTextPane);
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 790, 240));
+
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 290, 810, 270));
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelCreateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelCreateButtonActionPerformed
@@ -202,6 +222,7 @@ public class ProjectEditor
         catch (Exception e) {
             e.printStackTrace();
         }
+        makeProjectSummary();
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
@@ -233,9 +254,12 @@ public class ProjectEditor
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JTextField ownerTextField;
+    private javax.swing.JTextPane projectSummaryTextPane;
     private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 
@@ -250,8 +274,176 @@ public class ProjectEditor
         customerTextField.setText(project.getAttributeValue("Customer"));
         descriptionTextArea.setText(project.getAttributeValue("Description"));
         ownerTextField.setText(project.getAttributeValue("Owner"));
+        makeProjectSummary();
     }
 
+    private void makeProjectSummary() {
+        // TODO: Implement. Go through counting systems, care settings, roles, and 
+        // the various hazard states (that last as per the hazard analysis view)
+        
+        if (project == null)
+            return;
+        try {
+            StringBuilder sb = new StringBuilder();
+            Collection<uk.nhs.digital.safetycase.data.System> systems = MetaFactory.getInstance().getFactory("System").getEntries(project.getId());
+            int systemcount = 0;
+            int rootsystems = 0;
+            int functions = 0;
+            for (uk.nhs.digital.safetycase.data.System s : systems) {
+                if (s.isDeleted()) {
+                    continue;
+                }
+                systemcount++;
+                if ((s.getAttribute("ParentSystemID") == null) || (s.getAttribute("ParentSystemID").getIntValue() == -1)) {
+                    rootsystems++;
+                }
+                ArrayList<Relationship> rels = s.getRelationships("SystemFunction");
+                if (rels != null) {
+                    for (Relationship r : rels) {
+                        String m = r.getManagementClass();
+                        if ((m != null) && (m.contentEquals("Diagram"))) {
+                            if (!r.isDeleted())
+                                functions++;
+                        }
+                    }
+                }
+            }
+            if (systemcount == 1) {
+                sb.append("There is one system defined. It implements ");
+                if (functions == 1) {
+                    sb.append("one identified system function.");
+                } else {
+                    sb.append(functions);
+                    sb.append(" identified system functions.");
+                }
+            } else {
+                sb.append("There are ");
+                sb.append(systemcount);
+                sb.append(" systems defined, of which ");
+                if (rootsystems == 1) {
+                    sb.append("one is top-level.");
+                } else {
+                    sb.append(rootsystems);
+                    sb.append(" are top-level.");
+                }
+                sb.append("\n\nThey implement ");
+                if (functions == 1) {
+                    sb.append("one identified system function.\n\n");
+                } else {
+                    sb.append(functions);
+                    sb.append(" system functions between them.\n\n");
+                }
+            }
+                
+            
+            
+            Collection<Location> locations = MetaFactory.getInstance().getFactory("Location").getEntries(project.getId());
+            int settings = 0;
+            for (Location l : locations) {
+                if (l.isDeleted())
+                    continue;
+                settings++;
+            }
+            if (settings == 1) {
+                sb.append("There is one Care setting identified and ");
+            } else {
+                sb.append("There are ");
+                sb.append(settings);
+                sb.append(" Care settings identified and ");
+            }
+            Collection<Role> roles = MetaFactory.getInstance().getFactory("Role").getEntries(project.getId());
+            int role = 0;
+            for (Role r : roles) {
+                if (r.isDeleted())
+                    continue;
+                role++;
+            }
+            if (role == 1) {
+                sb.append(" one Role.");
+            } else {
+                sb.append(role);
+                sb.append(" Roles.\n\n");
+            }
+            
+            Collection<Hazard> hazards = MetaFactory.getInstance().getFactory("Hazard").getEntries(project.getId());
+            int hcount = 0;
+            int wip = 0;
+            int accepted = 0;
+            int notaccepted = 0;
+            int justified = 0;
+            for (Hazard h : hazards) {
+                if (h.isDeleted())
+                    continue;
+                hcount++;
+                // Rules:
+                // A hazard with a residual rating of > 3 goes in "unacceptable" UNLESS
+                // it has a non-empty clinical justification
+                // A hazard with a residual rating of <= 3 goes in "accepted"
+                // A Hazard with no residual rating goes in "workinprogress"
+
+                if ((h.getAttribute("ResidualRiskRating") == null) || (h.getAttribute("ResidualRiskRating").getIntValue() == -1)) {
+                    wip++;
+                    continue;
+                }
+                if (h.getAttribute("ResidualRiskRating").getIntValue() <= 3) {
+                    accepted++;
+                } else {
+                    if ((h.getAttributeValue("ClinicalJustification") == null) || (h.getAttributeValue("ClinicalJustification").trim().length() == 0)) {
+                        notaccepted++;
+                    } else {
+                        justified++;
+                    }
+                }
+            }
+            if (hcount == 1) {
+                sb.append("There is one hazard defined, which is ");
+                if (wip == 1) {
+                    sb.append(" currently work in progress.");
+                } else if (accepted == 1) {
+                    sb.append(" within acceptable limits of likelyhood and severity.");
+                } else if (justified == 1) {
+                    sb.append(" outside those limits but are considered clinically-justified.\n\n");
+                } else {
+                    sb.append(" outside acceptable limits and is not accepted due to lack of clinical justification.\n\n");
+                }
+            } else {
+                sb.append("There are ");
+                sb.append(hcount);                
+                sb.append(" hazards identified of which ");
+                sb.append(wip);
+                if (wip == 1)
+                    sb.append(" is ");
+                else 
+                    sb.append(" are ");
+                sb.append("currently work-in-progress and still undergoing analysis.\n");
+                sb.append(accepted);
+                if (accepted == 1)
+                    sb.append(" is ");
+                else 
+                    sb.append(" are ");
+                sb.append(" within acceptable limits of likelyhood and severity and ");
+                sb.append(justified);
+                if (justified == 1)
+                    sb.append(" is ");
+                else 
+                    sb.append(" are ");
+
+                sb.append(" outside those limits but considered clinically-justified.\n\n");
+                sb.append(notaccepted);
+                if (notaccepted == 1)
+                    sb.append(" is ");
+                else 
+                    sb.append(" are ");                
+                sb.append(" outside acceptable limits and not accepted due to lack of clinical justification");
+            }
+            projectSummaryTextPane.setText(sb.toString());
+            
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     @Override
     public Component getComponent() {
         return this;
@@ -273,7 +465,7 @@ public class ProjectEditor
             saveButtonActionPerformed(null);
             return false;
         }
-        
+        makeProjectSummary();
         return true;
     }
 }

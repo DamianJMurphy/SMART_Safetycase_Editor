@@ -90,15 +90,17 @@ public class ProjectWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
-        projectTreeScrollPane.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        projectTreeScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        projectTreeScrollPane.setAutoscrolls(true);
         projectTreeScrollPane.setPreferredSize(new java.awt.Dimension(350, 323));
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         projectTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        projectTree.setAutoscrolls(true);
+        projectTree.setLargeModel(true);
         projectTree.setPreferredSize(new java.awt.Dimension(400, 600));
         projectTree.setRootVisible(false);
         projectTree.setToggleClickCount(3);
+        projectTree.setVisibleRowCount(1);
         projectTree.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 projectTreeMouseClicked(evt);
@@ -335,7 +337,8 @@ public class ProjectWindow extends javax.swing.JFrame {
     }
     
     private void projectTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectTreeMouseClicked
-        
+        projectTree.revalidate();
+        projectTreeScrollPane.revalidate();
         String p = null;
         try {
             p = (String)projectTree.getSelectionPath().getPathComponent(1).toString();
