@@ -35,7 +35,6 @@ Functional
         editor) result in a second entry for the hazard in the project tree.
         Database updates are OK.
 
-
 - TODO: Reports
 
 - TODO: Link editor link type list - Hannah to provide RelationshipSemantics list

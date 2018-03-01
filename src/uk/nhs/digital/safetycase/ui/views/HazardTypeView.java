@@ -408,6 +408,8 @@ public class HazardTypeView
         Collection<Hazard> hcollection = MetaFactory.getInstance().getFactory("Hazard").getEntries(p);
         ArrayList<String> htypes = new ArrayList<>();
         for (Hazard h : hcollection) {
+            if (h.isDeleted())
+                continue;
             hazards.add(h);
             String t = h.getAttributeValue("GroupingType");
             if (!htypes.contains(t))

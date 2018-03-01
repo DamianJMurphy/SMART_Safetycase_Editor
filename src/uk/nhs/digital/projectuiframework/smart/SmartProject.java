@@ -62,7 +62,7 @@ public class SmartProject
     public static final String PROJECT_ICON = "/uk/nhs/digital/safetycase/ui/project.png";
     public static final String ANALYSIS_ICON = "/uk/nhs/digital/projectuiframework/smart/scales.png";
     
-    public static final String HELP_ABOUT_ICON = "/uk/nhs/digital/projectuiframework/smart/smart_splash_demo.jpg";
+    public static final String HELP_ABOUT_ICON = "/uk/nhs/digital/projectuiframework/smart/smart-about.png";
     
     private DefaultMutableTreeNode root = null;
     private static final String[] PROJECTCOMPONENTS = {"Care Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role", "Report"};

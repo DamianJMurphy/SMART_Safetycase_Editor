@@ -19,7 +19,9 @@ public class HelpAboutDialog extends javax.swing.JDialog {
     public HelpAboutDialog(java.awt.Frame parent, boolean modal, ImageIcon image) {
         super(parent, modal);
         initComponents();
+        imageLabel.setText("");
         imageLabel.setIcon(image);
+        pack();
     }
 
     /**
@@ -33,13 +35,17 @@ public class HelpAboutDialog extends javax.swing.JDialog {
 
         imageLabel = new javax.swing.JLabel();
         closeButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("SMART");
+        setBackground(new java.awt.Color(255, 255, 255));
+        setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         imageLabel.setText("Image not found");
-        getContentPane().add(imageLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, 814, 488));
+        getContentPane().add(imageLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 12, 720, 420));
 
         closeButton.setText("Close");
         closeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -47,7 +53,15 @@ public class HelpAboutDialog extends javax.swing.JDialog {
                 closeButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(closeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(753, 518, -1, -1));
+        getContentPane().add(closeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 640, -1, -1));
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setText("Copyright 2018 NHS Digital. Licensed under the Apache License, Version 2.0.\n\nMade in Yorkshire by: Hannah McCann (UX Lead, Safety Engineering SME), Damian Murphy and \nSharif Ullah (development team)\n\nGraphical editors powered by mxGraph (http://www.jgraph.com), licenced under Apache Licence, version 2.0\nHTML editors powered by Ekit (http://www.hexidec.com) licenced under LGPL, copyright Howard Kistler.\nPDF SMART methodology display powered by Apache PDFbox, copyright Apache Software Foundation.\n\n");
+        jScrollPane1.setViewportView(jTextArea1);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 470, 730, 160));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -60,5 +74,7 @@ public class HelpAboutDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
     private javax.swing.JLabel imageLabel;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 }

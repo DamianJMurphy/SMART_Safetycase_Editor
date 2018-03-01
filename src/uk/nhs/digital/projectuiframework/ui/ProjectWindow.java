@@ -86,7 +86,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         importMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         showProcessMenuItem = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        riskMatrixMenuItem = new javax.swing.JMenuItem();
         helpAboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -186,13 +186,13 @@ public class ProjectWindow extends javax.swing.JFrame {
         });
         helpMenu.add(showProcessMenuItem);
 
-        jMenuItem1.setText("Show risk matrix");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        riskMatrixMenuItem.setText("Show risk matrix");
+        riskMatrixMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                riskMatrixMenuItemActionPerformed(evt);
             }
         });
-        helpMenu.add(jMenuItem1);
+        helpMenu.add(riskMatrixMenuItem);
 
         helpAboutMenuItem.setText("About");
         helpAboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -454,13 +454,20 @@ public class ProjectWindow extends javax.swing.JFrame {
 
     private void showProcessMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showProcessMenuItemActionPerformed
         String s = System.getProperty("uk.nhs.digital.projectuiframework.initialtabtitle");
+        for (int i = 0; i < mainWindowTabbedPane.getTabCount(); i++) {
+            if ("SMART".contentEquals((mainWindowTabbedPane.getTitleAt(i)))) {
+                mainWindowTabbedPane.setSelectedIndex(i);
+                return;
+            }
+        }
+        
         mainWindowTabbedPane.add(s, new InitialTab());
         mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
     }//GEN-LAST:event_showProcessMenuItemActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void riskMatrixMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_riskMatrixMenuItemActionPerformed
         new RiskMatrix(this, false).setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_riskMatrixMenuItemActionPerformed
 
     public void addProject(String n, Project p) {
         lastProjectAdded = p;
@@ -519,7 +526,6 @@ public class ProjectWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem helpAboutMenuItem;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem importMenuItem;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuItem libraryMenuItem;
     private javax.swing.JMenu mainFileMenu;
@@ -530,6 +536,7 @@ public class ProjectWindow extends javax.swing.JFrame {
     private javax.swing.JTabbedPane mainWindowTabbedPane;
     private javax.swing.JTree projectTree;
     private javax.swing.JScrollPane projectTreeScrollPane;
+    private javax.swing.JMenuItem riskMatrixMenuItem;
     private javax.swing.JMenu saveAllMenu;
     private javax.swing.JMenuItem showProcessMenuItem;
     private javax.swing.JMenu toolsMenu;
