@@ -25,6 +25,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Project;
@@ -35,7 +37,7 @@ import uk.nhs.digital.safetycase.data.Project;
  */
 public class HazardTypeView 
         extends javax.swing.JPanel 
-        implements ViewConstructor
+        implements ViewConstructor, DataNotificationSubscriber
 {
     private static final String[] COLUMNS = {"Name", "Status", "Initial rating", "Residual rating"};
     private Project project = null;
@@ -61,6 +63,7 @@ public class HazardTypeView
                 populateHazardPanel(h);
             }
         });
+        SmartProject.getProject().addNotificationSubscriber(this);
     }
 
     private void populateHazardPanel(Hazard h) {
@@ -415,6 +418,38 @@ public class HazardTypeView
         for (String s : htypes)
             dlm.addElement(s);
         typesList.setModel(dlm);
+    }
+
+    private void clearDisplayedHazards() {
+        DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
+        displayedHazards.clear();
+        hazardsTable.setModel(dtm);        
+        nameTextField.setText("");
+        conditionTextField.setText("");
+        statusTextField.setText("");
+        descriptionTextArea.setText("");
+        clinicalJustificationTextArea.setText("");
+        initialSeverityTextField.setText("");
+        initialLikelihoodTextField.setText("");
+        residualSeverityTextField.setText("");
+        residualLikelihoodTextField.setText("");
+        initialRatingTextField.setText("");
+        residualRatingTextField.setText("");
+    }
+    
+    
+    @Override
+    public boolean notification(int evtype, Object o) {
+        try {
+            hazards.clear();
+            clearDisplayedHazards();
+            setProjectID(project.getId());
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
     }
     
 }

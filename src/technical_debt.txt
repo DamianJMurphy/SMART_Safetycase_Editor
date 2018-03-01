@@ -38,11 +38,6 @@ Functional
 
 - TODO: Reports
 
-- TODO NEXT: Hazard analysis and types views are populated when they're first
-    created by the SmartProject tree builder. This means that they don't reflect
-    current state when a Hazard is updated. Use the notification mechanism to
-    detect the updates and refresh.
-
 - TODO: Link editor link type list - Hannah to provide RelationshipSemantics list
     - TODO: Make sure the RelationshipSemantics is implemented and works for the 
             Link editor.

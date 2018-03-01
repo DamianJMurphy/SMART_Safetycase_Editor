@@ -12,6 +12,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Project;
@@ -22,7 +24,7 @@ import uk.nhs.digital.safetycase.data.Project;
  */
 public class HazardAnalysis 
         extends javax.swing.JPanel
-        implements ViewConstructor
+        implements ViewConstructor, DataNotificationSubscriber
 {
     private static final String[] COLUMNS = {"Name", "Status", "Initial rating", "Residual rating"};
 
@@ -51,6 +53,7 @@ public class HazardAnalysis
                 populateHazardPanel(h);
             }
         });
+        SmartProject.getProject().addNotificationSubscriber(this);
     }
 
     private void populateHazardPanel(Hazard h) {
@@ -86,6 +89,23 @@ public class HazardAnalysis
         }
         hazardsTable.setModel(dtm);
 
+    }
+    
+    private void clearDisplayedHazards() {
+        DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
+        displayedHazards.clear();
+        hazardsTable.setModel(dtm);        
+        nameTextField.setText("");
+        conditionTextField.setText("");
+        statusTextField.setText("");
+        descriptionTextArea.setText("");
+        clinicalJustificationTextArea.setText("");
+        initialSeverityTextField.setText("");
+        initialLikelihoodTextField.setText("");
+        residualSeverityTextField.setText("");
+        residualLikelihoodTextField.setText("");
+        initialRatingTextField.setText("");
+        residualRatingTextField.setText("");
     }
     
     /**
@@ -162,7 +182,7 @@ public class HazardAnalysis
         );
         hazardsPanelLayout.setVerticalGroup(
             hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 229, Short.MAX_VALUE)
             .addGroup(hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE))
         );
@@ -512,6 +532,21 @@ public class HazardAnalysis
             hazardStates.put(t, new ArrayList<>());
         }
         hazardStates.get(t).add(h);
+    }
+
+    @Override
+    public boolean notification(int evtype, Object o) {
+        
+        try {
+            hazardStates = new HashMap<>();
+            clearDisplayedHazards();
+            setProjectID(project.getId());
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
     }
 
 }

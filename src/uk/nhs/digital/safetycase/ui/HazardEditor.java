@@ -561,7 +561,7 @@ public class HazardEditor extends javax.swing.JPanel
         try {
             MetaFactory.getInstance().getFactory("Hazard").delete(hazard);
             SmartProject.getProject().editorEvent(Project.DELETE, hazard);
-            SmartProject.getProject().removeNotificationSubscriber(this);
+//            SmartProject.getProject().removeNotificationSubscriber(this);
             SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
         catch(Exception e) {

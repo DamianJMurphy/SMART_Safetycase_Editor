@@ -34,6 +34,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import uk.nhs.digital.projectuiframework.InitialTab;
+import uk.nhs.digital.projectuiframework.smart.RiskMatrix;
 import uk.nhs.digital.safetycase.ui.LibraryEditorDialog;
 import uk.nhs.digital.safetycase.ui.ProjectEditor;
 import uk.nhs.digital.safetycase.ui.views.ViewConstructor;
@@ -85,6 +86,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         importMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         showProcessMenuItem = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         helpAboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -183,6 +185,14 @@ public class ProjectWindow extends javax.swing.JFrame {
             }
         });
         helpMenu.add(showProcessMenuItem);
+
+        jMenuItem1.setText("Show risk matrix");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        helpMenu.add(jMenuItem1);
 
         helpAboutMenuItem.setText("About");
         helpAboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -448,6 +458,10 @@ public class ProjectWindow extends javax.swing.JFrame {
         mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
     }//GEN-LAST:event_showProcessMenuItemActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new RiskMatrix(this, false).setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     public void addProject(String n, Project p) {
         lastProjectAdded = p;
         projects.put(n, p);
@@ -505,6 +519,7 @@ public class ProjectWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem helpAboutMenuItem;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem importMenuItem;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JMenuItem libraryMenuItem;
     private javax.swing.JMenu mainFileMenu;

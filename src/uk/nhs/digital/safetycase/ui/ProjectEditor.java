@@ -278,7 +278,7 @@ public class ProjectEditor
     }
 
     private void makeProjectSummary() {
-        // TODO: Implement. Go through counting systems, care settings, roles, and 
+        // Go through counting systems, care settings, roles, and 
         // the various hazard states (that last as per the hazard analysis view)
         
         if (project == null)
@@ -371,10 +371,16 @@ public class ProjectEditor
             int accepted = 0;
             int notaccepted = 0;
             int justified = 0;
+            ArrayList<String> htypes = new ArrayList<>();
             for (Hazard h : hazards) {
                 if (h.isDeleted())
                     continue;
                 hcount++;
+                String t = h.getAttributeValue("GroupingType");
+                if (t == null)
+                    t = "Generic";
+                if (!htypes.contains(t))
+                    htypes.add(t);
                 // Rules:
                 // A hazard with a residual rating of > 3 goes in "unacceptable" UNLESS
                 // it has a non-empty clinical justification
@@ -404,7 +410,7 @@ public class ProjectEditor
                 } else if (justified == 1) {
                     sb.append(" outside those limits but are considered clinically-justified.\n\n");
                 } else {
-                    sb.append(" outside acceptable limits and is not accepted due to lack of clinical justification.\n\n");
+                    sb.append(" outside acceptable limits (that is, it has a residual risk rating of > 3) and is not accepted due to lack of clinical justification.\n\n");
                 }
             } else {
                 sb.append("There are ");
@@ -434,7 +440,14 @@ public class ProjectEditor
                     sb.append(" is ");
                 else 
                     sb.append(" are ");                
-                sb.append(" outside acceptable limits and not accepted due to lack of clinical justification");
+                sb.append(" outside acceptable limits (that is with a residual risk rating of > 3) and not accepted due to lack of clinical justification\n\n");
+                if (htypes.size() == 1) {
+                    sb.append("One hazard type was identified.");
+                } else {
+                    sb.append(htypes.size());
+                    sb.append(" hazard types were identified.");
+                }
+                
             }
             projectSummaryTextPane.setText(sb.toString());
             

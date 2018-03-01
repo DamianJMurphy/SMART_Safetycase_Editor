@@ -781,13 +781,18 @@ public class SmartProject
         // notification, and causing a concurrency exception.
         //
         ArrayList<DataNotificationSubscriber> toBeRemoved = new ArrayList<>();
-        for (DataNotificationSubscriber d : notificationSubscribers) {
-            if (d.notification(ev, o)) {
-                toBeRemoved.add(d);
+        try {
+            for (DataNotificationSubscriber d : notificationSubscribers) {
+                if (d.notification(ev, o)) {
+                    toBeRemoved.add(d);
+                }
+            }
+            for (DataNotificationSubscriber d : toBeRemoved) {
+               notificationSubscribers.remove(d);
             }
         }
-        for (DataNotificationSubscriber d : toBeRemoved) {
-           notificationSubscribers.remove(o);
+        catch (java.util.ConcurrentModificationException e) {
+            e.printStackTrace();
         }
     }
     
