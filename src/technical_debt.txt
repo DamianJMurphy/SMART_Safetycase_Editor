@@ -25,15 +25,8 @@ Functional
 
 - Go through and tidy up the editor forms
 
-    BUGFIX: Vertical scroll bar isn't behaving properly on Project Tree (this may
-        be a Netbeans artefact, may not happen elsewhere and might just involve
-        re-making the form, copying out the custom code and re-assembling that
-        part of the ProjectWindow)
-
-    BUGFIX: Hazard edit and save without changing name. Can (observed once with
-        re-edited and re-saved instance using the same instance of the hazard
-        editor) result in a second entry for the hazard in the project tree.
-        Database updates are OK.
+- BUGFIX: Window-bar close for things like "Details" re-shows the window first
+    time.
 
 - TODO: Reports
 

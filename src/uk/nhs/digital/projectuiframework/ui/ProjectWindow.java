@@ -18,15 +18,12 @@
 package uk.nhs.digital.projectuiframework.ui;
 import com.sun.glass.events.MouseEvent;
 import java.awt.Container;
+import java.awt.Dimension;
 import uk.nhs.digital.projectuiframework.Project;
-import uk.nhs.digital.projectuiframework.ProjectHelper;
-import java.io.File;
 import java.util.HashMap;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -37,7 +34,6 @@ import uk.nhs.digital.projectuiframework.InitialTab;
 import uk.nhs.digital.projectuiframework.smart.RiskMatrix;
 import uk.nhs.digital.safetycase.ui.LibraryEditorDialog;
 import uk.nhs.digital.safetycase.ui.ProjectEditor;
-import uk.nhs.digital.safetycase.ui.views.ViewConstructor;
 /**
  *
  * @author damian
@@ -54,6 +50,9 @@ public class ProjectWindow extends javax.swing.JFrame {
         String s = System.getProperty("uk.nhs.digital.projectuiframework.initialtabtitle");
         mainWindowTabbedPane.add(s, new InitialTab());
         mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
+        // Stop Netbeans' UI builder screwing up the scrolling behaviour of the tree
+        projectTree.setPreferredSize(null);
+        setSize(new Dimension(1620,950));
     }
 
     public JTree getProjectTree() { return projectTree; }
@@ -90,10 +89,12 @@ public class ProjectWindow extends javax.swing.JFrame {
         helpAboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setSize(new java.awt.Dimension(902, 892));
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
+        projectTreeScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         projectTreeScrollPane.setAutoscrolls(true);
-        projectTreeScrollPane.setPreferredSize(new java.awt.Dimension(350, 323));
+        projectTreeScrollPane.setPreferredSize(new java.awt.Dimension(400, 600));
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         projectTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
@@ -102,7 +103,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         projectTree.setPreferredSize(new java.awt.Dimension(400, 600));
         projectTree.setRootVisible(false);
         projectTree.setToggleClickCount(3);
-        projectTree.setVisibleRowCount(1);
+        projectTree.setVisibleRowCount(4000);
         projectTree.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 projectTreeMouseClicked(evt);

@@ -32,12 +32,12 @@ public class ProjectUIFramework {
     public static void main(String[] args) {
         System.setProperty(ProjectHelper.PROJECTCLASSPROPERTY, "uk.nhs.digital.projectuiframework.smart.SmartProject");
         Project smart = null;
-//        try {
-//            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         java.lang.System.setProperty(Database.CONNECTIONURLPROPERTY, args[0]);
         java.lang.System.setProperty("user", "SA");
         java.lang.System.setProperty("password", "");

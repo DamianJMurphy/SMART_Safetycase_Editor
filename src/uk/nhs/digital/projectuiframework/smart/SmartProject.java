@@ -63,6 +63,7 @@ public class SmartProject
     public static final String ANALYSIS_ICON = "/uk/nhs/digital/projectuiframework/smart/scales.png";
     
     public static final String HELP_ABOUT_ICON = "/uk/nhs/digital/projectuiframework/smart/smart-about.png";
+    public static final String SMART_ICON = "/uk/nhs/digital/projectuiframework/smart/nhsd-16x16.png";
     
     private DefaultMutableTreeNode root = null;
     private static final String[] PROJECTCOMPONENTS = {"Care Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role", "Report"};
@@ -895,6 +896,7 @@ public class SmartProject
         
         try {
             helpAboutIcon = ResourceUtils.getImageIcon(HELP_ABOUT_ICON);
+            pw.setIconImage(ResourceUtils.getImageIcon(SMART_ICON).getImage());
         }
         catch (Exception e) {
             e.printStackTrace();
