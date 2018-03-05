@@ -40,7 +40,7 @@ import uk.nhs.digital.safetycase.ui.ProjectEditor;
  */
 public class ProjectWindow extends javax.swing.JFrame {
     
-    private HashMap<String,Project> projects = new HashMap<>();
+    private final HashMap<String,Project> projects = new HashMap<>();
     private uk.nhs.digital.projectuiframework.Project lastProjectAdded = null;
     /**
      * Creates new form ProjectWindow
@@ -516,10 +516,8 @@ public class ProjectWindow extends javax.swing.JFrame {
        
         
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ProjectWindow().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new ProjectWindow().setVisible(true);
         });
     }
 

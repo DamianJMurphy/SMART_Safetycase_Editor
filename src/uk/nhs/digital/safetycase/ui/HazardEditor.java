@@ -639,10 +639,10 @@ public class HazardEditor extends javax.swing.JPanel
         JTabbedPane tp = null;
         ProjectWindow pw = SmartProject.getProject().getProjectWindow();
         tp = pw.getMainWindowTabbedPane();
-        EditorComponent ec = new EditorComponent(bge, "Bowtie:" + hazard.getAttributeValue("Name"), SmartProject.getProject());
+        EditorComponent ec = new EditorComponent(bge, hazard.getAttributeValue("Name"), SmartProject.getProject());
 //        ExternalEditorView editorView = new ExternalEditorView(bge, hazard.getAttributeValue("Name"), tp);
         tp.setSelectedComponent(tp.add(ec.getTitle(), ec.getComponent()));
-        tp.setTabComponentAt(tp.getSelectedIndex(), new UndockTabComponent(tp));  
+        tp.setTabComponentAt(tp.getSelectedIndex(), new UndockTabComponent(tp, SmartProject.getProject().getIcon("Bowtie")));  
     }//GEN-LAST:event_bowtieButtonActionPerformed
 
     private void initialSeveritySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_initialSeveritySpinnerStateChanged

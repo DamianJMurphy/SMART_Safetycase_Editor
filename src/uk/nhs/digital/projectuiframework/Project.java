@@ -49,6 +49,7 @@ public interface Project {
     String getName();
     void setName(String n);
     
+    ImageIcon getIcon(String s);
     ImageIcon getIcon(Object o);
     ImageIcon getHelpAboutIcon();
     

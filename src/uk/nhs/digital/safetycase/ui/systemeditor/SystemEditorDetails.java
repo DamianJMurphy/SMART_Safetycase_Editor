@@ -379,9 +379,9 @@ public class SystemEditorDetails extends javax.swing.JPanel
         JTabbedPane tp = null;
         ProjectWindow pw = SmartProject.getProject().getProjectWindow();
         tp = pw.getMainWindowTabbedPane();
-        EditorComponent ec = new EditorComponent(sge, "System:" + system.getAttributeValue("Name"), SmartProject.getProject());
+        EditorComponent ec = new EditorComponent(sge, system.getAttributeValue("Name"), SmartProject.getProject());
         tp.setSelectedComponent(tp.add(ec.getTitle(), ec.getComponent()));
-        tp.setTabComponentAt(tp.getSelectedIndex(), new UndockTabComponent(tp));  
+        tp.setTabComponentAt(tp.getSelectedIndex(), new UndockTabComponent(tp, SmartProject.getProject().getIcon("System")));  
     }//GEN-LAST:event_systemEditorButtonActionPerformed
 
     private HashMap<String,DiagramEditorElement> getExistingGraph(String xml) {

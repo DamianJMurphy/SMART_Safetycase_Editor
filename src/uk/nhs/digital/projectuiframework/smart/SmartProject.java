@@ -61,6 +61,7 @@ public class SmartProject
     public static final String ISSUE_LOG_ICON = "/uk/nhs/digital/safetycase/ui/issueslog.png";
     public static final String PROJECT_ICON = "/uk/nhs/digital/safetycase/ui/project.png";
     public static final String ANALYSIS_ICON = "/uk/nhs/digital/projectuiframework/smart/scales.png";
+    public static final String BOWTIE_ICON = "/uk/nhs/digital/safetycase/ui/bowtie.png";
     
     public static final String HELP_ABOUT_ICON = "/uk/nhs/digital/projectuiframework/smart/smart-about.png";
     public static final String SMART_ICON = "/uk/nhs/digital/projectuiframework/smart/nhsd-16x16.png";
@@ -511,6 +512,12 @@ public class SmartProject
     }
 
     @Override
+    public ImageIcon getIcon(String s) 
+    {
+        return icons.get(s);
+    }
+    
+    @Override
     public ImageIcon getIcon(Object o) 
     {
         if (o == null)
@@ -893,6 +900,8 @@ public class SmartProject
         icons.put("Issues Log", getIcon(ISSUE_LOG_ICON, r));
         icons.put("Project", getIcon(PROJECT_ICON, r));
         icons.put("Analysis", getIcon(ANALYSIS_ICON, r));
+        icons.put("Bowtie", getIcon(BOWTIE_ICON, r));
+        icons.put("SMART", getIcon(SMART_ICON, r));
         
         try {
             helpAboutIcon = ResourceUtils.getImageIcon(HELP_ABOUT_ICON);

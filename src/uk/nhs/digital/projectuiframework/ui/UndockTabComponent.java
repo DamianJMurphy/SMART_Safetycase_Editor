@@ -31,6 +31,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -45,19 +46,13 @@ import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 public class UndockTabComponent extends JPanel {
     
     private final JTabbedPane pane;
+    private ImageIcon labelIcon = null;
     
     private final static String UNDOCK_ICON = "/uk/nhs/digital/projectuiframework/ui/resources/undockpanelbutton16x16.png";
     private final static String CLOSE_ICON = "/uk/nhs/digital/projectuiframework/ui/resources/closepanelbutton16x16.png";
     
-   @SuppressWarnings("OverridableMethodCallInConstructor")
-    public UndockTabComponent(final JTabbedPane pane) 
-    {
-        //unset default FlowLayout' gaps
-        super(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        if (pane == null) {
-            throw new NullPointerException("TabbedPane is null");
-        }
-        this.pane = pane;
+    
+    private void init(JTabbedPane pane) {
         setOpaque(false);
         
         //make JLabel read titles from JTabbedPane
@@ -71,7 +66,9 @@ public class UndockTabComponent extends JPanel {
                 return null;
             }
         };
-        
+        if (labelIcon != null) {
+            label.setIcon(labelIcon);
+        }
         add(label);
         //add more space between the label and the button
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
@@ -89,6 +86,33 @@ public class UndockTabComponent extends JPanel {
             
         //add more space to the top of the component
         setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+        
+    }
+
+   @SuppressWarnings("OverridableMethodCallInConstructor")
+    public UndockTabComponent(final JTabbedPane pane, ImageIcon icon) 
+    {
+        //unset default FlowLayout' gaps
+        super(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        if (pane == null) {
+            throw new NullPointerException("TabbedPane is null");
+        }
+        labelIcon = icon;
+        this.pane = pane;
+        init(pane);
+    }
+    
+    
+   @SuppressWarnings("OverridableMethodCallInConstructor")
+    public UndockTabComponent(final JTabbedPane pane) 
+    {
+        //unset default FlowLayout' gaps
+        super(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        if (pane == null) {
+            throw new NullPointerException("TabbedPane is null");
+        }
+        this.pane = pane;
+        init(pane);
     }
     
     private class CloseButton extends JButton implements ActionListener {
@@ -177,7 +201,7 @@ public class UndockTabComponent extends JPanel {
         public void actionPerformed(ActionEvent e) {
             int i = pane.indexOfTabComponent(UndockTabComponent.this);
             if (i != -1) {
-                ExternalEditorView.start(pane.getComponentAt(i), pane.getTitleAt(i), pane);
+                ExternalEditorView.start(pane.getComponentAt(i), pane.getTitleAt(i), pane, labelIcon);
                 try {
                     pane.remove(i);
                 }

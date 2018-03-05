@@ -165,11 +165,11 @@ public class SystemGraphEditor extends BasicGraphEditor {
 //						"image;image=/uk/nhs/digital/safetycase/ui/systemeditor/subsystem.png",50, 50, "System");
         systemPalette
                 .addTemplate(
-                        "SystemFunction",
+                        "Function",
                         new ImageIcon(
                                 GraphEditor.class
                                         .getResource("/uk/nhs/digital/safetycase/ui/systemeditor/SystemFunction.png")),
-						"image;image=/uk/nhs/digital/safetycase/ui/systemeditor/SystemFunction.png",50, 50, "SystemFunction");
+						"image;image=/uk/nhs/digital/safetycase/ui/systemeditor/SystemFunction.png",50, 50, "Function");
 //        systemPalette
 //                .addTemplate(
 //                        "SystemFunction",

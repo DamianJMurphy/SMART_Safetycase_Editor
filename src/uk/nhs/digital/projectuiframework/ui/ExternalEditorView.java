@@ -19,8 +19,10 @@ package uk.nhs.digital.projectuiframework.ui;
 
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
+import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 
 /**
  *
@@ -31,11 +33,43 @@ public class ExternalEditorView extends javax.swing.JFrame {
     private JTabbedPane redockTabbedPane = null;
     private Component editorComponent = null;
     private String title = null;
+    private ImageIcon icon = null;
+    private boolean defaultIcon = false;
     /**
      * Creates new form ExternalEditorView
      */
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public ExternalEditorView(java.awt.Component p, String t, final JTabbedPane pane) {
+        init(p, t, pane);
+        setDefaultIcon();
+    }
+
+    private void setDefaultIcon() 
+    {
+        try {
+            String s = System.getProperty("uk.nhs.digial.projectuiframework.appicon");
+            if (s != null) {
+                icon = ResourceUtils.getImageIcon(s);
+                defaultIcon = true;
+                this.setIconImage(icon.getImage());
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @SuppressWarnings("OverridableMethodCallInConstructor")
+    public ExternalEditorView(java.awt.Component p, String t, final JTabbedPane pane, ImageIcon editorIcon) {
+        init(p, t, pane);
+        icon = editorIcon;
+        if (icon != null)
+            this.setIconImage(icon.getImage());
+        else
+            setDefaultIcon();
+    }    
+    
+    private void init(java.awt.Component p, String t, final JTabbedPane pane) {
         initComponents();
         editorComponent = p;
         title = t;
@@ -46,9 +80,9 @@ public class ExternalEditorView extends javax.swing.JFrame {
         setResizable(true);
         getContentPane().add(editorComponent);
         pack();
-        setVisible(true);
+        setVisible(true);        
     }
-
+    
     public JTabbedPane getRedockTabbedPane() { return redockTabbedPane; }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -99,7 +133,10 @@ public class ExternalEditorView extends javax.swing.JFrame {
 
     private void dockButtonMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_dockButtonMenuSelected
         redockTabbedPane.setSelectedComponent(redockTabbedPane.add(title, editorComponent));
-        redockTabbedPane.setTabComponentAt(redockTabbedPane.getSelectedIndex(), new UndockTabComponent(redockTabbedPane));                    
+        if ((defaultIcon) || (icon == null))
+            redockTabbedPane.setTabComponentAt(redockTabbedPane.getSelectedIndex(), new UndockTabComponent(redockTabbedPane));                    
+        else 
+            redockTabbedPane.setTabComponentAt(redockTabbedPane.getSelectedIndex(), new UndockTabComponent(redockTabbedPane, icon));                    
         this.dispose(); 
     }//GEN-LAST:event_dockButtonMenuSelected
 
@@ -121,14 +158,26 @@ public class ExternalEditorView extends javax.swing.JFrame {
         }
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new ExternalEditorView(p, t, pane).setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new ExternalEditorView(p, t, pane).setVisible(true);
         });
     }
 
+    public static void start(java.awt.Component p, String t, final JTabbedPane pane, ImageIcon editorIcon) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new ExternalEditorView(p, t, pane, editorIcon).setVisible(true);
+        });
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu closeButton;
     private javax.swing.JMenu dockButton;
