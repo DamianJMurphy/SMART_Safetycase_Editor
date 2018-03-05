@@ -315,7 +315,7 @@ public class RoleEditor extends javax.swing.JPanel
                         continue;
                     for (Relationship r : a) {
                         String[] row = new String[LINKCOLUMNS.length];
-                        row[0] = t;
+                        row[0] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getDisplayName();
                         row[1] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
                         row[2] = r.getComment();
                         dtm.addRow(row);

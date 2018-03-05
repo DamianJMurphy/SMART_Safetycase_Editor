@@ -36,8 +36,8 @@ public class LinkEditor extends javax.swing.JPanel {
     private final String[] columns = {"Type", "Name", "Comment"};
     private HashMap<String, ArrayList<Relationship>> relationships = null;
     private ArrayList<Relationship> tableMap = null;
-    private final String[] targets = {"Hazard","Control","Effect","System","Role","Care Setting", "Process", "Proces step"};
-    private final String[] dbtarget = {"Hazard","Control","Effect", "System","Role","Location","Process","ProcessStep"};
+    private final String[] targets = {"Hazard","Control","Effect","System","Function", "Role","Care Setting", "Process", "Proces step"};
+    private final String[] dbtarget = {"Hazard","Control","Effect", "System","SystemFunction", "Role","Location","Process","ProcessStep"};
     private ArrayList<Persistable> targetInstances = null;
     private JDialog parent = null;
     private Relationship editedRelationship = null;
