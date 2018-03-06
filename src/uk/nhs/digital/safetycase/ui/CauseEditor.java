@@ -281,7 +281,7 @@ public class CauseEditor extends javax.swing.JPanel
             cause.setAttribute("ProjectID",SmartProject.getProject().getCurrentProjectID());
         try {
             MetaFactory.getInstance().getFactory(cause.getDatabaseObjectName()).put(cause);
-            editorComponent.notifyEditorEvent((created) ? Project.ADD : Project.UPDATE, cause);
+            SmartProject.getProject().editorEvent((created) ? Project.ADD : Project.UPDATE, cause);
         }
         catch (Exception e) {
             e.printStackTrace();

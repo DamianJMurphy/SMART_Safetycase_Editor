@@ -462,7 +462,7 @@ public class ProjectWindow extends javax.swing.JFrame {
             }
         }
         
-        mainWindowTabbedPane.add(s, new InitialTab());
+        mainWindowTabbedPane.setSelectedComponent(mainWindowTabbedPane.add(s, new InitialTab()));
         mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
     }//GEN-LAST:event_showProcessMenuItemActionPerformed
 

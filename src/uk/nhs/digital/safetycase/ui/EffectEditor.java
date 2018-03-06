@@ -293,7 +293,7 @@ public class EffectEditor extends javax.swing.JPanel
             effect.setAttribute("ProjectID",SmartProject.getProject().getCurrentProjectID());
         try {
             MetaFactory.getInstance().getFactory(effect.getDatabaseObjectName()).put(effect);
-            editorComponent.notifyEditorEvent(Project.UPDATE, effect);
+            SmartProject.getProject().editorEvent(Project.UPDATE, effect);
         }
         catch (Exception e) {
             e.printStackTrace();

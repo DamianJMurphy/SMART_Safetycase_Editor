@@ -25,6 +25,8 @@ import java.util.HashMap;
 import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -107,12 +109,13 @@ public class BowtieObjectDetailsAction
             
             // Is it the Hazard itself ?
             if (type.contentEquals("Hazard")) {
-                JDialog detailEditor = new JDialog(JOptionPane.getFrameForComponent(c), true);
+//                JDialog detailEditor = new JDialog(JOptionPane.getFrameForComponent(c), true);
                 HazardEditor he = new HazardEditor();
                 he.setPersistableObject(h);
-                detailEditor.add(he);
-                detailEditor.pack();
-                detailEditor.setVisible(true);
+//                detailEditor.add(he);
+//                detailEditor.pack();
+//                detailEditor.setVisible(true);
+                ExternalEditorView hazardView = new ExternalEditorView(he, "Hazard:" + h.getAttributeValue("Name"), SmartProject.getProject().getProjectWindow().getMainWindowTabbedPane());
             } else {            
                 // No... find the object and display the editor
 
@@ -125,12 +128,13 @@ public class BowtieObjectDetailsAction
                         String eclass = java.lang.System.getProperty(uk.nhs.digital.projectuiframework.smart.SmartProject.EDITORCLASSROOT + s);
                         if (eclass == null)
                             return;
-                        JDialog detailEditor = new JDialog(JOptionPane.getFrameForComponent(c), true);
+//                        JDialog detailEditor = new JDialog(JOptionPane.getFrameForComponent(c), true);
                         PersistableEditor pe = (PersistableEditor)Class.forName(eclass).newInstance();
                         pe.setPersistableObject(p);
-                        detailEditor.add(pe.getComponent());
-                        detailEditor.pack();
-                        detailEditor.setVisible(true);
+//                        detailEditor.add(pe.getComponent());
+//                        detailEditor.pack();
+//                        detailEditor.setVisible(true);
+                        ExternalEditorView editorView = new ExternalEditorView(pe.getComponent(), p.getDisplayName() + ":" + p.getAttributeValue("Name"), SmartProject.getProject().getProjectWindow().getMainWindowTabbedPane());
                     }
                 }
             }

@@ -25,8 +25,6 @@ Functional
 
 - Go through and tidy up the editor forms
 
-- BUGFIX: Window-bar close for things like "Details" re-shows the window first
-    time.
 
 - BUGFIX: Check function of "Save" in Hazard editor. Didn't make two hazards but the
     UI notification and tree redraw showed two of them.

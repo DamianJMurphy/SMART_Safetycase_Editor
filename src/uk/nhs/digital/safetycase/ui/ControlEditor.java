@@ -358,7 +358,7 @@ public class ControlEditor extends javax.swing.JPanel
             control.setAttribute("ProjectID",SmartProject.getProject().getCurrentProjectID());
         try {
             MetaFactory.getInstance().getFactory(control.getDatabaseObjectName()).put(control);
-            editorComponent.notifyEditorEvent(Project.UPDATE, control);
+            SmartProject.getProject().editorEvent(Project.UPDATE, control);
         }
         catch (Exception e) {
             e.printStackTrace();
