@@ -81,7 +81,9 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         jLabel4.setText("Description");
 
         descriptionTextArea.setColumns(20);
+        descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(descriptionTextArea);
 
         cancelButton.setText("Cancel");

@@ -816,11 +816,11 @@ public class SmartProject
         DefaultMutableTreeNode dmtn = null;
         dmtn = new DefaultMutableTreeNode("Systems");
         d.add(dmtn);
-        dmtn = new DefaultMutableTreeNode("Care settings");
+        dmtn = new DefaultMutableTreeNode("Care Settings");
         d.add(dmtn);
         dmtn = new DefaultMutableTreeNode("Role");
         d.add(dmtn);
-        dmtn = new DefaultMutableTreeNode("Process");
+        dmtn = new DefaultMutableTreeNode("Care Process");
         d.add(dmtn);
         dmtn = new DefaultMutableTreeNode("Hazard");
         d.add(dmtn);

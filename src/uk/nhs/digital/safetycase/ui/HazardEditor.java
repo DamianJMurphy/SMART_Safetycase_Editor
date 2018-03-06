@@ -571,6 +571,7 @@ public class HazardEditor extends javax.swing.JPanel
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        saveButton.setEnabled(false);
         if (statusComboBox.getSelectedIndex() == -1)
             statusComboBox.setSelectedIndex(0);
         if (hazard == null) {
@@ -619,6 +620,7 @@ public class HazardEditor extends javax.swing.JPanel
             ((TitledBorder) analysisPanel.getBorder()).setTitle("");
             analysisPanel.setEnabled(true);
         }
+        saveButton.setEnabled(true);
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void bowtieButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bowtieButtonActionPerformed

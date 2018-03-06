@@ -255,7 +255,7 @@ public class ProjectWindow extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, check, "Can't make a new one of these here", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        EditorComponent ec = ec = proj.getEditorComponent(p);
+        EditorComponent ec = proj.getEditorComponent(p);
         if (ec == null)
             return;
         mainWindowTabbedPane.setSelectedComponent(mainWindowTabbedPane.add(ec.getTitle(), ec.getComponent()));
@@ -470,6 +470,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         new RiskMatrix(this, false).setVisible(true);
     }//GEN-LAST:event_riskMatrixMenuItemActionPerformed
 
+    
     public void addProject(String n, Project p) {
         lastProjectAdded = p;
         projects.put(n, p);
