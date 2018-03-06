@@ -1,13 +1,3 @@
-High-level
-
-- ERROR HANDLING AND REPORTING
-
-- System/subsystem/function graphical editor in the style of the bowtie/process interfaces
-
-- Reports. HTML editor integrated. Needs user refinement. Need to add report generator itself
-    to assemble report content from the project data. Also to include the graphs.
-
-
 
 NOT FOR MARCH:
 
@@ -23,8 +13,6 @@ NOT FOR MARCH:
 
 Functional
 
-- Go through and tidy up the editor forms
-
 - TODO: ProjectWindow needs a query method to allow a check to see if it already
     has a tab for something that another form is going to try to open (e.g one of
     the hazard details forms from the bowtie). Otherwise we can end up with more
@@ -32,6 +20,8 @@ Functional
 
 - TODO NEXT: Update notifcications for process editor and generally from when a new
     instance of an object is created
+
+- TODO: Error handling and reporting
 
 - TODO: Reports
 
