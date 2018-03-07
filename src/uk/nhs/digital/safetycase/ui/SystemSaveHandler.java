@@ -377,7 +377,7 @@ public class SystemSaveHandler
                 // Relationship rel = new Relationship(parentid, target.object.getId(), "System");
                 rel.setComment("system diagram");
                 rel.setManagementClass("Diagram");
-                p.addRelationship(rel);
+                parent.object.addRelationship(rel);
                 //system.addRelationship(rel); //temp comment
                 MetaFactory.getInstance().getFactory(target.type).put(p);
                 processedElements.add(String.valueOf(target.cellId));
@@ -398,7 +398,7 @@ public class SystemSaveHandler
                 if (!processedElements.contains(String.valueOf(targetchild.cellId))) {
                     if (targetchild.type.equals("System")) {
                         savesubsystem(target, targetchild, systemelements, projectid);
-                    } else if (targetchild.type.equals("Function")) {
+                    } else if (targetchild.type.equals("SystemFunction")) {
                         savesystemfunction(target, targetchild, systemelements, projectid);
                     }
                 }

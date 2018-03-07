@@ -87,6 +87,8 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
         saveButtonActionPerformed(null);
     }
     
+    String getProcessName() { return nameTextField.getText(); }
+    
     void populateLinks() 
             throws Exception
     {

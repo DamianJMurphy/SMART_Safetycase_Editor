@@ -70,6 +70,7 @@ public class SingleProcessEditorForm
             throws Exception
     {
         initComponents();
+        SmartProject.getProject().addNotificationSubscriber(this);
     }
     
     SingleProcessEditorForm setParent(JDialog p) {
@@ -148,6 +149,10 @@ public class SingleProcessEditorForm
     
     @Override
     public boolean notification(int evtype, Object o) {
+        if (process != null)
+            SmartProject.getProject().getProjectWindow().setViewTitle(this, "Process:" + process.getAttributeValue("Name"));
+        else 
+            SmartProject.getProject().getProjectWindow().setViewTitle(this, "Process:" + processEditor.getProcessName());
         if (evtype == Project.SAVE) {
             processEditor.save();
             return false;

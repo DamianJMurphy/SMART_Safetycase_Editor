@@ -13,13 +13,17 @@ NOT FOR MARCH:
 
 Functional
 
+- TODO NEXT: Protection against creating a new object with the same name as an
+    existing one.
+
 - TODO: ProjectWindow needs a query method to allow a check to see if it already
     has a tab for something that another form is going to try to open (e.g one of
     the hazard details forms from the bowtie). Otherwise we can end up with more
     than one editor form instance open for the same object.
 
-- TODO NEXT: Update notifcications for process editor and generally from when a new
-    instance of an object is created
+- TODO: Update notifcications for process editor and generally from when a new
+    instance of an object is created: SingleProcessEditorForm and Hazard at least,
+    check the others that support direct creation of a new object instance
 
 - TODO: Error handling and reporting
 

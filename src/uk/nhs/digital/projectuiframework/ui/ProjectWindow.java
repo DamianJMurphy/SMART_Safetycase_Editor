@@ -118,8 +118,6 @@ public class ProjectWindow extends javax.swing.JFrame {
 
         getContentPane().add(mainWindowSplitPane);
 
-        mainMenu.setBackground(new java.awt.Color(51, 102, 255));
-        mainMenu.setForeground(new java.awt.Color(255, 255, 255));
         mainMenu.setName("mainMenu"); // NOI18N
 
         saveAllMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uk/nhs/digital/projectuiframework/ui/resources/media-floppy.png"))); // NOI18N
@@ -134,7 +132,6 @@ public class ProjectWindow extends javax.swing.JFrame {
         });
         mainMenu.add(saveAllMenu);
 
-        mainFileMenu.setForeground(new java.awt.Color(255, 255, 255));
         mainFileMenu.setText("File");
 
         mainMenuNew.setText("New project ...");
@@ -157,7 +154,6 @@ public class ProjectWindow extends javax.swing.JFrame {
 
         mainMenu.add(mainFileMenu);
 
-        toolsMenu.setForeground(new java.awt.Color(255, 255, 255));
         toolsMenu.setText("Tools");
 
         libraryMenuItem.setText("Library");
@@ -176,7 +172,6 @@ public class ProjectWindow extends javax.swing.JFrame {
 
         mainMenu.add(toolsMenu);
 
-        helpMenu.setForeground(new java.awt.Color(255, 255, 255));
         helpMenu.setText("Help");
 
         showProcessMenuItem.setText("Show process");
