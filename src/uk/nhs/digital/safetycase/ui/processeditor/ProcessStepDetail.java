@@ -20,8 +20,10 @@ package uk.nhs.digital.safetycase.ui.processeditor;
 import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
@@ -36,7 +38,10 @@ import uk.nhs.digital.safetycase.ui.LinkEditor;
  *
  * @author murff
  */
-public class ProcessStepDetail extends javax.swing.JPanel {
+public class ProcessStepDetail 
+        extends javax.swing.JPanel 
+        implements DataNotificationSubscriber
+{
 
     private static final String[] COLUMNS = {"Name", "Status", "Initial rating", "Residual rating"};
     private JDialog parent = null;
@@ -48,6 +53,7 @@ public class ProcessStepDetail extends javax.swing.JPanel {
     public ProcessStepDetail(ProcessStep ps) {
         initComponents();
         processStep = ps;
+        SmartProject.getProject().addNotificationSubscriber(this);
         if (ps != null) {
             populate();
         } else {
@@ -243,4 +249,28 @@ public class ProcessStepDetail extends javax.swing.JPanel {
     private uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel rolesLinksPanel;
     private uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel systemLinksPanel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public boolean notification(int evtype, Object o) {
+        return false;
+    }
+
+    @Override
+    public JPanel getEditor(Object o) {
+        try {
+            uk.nhs.digital.safetycase.data.ProcessStep p = (uk.nhs.digital.safetycase.data.ProcessStep)o;
+            if (p == processStep)
+                return this;
+            
+        }
+        catch (Exception e) {}
+        return null;
+    }
+
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+
+
 }

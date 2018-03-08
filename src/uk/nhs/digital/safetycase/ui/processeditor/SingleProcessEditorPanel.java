@@ -44,7 +44,9 @@ import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
  *
  * @author damian
  */
-public class SingleProcessEditorPanel extends javax.swing.JPanel {
+public class SingleProcessEditorPanel 
+        extends javax.swing.JPanel 
+{
 
     private final String[] linkcolumns = {"Type", "Name", "Comment"};
     private JDialog parent = null;
@@ -426,4 +428,5 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField sourceTextField;
     private javax.swing.JTextField versionTextField;
     // End of variables declaration//GEN-END:variables
+
 }
