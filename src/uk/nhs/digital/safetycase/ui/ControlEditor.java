@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
@@ -534,6 +535,22 @@ public class ControlEditor extends javax.swing.JPanel
             }
         }
         return false;
+    }
+
+    @Override
+    public JPanel getEditor(Object o) {
+        try {            
+            Control c = (Control)o;
+            if (c.getTitle().equals(control.getTitle()))
+                return this;
+        }
+        catch (Exception e) {}
+        return null;
+    }
+
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
     }
     
 }

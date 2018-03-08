@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
@@ -22,6 +23,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import uk.nhs.digital.projectuiframework.Project;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -29,8 +31,6 @@ import uk.nhs.digital.safetycase.data.PersistableFactory;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 import uk.nhs.digital.safetycase.ui.PersistableEditor;
-import uk.nhs.digital.safetycase.ui.systemeditor.SystemGraphEditor;
-import uk.nhs.digital.safetycase.ui.systemeditor.SystemListForm;
 
 /**
  *
@@ -61,6 +61,11 @@ public class SystemEditor extends javax.swing.JSplitPane
 
     }
 
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="Unused Code"> 
 //     public SystemEditor(uk.nhs.digital.safetycase.data.System s) {
 //        this.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -352,4 +357,10 @@ public class SystemEditor extends javax.swing.JSplitPane
     public boolean notification(int evtype, Object o) {
         return true;
     }
+    
+   @Override
+    public JPanel getEditor(Object o) {
+        return null;
+    }    
+    
 }

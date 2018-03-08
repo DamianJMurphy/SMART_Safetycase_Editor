@@ -37,10 +37,15 @@ import com.mxgraph.view.mxGraph;
 import java.awt.event.MouseEvent;
 import java.awt.print.PageFormat;
 import java.util.HashMap;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 
-public class ProcessGraphEditor extends BasicGraphEditor
+public class ProcessGraphEditor 
+        extends BasicGraphEditor
+        implements DataNotificationSubscriber
 {
     private static int processId = -1;
     private HashMap<String,DiagramEditorElement> existingSteps = null;
@@ -49,6 +54,27 @@ public class ProcessGraphEditor extends BasicGraphEditor
     public HashMap<String,DiagramEditorElement> getExistingSteps() { return existingSteps; }
     
     public int getProcessId() { return processId; }
+
+    @Override
+    public boolean notification(int evtype, Object o) {
+        return false;
+    }
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+
+    @Override
+    public JPanel getEditor(Object o) {
+        try {
+            uk.nhs.digital.safetycase.data.Process h = (uk.nhs.digital.safetycase.data.Process)o;
+            if (h.getId() == processId)
+                return this;
+        }
+        catch (Exception e) {}
+        return null;
+    }
+
     
     public void setProcessId(int i, String x) { 
         processId = i; 
@@ -111,7 +137,7 @@ public class ProcessGraphEditor extends BasicGraphEditor
                 component.setAutoExtend(true);
                 
 		final mxGraph graph = graphComponent.getGraph();
-
+                SmartProject.getProject().addNotificationSubscriber(this);
 		// Creates the shapes palette
 //		EditorPalette shapesPalette = insertPalette(mxResources.get("shapes"));
 //		EditorPalette imagesPalette = insertPalette(mxResources.get("images"));

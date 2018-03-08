@@ -19,6 +19,7 @@ package uk.nhs.digital.projectuiframework.ui;
 import com.sun.glass.events.MouseEvent;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Frame;
 import uk.nhs.digital.projectuiframework.Project;
 import java.util.HashMap;
 import javax.swing.JDialog;
@@ -304,6 +305,23 @@ public class ProjectWindow extends javax.swing.JFrame {
                 return;
             }
         } 
+    }
+    
+    public void selectPanel(JPanel p) {
+        if (isDocked(p)) {
+            int i = mainWindowTabbedPane.indexOfComponent(p);
+            if (i != -1) {
+                mainWindowTabbedPane.setSelectedIndex(i);
+                return;
+            }
+        }
+        ExternalEditorView eev = getUndockedWindow(p);
+        if (eev != null) {
+            if (eev.getState() == Frame.ICONIFIED)
+                eev.setState(Frame.NORMAL);
+            eev.setVisible(true);
+            eev.toFront();
+        }
     }
     
     public ExternalEditorView getUndockedWindow(JPanel p) {

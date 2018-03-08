@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
@@ -47,6 +48,7 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
 
     private final String[] linkcolumns = {"Type", "Name", "Comment"};
     private JDialog parent = null;
+    private SingleProcessEditorForm containerForm = null;
 //    private ProcessEditor editor = null;
     private int processid = -1;
     private Process process = null;
@@ -70,6 +72,10 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
         return this;
     }
     
+    SingleProcessEditorPanel setParent(SingleProcessEditorForm p) {
+        containerForm = p;
+        return this;
+    }
     
 //    SingleProcessEditorPanel setEditor(ProcessEditor p) { 
 //        editor = p; 
@@ -365,6 +371,14 @@ public class SingleProcessEditorPanel extends javax.swing.JPanel {
         if (process == null) {
             JOptionPane.showMessageDialog(this, "Save this Process first, before editing the process steps", "Save first", JOptionPane.INFORMATION_MESSAGE);
             return;
+        }
+        
+        if (containerForm != null) {
+            JPanel pnl = SmartProject.getProject().getExistingEditor(process, containerForm);
+            if (pnl != null) {
+                SmartProject.getProject().getProjectWindow().selectPanel(pnl);
+                return;
+            }
         }
         try {
             ProcessGraphEditor pge = new ProcessGraphEditor();

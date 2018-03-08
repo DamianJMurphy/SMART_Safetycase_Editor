@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -562,6 +563,15 @@ public class IssuesLogEditor
         }
 
         return true;
+    }
+
+    @Override
+    public JPanel getEditor(Object o) {
+        return this;
+    }
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
     }
 
 }

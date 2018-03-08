@@ -26,6 +26,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -624,6 +625,18 @@ public class SmartProject
                 return;
             }
         }
+    }
+    
+    @Override
+    public JPanel getExistingEditor(Object o, Object caller) {
+        if (notificationSubscribers != null) {
+            for (DataNotificationSubscriber d : notificationSubscribers) {
+                JPanel p = d.getEditor(o);
+                if ((p != null) && (p != caller))
+                    return p;
+            }
+        }
+        return null;
     }
     
     @Override

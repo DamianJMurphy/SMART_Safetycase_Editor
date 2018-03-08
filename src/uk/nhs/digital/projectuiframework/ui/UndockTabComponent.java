@@ -37,6 +37,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicButtonUI;
+import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 
 /**
@@ -147,6 +148,10 @@ public class UndockTabComponent extends JPanel {
                 Component c = pane.getComponentAt(i);
                 String t = pane.getTitleAt(i);
                 pane.remove(i);
+                if (c instanceof DataNotificationSubscriber) {
+                    DataNotificationSubscriber d = (DataNotificationSubscriber)c;
+                    d.unsubscribe();
+                }
             }
         }        
     }

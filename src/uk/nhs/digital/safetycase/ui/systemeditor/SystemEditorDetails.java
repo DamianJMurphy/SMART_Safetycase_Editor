@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -72,6 +73,10 @@ public class SystemEditorDetails extends javax.swing.JPanel
      public SystemEditorDetails() {
         initComponents();
      }
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
     
     public SystemEditorDetails(Persistable p) {
         initComponents();
@@ -358,6 +363,12 @@ public class SystemEditorDetails extends javax.swing.JPanel
             
             return;
         }       
+       
+        JPanel pnl = SmartProject.getProject().getExistingEditor(system, this);
+        if (pnl != null) {
+            SmartProject.getProject().getProjectWindow().selectPanel(pnl);
+            return;
+        }
         
         if (system.getAttribute("ParentSystemID").getIntValue() != -1) {
             try {
@@ -632,4 +643,16 @@ public class SystemEditorDetails extends javax.swing.JPanel
         
         return true;
     }
+    
+   @Override
+    public JPanel getEditor(Object o) {
+        try {            
+            uk.nhs.digital.safetycase.data.System c = (uk.nhs.digital.safetycase.data.System)o;
+            if (c.getTitle().equals(system.getTitle()))
+                return this;
+        }
+        catch (Exception e) {}
+        return null;
+    }    
+    
 }

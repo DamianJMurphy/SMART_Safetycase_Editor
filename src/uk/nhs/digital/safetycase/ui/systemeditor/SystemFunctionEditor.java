@@ -19,7 +19,9 @@ package uk.nhs.digital.safetycase.ui.systemeditor;
 
 import java.awt.Component;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 import uk.nhs.digital.projectuiframework.Project;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -45,6 +47,10 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         initComponents();
               
     }    
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
     
     void setData(String n, String v, String s, String d) {
         nameTextField.setText(n);
@@ -234,4 +240,15 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         
         return true;
     }
+   @Override
+    public JPanel getEditor(Object o) {
+        try {            
+            uk.nhs.digital.safetycase.data.SystemFunction c = (uk.nhs.digital.safetycase.data.SystemFunction)o;
+            if (c.getTitle().equals(sf.getTitle()))
+                return this;
+        }
+        catch (Exception e) {}
+        return null;
+    }    
+    
 }

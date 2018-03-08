@@ -22,6 +22,7 @@ import java.awt.ComponentOrientation;
 import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
+import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 
 /**
@@ -141,6 +142,11 @@ public class ExternalEditorView extends javax.swing.JFrame {
     }//GEN-LAST:event_dockButtonMenuSelected
 
     private void closeButtonMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_closeButtonMenuSelected
+        
+        if (editorComponent instanceof DataNotificationSubscriber) {
+            DataNotificationSubscriber d = (DataNotificationSubscriber)editorComponent;
+            d.unsubscribe();
+        }
         this.dispose();
     }//GEN-LAST:event_closeButtonMenuSelected
 

@@ -8,6 +8,7 @@ package uk.nhs.digital.safetycase.ui.views;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -56,6 +57,11 @@ public class HazardAnalysis
         SmartProject.getProject().addNotificationSubscriber(this);
     }
 
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+    
     private void populateHazardPanel(Hazard h) {
         if (h == null)
             return;
@@ -548,5 +554,9 @@ public class HazardAnalysis
             return true;
         }
     }
+   @Override
+    public JPanel getEditor(Object o) {
+        return this;
+    }    
 
 }

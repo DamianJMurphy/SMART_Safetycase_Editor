@@ -25,6 +25,7 @@ import java.util.HashMap;
 import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.safetycase.data.Hazard;
@@ -93,6 +94,7 @@ public class BowtieObjectDetailsAction
         Object o = e.getSource();
         uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor.CustomGraphComponent c = (uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor.CustomGraphComponent)o;
         int hazardid = c.getHazardId();
+        BowtieGraphEditor container = (BowtieGraphEditor)c.getParent().getParent();
         
         // this.selected is the cell, which tells us what type of thing has been clicked and its cell id.
         // So get the Hazard, and its relationships to that type, and find the one with that cell id. That
@@ -100,6 +102,8 @@ public class BowtieObjectDetailsAction
         
         try {
             Hazard h = (Hazard)MetaFactory.getInstance().getFactory("Hazard").get(hazardid);
+            
+
             String cellid = selected.getId();
             String style = selected.getStyle();
             int lastslash = style.lastIndexOf("/");
@@ -109,6 +113,13 @@ public class BowtieObjectDetailsAction
             
             // Is it the Hazard itself ?
             if (type.contentEquals("Hazard")) {
+
+                JPanel pnl = SmartProject.getProject().getExistingEditor(h, container);
+                if (pnl != null) {
+                    SmartProject.getProject().getProjectWindow().selectPanel(pnl);
+                    return;
+                }
+
 //                JDialog detailEditor = new JDialog(JOptionPane.getFrameForComponent(c), true);
                 HazardEditor he = new HazardEditor();
                 he.setPersistableObject(h);
@@ -128,6 +139,13 @@ public class BowtieObjectDetailsAction
                         String eclass = java.lang.System.getProperty(uk.nhs.digital.projectuiframework.smart.SmartProject.EDITORCLASSROOT + s);
                         if (eclass == null)
                             return;
+                        
+                        JPanel pnl = SmartProject.getProject().getExistingEditor(p, container);
+                        if (pnl != null) {
+                            SmartProject.getProject().getProjectWindow().selectPanel(pnl);
+                            return;
+                        }
+                        
 //                        JDialog detailEditor = new JDialog(JOptionPane.getFrameForComponent(c), true);
                         PersistableEditor pe = (PersistableEditor)Class.forName(eclass).newInstance();
                         pe.setPersistableObject(p);

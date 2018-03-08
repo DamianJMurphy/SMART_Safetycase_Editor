@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
@@ -481,4 +482,21 @@ public class ProjectEditor
         makeProjectSummary();
         return true;
     }
+    
+   @Override
+    public JPanel getEditor(Object o) {
+        try {            
+            uk.nhs.digital.safetycase.data.Project c = (uk.nhs.digital.safetycase.data.Project)o;
+            if (c.getTitle().equals(project.getTitle()))
+                return this;
+        }
+        catch (Exception e) {}
+        return null;
+    }    
+    
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+    
 }

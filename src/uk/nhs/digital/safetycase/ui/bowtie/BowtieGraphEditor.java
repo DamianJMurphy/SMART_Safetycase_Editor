@@ -37,11 +37,17 @@ import com.mxgraph.view.mxGraph;
 import java.awt.event.MouseEvent;
 import java.awt.print.PageFormat;
 import java.util.HashMap;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 
-public class BowtieGraphEditor extends BasicGraphEditor
+public class BowtieGraphEditor 
+        extends BasicGraphEditor
+        implements DataNotificationSubscriber
 {
     private static int hazardId = -1;
     private ProcessStep processStep = null;
@@ -79,7 +85,12 @@ public class BowtieGraphEditor extends BasicGraphEditor
 
 		e.consume();
 	}
-    
+ 
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+        
 	/**
 	 * 
 	 */
@@ -102,7 +113,6 @@ public class BowtieGraphEditor extends BasicGraphEditor
 	public BowtieGraphEditor()
 	{
 		this("mxGraph Editor", new CustomGraphComponent(new CustomGraph()));
-
 	}
 
         public void setProcessStep(ProcessStep p) {
@@ -121,6 +131,7 @@ public class BowtieGraphEditor extends BasicGraphEditor
                 component.setPageFormat(format);
                 component.setAutoExtend(true);
 		final mxGraph graph = graphComponent.getGraph();
+                SmartProject.getProject().addNotificationSubscriber(this);
 
 		// Creates the shapes palette
 //		EditorPalette shapesPalette = insertPalette(mxResources.get("shapes"));
@@ -198,6 +209,22 @@ public class BowtieGraphEditor extends BasicGraphEditor
 						"vertical", 100, 100, "");
 
 	}
+
+    @Override
+    public boolean notification(int evtype, Object o) {
+        return false;
+    }
+
+    @Override
+    public JPanel getEditor(Object o) {
+        try {
+            Hazard h = (Hazard)o;
+            if (h.getId() == hazardId)
+                return this;
+        }
+        catch (Exception e) {}
+        return null;
+    }
 
 	/**
 	 * 

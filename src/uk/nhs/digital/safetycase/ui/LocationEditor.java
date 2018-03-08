@@ -19,10 +19,9 @@ package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
@@ -366,6 +365,22 @@ public class LocationEditor extends javax.swing.JPanel
             }
         }
         return false;
+    }
+    
+    @Override
+    public JPanel getEditor(Object o) {
+        try {            
+            Location c = (Location)o;
+            if (c.getTitle().equals(location.getTitle()))
+                return this;
+        }
+        catch (Exception e) {}
+        return null;
+    }
+
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
     }
     
 }

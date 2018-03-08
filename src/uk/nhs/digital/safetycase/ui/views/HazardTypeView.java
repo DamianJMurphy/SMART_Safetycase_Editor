@@ -21,6 +21,7 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.swing.DefaultListModel;
+import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -65,6 +66,12 @@ public class HazardTypeView
         });
         SmartProject.getProject().addNotificationSubscriber(this);
     }
+    
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+
 
     private void populateHazardPanel(Hazard h) {
         if (h == null)
@@ -453,5 +460,10 @@ public class HazardTypeView
             return true;
         }
     }
+
+   @Override
+    public JPanel getEditor(Object o) {
+        return this;
+    }    
     
 }

@@ -19,6 +19,7 @@ package uk.nhs.digital.projectuiframework;
 
 import java.io.File;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -72,6 +73,7 @@ public interface Project {
     void setCurrentProjectID(int id);
     
     void editorEvent(int e, Object o);
+    JPanel getExistingEditor(Object o, Object c);
     void addNotificationSubscriber(DataNotificationSubscriber n);
     void removeNotificationSubscriber(DataNotificationSubscriber n);
     void saveAll();

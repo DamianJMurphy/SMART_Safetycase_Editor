@@ -23,6 +23,7 @@ import java.util.HashMap;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
@@ -384,6 +385,22 @@ public class RoleEditor extends javax.swing.JPanel
             }
         }
         return false;
+    }
+
+   @Override
+    public JPanel getEditor(Object o) {
+        try {            
+            uk.nhs.digital.safetycase.data.Role c = (uk.nhs.digital.safetycase.data.Role)o;
+            if (c.getTitle().equals(role.getTitle()))
+                return this;
+        }
+        catch (Exception e) {}
+        return null;
+    }    
+    
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
     }
     
 }

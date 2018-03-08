@@ -23,11 +23,13 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.Action;
+import javax.swing.JPanel;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.ProcessStep;
+import uk.nhs.digital.safetycase.ui.processeditor.ProcessGraphEditor;
 import uk.nhs.digital.safetycase.ui.processeditor.ProcessStepDetail;
 
 /**
@@ -88,6 +90,7 @@ public class ProcessStepDetailsAction
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         uk.nhs.digital.safetycase.ui.processeditor.ProcessGraphEditor.CustomGraphComponent c = (uk.nhs.digital.safetycase.ui.processeditor.ProcessGraphEditor.CustomGraphComponent)o;
+        ProcessGraphEditor container = (ProcessGraphEditor)c.getParent().getParent();
         int processid = c.getProcessId();
         if (processid != -1) {
             try {
@@ -96,6 +99,13 @@ public class ProcessStepDetailsAction
                     if (steps != null) {
                         for (Persistable p : steps) {
                             if (p.getAttributeValue("GraphCellId").contentEquals(selected.getId())) {
+                                
+                                JPanel pnl = SmartProject.getProject().getExistingEditor(p, container);
+                                if (pnl != null) {
+                                    SmartProject.getProject().getProjectWindow().selectPanel(pnl);
+                                    return;
+                                }
+                                
                                 ProcessStepDetail psd = new ProcessStepDetail((ProcessStep)p);
                                 ExternalEditorView editorView = new ExternalEditorView(psd, "Step:" + p.getAttributeValue("Name"), SmartProject.getProject().getProjectWindow().getMainWindowTabbedPane());
 //                                JDialog detailEditor = new JDialog(JOptionPane.getFrameForComponent(c), false);

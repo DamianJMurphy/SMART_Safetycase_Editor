@@ -27,6 +27,7 @@ import java.util.Iterator;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SpinnerListModel;
 import javax.swing.border.TitledBorder;
@@ -630,6 +631,12 @@ public class HazardEditor extends javax.swing.JPanel
             return;
         }
         
+        JPanel pnl = SmartProject.getProject().getExistingEditor(hazard, this);
+        if (pnl != null) {
+            SmartProject.getProject().getProjectWindow().selectPanel(pnl);
+            return;
+        }
+        
         BowtieGraphEditor bge = new BowtieGraphEditor();
         String xml = hazard.getAttributeValue("GraphXml");
         bge.setHazardId(hazard.getId(), xml);
@@ -905,6 +912,22 @@ public class HazardEditor extends javax.swing.JPanel
             }
         }
         return false;
+    }
+    
+    @Override
+    public JPanel getEditor(Object o) {
+        try {            
+            Hazard c = (Hazard)o;
+            if (c.getTitle().equals(hazard.getTitle()))
+                return this;
+        }
+        catch (Exception e) {}
+        return null;
+    }
+
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
     }
     
 }

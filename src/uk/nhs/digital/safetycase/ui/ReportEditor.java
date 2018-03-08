@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
@@ -562,5 +563,15 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
         
         return true;
     }
+    
+   @Override
+    public JPanel getEditor(Object o) {
+        return this;
+    }    
 
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+    
 }

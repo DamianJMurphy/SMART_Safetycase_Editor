@@ -16,10 +16,18 @@ Functional
 - TODO NEXT: Protection against creating a new object with the same name as an
     existing one.
 
-- TODO: ProjectWindow needs a query method to allow a check to see if it already
+- TODO: Needs a query method to allow a check to see if it already
     has a tab for something that another form is going to try to open (e.g one of
     the hazard details forms from the bowtie). Otherwise we can end up with more
     than one editor form instance open for the same object.
+        - (DONE)Hazard -> Bowtie button
+        - (DONE)System -> system editor button
+        - (DONE)Process -> process editor button
+ NEXT-->       - Graphical editor menus -> details items (Hazard/bowtie done, others don't
+            use PersistableEditor or DataNotificationSubscriber, they should. FIX
+        Use SmartProject.getProject().getExistingEditor() for currently edited object
+            - if not null use SmartProject.getProject().getProjectWindow().selectPanel() with result
+    - (DONE)need to make sure editors de-register themselves.
 
 - TODO: Update notifcications for process editor and generally from when a new
     instance of an object is created: SingleProcessEditorForm and Hazard at least,

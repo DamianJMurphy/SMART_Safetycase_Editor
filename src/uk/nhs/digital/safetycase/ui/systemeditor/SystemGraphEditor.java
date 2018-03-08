@@ -40,7 +40,10 @@ import com.mxgraph.view.mxGraph;
 import java.awt.event.MouseEvent;
 import java.awt.print.PageFormat;
 import java.util.HashMap;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 import uk.nhs.digital.safetycase.ui.systemeditor.SystemEditorPopupMenu;
 
@@ -49,7 +52,10 @@ import uk.nhs.digital.safetycase.ui.systemeditor.SystemEditorPopupMenu;
  * @author SHUL1
  */
 
-public class SystemGraphEditor extends BasicGraphEditor {
+public class SystemGraphEditor 
+        extends BasicGraphEditor 
+        implements DataNotificationSubscriber
+{
 
     private static int systemId = -1;
     
@@ -64,6 +70,11 @@ public class SystemGraphEditor extends BasicGraphEditor {
         return systemId;
     }
 
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+    
     public void setSystemId(int i, String x) {
         systemId = i;
         getGraphComponent().getGraph().setModel(new mxGraphModel());
@@ -123,7 +134,7 @@ public class SystemGraphEditor extends BasicGraphEditor {
         component.setPageFormat(format);
         component.setAutoExtend(true);
         final mxGraph graph = graphComponent.getGraph();
-
+        SmartProject.getProject().addNotificationSubscriber(this);
         // Creates the shapes palette
 //		EditorPalette shapesPalette = insertPalette(mxResources.get("shapes"));
 //		EditorPalette imagesPalette = insertPalette(mxResources.get("images"));
@@ -196,6 +207,22 @@ public class SystemGraphEditor extends BasicGraphEditor {
                                         .getResource("/com/mxgraph/examples/swing/images/vertical.png")),
                         "vertical", 100, 100, "");
 
+    }
+
+    @Override
+    public boolean notification(int evtype, Object o) {
+        return false;
+    }
+
+    @Override
+    public JPanel getEditor(Object o) {
+        try {
+            uk.nhs.digital.safetycase.data.System h = (uk.nhs.digital.safetycase.data.System)o;
+            if (h.getId() == systemId)
+                return this;
+        }
+        catch (Exception e) {}
+        return null;
     }
 
     /**

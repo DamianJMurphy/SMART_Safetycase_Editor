@@ -19,12 +19,11 @@ package uk.nhs.digital.safetycase.ui.processeditor;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.Collection;
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
-import uk.nhs.digital.safetycase.data.Cause;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
@@ -61,15 +60,21 @@ public class SingleProcessEditorForm
             processEditor.setData(process.getAttributeValue("Name"), process.getAttributeValue("Version"), process.getAttributeValue("Source"), 
                     process.getAttributeValue("Description"));
             processEditor.setProcessId(pid);
+            processEditor.setParent(this);
             ArrayList<Persistable> ps = MetaFactory.getInstance().getChildren("ProcessStep", "ProcessID", pid);
             stepList.populateList(ps);
         }
+    }
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
     }
 
     public SingleProcessEditorForm()
             throws Exception
     {
         initComponents();
+        processEditor.setParent(this);
         SmartProject.getProject().addNotificationSubscriber(this);
     }
     
@@ -160,5 +165,16 @@ public class SingleProcessEditorForm
         
         return true;
     }
+    
+   @Override
+    public JPanel getEditor(Object o) {
+        try {            
+            uk.nhs.digital.safetycase.data.Process c = (uk.nhs.digital.safetycase.data.Process)o;
+            if (c.getTitle().equals(process.getTitle()))
+                return this;
+        }
+        catch (Exception e) {}
+        return null;
+    }    
     
 }
