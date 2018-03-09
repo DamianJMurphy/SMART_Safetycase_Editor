@@ -5,7 +5,6 @@
  */
 package uk.nhs.digital.safetycase.ui.systemeditor;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,17 +12,11 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
-import uk.nhs.digital.projectuiframework.smart.SmartProject;
-import uk.nhs.digital.projectuiframework.ui.EditorComponent;
-import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
-import uk.nhs.digital.projectuiframework.ui.UndockTabComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
 import uk.nhs.digital.safetycase.data.Relationship;
-import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 import uk.nhs.digital.safetycase.ui.systemeditor.SystemEditor;
-import uk.nhs.digital.safetycase.ui.systemeditor.SingleSystemEditorForm;
 import uk.nhs.digital.safetycase.ui.systemeditor.SingleSystemEditorPanel;
 
 /**

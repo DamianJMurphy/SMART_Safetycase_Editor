@@ -21,18 +21,13 @@ import uk.nhs.digital.safetycase.ui.*;
 import java.awt.Component;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -50,7 +45,6 @@ import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.data.SystemFunction;
-import uk.nhs.digital.safetycase.data.ValueSet;
 
 /**
  *
@@ -91,8 +85,11 @@ public class SystemEditorDetails extends javax.swing.JPanel
             system = (System) p;
             functionsTable.setModel(dsftm);
             int psid = Integer.parseInt(system.getAttributeValue("ParentSystemID"));
-            if(psid !=-1)
+            if(psid !=-1) {
                 psname = MetaFactory.getInstance().getFactory("System").get(psid).getAttributeValue("Name"); 
+            } else {
+                populateSubsystemList();
+            }
             nameTextField.setText(system.getAttributeValue("Name"));
             descriptionTextArea.setText(system.getAttributeValue("Description"));
             mnemonicTextField.setText(system.getAttributeValue("Mnemonic"));
@@ -130,6 +127,9 @@ public class SystemEditorDetails extends javax.swing.JPanel
         jLabel3 = new javax.swing.JLabel();
         parentSystemTextField = new javax.swing.JTextField();
         systemEditorButton = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        subsystemsList = new javax.swing.JList<>();
 
         editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -209,6 +209,26 @@ public class SystemEditorDetails extends javax.swing.JPanel
             }
         });
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Subsystems"));
+
+        jScrollPane1.setViewportView(subsystemsList);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
         editorPanel.setLayout(editorPanelLayout);
         editorPanelLayout.setHorizontalGroup(
@@ -231,14 +251,15 @@ public class SystemEditorDetails extends javax.swing.JPanel
                         .addGap(35, 35, 35)
                         .addComponent(mnemonicTextField))
                     .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(editorPanelLayout.createSequentialGroup()
                         .addComponent(systemEditorButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(discardButton)))
+                        .addComponent(discardButton))
+                    .addGroup(editorPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         editorPanelLayout.setVerticalGroup(
@@ -268,7 +289,9 @@ public class SystemEditorDetails extends javax.swing.JPanel
                         .addComponent(systemEditorButton)))
                 .addGap(18, 18, 18)
                 .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(118, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -284,7 +307,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -459,12 +482,36 @@ public class SystemEditorDetails extends javax.swing.JPanel
         return null;
     }
     
+    private void populateSubsystemList()
+            throws Exception
+    {
+        DefaultListModel dlm = new DefaultListModel();
+        subsystemsList.setModel(dlm);
+        if (system == null)
+            return;
+        HashMap<String, ArrayList<Relationship>> hrels = system.getRelationshipsForLoad();
+        Persistable p = null;
+        if (hrels != null) {
+            for (ArrayList<Relationship> a : hrels.values()) {
+                for (Relationship r : a) {
+                    if (r.getTargetType().contentEquals("System")) {
+                        p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                        if (p.isDeleted())
+                            continue;
+                        dlm.addElement(p.getTitle());
+                    }
+                }
+            }
+        }
+        subsystemsList.setModel(dlm);
+    }
+    
     private void populateFunctionTable(System s) throws Exception {
         systemfunctions = new ArrayList<>();
         DefaultTableModel dtm = new DefaultTableModel(functioncolumns, 0);
         PersistableFactory<System> pfs = MetaFactory.getInstance().getFactory("System");
         PersistableFactory<SystemFunction> pfsf = MetaFactory.getInstance().getFactory("SystemFunction");
-        Persistable p;
+        Persistable p = null;
         try {
             System sys = pfs.get(s.getId());
             HashMap<String, ArrayList<Relationship>> hrels = sys.getRelationshipsForLoad();
@@ -575,6 +622,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JPanel linksPanel;
@@ -582,6 +631,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
     private javax.swing.JTextField nameTextField;
     private javax.swing.JTextField parentSystemTextField;
     private javax.swing.JButton saveButton;
+    private javax.swing.JList<String> subsystemsList;
     private javax.swing.JButton systemEditorButton;
     // End of variables declaration//GEN-END:variables
 
@@ -604,6 +654,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
             int psid = Integer.parseInt(system.getAttributeValue("ParentSystemID"));
             if(psid !=-1)
                 psname = MetaFactory.getInstance().getFactory("System").get(psid).getAttributeValue("Name"); 
+            else
+                populateSubsystemList();
             nameTextField.setText(system.getAttributeValue("Name"));
             descriptionTextArea.setText(system.getAttributeValue("Description"));
             mnemonicTextField.setText(system.getAttributeValue("Mnemonic"));
