@@ -556,7 +556,7 @@ public class HazardAnalysis
     }
    @Override
     public JPanel getEditor(Object o) {
-        return this;
+        return null;
     }    
 
 }

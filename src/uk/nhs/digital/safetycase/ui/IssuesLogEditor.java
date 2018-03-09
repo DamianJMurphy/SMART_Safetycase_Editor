@@ -557,17 +557,12 @@ public class IssuesLogEditor
 
     @Override
     public boolean notification(int evtype, Object o) {
-        if (evtype == Project.SAVE) {
-            saveButtonActionPerformed(null);
-            return false;
-        }
-
         return true;
     }
 
     @Override
     public JPanel getEditor(Object o) {
-        return this;
+        return null;
     }
     @Override
     public void unsubscribe() {

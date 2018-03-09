@@ -463,7 +463,7 @@ public class HazardTypeView
 
    @Override
     public JPanel getEditor(Object o) {
-        return this;
+        return null;
     }    
     
 }

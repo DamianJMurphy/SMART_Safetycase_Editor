@@ -3,6 +3,8 @@ NOT FOR MARCH:
 
 - TODO: Modifications inside the graphical editors:
     - TODO: See if it is possible to auto-wrap the text in boxes in the graphical editors
+    - Auto set hazard and root system names
+    - Auto-create hazard and root system
 - TODO: Look at putting in a check routine to cascade deletes... maybe. Uncontrolled
     that could accidentally wipe out an entire project and safe rules will be tricky.
 - TODO: Probably need to detect name collisions within a set of child nodes in the tree.
