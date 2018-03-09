@@ -13,8 +13,14 @@ NOT FOR MARCH:
 
 Functional
 
+- TODO: Remind user to save process diagram before selecting "Add new hazard"
+
+- TODO: Add list of subsystems beneath display of functions in parent system form.
+
 - TODO NEXT: Protection against creating a new object with the same name as an
     existing one.
+
+- TODO: Window close event handler to call unsubscribe().
 
 - TODO: Update notifcications for process editor and generally from when a new
     instance of an object is created: SingleProcessEditorForm and Hazard at least,

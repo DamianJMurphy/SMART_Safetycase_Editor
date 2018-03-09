@@ -128,7 +128,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Summary"/>
+            <Property name="text" type="java.lang.String" value="Name"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="summaryTextField">
@@ -173,7 +173,7 @@
         </Container>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Clinical justification"/>
+            <Property name="text" type="java.lang.String" value="Clinical justification for risk acceptance"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane3">

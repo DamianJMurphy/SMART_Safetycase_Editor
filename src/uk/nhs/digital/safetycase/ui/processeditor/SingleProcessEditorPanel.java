@@ -87,7 +87,6 @@ public class SingleProcessEditorPanel
     void setData(String n, String v, String s, String d) {
         nameTextField.setText(n);
         versionTextField.setText(v);
-        sourceTextField.setText(s);
         descriptionTextArea.setText(d);        
     }
     
@@ -137,8 +136,6 @@ public class SingleProcessEditorPanel
         nameTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         versionTextField = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        sourceTextField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
@@ -155,8 +152,6 @@ public class SingleProcessEditorPanel
         jLabel1.setText("Name");
 
         jLabel2.setText("Version");
-
-        jLabel3.setText("Source");
 
         jLabel4.setText("Description");
 
@@ -236,15 +231,13 @@ public class SingleProcessEditorPanel
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel2))
                         .addGap(39, 39, 39)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(versionTextField)
                                 .addGap(313, 313, 313))
-                            .addComponent(nameTextField)
-                            .addComponent(sourceTextField)))
+                            .addComponent(nameTextField)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -270,11 +263,7 @@ public class SingleProcessEditorPanel
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(versionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(sourceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -286,7 +275,7 @@ public class SingleProcessEditorPanel
                     .addComponent(processEditorButton))
                 .addGap(18, 18, 18)
                 .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -303,7 +292,7 @@ public class SingleProcessEditorPanel
         }
         process.setAttribute("Name",nameTextField.getText());
         process.setAttribute("Version", versionTextField.getText());
-        process.setAttribute("Source", sourceTextField.getText());
+        process.setAttribute("Source", "");
         process.setAttribute("Description", descriptionTextArea.getText());
 //        if (newObjectProjectId == -1)
 //            process.setAttribute("ProjectID", Integer.parseInt(process.getAttributeValue("ProjectID")));
@@ -415,7 +404,6 @@ public class SingleProcessEditorPanel
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -425,7 +413,6 @@ public class SingleProcessEditorPanel
     private javax.swing.JTextField nameTextField;
     private javax.swing.JButton processEditorButton;
     private javax.swing.JButton saveButton;
-    private javax.swing.JTextField sourceTextField;
     private javax.swing.JTextField versionTextField;
     // End of variables declaration//GEN-END:variables
 

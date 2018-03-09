@@ -330,10 +330,14 @@ public class SystemEditorDetails extends javax.swing.JPanel
         system.setAttribute("ProjectID", SmartProject.getProject().getCurrentProjectID());
         try {
             MetaFactory.getInstance().getFactory(system.getDatabaseObjectName()).put(system);
-            if (created)
-                SmartProject.getProject().editorEvent(Project.ADD, system);
-            else
-                SmartProject.getProject().editorEvent(Project.UPDATE, system);
+            // TODO: Don't bother trying to update the tree if this is a subsystem
+            //
+            if (system.getAttribute("ParentSystemID").getIntValue() == -1) {
+                if (created)
+                    SmartProject.getProject().editorEvent(Project.ADD, system);
+                else
+                    SmartProject.getProject().editorEvent(Project.UPDATE, system);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

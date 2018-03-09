@@ -220,7 +220,7 @@ public class HazardEditor extends javax.swing.JPanel
 
         editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel1.setText("Summary");
+        jLabel1.setText("Name");
 
         jLabel2.setText("Type");
 
@@ -234,7 +234,7 @@ public class HazardEditor extends javax.swing.JPanel
         descriptionTextArea.setWrapStyleWord(true);
         jScrollPane2.setViewportView(descriptionTextArea);
 
-        jLabel5.setText("Clinical justification");
+        jLabel5.setText("Clinical justification for risk acceptance");
 
         clinicalJustificationTextArea.setColumns(20);
         clinicalJustificationTextArea.setLineWrap(true);
@@ -586,8 +586,8 @@ public class HazardEditor extends javax.swing.JPanel
         hazard.setAttribute("InitialSeverity", Hazard.getSeverity((String)initialSeveritySpinner.getValue()));
         hazard.setAttribute("InitialLikelihood", Hazard.getLikelihood((String)initialLikelihoodSpinner.getValue()));
         hazard.setAttribute("InitialRiskRating", (Integer.parseInt(initialRiskRatingTextField.getText())));
-        hazard.setAttribute("ResidualSeverity", Hazard.getLikelihood((String)residualLikelihoodSpinner.getValue()));
-        hazard.setAttribute("ResidualLikelihood", Hazard.getSeverity((String)residualSeveritySpinner.getValue()));
+        hazard.setAttribute("ResidualLikelihood", Hazard.getLikelihood((String)residualLikelihoodSpinner.getValue()));
+        hazard.setAttribute("ResidualSeverity", Hazard.getSeverity((String)residualSeveritySpinner.getValue()));
         hazard.setAttribute("ResidualRiskRating", (Integer.parseInt(residualRiskRatingTextField.getText())));
 //        if (newObjectProjectId == -1)
 //            hazard.setAttribute("ProjectID", Integer.parseInt(hazard.getAttributeValue("ProjectID")));
