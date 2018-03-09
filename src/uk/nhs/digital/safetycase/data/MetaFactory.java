@@ -100,6 +100,44 @@ public class MetaFactory {
         valueSets.put(v.getName(), v);
     }
     
+    public String getDuplicateCheckMessage(String type, String display, String name, int pid, Persistable object) {
+        if (type == null)
+            return null;
+        if (name == null)
+            return null;
+        PersistableFactory pf = factories.get(type);
+        if (pf == null)
+            return null;
+        
+        Collection<Persistable> c = null;
+        if (pid != -1) {
+            c = pf.getEntries(pid);
+        } else {
+            c = pf.getEntries();
+        }
+        for (Persistable p : c) {
+            if (p == object)
+                continue;
+            try {
+                if (p.getAttributeValue("Name").contentEquals(name)) {
+                    StringBuilder sb = new StringBuilder();
+                    if (p.isDeleted()) {
+                         sb.append("A deleted instance of ");
+                    } else {
+                        sb.append("An instance of ");
+                    }
+                    sb.append(display);
+                    sb.append(" already exists in this project with name '");
+                    sb.append(name);
+                    sb.append("' - either use a different name, or delete/purge the existing one.");
+                    return sb.toString();
+                }
+            }
+            catch (Exception e) {}
+        }
+        return null;
+    }
+    
     public static final MetaFactory getInstance()
             throws Exception
     {

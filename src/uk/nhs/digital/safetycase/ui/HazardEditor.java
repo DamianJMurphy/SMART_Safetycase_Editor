@@ -573,9 +573,19 @@ public class HazardEditor extends javax.swing.JPanel
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
         saveButton.setEnabled(false);
+
         if (statusComboBox.getSelectedIndex() == -1)
             statusComboBox.setSelectedIndex(0);
         if (hazard == null) {
+            try {
+                String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Hazard", "Hazard", summaryTextField.getText(),SmartProject.getProject().getCurrentProjectID(), hazard);
+                if (duplicateWarning != null) {
+                    JOptionPane.showMessageDialog(this, duplicateWarning, "Duplicate hazard name", JOptionPane.ERROR_MESSAGE);
+                    saveButton.setEnabled(true);
+                    return;
+                }
+            }
+            catch (Exception e) {}
             hazard = new Hazard();
             hazard.setAttribute("Name", summaryTextField.getText());
         }

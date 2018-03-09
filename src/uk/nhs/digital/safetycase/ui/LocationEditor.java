@@ -214,6 +214,16 @@ public class LocationEditor extends javax.swing.JPanel
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
     
+        
+        try {
+            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Location", "Care setting", nameTextField.getText(), SmartProject.getProject().getCurrentProjectID(), location);
+            if (duplicateWarning != null) {
+                JOptionPane.showMessageDialog(this, duplicateWarning, "Duplicate Care Setting name", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (Exception e) {
+        }
+        
         boolean created = false;
         if (location == null) {
             location = new Location();

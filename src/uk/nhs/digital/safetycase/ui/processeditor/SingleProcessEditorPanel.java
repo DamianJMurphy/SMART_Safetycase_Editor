@@ -284,6 +284,17 @@ public class SingleProcessEditorPanel
     }
     
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+
+        try {
+            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Process", "Care process", nameTextField.getText(), SmartProject.getProject().getCurrentProjectID(), process);
+            if (duplicateWarning != null) {
+                JOptionPane.showMessageDialog(this, duplicateWarning, "Duplicate care process name", JOptionPane.ERROR_MESSAGE);
+                saveButton.setEnabled(true);
+                return;
+            }
+        } catch (Exception e) {
+        }
+
         boolean create = false;
         if (process == null) {
             process = new Process();

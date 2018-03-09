@@ -21,6 +21,7 @@ import com.mxgraph.examples.swing.editor.BasicGraphEditor;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Element;
@@ -51,6 +52,8 @@ public class BowtieSaveHandler
 //    private final ArrayList<Persistable> updated = new ArrayList<>();
 //    private final ArrayList<Persistable> removed = new ArrayList<>();
     
+    private BowtieGraphEditor bge = null; 
+    private Hazard hazard = null;
     @Override
     public void handle(BasicGraphEditor ge) 
             throws Exception 
@@ -58,13 +61,12 @@ public class BowtieSaveHandler
         boolean existingHazard = false;
         try {
             int processStepId = -1;
-            BowtieGraphEditor bge = (BowtieGraphEditor)ge;
+            bge = (BowtieGraphEditor)ge;
             ProcessStep ps = null;
             MetaFactory mf = MetaFactory.getInstance();            
             PersistableFactory<Hazard> hf = mf.getFactory("Hazard");
             PersistableFactory<uk.nhs.digital.safetycase.data.Process> pf = mf.getFactory("Process");
             Process process = null;
-            Hazard hazard = null;
             if (bge.getHazardId() !=  -1)
                 hazard = hf.get(bge.getHazardId());
 
@@ -75,7 +77,9 @@ public class BowtieSaveHandler
                 processStepId = ps.getId();
             String xml = getXml(ge);
 
-            HashMap<String,DiagramEditorElement> existingBowtie = null; 
+            HashMap<String,DiagramEditorElement> existingBowtie = bge.getExistingBowtie(); 
+            if (checkNames(xml, existingBowtie))
+                return;
             int projectid = -1;
             if (hazard == null) {
                 // Note: this branch should only be true if ps != null...
@@ -89,7 +93,6 @@ public class BowtieSaveHandler
             } else {
                 existingHazard = true;
                 projectid = hazard.getAttribute("ProjectID").getIntValue();
-                existingBowtie = bge.getExistingBowtie();
 //                updated.add(hazard);
             }
             NodeList cells = parseHazard(xml, hazard);
@@ -401,5 +404,78 @@ public class BowtieSaveHandler
         }
         return nl;
     } 
-
+    
+    private boolean checkNames(String xml, HashMap<String,DiagramEditorElement> existingBowtie) {
+        try {
+            int pid = SmartProject.getProject().getCurrentProjectID();
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setNamespaceAware(true);
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            StringReader sr = new StringReader(xml);
+            InputSource is = new InputSource(sr);
+            Element d = db.parse(is).getDocumentElement();
+            NodeList nl = d.getElementsByTagName("mxCell");
+            for (int i = 0; i < nl.getLength(); i++) {
+                Element cell = (Element)nl.item(i);
+                if (cell.hasAttribute("style")) {
+                    String id = cell.getAttribute("id");
+                    String name = cell.getAttribute("value");
+                   
+                    // Get any existing object of this sort
+                    Persistable p = null;
+                    if (existingBowtie != null) {
+                        DiagramEditorElement dee = existingBowtie.get(id);
+                        if (dee != null)
+                            p = dee.object;
+                    }    
+                    
+                    if (cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/bowtie/hazard.png")) {
+                        try {
+                            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Hazard", "Hazard", name,pid, hazard);
+                            if (duplicateWarning != null) {
+                                JOptionPane.showMessageDialog(bge, duplicateWarning, "Duplicate hazard name", JOptionPane.ERROR_MESSAGE);
+                                return true;
+                            }
+                        }
+                        catch (Exception e) {}                        
+                    }
+                    if (cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/bowtie/cause.png")) {
+                        try {
+                            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Cause", "Cause", name,pid, p);
+                            if (duplicateWarning != null) {
+                                JOptionPane.showMessageDialog(bge, duplicateWarning, "Duplicate cause name", JOptionPane.ERROR_MESSAGE);
+                                return true;
+                            }
+                        }
+                        catch (Exception e) {}                        
+                        
+                    }
+                    if (cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/bowtie/effect.png")) {
+                        try {
+                            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Effect", "Effect", name,pid, p);
+                            if (duplicateWarning != null) {
+                                JOptionPane.showMessageDialog(bge, duplicateWarning, "Duplicate effect name", JOptionPane.ERROR_MESSAGE);
+                                return true;
+                            }
+                        }
+                        catch (Exception e) {}                                                
+                    }
+                    if (cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/bowtie/control.png")) {
+                        try {
+                            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Control", "Control", name,pid, p);
+                            if (duplicateWarning != null) {
+                                JOptionPane.showMessageDialog(bge, duplicateWarning, "Duplicate control name", JOptionPane.ERROR_MESSAGE);
+                                return true;
+                            }
+                        }
+                        catch (Exception e) {}                                                
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

@@ -246,7 +246,18 @@ public class RoleEditor extends javax.swing.JPanel
 
     
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        
+     
+       
+        try {
+            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Role", "Role", nameTextField.getText(), SmartProject.getProject().getCurrentProjectID(), role);
+            if (duplicateWarning != null) {
+                JOptionPane.showMessageDialog(this, duplicateWarning, "Duplicate role name", JOptionPane.ERROR_MESSAGE);
+                saveButton.setEnabled(true);
+                return;
+            }
+        } catch (Exception e) {
+        }
+         
         boolean created = false;
         if (role == null) {
                 role = new Role();

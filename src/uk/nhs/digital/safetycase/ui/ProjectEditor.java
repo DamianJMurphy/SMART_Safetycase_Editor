@@ -188,6 +188,17 @@ public class ProjectEditor
     }//GEN-LAST:event_cancelCreateButtonActionPerformed
 
     private void createProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createProjectButtonActionPerformed
+
+        try {
+            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Project", "Project", nameTextField.getText(), -1, null);
+            if (duplicateWarning != null) {
+                JOptionPane.showMessageDialog(this, duplicateWarning, "Duplicate project name", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         project = new uk.nhs.digital.safetycase.data.Project();
         project.setAttribute("Name", nameTextField.getText());
         project.setAttribute("Owner", ownerTextField.getText());
@@ -204,6 +215,17 @@ public class ProjectEditor
     }//GEN-LAST:event_createProjectButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+
+        try {
+            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Project", "Project", nameTextField.getText(), -1, project);
+            if (duplicateWarning != null) {
+                JOptionPane.showMessageDialog(this, duplicateWarning, "Duplicate project name", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         boolean created = false;
         if (project == null) {
             project = new uk.nhs.digital.safetycase.data.Project();

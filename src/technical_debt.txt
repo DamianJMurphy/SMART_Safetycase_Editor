@@ -18,7 +18,7 @@ Functional
 - TODO: Add list of subsystems beneath display of functions in parent system form.
 
 - TODO NEXT: Protection against creating a new object with the same name as an
-    existing one.
+    existing one. DONE for forms. DONE for bowtie. Needs to be done for System graphical editor
 
 - TODO: Window close event handler to call unsubscribe().
 

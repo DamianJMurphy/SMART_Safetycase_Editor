@@ -618,7 +618,10 @@ public class Database {
                 if (a.getIsDate() && a.empty) {
                     sb.append("null");
                 } else {
-                    sb.append(a.toString());
+                    if (a.empty)
+                        sb.append(" null");
+                    else 
+                        sb.append(a.toString());
                 }
             }
             sb.append(", ");
