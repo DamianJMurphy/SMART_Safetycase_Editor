@@ -19,6 +19,8 @@ package uk.nhs.digital.projectuiframework.ui;
 
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
@@ -29,7 +31,10 @@ import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
  *
  * @author murff
  */
-public class ExternalEditorView extends javax.swing.JFrame {
+public class ExternalEditorView 
+        extends javax.swing.JFrame 
+        implements WindowListener
+{
 
     private JTabbedPane redockTabbedPane = null;
     private Component editorComponent = null;
@@ -42,7 +47,7 @@ public class ExternalEditorView extends javax.swing.JFrame {
     @SuppressWarnings("OverridableMethodCallInConstructor")
     public ExternalEditorView(java.awt.Component p, String t, final JTabbedPane pane) {
         init(p, t, pane);
-        setDefaultIcon();
+        setDefaultIcon();      
     }
 
     private void setDefaultIcon() 
@@ -76,6 +81,7 @@ public class ExternalEditorView extends javax.swing.JFrame {
         title = t;
         redockTabbedPane = pane;
         dockControlMenuBar.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        addWindowListener(this);
         setTitle(title);
         setSize(600,500);
         setResizable(true);
@@ -98,7 +104,7 @@ public class ExternalEditorView extends javax.swing.JFrame {
         closeButton = new javax.swing.JMenu();
         dockButton = new javax.swing.JMenu();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         closeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uk/nhs/digital/projectuiframework/ui/resources/closepanelbutton16x16.png"))); // NOI18N
         closeButton.setToolTipText("Close");
@@ -189,4 +195,35 @@ public class ExternalEditorView extends javax.swing.JFrame {
     private javax.swing.JMenu dockButton;
     private javax.swing.JMenuBar dockControlMenuBar;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        closeButtonMenuSelected(null);
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        closeButtonMenuSelected(null);
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+    }
 }

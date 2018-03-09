@@ -68,7 +68,7 @@ public class SystemSaveHandler
             }
             String xml = getXml(ge);
 
-            HashMap<String, DiagramEditorElement> existingSystem = null;
+            HashMap<String, DiagramEditorElement> existingSystem = sge.getExistingGraph();
             int projectid = -1;
             if (system == null) {
                 system = new System();
@@ -80,8 +80,6 @@ public class SystemSaveHandler
             } else {
                 systemExists = true;
                 projectid = system.getAttribute("ProjectID").getIntValue();
-                // This is returning null when it shouldn't
-                existingSystem = sge.getExistingGraph();
                // updated.add(system);
             }
             //when parsing XMl make sure that we find the root system and not the subsystem.

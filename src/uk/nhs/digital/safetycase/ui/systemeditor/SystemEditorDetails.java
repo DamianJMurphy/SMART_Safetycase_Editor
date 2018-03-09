@@ -344,6 +344,15 @@ public class SystemEditorDetails extends javax.swing.JPanel
 //        }
         boolean created = false;
         if (system == null) {
+            try {
+                String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("System", "System", nameTextField.getText(),SmartProject.getProject().getCurrentProjectID(), null);
+                if (duplicateWarning != null) {
+                    JOptionPane.showMessageDialog(this, duplicateWarning, "Duplicate hazard name", JOptionPane.ERROR_MESSAGE);
+                    saveButton.setEnabled(true);
+                    return;
+                }
+            }
+            catch (Exception e) {}
             system = new System();
             system.setAttribute("Name",nameTextField.getText());
             created = true;
