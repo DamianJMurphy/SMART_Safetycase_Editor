@@ -15,13 +15,6 @@ NOT FOR MARCH:
 
 Functional
 
-- TODO: Remind user to save process diagram before selecting "Add new hazard"
-
-- TODO: Protection against creating a new object with the same name as an
-    existing one. DONE for forms. DONE for bowtie. 
-    - TODO NEXT: Needs to be done for System graphical editor (for top level
-        system only)
-
 - TODO: Update notifications for process editor and generally from when a new
     instance of an object is created: SingleProcessEditorForm and Hazard at least,
     check the others that support direct creation of a new object instance
@@ -30,7 +23,7 @@ Functional
 
 - TODO: Reports
 
-- TODO: Link editor link type list - Hannah to provide RelationshipSemantics list
+- TODO NEXT: Link editor link type list - Hannah to provide RelationshipSemantics list
     - TODO: Make sure the RelationshipSemantics is implemented and works for the 
             Link editor.
 

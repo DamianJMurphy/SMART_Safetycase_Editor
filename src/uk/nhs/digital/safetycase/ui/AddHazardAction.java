@@ -23,6 +23,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.safetycase.data.MetaFactory;
@@ -87,7 +88,8 @@ public class AddHazardAction
 
     @Override
     public void actionPerformed(ActionEvent e) {
-                
+            
+        boolean didsomething = false;
         Object o = e.getSource();
         uk.nhs.digital.safetycase.ui.processeditor.ProcessGraphEditor.CustomGraphComponent c = (uk.nhs.digital.safetycase.ui.processeditor.ProcessGraphEditor.CustomGraphComponent)o;
         int processid = c.getProcessId();
@@ -98,7 +100,7 @@ public class AddHazardAction
                     if (steps != null) {
                         for (Persistable p : steps) {
                             if (p.getAttributeValue("GraphCellId").contentEquals(selected.getId())) {
-                                
+                                didsomething = true;
                                 HazardEditor he = new HazardEditor().setParent((ProcessStep)p);
                                 ExternalEditorView editorView = new ExternalEditorView(he.getComponent(), p.getAttributeValue("Name") + ":Hazards", SmartProject.getProject().getProjectWindow().getMainWindowTabbedPane());
                                 break;
@@ -132,7 +134,9 @@ public class AddHazardAction
                 ex.printStackTrace();
             }
         }
-        
+        if (!didsomething) {
+            JOptionPane.showMessageDialog(c, "Save process diagram before adding a Hazard", "Process not saved", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
     
 }

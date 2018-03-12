@@ -21,6 +21,7 @@ import com.mxgraph.examples.swing.editor.BasicGraphEditor;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Element;
@@ -49,6 +50,7 @@ public class SystemSaveHandler
 
     private final ArrayList<String> processedElements = new ArrayList<>();
     private System system = null;
+    SystemGraphEditor sge = null;
 
     @Override
     public void handle(BasicGraphEditor ge)
@@ -56,7 +58,7 @@ public class SystemSaveHandler
         boolean systemExists = false;
         try {
             // int systemStepId = -1;
-            SystemGraphEditor sge = (SystemGraphEditor) ge;
+            sge = (SystemGraphEditor) ge;
             //SystemStep ss = null;
             MetaFactory mf = MetaFactory.getInstance();
             PersistableFactory<System> sf = mf.getFactory("System");
@@ -69,6 +71,9 @@ public class SystemSaveHandler
             String xml = getXml(ge);
 
             HashMap<String, DiagramEditorElement> existingSystem = sge.getExistingGraph();
+            if (checkNames(xml, existingSystem))
+                return;
+            
             int projectid = -1;
             if (system == null) {
                 system = new System();
@@ -442,6 +447,49 @@ public class SystemSaveHandler
         return p;
     }
 
+    private boolean checkNames(String xml, HashMap<String,DiagramEditorElement> existingSystem) {
+        try {
+            int pid = SmartProject.getProject().getCurrentProjectID();
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setNamespaceAware(true);
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            StringReader sr = new StringReader(xml);
+            InputSource is = new InputSource(sr);
+            Element d = db.parse(is).getDocumentElement();
+            NodeList nl = d.getElementsByTagName("mxCell");
+            for (int i = 0; i < nl.getLength(); i++) {
+                Element cell = (Element)nl.item(i);
+                if (cell.hasAttribute("style")) {
+                    String id = cell.getAttribute("id");
+                    String name = cell.getAttribute("value");
+                   
+                    // Get any existing object of this sort
+                    Persistable p = null;
+                    if (existingSystem != null) {
+                        DiagramEditorElement dee = existingSystem.get(id);
+                        if (dee != null)
+                            p = dee.object;
+                    }    
+                    
+                    if (cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/systemeditor/system.png")) {
+                        try {
+                            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("System", "System", name,pid, system);
+                            if (duplicateWarning != null) {
+                                JOptionPane.showMessageDialog(sge, duplicateWarning, "Duplicate hazard name", JOptionPane.ERROR_MESSAGE);
+                                return true;
+                            }
+                        }
+                        catch (Exception e) {}                        
+                    }
+                }
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
     private NodeList parseSystem(String xml, System s)
             throws Exception {
         // Find the System, get the name, and store it.
