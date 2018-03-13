@@ -19,7 +19,6 @@ package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.JDialog;
@@ -73,7 +72,7 @@ public class EffectEditor extends javax.swing.JPanel
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to initialise EffectEditor", e);
         }
         
     }
@@ -275,7 +274,7 @@ public class EffectEditor extends javax.swing.JPanel
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to process editLinks action in EffectEditor", e);
         }
 
 
@@ -297,7 +296,8 @@ public class EffectEditor extends javax.swing.JPanel
             SmartProject.getProject().editorEvent(Project.UPDATE, effect);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to save Effect. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in EffectEditor", e);
         }
      
     }//GEN-LAST:event_saveButtonActionPerformed
@@ -345,7 +345,8 @@ public class EffectEditor extends javax.swing.JPanel
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load Effect for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to set persistable object in EffectEditor", e);
         }
       
     }

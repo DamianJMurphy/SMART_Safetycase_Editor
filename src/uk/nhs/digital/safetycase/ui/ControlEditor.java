@@ -77,7 +77,7 @@ public class ControlEditor extends javax.swing.JPanel
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to initialise ControlEditor", e);
         }
         
     }
@@ -338,7 +338,7 @@ public class ControlEditor extends javax.swing.JPanel
             editorComponent.notifyEditorEvent(Project.DELETE, control);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to delete Control", e);
         }        
     }
     
@@ -362,7 +362,8 @@ public class ControlEditor extends javax.swing.JPanel
             SmartProject.getProject().editorEvent(Project.UPDATE, control);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to save Control. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in ControlEditor", e);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -392,7 +393,7 @@ public class ControlEditor extends javax.swing.JPanel
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to process editLinks action in ControlEditor", e);
         }
     }//GEN-LAST:event_editLinksButtonActionPerformed
 
@@ -489,7 +490,8 @@ public class ControlEditor extends javax.swing.JPanel
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load Control for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to set persistable object in ControlEditor", e);
         }
       
     }

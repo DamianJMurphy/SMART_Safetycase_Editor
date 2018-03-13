@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import uk.nhs.digital.projectuiframework.Project;
 import java.util.HashMap;
+import java.util.logging.Level;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -33,6 +34,7 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import uk.nhs.digital.projectuiframework.InitialTab;
 import uk.nhs.digital.projectuiframework.smart.RiskMatrix;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.ui.LibraryEditorDialog;
 import uk.nhs.digital.safetycase.ui.ProjectEditor;
 /**
@@ -221,7 +223,7 @@ public class ProjectWindow extends javax.swing.JFrame {
               
         }
         catch (Exception e) {
-            e.printStackTrace(System.err);
+            SmartProject.getProject().log("Failed to load new project editor", e);
             JOptionPane.showMessageDialog(rootPane, "Error " + e.getMessage() + " details have been saved to the log file", "Error whilst creating", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_mainMenuNewActionPerformed

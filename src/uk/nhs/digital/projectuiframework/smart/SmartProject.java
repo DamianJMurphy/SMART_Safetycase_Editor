@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.LogRecord;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,6 +34,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
+import uk.nhs.digital.projectuiframework.smart.logging.SmartLogger;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.projectuiframework.ui.ViewComponent;
@@ -69,7 +73,7 @@ public class SmartProject
     
     private DefaultMutableTreeNode root = null;
     private static final String[] PROJECTCOMPONENTS = {"Care Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role", "Report"};
-    private static final String[] PROJECTOTHERCOMPONENTS = { "Care Settings", "Role", "Report"};
+//    private static final String[] PROJECTOTHERCOMPONENTS = { "Care Settings", "Role", "Report"};
     private static final String[] PROJECTEDITORS = {"Process", "Hazard", "Cause", "Effect", "Control", "Location", "Role", "Report"};
     private static final String[] PROJECTNEWABLES = {"Care Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role"};
     private static final String PROJECTNAME = "SMART";
@@ -85,15 +89,37 @@ public class SmartProject
     private ImageIcon helpAboutIcon = null;
     
     private final ArrayList<DataNotificationSubscriber> notificationSubscribers = new ArrayList<>();
+
+    private SmartLogger logger = null;
     
     public SmartProject()
             throws Exception
     {
-        metaFactory = MetaFactory.getInstance();
-        metaFactory.initialise();
         project = this;
+        logger = new SmartLogger();
+        try {
+            metaFactory = MetaFactory.getInstance();
+            metaFactory.initialise();
+        }
+        catch (Exception e) {
+            log(Level.SEVERE, "Failed to initialise metaFactory", e);
+            throw new Exception("Failed to initialise database access", e);
+        }
     }
- 
+    
+    @Override
+    public void log(String message, Throwable thrown) {
+        log(Level.INFO, message, thrown);
+    }
+
+    @Override
+    public void log(Level level, String message, Throwable thrown) {
+        LogRecord lr = new LogRecord(level, message);
+        lr.setThrown(thrown);
+        logger.log(lr);
+    }
+
+    
     private ImageIcon getIcon(String s, ProjectTreeCellRenderer r) {
         try {
             ImageIcon icon = ResourceUtils.getImageIcon(s);
@@ -101,7 +127,7 @@ public class SmartProject
             return icon;
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log("Error loading icon resource", e);
             return null;
         }       
     }
@@ -132,7 +158,7 @@ public class SmartProject
             } 
             catch (ClassCastException cce) {}
             catch (Exception e) {
-                e.printStackTrace();
+                log("Error resolving user-selected component from project tree", e);
             }
         }
         if (s == null) {
@@ -206,7 +232,7 @@ public class SmartProject
                     ile.setEditorComponent(ecl);
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    log("Editor for Issues Log not found", e);
                     JLabel l = new JLabel("Editor for Issues Log not found");
                     ecl = new EditorComponent(l, "Issues Log", this);
                 }   
@@ -232,6 +258,10 @@ public class SmartProject
             return resolveNonContainedComponent(t);
         }
         String s = p.getEditorType();
+        if (s == null) {
+            log("No editor type: " + p.getDatabaseObjectName(), null);
+            return null;
+        }
         String eclass = java.lang.System.getProperty(EDITORCLASSROOT + s);
         if (eclass == null)
             return null;
@@ -242,8 +272,8 @@ public class SmartProject
             ec = new EditorComponent(pe.getComponent(), p.getDisplayName() + ":" + p.getTitle(), this);
             pe.setEditorComponent(ec);
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            log("No editor found for " + p.getDisplayName(), e);
             JLabel l = new JLabel("Editor for " + p.getDisplayName() + ":" + p.getTitle() + " not found");
             ec = new EditorComponent(l, p.getTitle(), this);
         }   
@@ -322,33 +352,12 @@ public class SmartProject
         peditor.setUserObject(proj);
         p.add(peditor);
         p.add(populateSystem(proj.getId()));
-/*
-        ArrayList<Persistable> list = metaFactory.getChildren("System", "ProjectID", proj.getId());
-        DefaultMutableTreeNode systemsNode = new DefaultMutableTreeNode("Systems");
-        p.add(systemsNode);
-        if (list != null) {
-            for (Persistable s : list) {
-                DefaultMutableTreeNode sn = new DefaultMutableTreeNode(s.getTitle());
-                uk.nhs.digital.safetycase.data.System sys = (uk.nhs.digital.safetycase.data.System) s;
-                sn.setUserObject(sys);
-                systemsNode.add(sn);
-                try {
-                    populateSystemFunctions(sn, s.getId());
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-*/
+
         populateProjectComponent("Care Settings", p, proj.getId());
         populateProjectComponent("Role", p, proj.getId());
         populateProjectComponent("Care Process", p, proj.getId());
         p.add(populateHazard(proj.getId()));
 
-//        for (String s : PROJECTOTHERCOMPONENTS) {
-//            populateProjectComponent(s, p, proj.getId());
-//        }
         DefaultMutableTreeNode issuesNode = new DefaultMutableTreeNode("Issues Log");
         p.add(issuesNode);
         
@@ -421,7 +430,7 @@ public class SmartProject
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log("Error getting hazard dependents", e);
         }
     }
     
@@ -705,7 +714,7 @@ public class SmartProject
             eventNode = getTreeNode(p);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log("Cannot make eventNode processing editor notification event", e);
             return;
         }
         
@@ -813,7 +822,7 @@ public class SmartProject
             }
         }
         catch (java.util.ConcurrentModificationException e) {
-            e.printStackTrace();
+            log("Conflict managing notificationSubscribers", e);
         }
     }
     
@@ -921,7 +930,7 @@ public class SmartProject
             pw.setIconImage(ResourceUtils.getImageIcon(SMART_ICON).getImage());
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log("Failed to load the help/about image resource", e);
         }
         pw.setTreeCellRenderer(r);
     }
@@ -947,7 +956,7 @@ public class SmartProject
             view.setProject(this);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            log("Failed to load view: " + view.getClassName(), e);
             return null;
         }
         return view;
@@ -1008,7 +1017,7 @@ public class SmartProject
 
         } catch (Exception e) {
             java.lang.System.err.println("Unprocessed Element : " + e.toString());
-            e.printStackTrace();
+            log("Error displaying System child nodes", e);
         }
         sy.setUserObject(s);
         node.add(sy);
@@ -1060,7 +1069,7 @@ public class SmartProject
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log("Error building TreeNode instances for child nodes", e);
         }
 
     }

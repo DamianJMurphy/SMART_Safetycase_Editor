@@ -18,6 +18,7 @@
 package uk.nhs.digital.projectuiframework;
 
 import java.io.File;
+import java.util.logging.Level;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -77,4 +78,7 @@ public interface Project {
     void addNotificationSubscriber(DataNotificationSubscriber n);
     void removeNotificationSubscriber(DataNotificationSubscriber n);
     void saveAll();
+    
+    void log(String message, Throwable thrown);
+    void log(Level level, String message, Throwable thrown);
 }

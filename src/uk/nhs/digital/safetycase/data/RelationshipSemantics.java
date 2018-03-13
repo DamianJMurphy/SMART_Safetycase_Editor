@@ -16,6 +16,9 @@
  *  
  */
 package uk.nhs.digital.safetycase.data;
+
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
+
 /**
  *
  * @author damian
@@ -42,8 +45,8 @@ public class RelationshipSemantics {
             Persistable p = (Persistable)Class.forName(cname).newInstance();
             displayName = p.getDisplayName();
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            SmartProject.getProject().log("Could not identify displayName for relationship target type " + t, e);
         }
     }
     void setSummary(String s) { summary = s; }

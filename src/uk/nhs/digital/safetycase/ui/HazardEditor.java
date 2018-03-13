@@ -22,6 +22,7 @@ import java.awt.Component;
 import java.awt.Image;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.ImageIcon;
@@ -55,6 +56,7 @@ import uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor;
  *
  * @author damian
  */
+@SuppressWarnings("StaticNonFinalUsedInInitialization")
 public class HazardEditor extends javax.swing.JPanel 
     implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
@@ -62,8 +64,8 @@ public class HazardEditor extends javax.swing.JPanel
     private static final int RISK_MATRIX_X = 722;
     private static final int RISK_MATRIX_Y = 186;
     private EditorComponent editorComponent = null;
-    private ArrayList<Hazard> hazards = new ArrayList<>();
-    private ArrayList<Relationship> displayedLinks = new ArrayList<>();
+    private final ArrayList<Hazard> hazards = new ArrayList<>();
+    private final ArrayList<Relationship> displayedLinks = new ArrayList<>();
     private Hazard hazard = null;
     
     private ProcessStep parentProcessStep = null;
@@ -85,22 +87,18 @@ public class HazardEditor extends javax.swing.JPanel
             riskMatrixImageIcon = new ImageIcon(riskMatrixImageIcon.getImage().getScaledInstance(RISK_MATRIX_X, RISK_MATRIX_Y, Image.SCALE_DEFAULT));
             ArrayList<String> severity = new ArrayList<>();
             severity.add("Not set");
-            for (String s : Hazard.SEVERITIES)
-                severity.add(s);
+            severity.addAll(Arrays.asList(Hazard.SEVERITIES));
             ArrayList<String> likelihood = new ArrayList<>();
             likelihood.add("Not set");
-            for (String s : Hazard.LIKELIHOODS)
-                likelihood.add(s);
+            likelihood.addAll(Arrays.asList(Hazard.LIKELIHOODS));
             initialSeveritySpinnerModel.setList(severity);
             initialLikelihoodSpinnerModel.setList(likelihood);
             severity = new ArrayList<>();
             severity.add("Not set");
-            for (String s : Hazard.SEVERITIES)
-                severity.add(s);  
+            severity.addAll(Arrays.asList(Hazard.SEVERITIES));  
             likelihood = new ArrayList<>();
             likelihood.add("Not set");
-            for (String s : Hazard.LIKELIHOODS)
-                likelihood.add(s);            
+            likelihood.addAll(Arrays.asList(Hazard.LIKELIHOODS));            
             residualSeveritySpinnerModel.setList(severity);
             residualLikelihoodSpinnerModel.setList(likelihood);
         }
@@ -136,7 +134,7 @@ public class HazardEditor extends javax.swing.JPanel
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to initialise HazardEditor", e);
         }
         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
         linksTable.setModel(dtm);
@@ -545,7 +543,7 @@ public class HazardEditor extends javax.swing.JPanel
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to process editLinks action in HazardEditor", e);
         }
 
     }//GEN-LAST:event_editLinksButtonActionPerformed
@@ -566,7 +564,8 @@ public class HazardEditor extends javax.swing.JPanel
             SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
         catch(Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Error deleting Hazard. Send logs to support", "Delete failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to delete in HazardEditor", e);
         }
         
     }//GEN-LAST:event_discardButtonActionPerformed
@@ -618,7 +617,8 @@ public class HazardEditor extends javax.swing.JPanel
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to save Hazard. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in HazardEditor", e);
         }
         String g = hazard.getAttributeValue("GraphXml");
         if ((g == null) || (g.trim().length() == 0)) {
@@ -723,7 +723,7 @@ public class HazardEditor extends javax.swing.JPanel
         return bowtieElements;
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to build existingBowtie in hazard editpr", e);
             return null;
         }
     }
@@ -832,29 +832,10 @@ public class HazardEditor extends javax.swing.JPanel
 
             descriptionTextArea.setText(hazard.getAttributeValue("Description"));
             clinicalJustificationTextArea.setText(hazard.getAttributeValue("ClinicalJustification"));
-/*
-            HashMap<String, ArrayList<Relationship>> rels = hazard.getRelationshipsForLoad();
-            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            for (String t : rels.keySet()) {
-                ArrayList<Relationship> a = rels.get(t);
-                for (Relationship r : a) {
-                    // Suppress "diagram editor management" relationships so they don't clutter up the view
-                    if ((r.getManagementClass() != null) && (r.getManagementClass().contentEquals("Diagram"))) {
-                        continue;
-                    }
-                    String[] row = new String[linkcolumns.length];
-                    row[0] = t;
-                    row[1] = Integer.toString(r.getTarget());
-                    row[2] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                    row[3] = r.getComment();
-                    dtm.addRow(row);
-                }
-            }
-            linksTable.setModel(dtm);
-*/
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load Hazard for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to set persistable object in HazardEditor", e);
         }
         try {
             HashMap<String,ArrayList<Relationship>> rels = hazard.getRelationshipsForLoad();
@@ -877,7 +858,8 @@ public class HazardEditor extends javax.swing.JPanel
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load Hazard relationshis for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load hazard relationships", e);
         }
         
     }

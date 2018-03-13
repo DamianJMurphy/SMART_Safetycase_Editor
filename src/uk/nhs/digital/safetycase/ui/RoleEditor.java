@@ -20,7 +20,6 @@ package uk.nhs.digital.safetycase.ui;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -28,7 +27,6 @@ import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
-import uk.nhs.digital.safetycase.data.Location;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.Relationship;
@@ -234,14 +232,10 @@ public class RoleEditor extends javax.swing.JPanel
             SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
         catch(Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to delete Role", "Delete failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to delete in RoleEditor", e);
         }
         
-//        descriptionTextArea.setText("");
-//        nameTextField.setText("");
-//        categoryTextField.setText("");
-//        DefaultTableModel dtm = new DefaultTableModel(LINKCOLUMNS, 0);
-//        linksTable.setModel(dtm);
     }//GEN-LAST:event_discardButtonActionPerformed
 
     
@@ -279,7 +273,8 @@ public class RoleEditor extends javax.swing.JPanel
             }                
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to save Role", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in RoleEditor", e);
         }
         // Check to see if the Role has at least one link to a Location, if not
         // display a warning that one needs to be added.
@@ -337,7 +332,8 @@ public class RoleEditor extends javax.swing.JPanel
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load Role for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to set persistable object in RoleEditor", e);
         }
     }
 

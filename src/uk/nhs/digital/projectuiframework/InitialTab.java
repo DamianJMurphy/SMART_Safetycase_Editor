@@ -7,10 +7,12 @@ package uk.nhs.digital.projectuiframework;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
 import javax.swing.ImageIcon;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 
 /**
  *
@@ -35,8 +37,8 @@ public class InitialTab extends javax.swing.JPanel {
                 BufferedImage image = renderer.renderImageWithDPI(0, 100);
                 initialPageLabel.setIcon(new ImageIcon(image));
             }
-            catch (Exception e) {
-                e.printStackTrace();
+            catch (IOException e) {
+                SmartProject.getProject().log("Error loading initial tab", e);
             }
         }
     }

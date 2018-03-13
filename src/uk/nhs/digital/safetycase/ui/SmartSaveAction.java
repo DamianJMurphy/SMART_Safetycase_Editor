@@ -22,6 +22,8 @@ import com.mxgraph.examples.swing.editor.BasicGraphEditor;
 import static com.mxgraph.examples.swing.editor.EditorActions.getEditor;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 /**
  *
  * @author damian
@@ -35,8 +37,9 @@ public class SmartSaveAction
     @Override
     public void actionPerformed(ActionEvent e) 
     {
+        BasicGraphEditor editor = null;
         try {
-            BasicGraphEditor editor = getEditor(e);
+            editor = getEditor(e);
             String geclass = editor.getClass().toString();
             if (geclass.contains("Process")) {
                 ProcessSaveHandler psh = new ProcessSaveHandler();
@@ -53,7 +56,8 @@ public class SmartSaveAction
             }
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(editor, "Failed to save", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in SmartSaveAction", ex);
         }
     }
    

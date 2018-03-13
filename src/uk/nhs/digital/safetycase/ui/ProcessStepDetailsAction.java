@@ -23,6 +23,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.Action;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
@@ -119,7 +120,8 @@ public class ProcessStepDetailsAction
                 }
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                JOptionPane.showMessageDialog(container, "Cannot make details view. Send logs to support", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                SmartProject.getProject().log("Failed to open process step details view", ex);
             }
         }
         

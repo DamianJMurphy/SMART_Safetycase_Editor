@@ -16,9 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.IssuesLog;
@@ -51,15 +49,12 @@ public class IssuesLogEditor
         initComponents();
         SmartProject.getProject().addNotificationSubscriber(this);
         ListSelectionModel lsm = issuesTable.getSelectionModel();
-        lsm.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent evt) {
-                int sel = issuesTable.getSelectedRow();
-                if (sel == -1)
-                    return;
-                IssuesLog issue = displayedEntries.get(sel);
-                populateIssuesDisplay(issue);
-            }
+        lsm.addListSelectionListener((ListSelectionEvent evt) -> {
+            int sel = issuesTable.getSelectedRow();
+            if (sel == -1)
+                return;
+            IssuesLog issue = displayedEntries.get(sel);
+            populateIssuesDisplay(issue);
         });
         try {
             ArrayList<String> issueTypes = MetaFactory.getInstance().getFactory("IssuesLog").getDistinctSet("GroupingType");
@@ -90,7 +85,7 @@ public class IssuesLogEditor
             
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to initialise IssuesLogEditor", e);
         }
     }
 
@@ -403,7 +398,8 @@ public class IssuesLogEditor
                 logEntries.add(currentIssue);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to save Issue. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in IssuessLogEditor", e);
         }
         populateIssuesTable();
     }//GEN-LAST:event_saveButtonActionPerformed
@@ -478,7 +474,7 @@ public class IssuesLogEditor
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to populate display in IssuesLogEditor", e);
         }
     }
     

@@ -37,9 +37,10 @@ public class LocationEditor extends javax.swing.JPanel
         implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
     private EditorComponent editorComponent = null;
+    @SuppressWarnings("MismatchedReadAndWriteOfArray")
     private final String[] columns = {"Name", "Mnemonic", "Description", "Parent"};
     private Location location = null;
-    private ArrayList<Location> projectLocs = new ArrayList<>();
+    private final ArrayList<Location> projectLocs = new ArrayList<>();
     private int newObjectProjectId = -1;
     
     /**
@@ -202,7 +203,8 @@ public class LocationEditor extends javax.swing.JPanel
             SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
         catch(Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to delete Care setting. Send logs to support", "Delete failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in LocationEditor", e);
         }
         
 
@@ -256,7 +258,8 @@ public class LocationEditor extends javax.swing.JPanel
             
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to save Care setting. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in LocationEditor", e);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -314,7 +317,8 @@ public class LocationEditor extends javax.swing.JPanel
             parentLocationComboBox.setSelectedIndex(-1);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load list of potential parent care settings. Send logs to support", "Warning", JOptionPane.INFORMATION_MESSAGE);
+            SmartProject.getProject().log("Failed to load potential parent locations", e);
         }
     }
     

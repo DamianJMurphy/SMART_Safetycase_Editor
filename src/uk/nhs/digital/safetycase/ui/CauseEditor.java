@@ -64,7 +64,7 @@ public class CauseEditor extends javax.swing.JPanel
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to initialise CauseEditor", e);
         }
     }
 
@@ -256,7 +256,7 @@ public class CauseEditor extends javax.swing.JPanel
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to process editLinks action in CauseEditor", e);
         }
 
     }//GEN-LAST:event_editLinksButtonActionPerformed
@@ -285,7 +285,8 @@ public class CauseEditor extends javax.swing.JPanel
             SmartProject.getProject().editorEvent((created) ? Project.ADD : Project.UPDATE, cause);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to save Cause. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in CauseEditor", e);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
     
@@ -315,7 +316,7 @@ public class CauseEditor extends javax.swing.JPanel
             editorComponent.notifyEditorEvent(Project.DELETE, cause);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to delete in CauseEditor", e);
         }        
     }
     
@@ -383,7 +384,8 @@ public class CauseEditor extends javax.swing.JPanel
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load Cause for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to set persistable object in CauseEditor", e);
         }
     }
 

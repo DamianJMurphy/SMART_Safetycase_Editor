@@ -18,15 +18,18 @@
 package uk.nhs.digital.safetycase.ui;
 
 import com.mxgraph.examples.swing.editor.BasicGraphEditor;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.Cause;
@@ -140,10 +143,11 @@ public class BowtieSaveHandler
 //                hlf.updateHazard(hazard);
         } 
         catch (BrokenConnectionException bce) {
-            System.err.println("TODO: Notify user that the diagram has a broken link and has not been saved: " + bce.getMessage());
+            JOptionPane.showMessageDialog(ge, "The diagram has a broken link and has not been saved", "Diagram incomplete", JOptionPane.ERROR_MESSAGE);
+//            System.err.println("TODO: Notify user that the diagram has a broken link and has not been saved: " + bce.getMessage());
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+            SmartProject.getProject().log("Failed to save bowtie", ex);
         }            
     }
 
@@ -473,8 +477,9 @@ public class BowtieSaveHandler
                 }
             }
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (IOException | ParserConfigurationException | SAXException e) {
+            JOptionPane.showMessageDialog(bge, "Error checking for duplicate names, send logs to support", "Error", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Error in bowtie duplicate name check", e);
         }
         return false;
     }

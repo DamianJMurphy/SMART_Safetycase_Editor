@@ -27,7 +27,7 @@ public class RiskMatrix extends javax.swing.JDialog {
             riskMatrixImageIcon = new ImageIcon(riskMatrixImageIcon.getImage().getScaledInstance(RISK_MATRIX_X, RISK_MATRIX_Y, Image.SCALE_DEFAULT));
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Error loading Risk Matrix graphic", e);
         }
     }
     

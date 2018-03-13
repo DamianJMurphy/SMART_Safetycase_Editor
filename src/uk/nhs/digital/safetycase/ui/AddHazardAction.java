@@ -104,34 +104,14 @@ public class AddHazardAction
                                 HazardEditor he = new HazardEditor().setParent((ProcessStep)p);
                                 ExternalEditorView editorView = new ExternalEditorView(he.getComponent(), p.getAttributeValue("Name") + ":Hazards", SmartProject.getProject().getProjectWindow().getMainWindowTabbedPane());
                                 break;
-/*
-                                BowtieEditor bte = new BowtieEditor();
-                                bte.setPersistableObject((ProcessStep)p);
-                                JTabbedPane tp = null;
-                                try {
-                                    ProjectWindow pw = (ProjectWindow)JOptionPane.getFrameForComponent(c);
-                                    tp = pw.getMainWindowTabbedPane();
-                                }
-                                catch (ClassCastException cce) {
-                                    try {
-                                        ExternalEditorView eev = (ExternalEditorView)JOptionPane.getFrameForComponent(c);
-                                        tp = eev.getRedockTabbedPane();
-                                    }
-                                    catch (ClassCastException cce2) {
-                                        System.err.println("Window control assumption failed");
-                                        return;
-                                    }
-                                }
-                                ExternalEditorView editorView = new ExternalEditorView(bte.getComponent(), p.getAttributeValue("Name") + ":Hazards", tp);
-*/
-//                                break;
+
                             }
                         }
                     }
                 }
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                SmartProject.getProject().log("Failed to add a new hazard", ex);
             }
         }
         if (!didsomething) {

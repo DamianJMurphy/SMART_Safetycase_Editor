@@ -89,7 +89,7 @@ public class Database {
         sql.append(f);
         try (Statement s = connection.createStatement()) {
             if (!s.execute(sql.toString())) {
-                throw new Exception("Cannot read allowed relationship types");
+                throw new Exception("Cannot read allowed relationship types " + sql.toString());
             }
             try (ResultSet r = s.getResultSet()) {
                 while (r.next()) {
@@ -110,7 +110,7 @@ public class Database {
         String sql = RelationshipSemantics.sqlActive;
         try (Statement s = connection.createStatement()) {
             if (!s.execute(sql)) {
-                throw new Exception("Cannot read allowed relationship types");
+                throw new Exception("Cannot read allowed relationship types: " + sql);
             }
             try (ResultSet r = s.getResultSet()) {
                 while (r.next()) {
@@ -163,7 +163,7 @@ public class Database {
                 if (generatedKeys.next())
                     lib.setId(generatedKeys.getInt(1));
                 else
-                    throw new Exception("Failed to retrieve relationship id");
+                    throw new Exception("Failed to retrieve relationship id: " + sb.toString());
             }
             for (LibraryAttribute a : lib.getAttributes()) {
                 createLibraryAttribute(lib.getId(), a);
@@ -189,7 +189,7 @@ public class Database {
         sb.append(lib.getId());
         try (Statement s = connection.createStatement()) {
             if (s.executeUpdate(sb.toString()) != 1) {
-                throw new Exception("Cannot update LibraryObject - not found");
+                throw new Exception("Cannot update LibraryObject - not found: " + sb.toString());
             }
             for (LibraryAttribute a : lib.getAttributes()) {
                 updateLibraryAttribute(lib.getId(), a);
@@ -220,7 +220,7 @@ public class Database {
                 if (generatedKeys.next())
                     a.setId(generatedKeys.getInt(1));
                 else
-                    throw new Exception("Failed to retrieve relationship id");
+                    throw new Exception("Failed to retrieve relationship id: " + sb.toString());
             }
         }
     }
@@ -244,7 +244,7 @@ public class Database {
         sb.append(a.getID());
         try (Statement s = connection.createStatement()) {
             if (s.executeUpdate(sb.toString()) != 1) {
-                throw new Exception("Cannot update LibraryAttribute - not found");
+                throw new Exception("Cannot update LibraryAttribute - not found: " + sb.toString());
             }
         }
     }
@@ -337,7 +337,7 @@ public class Database {
         sb.append(p.getId());
         try (Statement s = connection.createStatement()) {
             if (!s.execute(sb.toString())) {
-                throw new Exception("Cannot read allowed relationship types");
+                throw new Exception("Cannot read allowed relationship types: " + sb.toString());
             }
             try (ResultSet r = s.getResultSet()) {
                 while (r.next()) {
@@ -404,7 +404,7 @@ public class Database {
         Persistable newP = null;
         try (Statement s = connection.createStatement()) {
             if (!s.execute(sql)) {
-                throw new Exception("Cannot read " + p.getDatabaseObjectName() + " id " + id + " projectid " + pid);
+                throw new Exception("Cannot read " + p.getDatabaseObjectName() + " id " + id + " projectid " + pid + " : " + sql);
             }
             try (ResultSet r = s.getResultSet()) {
                 if (r.next()) {
@@ -424,7 +424,7 @@ public class Database {
         ArrayList<Persistable> a = null;
         try (Statement s = connection.createStatement()) {
             if (!s.execute(sql)) {
-                throw new Exception("Cannot read " + p.getDatabaseObjectName() + " id " + id + " projectid " + pid);
+                throw new Exception("Cannot read " + p.getDatabaseObjectName() + " id " + id + " projectid " + pid + " : " + sql);
             }
             try (ResultSet r = s.getResultSet()) {
                 a = new ArrayList<>();
@@ -539,6 +539,10 @@ public class Database {
             }
             connection.commit();
         }
+        catch(Exception e) {
+            Exception edetail = new Exception(sb.toString(), e);
+            throw edetail;
+        }
     }
     
     private void update(Relationship r)
@@ -561,6 +565,10 @@ public class Database {
                 throw new Exception("Cannot update object - not found");
             }
             connection.commit();
+        }
+        catch(Exception e) {
+            Exception edetail = new Exception(sb.toString(), e);
+            throw edetail;
         }
     }
     
@@ -601,6 +609,10 @@ public class Database {
             }
             connection.commit();            
         } 
+        catch(Exception e) {
+            Exception edetail = new Exception(sb.toString(), e);
+            throw edetail;
+        }
     }
     
     private void update(Persistable t)
@@ -641,6 +653,10 @@ public class Database {
             }
             connection.commit();
         }
+        catch(Exception e) {
+            Exception edetail = new Exception(sb.toString(), e);
+            throw edetail;
+        }
     }
     
     Persistable delete(Persistable t)
@@ -658,6 +674,10 @@ public class Database {
                 throw new Exception("Cannot mark object deleted - not found");
             }
             connection.commit();            
+        }
+        catch(Exception e) {
+            Exception edetail = new Exception(sb.toString(), e);
+            throw edetail;
         }
         t.setDeleted();
         return t;

@@ -146,9 +146,10 @@ public class SystemSaveHandler
 //                sp.editorEvent(Project.DELETE, n);
 //            }
         } catch (BrokenConnectionException bce) {
-            java.lang.System.err.println("TODO: Notify user that the diagram has a broken link and has not been saved: " + bce.getMessage());
+            JOptionPane.showMessageDialog(sge, "The diagram has a broken link and has not been saved", "Diagram incomplete", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(sge, "Failed to save. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in SystemSaveEditor", ex);
         }
     }
 
@@ -485,7 +486,8 @@ public class SystemSaveHandler
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(sge, "Error checking for duplicate names, send logs to support", "Error", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Error in system duplicate name check", e);
         }
         return false;
     }

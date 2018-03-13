@@ -25,6 +25,7 @@ import java.util.HashMap;
 import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
@@ -121,7 +122,8 @@ public class LinkAction
                 }
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                SmartProject.getProject().log("Failed to launch link editor", ex);
+
             }
         }
     }

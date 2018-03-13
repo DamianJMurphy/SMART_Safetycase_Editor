@@ -15,15 +15,13 @@ NOT FOR MARCH:
 
 Functional
 
-- BUGFIX: Something stopped process graphical editor being opened for Dev project "process 1"
-    after editor opened for process 2 and the issues log editor. And *possibly* for 
-    something in the hobbit demo project, too. Investigate.
 
 - TODO: Update notifications for process editor and generally from when a new
     instance of an object is created: SingleProcessEditorForm and Hazard at least,
     check the others that support direct creation of a new object instance
 
-- TODO: Error handling and reporting
+- TODO: Error handling and reporting (mostly done, needs finishing in packages
+    bowtie and below)
 
 - TODO: Reports
 

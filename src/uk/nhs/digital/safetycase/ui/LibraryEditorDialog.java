@@ -20,7 +20,6 @@ package uk.nhs.digital.safetycase.ui;
 import java.util.Iterator;
 import javax.swing.DefaultListModel;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 
 /**

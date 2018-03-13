@@ -25,6 +25,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 
 /**
@@ -61,7 +62,7 @@ public class ExternalEditorView
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to set ExternalEditorView default icon: " + title, e);
         }
     }
     

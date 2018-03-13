@@ -21,6 +21,7 @@ import com.mxgraph.examples.swing.editor.BasicGraphEditor;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Element;
@@ -46,10 +47,6 @@ public class ProcessSaveHandler
     @Override
     public void handle(BasicGraphEditor ge) throws Exception {
        try {
-           // TODO NEXT: Amend to handle "existing steps" from the editor, modelled on the 
-           // way that the bowtie editor does it (but without the connections - see the
-           // comment in ProcessEditor.setPersistableObject() about this).
-           
             ProcessGraphEditor pge = (ProcessGraphEditor)ge;
             MetaFactory mf = MetaFactory.getInstance();
             PersistableFactory<uk.nhs.digital.safetycase.data.Process> pf = mf.getFactory("Process");
@@ -70,7 +67,9 @@ public class ProcessSaveHandler
 //            System.err.println("TODO: Notify user that the diagram has a broken link and has not been saved: " + bce.getMessage());
 //       }
        catch (Exception ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(ge, "Failed to save Process. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in ProcessSaveHandler", ex);
+            
        }    
        
     }
@@ -136,7 +135,7 @@ public class ProcessSaveHandler
                     ps.setAttribute("GraphCellId", cellId);
                     ps.setAttribute("Name", n);
                     ps.setAttribute("ProcessID", processid);
-                    if (style == "") {
+                    if (style.trim().length() == 0) {
                         ps.setAttribute("Type", "Activity");
                     } else {
                         if (style.contentEquals("rhombus")) {

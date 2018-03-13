@@ -22,7 +22,9 @@ import java.util.HashMap;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.Relationship;
@@ -39,6 +41,7 @@ public class LinkEditor extends javax.swing.JPanel {
     private HashMap<String, ArrayList<Relationship>> relationships = null;
     private ArrayList<Relationship> tableMap = null;
 //    private final String[] targets = {"Hazard","Control","Effect","System","Function", "Role","Care Setting", "Process", "Proces step"};
+    @SuppressWarnings("MismatchedReadAndWriteOfArray")
     private final String[] dbtarget = {"Hazard","Control","Effect", "System","SystemFunction", "Role","Location","Process","ProcessStep"};
     private ArrayList<Persistable> targetInstances = null;
     private JDialog parent = null;
@@ -46,6 +49,7 @@ public class LinkEditor extends javax.swing.JPanel {
     private ArrayList<RelationshipSemantics> allowedRelationships = null;
     /**
      * Creates new form LinkEditor
+     * @param p
      */
     public LinkEditor(Persistable p) {
         initComponents();
@@ -86,7 +90,7 @@ public class LinkEditor extends javax.swing.JPanel {
             targetTypeComboBox.setModel(targetTypes);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to initialise LinkEditor", e);
         }
     }
 
@@ -345,7 +349,7 @@ public class LinkEditor extends javax.swing.JPanel {
             targetList.setModel(dlm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Link editor failed to get target type in combo box", e);
         }
     }//GEN-LAST:event_targetTypeComboBoxActionPerformed
 
@@ -389,7 +393,8 @@ public class LinkEditor extends javax.swing.JPanel {
                 targetList.setSelectedIndex(select);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to get link for editing. Send logs to support", "Edit failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in LinkEditor", e);
         }
     }//GEN-LAST:event_editButtonActionPerformed
 
@@ -406,7 +411,8 @@ public class LinkEditor extends javax.swing.JPanel {
             tableMap.remove(r);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to delete link. Send logs to support", "Delete failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to delete in LinkEditor", e);
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
@@ -447,7 +453,8 @@ public class LinkEditor extends javax.swing.JPanel {
                 ((DefaultTableModel)relationshipsTable.getModel()).addRow(row);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Failed to save Link. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+                SmartProject.getProject().log("Failed to save in LinkEditor", e);
             }
         }
         editedRelationship = null;

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 
 /**
  *
@@ -28,9 +29,10 @@ import java.util.Set;
  */
 public class MetaFactory {
 
+    private static Exception bootException = null;
+    
     private static final MetaFactory instance = new MetaFactory();
     
-    private static Exception bootException = null;
     
     private final HashMap<String,PersistableFactory> factories = new HashMap<>();
     private final HashMap<String,ValueSet> valueSets = new HashMap<>();
@@ -171,7 +173,8 @@ public class MetaFactory {
                     }
                 }
             }
-            catch (Exception e) {
+            catch (NumberFormatException e) {
+                SmartProject.getProject().log("Error getting children: " + attribute + " from " + type + " for object " + id, e);
                 // Requested parent id attribute doesn't exist or not an id (integer)
                 // type - we'll find this out the first time we try, so just bug out.
                 return null;
@@ -193,6 +196,8 @@ public class MetaFactory {
     public void initialise()
             throws Exception
     {
+        if (database == null)
+            throw new Exception("Database initialisation failed");
         database.loadAllowedRelationships();
         for (PersistableFactory p : factories.values()) {
             p.loadAll();
@@ -202,6 +207,8 @@ public class MetaFactory {
     public void initialise(int projectid)
             throws Exception
     {
+        if (database == null)
+            throw new Exception("Database initialisation failed");
         database.loadAllowedRelationships();
         for (PersistableFactory p : factories.values()) {
             p.loadAll(projectid);

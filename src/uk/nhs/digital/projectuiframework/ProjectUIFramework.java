@@ -65,8 +65,8 @@ public class ProjectUIFramework {
             p.setTreeModel(smart.getTreeModel(), smart.getName(), smart);
         }
         catch (Exception e) {
-            e.printStackTrace();
-            return;
+            System.err.println("Fatal error initialising: " + e.toString());
+            System.exit(1);
         }
         p.setVisible(true);
     }

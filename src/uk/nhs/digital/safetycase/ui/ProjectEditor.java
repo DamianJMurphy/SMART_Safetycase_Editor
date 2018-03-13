@@ -49,6 +49,7 @@ public class ProjectEditor
     private uk.nhs.digital.safetycase.data.Project project = null;
     /**
      * Creates new form ProjectEditor
+     * @param sp
      */
     public ProjectEditor(uk.nhs.digital.projectuiframework.Project sp) {
         initComponents();
@@ -196,7 +197,8 @@ public class ProjectEditor
                 return;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Duplicate detection failed. Send logs to support", "Warning", JOptionPane.INFORMATION_MESSAGE);
+            SmartProject.getProject().log("Failed to do duplicate detection in PorjectEditor", e);
         }
 
         project = new uk.nhs.digital.safetycase.data.Project();
@@ -209,7 +211,8 @@ public class ProjectEditor
             smartProject.editorEvent(Project.ADD, project);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to save Porject. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in ProjectEditor", e);
         }
         parent.dispose();
     }//GEN-LAST:event_createProjectButtonActionPerformed
@@ -223,7 +226,8 @@ public class ProjectEditor
                 return;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Duplicate detection failed. Send logs to support", "Warning", JOptionPane.INFORMATION_MESSAGE);
+            SmartProject.getProject().log("Failed to do duplicate detection in PorjectEditor existing save", e);
         }
 
         boolean created = false;
@@ -243,7 +247,8 @@ public class ProjectEditor
                 SmartProject.getProject().editorEvent(Project.UPDATE, project);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to save Porject. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in ProjectEditor", e);
         }
         makeProjectSummary();
     }//GEN-LAST:event_saveButtonActionPerformed
@@ -262,7 +267,8 @@ public class ProjectEditor
             SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
         catch(Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to delete Porject. Send logs to support", "Delete failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to delete in ProjectEditor", e);
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
@@ -476,7 +482,9 @@ public class ProjectEditor
             
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to make Project summary. Send logs to support", "Save failed", JOptionPane.INFORMATION_MESSAGE);
+            SmartProject.getProject().log("Failed to make Project summary", e);
+            projectSummaryTextPane.setText("Problem generating current project summary. Contact support if this persists.");
         }
     }
     

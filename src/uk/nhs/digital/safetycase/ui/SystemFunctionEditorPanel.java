@@ -17,11 +17,10 @@
  */
 package uk.nhs.digital.safetycase.ui;
 
-import uk.nhs.digital.safetycase.ui.processeditor.*;
-import java.awt.Container;
 import java.util.ArrayList;
-import java.util.Collection;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
@@ -79,7 +78,8 @@ public class SystemFunctionEditorPanel extends javax.swing.JPanel {
              }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to load function for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to set load object in FunctionEditor", e);            
         }
     }    
     
@@ -228,7 +228,8 @@ public class SystemFunctionEditorPanel extends javax.swing.JPanel {
             pfsf.put(sf);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to save Function for editing", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save object in SystemFunctionEditorPanel", e);
         }
         this.parent.dispose();
     }//GEN-LAST:event_okButtonActionPerformed

@@ -18,27 +18,22 @@
 package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
+import java.awt.HeadlessException;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.nio.file.Files;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.Project;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
-import uk.nhs.digital.safetycase.data.Database;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
@@ -98,7 +93,7 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
     private static final String QA_OCUMENT_APPROVAL = H1_START + "Quality Assurance and Document Approval " + H1_END;
     private static final String CONFIG_CONTROL = H1_START + "Configuration Control and Management " + H1_END;
 
-    private static String HTML = "<html>\n<head>\n<title> Project Report</title>\n</head>\n<body>\n __HTMLBODY__ \n</body>\n</html>";
+    private static final String HTML = "<html>\n<head>\n<title> Project Report</title>\n</head>\n<body>\n __HTMLBODY__ \n</body>\n</html>";
 
     private static String SYSTEM_REPORT = null;
     private static String HAZARD_REPORT = null;
@@ -106,6 +101,7 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
     
     /**
      * Creates new form ReportsEditor
+     * @throws java.lang.Exception
      */
     public ReportEditor() throws Exception {
         initComponents();
@@ -342,7 +338,7 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
         String data = HTML.replace("__HTMLBODY__", body.toString());
         DateFormat df = new SimpleDateFormat("yyyyMMdd_HH_mm_ss");
         String dateTime = df.format(new Date(System.currentTimeMillis()));
-        String name = proj.getTitle().toString().trim()+"_"+dateTime + ".html";
+        String name = proj.getTitle().trim()+"_"+dateTime + ".html";
         String fileName = FILEPATH+"/"+ name;
         if(new File(FILEPATH).exists()) {
             FileWriter fWriter = null;
@@ -354,9 +350,9 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
                 writer.close();
                 fWriter.close();
                 JOptionPane.showMessageDialog(null, fileName, "Report Created", JOptionPane.INFORMATION_MESSAGE);
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, e.getMessage().toString(), "Error Occured", JOptionPane.ERROR_MESSAGE);
+            } catch (HeadlessException | IOException e) {
+                SmartProject.getProject().log("Error generating report", e);
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error Occured", JOptionPane.ERROR_MESSAGE);
             }
         }       
     }//GEN-LAST:event_exportButtonActionPerformed
@@ -381,7 +377,8 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
             newButtonActionPerformed(null);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to delete report. Send logs to support", "Delete failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to delete in ReportEditor", e);
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
@@ -407,7 +404,8 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
             MetaFactory.getInstance().getFactory(report.getDatabaseObjectName()).put(report);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to save report. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in reportEditor", e);
         }
         if (newreport)
             editorComponent.notifyEditorEvent(uk.nhs.digital.projectuiframework.Project.ADD, report);
@@ -461,7 +459,8 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
 
                 systemSB.append(GenerateFunctionReport(s.getId()));
             } catch (Exception ex) {
-                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Failed to generate system report. Send logs to support", "Generation failed", JOptionPane.ERROR_MESSAGE);
+                SmartProject.getProject().log("Failed to generate in ReportEditor", ex);
             }
         }
         return systemSB.toString();
@@ -475,7 +474,8 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
             functions = MetaFactory.getInstance().getChildren("SystemFunction", "SystemID", sysID);
         }
         catch (Exception e) {
-            e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Failed to generate function report. Send logs to support", "Generation failed", JOptionPane.ERROR_MESSAGE);
+                SmartProject.getProject().log("Failed to generate in ReportEditor", e);
             return "";
         }
         if (functions != null) {
@@ -534,7 +534,8 @@ public class ReportEditor extends javax.swing.JPanel implements uk.nhs.digital.s
             qaTextArea.setText(report.getAttributeValue("QAADdetails"));
             safetyTextArea.setText(report.getAttributeValue("SummarySafetySystemDetails"));
         } catch (Exception ex) {
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to load reports for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to set persistable object in ReportEditor", ex);
         }
     }
 
