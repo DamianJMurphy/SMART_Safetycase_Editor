@@ -16,8 +16,6 @@
  *  
  */
 package uk.nhs.digital.safetycase.data;
-import java.util.HashMap;
-import java.util.ArrayList;
 /**
  *
  * @author damian
@@ -29,6 +27,7 @@ public class RelationshipSemantics {
     private String targetType = null;
     private String summary = null;
     private String description = null;
+    private String displayName = null;
     
     static final String sqlAll = "select * from RelationshipSemantics";
     static final String sqlActive = "select * from RelationshipSemantics where DeprecatedDate is null";
@@ -36,7 +35,17 @@ public class RelationshipSemantics {
     RelationshipSemantics(int i) { semanticsId = i; }
     
     void setSourceType(String s) { sourceType = s; }
-    void setTargetType(String t) { targetType = t; }
+    void setTargetType(String t) { 
+        targetType = t; 
+        try {
+            String cname = "uk.nhs.digital.safetycase.data." + targetType;
+            Persistable p = (Persistable)Class.forName(cname).newInstance();
+            displayName = p.getDisplayName();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     void setSummary(String s) { summary = s; }
     void setDescription(String d) { description = d; }
     
@@ -44,4 +53,5 @@ public class RelationshipSemantics {
     public String getTargetType() { return targetType; }
     public String getSummary() { return summary; }
     public String getDescription() { return description; }
+    public String getDisplayName() { return displayName; }
 }

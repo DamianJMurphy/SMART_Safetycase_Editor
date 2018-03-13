@@ -15,6 +15,10 @@ NOT FOR MARCH:
 
 Functional
 
+- BUGFIX: Something stopped process graphical editor being opened for Dev project "process 1"
+    after editor opened for process 2 and the issues log editor. And *possibly* for 
+    something in the hobbit demo project, too. Investigate.
+
 - TODO: Update notifications for process editor and generally from when a new
     instance of an object is created: SingleProcessEditorForm and Hazard at least,
     check the others that support direct creation of a new object instance
@@ -22,10 +26,6 @@ Functional
 - TODO: Error handling and reporting
 
 - TODO: Reports
-
-- TODO NEXT: Link editor link type list - Hannah to provide RelationshipSemantics list
-    - TODO: Make sure the RelationshipSemantics is implemented and works for the 
-            Link editor.
 
     
 

@@ -100,6 +100,10 @@ public class Database {
         return list;
     }
     
+    public ArrayList<RelationshipSemantics> getAllowedRelationships(String sourcetype) {
+        return allowedRelationships.get(sourcetype);
+    }
+    
     public void loadAllowedRelationships()
             throws Exception
     {

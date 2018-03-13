@@ -19,12 +19,14 @@ package uk.nhs.digital.safetycase.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.Relationship;
+import uk.nhs.digital.safetycase.data.RelationshipSemantics;
 
 /**
  *
@@ -36,18 +38,19 @@ public class LinkEditor extends javax.swing.JPanel {
     private final String[] columns = {"Type", "Name", "Comment"};
     private HashMap<String, ArrayList<Relationship>> relationships = null;
     private ArrayList<Relationship> tableMap = null;
-    private final String[] targets = {"Hazard","Control","Effect","System","Function", "Role","Care Setting", "Process", "Proces step"};
+//    private final String[] targets = {"Hazard","Control","Effect","System","Function", "Role","Care Setting", "Process", "Proces step"};
     private final String[] dbtarget = {"Hazard","Control","Effect", "System","SystemFunction", "Role","Location","Process","ProcessStep"};
     private ArrayList<Persistable> targetInstances = null;
     private JDialog parent = null;
     private Relationship editedRelationship = null;
+    private ArrayList<RelationshipSemantics> allowedRelationships = null;
     /**
      * Creates new form LinkEditor
      */
     public LinkEditor(Persistable p) {
         initComponents();
         focus = p;
-        StringBuilder sb = new StringBuilder(p.getDatabaseObjectName());
+        StringBuilder sb = new StringBuilder(p.getDisplayName());
         sb.append(": ");
         sb.append(p.getTitle());
         linkFromTextField.setText(sb.toString());
@@ -72,6 +75,19 @@ public class LinkEditor extends javax.swing.JPanel {
             }            
         }
         relationshipsTable.setModel(dtm);
+        DefaultComboBoxModel targetTypes = new DefaultComboBoxModel();
+        try {
+            allowedRelationships = MetaFactory.getInstance().getDatabase().getAllowedRelationships(p.getDatabaseObjectName());
+            if (allowedRelationships != null) {
+                for (RelationshipSemantics rs : allowedRelationships) {
+                    targetTypes.addElement(rs.getDisplayName());
+                }
+            }
+            targetTypeComboBox.setModel(targetTypes);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public LinkEditor setParent(JDialog p) {
@@ -303,14 +319,11 @@ public class LinkEditor extends javax.swing.JPanel {
 
     private void targetTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_targetTypeComboBoxActionPerformed
  
-        String selected = (String)targetTypeComboBox.getSelectedItem();
-        String dbtype = null;
-        for (int i = 0; i < targets.length; i++) {
-            if (selected.contentEquals(targets[i])) {
-                dbtype = dbtarget[i];
-                break;
-            }
-        }
+        int selected = targetTypeComboBox.getSelectedIndex();
+        if (selected == -1)
+            return;
+        
+        String dbtype = allowedRelationships.get(selected).getTargetType();
         try {
             int id = -1;
             if (focus.getDatabaseObjectName().contentEquals("ProcessStep")) {
