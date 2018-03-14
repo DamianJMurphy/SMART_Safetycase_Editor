@@ -858,24 +858,31 @@ public class SmartProject
     @Override
     public boolean checkShowPopup(TreePath t) {
         TreePath path = t;
-        if (t.getPathCount() < 5)
+        if (t.getPathCount() < 5) {
             return false;
+        }
         try {
-            do {
-                Object o = ((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
-                if (o instanceof java.lang.String) {
-                    if (((String) o).contains("Views"))
-                        return false;
-                    if (((String) o).contains("Issues"))
-                        return false;
+            Object o = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+            if (o instanceof java.lang.String) {
+                if (((String) o).contains("Systems")) {
+                    return true;
                 }
-                path = path.getParentPath();
-            } while(path != null);
+                if (((String) o).contains("Care Settings")) {
+                    return true;
+                }
+                if (((String) o).contains("Role")) {
+                    return true;
+                }
+                if (((String) o).contains("Care Process")) {
+                    return true;
+                }
+                if (((String) o).contains("Hazard")) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
         }
-        catch (Exception e) {
-            return false;
-        }
-       return true;
+        return false;
     }
     
     @Override

@@ -15,8 +15,6 @@ NOT FOR MARCH:
 
 Functional
 
-- TODO NEXT: Better control over "New object" popup in project tree.
-
 - TODO: Update notifications for process editor and generally from when a new
     instance of an object is created: SingleProcessEditorForm and Hazard at least,
     check the others that support direct creation of a new object instance
