@@ -17,7 +17,6 @@
  */
 package uk.nhs.digital.safetycase.ui.ekit;
 
-import com.hexidec.ekit.EkitCore;
 import com.hexidec.ekit.EkitCoreSpell;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -36,6 +35,9 @@ public class EkitDialog
     
     /**
      * Creates new form EkitDialog
+     * @param parent
+     * @param c
+     * @param p
      */
     public EkitDialog(java.awt.Frame parent, String c, HtmlEditorPanel p) {
         super(parent, false);

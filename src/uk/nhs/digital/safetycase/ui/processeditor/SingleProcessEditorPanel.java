@@ -99,29 +99,31 @@ public class SingleProcessEditorPanel
     void populateLinks() 
             throws Exception
     {
-        if (processid == -1)
+        if (processid == -1) {
             return;
-        if (process == null)
-            process = (Process)MetaFactory.getInstance().getFactory("Process").get(processid);
-            HashMap<String,ArrayList<Relationship>> rels = process.getRelationshipsForLoad();
-            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            if (rels != null) {
-                for (String t : rels.keySet()) {
-                    ArrayList<Relationship> a = rels.get(t);
-                    for (Relationship r : a) {
-                        String m = r.getManagementClass();
-                        if ((m == null) || (!m.contentEquals("Diagram"))) {                    
-                            String[] row = new String[linkcolumns.length];
-                            Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()); 
-                            row[0] = tgt.getDisplayName();
-                            row[1] = tgt.getAttributeValue("Name");
-                            row[2] = r.getComment();
-                            dtm.addRow(row);
-                        }
+        }
+        if (process == null) {
+            process = (Process) MetaFactory.getInstance().getFactory("Process").get(processid);
+        }
+        HashMap<String, ArrayList<Relationship>> rels = process.getRelationshipsForLoad();
+        DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+        if (rels != null) {
+            for (String t : rels.keySet()) {
+                ArrayList<Relationship> a = rels.get(t);
+                for (Relationship r : a) {
+                    String m = r.getManagementClass();
+                    if ((m == null) || (!m.contentEquals("Diagram"))) {
+                        String[] row = new String[linkcolumns.length];
+                        Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                        row[0] = tgt.getDisplayName();
+                        row[1] = tgt.getAttributeValue("Name");
+                        row[2] = r.getComment();
+                        dtm.addRow(row);
                     }
                 }
             }
-            linksTable.setModel(dtm);        
+        }
+        linksTable.setModel(dtm);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -318,7 +320,8 @@ public class SingleProcessEditorPanel
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to save Process. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in SingleProcessEditor", e);
         }
         
     }//GEN-LAST:event_saveButtonActionPerformed
@@ -336,7 +339,8 @@ public class SingleProcessEditorPanel
             SmartProject.getProject().editorEvent(Project.DELETE, process);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to delete Process. Send logs to support", "Delete failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to delete in SingleProcessEditor", e);
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
@@ -363,7 +367,8 @@ public class SingleProcessEditorPanel
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to load existing links for Process. Send logs to support", "Display failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load existing links in SingleProcessEditor", e);
         }
 
     }//GEN-LAST:event_linksEditorButtonActionPerformed
@@ -405,7 +410,8 @@ public class SingleProcessEditorPanel
             tp.setTabComponentAt(tp.getSelectedIndex(), new UndockTabComponent(tp, SmartProject.getProject().getIcon("Process")));              
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to build details for graphical Process editor. Send logs to support", "Warning", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to build details for graphical Process editor in SingleProcessEditor", e);
         }
     }//GEN-LAST:event_processEditorButtonActionPerformed
 

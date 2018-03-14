@@ -456,7 +456,7 @@ public class HazardTypeView
             return false;
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to process notification in HazardTypeView", e);
             return true;
         }
     }

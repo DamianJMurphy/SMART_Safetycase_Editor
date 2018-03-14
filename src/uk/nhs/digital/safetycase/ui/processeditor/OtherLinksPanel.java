@@ -18,7 +18,9 @@
 package uk.nhs.digital.safetycase.ui.processeditor;
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.ProcessStep;
@@ -62,7 +64,8 @@ public class OtherLinksPanel extends javax.swing.JPanel {
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Cannot make details view. Send logs to support", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                SmartProject.getProject().log("Failed to open other links panel", e);
         }
     }
     

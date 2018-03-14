@@ -142,6 +142,7 @@ public class BowtieGraphEditor
 		// is clicked in the shape palette
 		bowtiePalette.addListener(mxEvent.SELECT, new mxIEventListener()
 		{
+                        @Override
 			public void invoke(Object sender, mxEventObject evt)
 			{
 				Object tmp = evt.getProperty("transferable");

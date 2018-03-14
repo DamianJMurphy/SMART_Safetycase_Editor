@@ -19,6 +19,8 @@ package uk.nhs.digital.safetycase.ui.processeditor;
 
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.ProcessStep;
@@ -169,7 +171,8 @@ public class ProcessEditorStepList extends javax.swing.JPanel {
             MetaFactory.getInstance().getFactory("ProcessStep").put(ps);
         }
         catch (Exception e) {
-            e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Failed to save description. Send logs to support", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                SmartProject.getProject().log("Failed to open process step details view", e);
         }
     }//GEN-LAST:event_okButtonActionPerformed
 

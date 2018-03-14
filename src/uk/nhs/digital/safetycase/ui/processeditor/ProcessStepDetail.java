@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
@@ -49,6 +48,7 @@ public class ProcessStepDetail
     private ArrayList<Hazard> hazardList = new ArrayList<>();
     /**
      * Creates new form ProcessStepDetail
+     * @param ps
      */
     public ProcessStepDetail(ProcessStep ps) {
         initComponents();
@@ -90,7 +90,8 @@ public class ProcessStepDetail
             
         }
         catch (Exception e) {
-            e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Cannot make details view. Send logs to support", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                SmartProject.getProject().log("Failed to populate process step details view", e);
         }
     }
     

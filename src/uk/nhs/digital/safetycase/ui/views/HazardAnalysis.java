@@ -550,7 +550,7 @@ public class HazardAnalysis
             return false;
         }
         catch (Exception e) {
-            e.printStackTrace();
+            SmartProject.getProject().log("Failed to process notification in HazardAnalysis", e);
             return true;
         }
     }

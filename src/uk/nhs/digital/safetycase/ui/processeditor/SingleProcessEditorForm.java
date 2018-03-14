@@ -20,6 +20,7 @@ package uk.nhs.digital.safetycase.ui.processeditor;
 import java.awt.Component;
 import java.util.ArrayList;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
@@ -133,7 +134,8 @@ public class SingleProcessEditorForm
             stepList.populateList(ps);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to load Care process for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to set persistable object in SingleProcessEditorForm", e);
         }
     }
 

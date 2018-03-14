@@ -91,13 +91,15 @@ public class SystemEditorDetails extends javax.swing.JPanel
                 populateSubsystemList();
             }
             nameTextField.setText(system.getAttributeValue("Name"));
+            versionTextField.setText(system.getAttributeValue("Version"));
             descriptionTextArea.setText(system.getAttributeValue("Description"));
             mnemonicTextField.setText(system.getAttributeValue("Mnemonic"));
             parentSystemTextField.setText(psname);
             // populate function table for this particular system
             populateFunctionTable(system);
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load System for display. Send logs to support", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load in SystemEditorDetails", e);
         }
     }
 
@@ -130,6 +132,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         subsystemsList = new javax.swing.JList<>();
+        versionTextField = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
 
         editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -225,9 +229,11 @@ public class SystemEditorDetails extends javax.swing.JPanel
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
+
+        jLabel5.setText("Version");
 
         javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
         editorPanel.setLayout(editorPanelLayout);
@@ -241,25 +247,28 @@ public class SystemEditorDetails extends javax.swing.JPanel
                     .addGroup(editorPanelLayout.createSequentialGroup()
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel3))
-                        .addGap(12, 12, 12)
+                            .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel5)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(parentSystemTextField, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(nameTextField)
-                            .addComponent(parentSystemTextField)))
-                    .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(35, 35, 35)
-                        .addComponent(mnemonicTextField))
+                            .addComponent(versionTextField)))
                     .addGroup(editorPanelLayout.createSequentialGroup()
                         .addComponent(systemEditorButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(discardButton))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(editorPanelLayout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(editorPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(44, 44, 44)
+                        .addComponent(mnemonicTextField)))
                 .addContainerGap())
         );
         editorPanelLayout.setVerticalGroup(
@@ -269,19 +278,23 @@ public class SystemEditorDetails extends javax.swing.JPanel
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(parentSystemTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addGap(18, 18, 18)
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(mnemonicTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(versionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(parentSystemTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(mnemonicTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
-                .addGap(11, 11, 11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(discardButton)
                     .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -327,7 +340,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
             SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
         catch(Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to delete System. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to delete in SystemEditorDetails", e);
         }
 
 
@@ -358,6 +372,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
             created = true;
         }
         system.setAttribute("Description", descriptionTextArea.getText());
+        system.setAttribute("Version", versionTextField.getText());
         system.setAttribute("Mnemonic", mnemonicTextField.getText());
         system.setAttribute("ProjectID", SmartProject.getProject().getCurrentProjectID());
         try {
@@ -371,7 +386,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
                     SmartProject.getProject().editorEvent(Project.UPDATE, system);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to save System. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in SystemEditorDetails", e);            
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -389,7 +405,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
             populateFunctionTable(system);
             singleFunctionEditor.dispose();
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load Function. Send logs to support", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load function in SystemEditorDetails", e);
         }
     }//GEN-LAST:event_functionEditActionPerformed
 
@@ -486,7 +503,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
             return systemElements;
         }
         catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load System/Function diagram. Send logs to support", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load System/Function diagram in system editor details", e);
         }
         return null;
     }
@@ -570,7 +588,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load function list. Send logs to support", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load function list in SystemEditorDetails", e);
         }
         this.functionsTable.setModel(dtm);
 //        HideTableColumnsMethod();
@@ -617,7 +636,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load child system/function list. Send logs to support", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load child function list in SystemEditorDetails", e);
         }
         return lp;
     }
@@ -631,6 +651,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -642,6 +663,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
     private javax.swing.JButton saveButton;
     private javax.swing.JList<String> subsystemsList;
     private javax.swing.JButton systemEditorButton;
+    private javax.swing.JTextField versionTextField;
     // End of variables declaration//GEN-END:variables
 
      SystemEditorDetails setParent(JDialog p) {
@@ -668,6 +690,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
             nameTextField.setText(system.getAttributeValue("Name"));
             descriptionTextArea.setText(system.getAttributeValue("Description"));
             mnemonicTextField.setText(system.getAttributeValue("Mnemonic"));
+            versionTextField.setText(system.getAttributeValue("Version"));
             parentSystemTextField.setText(psname);
             // populate function table for this particular system
             populateFunctionTable(system);
@@ -677,7 +700,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
 //            if ((xml == null) || (xml.trim().length() == 0))
 //                systemEditorButton.setEnabled(false);
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load System for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to set persistable object in SystemEditorDetails", e);
         }
 //         HideTableColumnsMethod();
     }

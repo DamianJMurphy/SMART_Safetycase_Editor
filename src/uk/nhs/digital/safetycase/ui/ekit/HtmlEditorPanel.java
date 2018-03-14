@@ -17,9 +17,7 @@
  */
 package uk.nhs.digital.safetycase.ui.ekit;
 
-import com.hexidec.ekit.Ekit;
 import com.hexidec.ekit.EkitCore;
-import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -50,10 +48,8 @@ public class HtmlEditorPanel
         viewer.getTextPane().setEditable(false);
         viewer.getTextPane().setHighlighter(null);
         editButton.setText("Edit");
-        editButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editButtonActionPerformed(evt);
-            }
+        editButton.addActionListener((java.awt.event.ActionEvent evt) -> {
+            editButtonActionPerformed(evt);
         });
         GridBagConstraints gbc = new GridBagConstraints();
         setLayout(new GridBagLayout());

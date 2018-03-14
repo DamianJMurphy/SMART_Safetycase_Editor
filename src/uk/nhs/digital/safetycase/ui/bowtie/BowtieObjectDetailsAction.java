@@ -23,7 +23,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
@@ -158,7 +157,8 @@ public class BowtieObjectDetailsAction
             }
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+                JOptionPane.showMessageDialog(container, "Cannot make details view. Send logs to support", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                SmartProject.getProject().log("Failed to open bowtie object details view", ex);
         }
     }
     
