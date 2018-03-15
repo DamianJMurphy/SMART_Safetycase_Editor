@@ -138,7 +138,9 @@ public class ProcessStepDetail
         add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 66, -1, -1));
 
         descriptionTextArea.setColumns(20);
+        descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
         descriptionTextArea.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 descriptionTextAreaFocusLost(evt);

@@ -54,6 +54,7 @@ public class ControlEditor extends javax.swing.JPanel
         DefaultTableModel linkModel = new DefaultTableModel(linkcolumns, 0);
         SmartProject.getProject().addNotificationSubscriber(this);
         linksTable.setModel(linkModel);
+        linksTable.setDefaultEditor(Object.class, null);
         try {
             ValueSet controlType = MetaFactory.getInstance().getValueSet("ControlType");
             Iterator<String> ctypes = controlType.iterator();
@@ -200,6 +201,7 @@ public class ControlEditor extends javax.swing.JPanel
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
         jScrollPane4.setViewportView(descriptionTextArea);
 
         saveButton.setText("Save");
@@ -214,6 +216,7 @@ public class ControlEditor extends javax.swing.JPanel
         clinicalJustificationTextArea.setColumns(20);
         clinicalJustificationTextArea.setLineWrap(true);
         clinicalJustificationTextArea.setRows(5);
+        clinicalJustificationTextArea.setWrapStyleWord(true);
         jScrollPane5.setViewportView(clinicalJustificationTextArea);
 
         jLabel7.setText("Evidence");

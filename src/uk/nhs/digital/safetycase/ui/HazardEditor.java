@@ -110,6 +110,7 @@ public class HazardEditor extends javax.swing.JPanel
     
     private void init() {
         initComponents();
+        linksTable.setDefaultEditor(Object.class, null);
         riskMatrixImageLabel.setIcon(riskMatrixImageIcon);
         initialSeveritySpinner.setModel(initialSeveritySpinnerModel);
         initialLikelihoodSpinner.setModel(initialLikelihoodSpinnerModel);

@@ -137,6 +137,7 @@ public class ProjectEditor
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(descriptionTextArea);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(113, 123, 690, 103));
@@ -176,7 +177,6 @@ public class ProjectEditor
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Project summary"));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        projectSummaryTextPane.setEditable(false);
         jScrollPane2.setViewportView(projectSummaryTextPane);
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 790, 240));

@@ -86,6 +86,7 @@ public class ProcessEditorStepList extends javax.swing.JPanel {
         jLabel3.setText("Description");
 
         descriptionTextArea.setColumns(20);
+        descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setWrapStyleWord(true);
         jScrollPane2.setViewportView(descriptionTextArea);

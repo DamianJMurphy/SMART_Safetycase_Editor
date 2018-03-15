@@ -49,6 +49,7 @@ public class RoleEditor extends javax.swing.JPanel
      */
     public RoleEditor() {
         initComponents();
+        linksTable.setDefaultEditor(Object.class, null);
         DefaultTableModel dtm = new DefaultTableModel(LINKCOLUMNS, 0);
         linksTable.setModel(dtm);
         SmartProject.getProject().addNotificationSubscriber(this);
@@ -101,6 +102,7 @@ public class RoleEditor extends javax.swing.JPanel
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
         jScrollPane2.setViewportView(descriptionTextArea);
 
         saveButton.setText("Save");

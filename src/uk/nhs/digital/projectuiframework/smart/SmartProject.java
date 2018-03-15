@@ -675,10 +675,10 @@ public class SmartProject
         DefaultMutableTreeNode projectNode = null;
         while (nodes.hasMoreElements()) {
             DefaultMutableTreeNode d = (DefaultMutableTreeNode)nodes.nextElement();
-            uk.nhs.digital.safetycase.data.Project project = null;
+            uk.nhs.digital.safetycase.data.Project proj = null;
             try {
-                project = (uk.nhs.digital.safetycase.data.Project)d.getUserObject();
-                if (project.getId() == (Integer.parseInt(p.getAttributeValue("ProjectID")))) {
+                proj = (uk.nhs.digital.safetycase.data.Project)d.getUserObject();
+                if (proj.getId() == (Integer.parseInt(p.getAttributeValue("ProjectID")))) {
                     projectNode = d;
                     break;
                 }

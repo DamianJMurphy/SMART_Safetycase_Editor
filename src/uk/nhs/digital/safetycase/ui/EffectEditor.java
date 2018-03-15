@@ -169,7 +169,9 @@ public class EffectEditor extends javax.swing.JPanel
         conditionsComboBox.setEditable(true);
 
         descriptionTextArea.setColumns(20);
+        descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
         jScrollPane3.setViewportView(descriptionTextArea);
 
         saveButton.setText("Save");

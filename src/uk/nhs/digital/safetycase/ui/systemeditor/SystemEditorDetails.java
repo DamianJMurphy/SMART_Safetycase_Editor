@@ -66,6 +66,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
      */
      public SystemEditorDetails() {
         initComponents();
+        functionsTable.setDefaultEditor(Object.class, null);
      }
     @Override
     public void unsubscribe() {
@@ -74,6 +75,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
     
     public SystemEditorDetails(Persistable p) {
         initComponents();
+        functionsTable.setDefaultEditor(Object.class, null);
         DefaultTableModel dsftm = new DefaultTableModel(functioncolumns, 0);
         SmartProject.getProject().addNotificationSubscriber(this);
         String psname= "";
@@ -146,6 +148,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
         jScrollPane2.setViewportView(descriptionTextArea);
 
         linksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Functions"));

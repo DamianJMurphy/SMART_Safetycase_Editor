@@ -190,7 +190,9 @@ public class IssuesLogEditor
         jLabel3.setText("Description");
 
         descriptionTextArea.setColumns(20);
+        descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
         jScrollPane4.setViewportView(descriptionTextArea);
 
         jLabel4.setText("Resolution type");
@@ -200,7 +202,9 @@ public class IssuesLogEditor
         jLabel5.setText("Resolution");
 
         resolutionTextArea.setColumns(20);
+        resolutionTextArea.setLineWrap(true);
         resolutionTextArea.setRows(5);
+        resolutionTextArea.setWrapStyleWord(true);
         jScrollPane5.setViewportView(resolutionTextArea);
 
         jLabel6.setText("Type");

@@ -50,6 +50,7 @@ public class CauseEditor extends javax.swing.JPanel
      */
     public CauseEditor() {
         initComponents();
+        linksTable.setDefaultEditor(Object.class, null);
         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
         SmartProject.getProject().addNotificationSubscriber(this);
         linksTable.setModel(dtm);
@@ -116,6 +117,7 @@ public class CauseEditor extends javax.swing.JPanel
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
         jScrollPane2.setViewportView(descriptionTextArea);
 
         linksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Links"));

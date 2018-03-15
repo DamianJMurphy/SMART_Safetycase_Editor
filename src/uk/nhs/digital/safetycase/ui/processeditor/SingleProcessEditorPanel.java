@@ -60,6 +60,7 @@ public class SingleProcessEditorPanel
      */
     public SingleProcessEditorPanel() {
         initComponents();
+        linksTable.setDefaultEditor(Object.class, null);
     }
     
     void setProcessId(int i) 
@@ -158,7 +159,9 @@ public class SingleProcessEditorPanel
         jLabel4.setText("Description");
 
         descriptionTextArea.setColumns(20);
+        descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(descriptionTextArea);
 
         deleteButton.setText("Delete");
