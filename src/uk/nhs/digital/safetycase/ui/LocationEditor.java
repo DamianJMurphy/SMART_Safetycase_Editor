@@ -372,6 +372,7 @@ public class LocationEditor extends javax.swing.JPanel
                     // notifications list
                     return true;
                 }
+                SmartProject.getProject().getProjectWindow().setViewTitle(this, "Care setting:" + c.getTitle());
                 setPersistableObject(c);
                 if (evtype == Project.SAVE) {
                     saveButtonActionPerformed(null);

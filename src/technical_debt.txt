@@ -15,11 +15,10 @@ NOT FOR MARCH:
 
 Functional
 
-- TODO: Update notifications for process editor and generally from when a new
-    instance of an object is created: SingleProcessEditorForm and Hazard at least,
-    check the others that support direct creation of a new object instance
+- BUGFIXES: Tree updates on save-hazard (need to check conditions)
 
-
+- TODO: Seem to be missing relationship semantics for Hazard/Cause/Control/Effect
+    (for setting manual relationships to other objects), also for Role (ditto).
 
 - TODO: Reports
 

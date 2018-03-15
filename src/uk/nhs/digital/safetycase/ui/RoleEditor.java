@@ -385,6 +385,7 @@ public class RoleEditor extends javax.swing.JPanel
                     // notifications list
                     return true;
                 }
+                SmartProject.getProject().getProjectWindow().setViewTitle(this, "Role:" + c.getTitle());
                 setPersistableObject(c);
                 if (evtype == Project.SAVE) {
                     saveButtonActionPerformed(null);

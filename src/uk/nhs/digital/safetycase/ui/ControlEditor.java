@@ -530,6 +530,7 @@ public class ControlEditor extends javax.swing.JPanel
                     // notifications list
                     return true;
                 }
+                SmartProject.getProject().getProjectWindow().setViewTitle(this, "Control:" + c.getTitle());
                 setPersistableObject(c);
                 if (evtype == Project.SAVE) {
                     saveButtonActionPerformed(null);

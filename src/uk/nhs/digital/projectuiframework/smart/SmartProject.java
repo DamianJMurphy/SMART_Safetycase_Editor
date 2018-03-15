@@ -829,8 +829,13 @@ public class SmartProject
     @Override
     public void saveAll() 
     {
-        for (DataNotificationSubscriber d : notificationSubscribers) {
-            d.notification(SAVE, null);
+        try {
+            for (DataNotificationSubscriber d : notificationSubscribers) {
+                d.notification(SAVE, null);
+            }
+        }
+        catch (Exception e) {
+            log("Exception caught processing notifications in SaveAll from main menu", e);
         }
     }
     

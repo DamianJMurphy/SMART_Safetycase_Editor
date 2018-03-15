@@ -897,6 +897,7 @@ public class HazardEditor extends javax.swing.JPanel
                     // notifications list
                     return true;
                 }
+                SmartProject.getProject().getProjectWindow().setViewTitle(this, "Hazard:" + c.getTitle());
                 setPersistableObject(c);
                 if (evtype == Project.SAVE) {
                     saveButtonActionPerformed(null);

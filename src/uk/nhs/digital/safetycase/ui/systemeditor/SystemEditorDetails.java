@@ -723,13 +723,18 @@ public class SystemEditorDetails extends javax.swing.JPanel
     //</editor-fold>
 
     @Override
+    @SuppressWarnings("null")
     public boolean notification(int evtype, Object o) {
         
         if (evtype == Project.SAVE) {
             saveButtonActionPerformed(null);
             return false;
         }
-        
+        uk.nhs.digital.safetycase.data.System c = null;
+        if (o instanceof uk.nhs.digital.safetycase.data.System)
+            c = (uk.nhs.digital.safetycase.data.System)o;
+        nameTextField.setText(c.getAttributeValue("Name"));
+        SmartProject.getProject().getProjectWindow().setViewTitle(this, "System:" + c.getTitle());
         return true;
     }
     

@@ -423,6 +423,7 @@ public class CauseEditor extends javax.swing.JPanel
                     // notifications list
                     return true;
                 }
+                SmartProject.getProject().getProjectWindow().setViewTitle(this, "Cause:" + c.getTitle());
                 setPersistableObject(c);
                 if (evtype == Project.SAVE) {
                     saveButtonActionPerformed(null);
