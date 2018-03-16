@@ -39,7 +39,7 @@ import uk.nhs.digital.safetycase.data.Role;
 public class RoleEditor extends javax.swing.JPanel
         implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
-    private static final String[] LINKCOLUMNS = {"Type", "Name", "Comment"};
+    private final String[] linkcolumns = {"Type", "Name", "Comment"};
     private Role role = null;
     private EditorComponent editorComponent = null;
     private int newObjectProjectId = -1;
@@ -49,8 +49,9 @@ public class RoleEditor extends javax.swing.JPanel
      */
     public RoleEditor() {
         initComponents();
+        DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
         linksTable.setDefaultEditor(Object.class, null);
-        DefaultTableModel dtm = new DefaultTableModel(LINKCOLUMNS, 0);
+        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
         linksTable.setModel(dtm);
         SmartProject.getProject().addNotificationSubscriber(this);
     }
@@ -315,7 +316,7 @@ public class RoleEditor extends javax.swing.JPanel
             descriptionTextArea.setText(role.getAttributeValue("Description"));
             nameTextField.setText(role.getAttributeValue("Name"));
             categoryTextField.setText(role.getAttributeValue("Category"));
-            DefaultTableModel dtm = new DefaultTableModel(LINKCOLUMNS, 0);
+            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             HashMap<String,ArrayList<Relationship>> rels = role.getRelationshipsForLoad();
             if (rels != null) {
                 for (String t : rels.keySet()) {
@@ -323,10 +324,9 @@ public class RoleEditor extends javax.swing.JPanel
                     if (a == null)
                         continue;
                     for (Relationship r : a) {
-                        String[] row = new String[LINKCOLUMNS.length];
-                        row[0] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getDisplayName();
-                        row[1] = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()).getAttributeValue("Name");
-                        row[2] = r.getComment();
+                        Object[] row = new Object[linkcolumns.length];
+                        for (int i = 0; i < linkcolumns.length; i++)
+                            row[i] = r;
                         dtm.addRow(row);
                     }
                 }

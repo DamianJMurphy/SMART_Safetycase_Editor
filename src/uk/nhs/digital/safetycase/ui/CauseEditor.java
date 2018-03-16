@@ -51,6 +51,7 @@ public class CauseEditor extends javax.swing.JPanel
     public CauseEditor() {
         initComponents();
         linksTable.setDefaultEditor(Object.class, null);
+        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
         SmartProject.getProject().addNotificationSubscriber(this);
         linksTable.setModel(dtm);
@@ -246,11 +247,9 @@ public class CauseEditor extends javax.swing.JPanel
                 for (Relationship r : a) {
                     String m = r.getManagementClass();
                     if ((m == null) || (!m.contentEquals("Diagram"))) {                    
-                        Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                        String[] row = new String[linkcolumns.length];
-                        row[0] = tgt.getDisplayName();
-                        row[1] = tgt.getAttributeValue("Name");
-                        row[2] = r.getComment();
+                        Object[] row = new Object[linkcolumns.length];
+                        for (int i = 0; i < linkcolumns.length; i++)
+                            row[i] = r;
                         dtm.addRow(row);
                     }
                 }
@@ -374,11 +373,9 @@ public class CauseEditor extends javax.swing.JPanel
                 for (Relationship r : a) {
                     String m = r.getManagementClass();
                     if ((m == null) || (!m.contentEquals("Diagram"))) {    
-                        Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                        String[] row = new String[linkcolumns.length];
-                        row[0] = tgt.getDisplayName();
-                        row[1] = tgt.getAttributeValue("Name");
-                        row[2] = r.getComment();
+                        Object[] row = new Object[linkcolumns.length];
+                        for (int i = 0; i < linkcolumns.length; i++)
+                            row[i] = r;
                         dtm.addRow(row);
                     }
                 }

@@ -21,10 +21,9 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
-import uk.nhs.digital.safetycase.data.MetaFactory;
-import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.Relationship;
+import uk.nhs.digital.safetycase.ui.LinkTableCellRenderer;
 
 /**
  *
@@ -32,7 +31,7 @@ import uk.nhs.digital.safetycase.data.Relationship;
  */
 public class OtherLinksPanel extends javax.swing.JPanel {
 
-    private static final String[] COLUMNS = {"Name", "Comment"};
+    private final String[] linkcolumns = {"Type", "Name", "Comment"};
     private ProcessStep processStep = null;
     private String type = null;
     private ArrayList<Relationship> rels = null;
@@ -42,7 +41,9 @@ public class OtherLinksPanel extends javax.swing.JPanel {
      */
     public OtherLinksPanel() {
         initComponents();
-        DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
+        DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+        linksTable.setDefaultEditor(Object.class, null);
+        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
         linksTable.setModel(dtm);
     }
 
@@ -51,13 +52,12 @@ public class OtherLinksPanel extends javax.swing.JPanel {
         type = t;
         try {
             rels = ps.getRelationships(type);
-            DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
+            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             if (rels != null) {
                 for (Relationship r : rels) {
-                    String[] row = new String[COLUMNS.length];
-                    Persistable p = MetaFactory.getInstance().getFactory(type).get(r.getTarget());
-                    row[0] = p.getAttributeValue("Name");
-                    row[1] = r.getComment();
+                        Object[] row = new Object[linkcolumns.length];
+                        for (int i = 0; i < linkcolumns.length; i++)
+                            row[i] = r;
                     dtm.addRow(row);
                 }
             }

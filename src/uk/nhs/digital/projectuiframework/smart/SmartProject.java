@@ -108,6 +108,11 @@ public class SmartProject
     }
     
     @Override
+    public String getApplicationIdentifier() {
+        return java.lang.System.getProperty("uk.nhs.digital.safetycase.applicationidentity");
+    }
+    
+    @Override
     public void log(String message, Throwable thrown) {
         log(Level.INFO, message, thrown);
     }

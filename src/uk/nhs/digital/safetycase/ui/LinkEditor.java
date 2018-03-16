@@ -61,24 +61,26 @@ public class LinkEditor extends javax.swing.JPanel {
         DefaultTableModel dtm = new DefaultTableModel(columns, 0);
         tableMap = new ArrayList<>();
         relationships = focus.getRelationshipsForLoad();
-        for (String s : relationships.keySet()) {
-            for (Relationship r : relationships.get(s)) {
-                tableMap.add(r);
-                
-                String[] row = new String[columns.length];
-                try {
-                    Persistable target = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                    row[0] = target.getDisplayName();
-                    row[1] = target.getAttributeValue("Name");
-                    row[2] = r.getComment();
+        if (relationships != null) {
+            for (String s : relationships.keySet()) {
+                ArrayList<Relationship> a = relationships.get(s);
+                if (a != null) {
+                    for (Relationship r : a) {
+                        if ((r.getManagementClass() != null) && (r.getManagementClass().contentEquals("Diagram")))
+                            continue;
+                        
+                        tableMap.add(r);
+                        Object[] row = new Object[columns.length];
+                        for (int i = 0; i < row.length; i++)
+                            row[i] = r;
+                        dtm.addRow(row);
+                    }
                 }
-                catch (Exception e) {
-                    e.printStackTrace();
-                }
-                dtm.addRow(row);
-            }            
+            }
         }
         relationshipsTable.setModel(dtm);
+        relationshipsTable.setDefaultEditor(Object.class, null);
+        relationshipsTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());
         DefaultComboBoxModel targetTypes = new DefaultComboBoxModel();
         try {
             allowedRelationships = MetaFactory.getInstance().getDatabase().getAllowedRelationships(p.getDatabaseObjectName());
@@ -336,15 +338,19 @@ public class LinkEditor extends javax.swing.JPanel {
             } else {
                 id = Integer.parseInt(focus.getAttributeValue("ProjectID"));
             }
-            targetInstances = MetaFactory.getInstance().getChildren(dbtype, "ProjectID", id);
-            if (targetInstances == null) {
+            ArrayList<Persistable> targets = MetaFactory.getInstance().getChildren(dbtype, "ProjectID", id);
+            if (targets == null) {
                 DefaultListModel dlm = new DefaultListModel();
                 targetList.setModel(dlm);
                 return;
             }
             DefaultListModel dlm = new DefaultListModel();
-            for (Persistable p : targetInstances) {
-                dlm.addElement(p.getTitle());
+            targetInstances = new ArrayList<>();
+            for (Persistable p : targets) {
+                if (!p.isDeleted()) {
+                    dlm.addElement(p.getTitle());
+                    targetInstances.add(p);
+                }
             }
             targetList.setModel(dlm);
         }
@@ -366,6 +372,23 @@ public class LinkEditor extends javax.swing.JPanel {
         if (selected == -1)
             return;
         editedRelationship = tableMap.get(selected);
+        try {
+            Persistable p = MetaFactory.getInstance().getFactory(editedRelationship.getTargetType()).get(editedRelationship.getTarget()); 
+            if (p.isDeleted()) {
+                StringBuilder sb = new StringBuilder("This link points to a ");
+                sb.append(p.getDisplayName());
+                sb.append(" that has been deleted, and is visible pending that being purged.\nIt cannot be edited unless the target ");
+                sb.append(p.getDisplayName());
+                sb.append(" is un-deleted.");
+                JOptionPane.showMessageDialog(this, sb.toString(), "Deleted relationship", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An error occurred checking the link for editing", "Error checking link", JOptionPane.WARNING_MESSAGE);
+            SmartProject.getProject().log("Error checking if relationship target is deleted", e);
+            return;
+        }
         targetTypeComboBox.setSelectedItem(editedRelationship.getTargetType());
         commentTextArea.setText(editedRelationship.getComment());
         try {
@@ -376,17 +399,21 @@ public class LinkEditor extends javax.swing.JPanel {
             } else {
                 id = Integer.parseInt(focus.getAttributeValue("ProjectID"));
             }
-            targetInstances = MetaFactory.getInstance().getChildren(editedRelationship.getTargetType(), "ProjectID", id);
-            if (targetInstances == null) 
+            ArrayList<Persistable> targets = MetaFactory.getInstance().getChildren(editedRelationship.getTargetType(), "ProjectID", id);
+            if (targets == null) 
                 return;
             DefaultListModel dlm = new DefaultListModel();
+            targetInstances = new ArrayList<>();
             int select = -1;
             int i = 0;
-            for (Persistable p : targetInstances) {
-                dlm.addElement(p.getTitle());
-                if (p.getId() == editedRelationship.getTarget())
-                    select = i;
-                i++;                
+            for (Persistable p : targets) {
+                if (!p.isDeleted()) {
+                    targetInstances.add(p);
+                    dlm.addElement(p.getTitle());
+                    if (p.getId() == editedRelationship.getTarget())
+                        select = i;
+                    i++;                
+                }
             }
             targetList.setModel(dlm);
             if (select != -1)
@@ -403,6 +430,10 @@ public class LinkEditor extends javax.swing.JPanel {
         if (selected == -1)
             return;
         Relationship r = tableMap.get(selected);
+        if (r.getManagementClass() != null) {
+            JOptionPane.showMessageDialog(this, "This relationship is managed by the SMART application. It cannot be deleted manually.", "Not allowed", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         try {
             editedRelationship = null;
             focus.deleteRelationship(r);
@@ -445,11 +476,11 @@ public class LinkEditor extends javax.swing.JPanel {
             try {
                 focus.addRelationship(r);
                 MetaFactory.getInstance().getFactory(focus.getDatabaseObjectName()).put(focus);
-                String[] row = new String[columns.length];
+                Object[] row = new Object[columns.length];
                 tableMap.add(r);
-                row[0] = target.getDisplayName();
-                row[1] = target.getAttributeValue("Name");
-                row[2] = r.getComment();
+                for (int i = 0; i < columns.length; i++) {
+                    row[i] = r;
+                }
                 ((DefaultTableModel)relationshipsTable.getModel()).addRow(row);
             }
             catch (Exception e) {

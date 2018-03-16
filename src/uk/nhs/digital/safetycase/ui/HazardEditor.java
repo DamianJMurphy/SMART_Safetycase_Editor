@@ -111,6 +111,8 @@ public class HazardEditor extends javax.swing.JPanel
     private void init() {
         initComponents();
         linksTable.setDefaultEditor(Object.class, null);
+        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());
+        
         riskMatrixImageLabel.setIcon(riskMatrixImageIcon);
         initialSeveritySpinner.setModel(initialSeveritySpinnerModel);
         initialLikelihoodSpinner.setModel(initialLikelihoodSpinnerModel);
@@ -526,18 +528,20 @@ public class HazardEditor extends javax.swing.JPanel
             displayedLinks.clear();
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
-                for (Relationship r : a) {
-                    String m = r.getManagementClass();
-                    if ((m == null) || (!m.contentEquals("Diagram"))) {                    
-                        displayedLinks.add(r);
-                        Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                        String[] row = new String[linkcolumns.length];
-                        row[0] = tgt.getDisplayName();
-                        row[1] = tgt.getAttributeValue("Name");
-                        row[2] = r.getComment();
-                        dtm.addRow(row);
+                if (a != null) {
+                    for (Relationship r : a) {
+                        String m = r.getManagementClass();
+                        if ((m == null) || (!m.contentEquals("Diagram"))) {                    
+                            displayedLinks.add(r);
 
-                        
+                            Object[] row = new Object[linkcolumns.length];
+                            for (int i = 0; i < linkcolumns.length; i++)
+                                row[i] = r;
+                            
+                            dtm.addRow(row);
+
+
+                        }
                     }
                 }
             }
@@ -843,16 +847,16 @@ public class HazardEditor extends javax.swing.JPanel
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
-                for (Relationship r : a) {
-                    String m = r.getManagementClass();
-                    if ((m == null) || (!m.contentEquals("Diagram"))) {
-                        displayedLinks.add(r);
-                        Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                        String[] row = new String[linkcolumns.length];
-                        row[0] = tgt.getDisplayName();
-                        row[1] = tgt.getAttributeValue("Name");
-                        row[2] = r.getComment();
-                        dtm.addRow(row);
+                if (a != null) {
+                    for (Relationship r : a) {
+                        String m = r.getManagementClass();
+                        if ((m == null) || (!m.contentEquals("Diagram"))) {
+                            displayedLinks.add(r);
+                            Object[] row = new Object[linkcolumns.length];
+                            for (int i = 0; i < linkcolumns.length; i++)
+                                row[i] = r;
+                            dtm.addRow(row);
+                        }
                     }
                 }
             }

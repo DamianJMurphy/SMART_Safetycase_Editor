@@ -48,6 +48,7 @@ public interface Project {
     void setProjectWindow(ProjectWindow pw);
     ProjectWindow getProjectWindow();
 
+    String getApplicationIdentifier();
     String getName();
     void setName(String n);
     

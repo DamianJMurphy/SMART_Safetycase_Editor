@@ -165,6 +165,8 @@ public class MetaFactory {
             Persistable p = (Persistable)o;
             try {
                 Attribute a = p.getAttribute(attribute);
+                if (a == null)
+                    return null;
                 if (a.getType() == Attribute.INTEGER) {
                     if (Integer.parseInt(a.toString()) == id) {
                         if (results == null)

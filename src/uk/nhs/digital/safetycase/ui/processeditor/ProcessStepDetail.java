@@ -73,13 +73,15 @@ public class ProcessStepDetail
             if (hazards != null) {
                 for (Relationship r : hazards) {
                     Hazard h = (Hazard)MetaFactory.getInstance().getFactory("Hazard").get(r.getTarget());
-                    String[] row = new String[COLUMNS.length];
-                    row[0] = h.getAttributeValue("Name");
-                    row[1] = h.getAttributeValue("Status");
-                    row[2] = h.getAttributeValue("InitialRiskRating");
-                    row[3] = h.getAttributeValue("ResidualRiskRating");
-                    hazardList.add(h);
-                    dtm.addRow(row);
+                    if (!h.isDeleted()) {
+                        String[] row = new String[COLUMNS.length];
+                        row[0] = h.getAttributeValue("Name");
+                        row[1] = h.getAttributeValue("Status");
+                        row[2] = h.getAttributeValue("InitialRiskRating");
+                        row[3] = h.getAttributeValue("ResidualRiskRating");
+                        hazardList.add(h);
+                        dtm.addRow(row);
+                    }
                 }
             }
             hazardsTable.setModel(dtm);

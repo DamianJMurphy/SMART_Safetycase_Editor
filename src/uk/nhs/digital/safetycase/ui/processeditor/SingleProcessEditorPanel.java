@@ -39,6 +39,7 @@ import uk.nhs.digital.safetycase.data.PersistableFilter;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
+import uk.nhs.digital.safetycase.ui.LinkTableCellRenderer;
 
 /**
  *
@@ -61,6 +62,7 @@ public class SingleProcessEditorPanel
     public SingleProcessEditorPanel() {
         initComponents();
         linksTable.setDefaultEditor(Object.class, null);
+        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());
     }
     
     void setProcessId(int i) 
@@ -114,11 +116,14 @@ public class SingleProcessEditorPanel
                 for (Relationship r : a) {
                     String m = r.getManagementClass();
                     if ((m == null) || (!m.contentEquals("Diagram"))) {
-                        String[] row = new String[linkcolumns.length];
-                        Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                        row[0] = tgt.getDisplayName();
-                        row[1] = tgt.getAttributeValue("Name");
-                        row[2] = r.getComment();
+//                        String[] row = new String[linkcolumns.length];
+//                        Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+//                        row[0] = tgt.getDisplayName();
+//                        row[1] = tgt.getAttributeValue("Name");
+//                        row[2] = r.getComment();
+                        Object[] row = new Object[linkcolumns.length];
+                        for (int i = 0; i < linkcolumns.length; i++)
+                            row[i] = r;
                         dtm.addRow(row);
                     }
                 }
@@ -358,13 +363,18 @@ public class SingleProcessEditorPanel
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
-                for (Relationship r : a) {
-                    String[] row = new String[linkcolumns.length];
-                    Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                    row[0] = tgt.getDisplayName();
-                    row[1] = tgt.getAttributeValue("Name");
-                    row[2] = r.getComment();
-                    dtm.addRow(row);
+                if (a != null) {
+                    for (Relationship r : a) {
+//                    String[] row = new String[linkcolumns.length];
+//                    Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+//                    row[0] = tgt.getDisplayName();
+//                    row[1] = tgt.getAttributeValue("Name");
+//                    row[2] = r.getComment();
+                        Object[] row = new Object[linkcolumns.length];
+                        for (int i = 0; i < linkcolumns.length; i++)
+                            row[i] = r;
+                        dtm.addRow(row);
+                    }
                 }
             }
             linksTable.setModel(dtm);

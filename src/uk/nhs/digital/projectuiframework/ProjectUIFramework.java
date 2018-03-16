@@ -41,6 +41,7 @@ public class ProjectUIFramework {
         java.lang.System.setProperty(Database.CONNECTIONURLPROPERTY, args[0]);
         java.lang.System.setProperty("user", "SA");
         java.lang.System.setProperty("password", "");
+        java.lang.System.setProperty("uk.nhs.digital.safetycase.applicationidentity", "NHS Digital SMART Safety Case Editor DEVELOPMENT 20180316");
 //        java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Process","uk.nhs.digital.safetycase.ui.processeditor.ProcessEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Process","uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorForm");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Location","uk.nhs.digital.safetycase.ui.LocationEditor");
@@ -56,10 +57,10 @@ public class ProjectUIFramework {
         java.lang.System.setProperty("uk.nhs.digital.projectuiframework.initialtabtitle", "SMART");
         java.lang.System.setProperty("uk.nhs.digial.projectuiframework.appicon", "/uk/nhs/digital/projectuiframework/smart/nhsd-16x16.png");
         ProjectWindow p = new ProjectWindow();
-        p.setTitle("NHS Digital SMART Safety Case Editor");
         try {
             smart = ProjectHelper.createProject();
             smart.setProjectWindow(p);
+            p.setTitle(smart.getApplicationIdentifier());
             MetaFactory.getInstance().setUIProject(smart);
 //            p.addProject(smart.getName(), smart);
             p.setTreeModel(smart.getTreeModel(), smart.getName(), smart);

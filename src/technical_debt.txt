@@ -11,14 +11,16 @@ NOT FOR MARCH:
 - TODO: "Undelete" and housekeeping functions from main menu
 - TODO: DQ checking and issues system
 - TODO: Library functions and object copy/paste
+- TODO: Project tree display management is a serious mess. Refactor.
 
 
 Functional
 
-- BUGFIXES: Tree updates on save-hazard (need to check conditions)
+- BUGFIX: There are some cases where the graphical editor buttons don't work. But it
+    is intermittent. Might be a problem with the notification system.
 
-
-- TODO: Project tree display management is a serious mess. Refactor.
+- TODO: Make a smart_new3 with a fresh database in it, plus a "refresh" copy of the
+    fresh database to replace one that has become cluttered up with demo content
 
 - TODO: Reports
 
