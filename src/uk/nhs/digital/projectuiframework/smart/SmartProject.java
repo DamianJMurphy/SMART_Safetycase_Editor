@@ -257,7 +257,7 @@ public class SmartProject
                 String check = checkNewFromPopupMenu(t);
                 if (check != null)
                     return null;
-            }
+            }                
         }
         catch (ClassCastException e) {
             return resolveNonContainedComponent(t);

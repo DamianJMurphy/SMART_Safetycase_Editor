@@ -22,7 +22,6 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import uk.nhs.digital.projectuiframework.Project;
 import java.util.HashMap;
-import java.util.logging.Level;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -363,8 +362,6 @@ public class ProjectWindow extends javax.swing.JFrame {
     }
     
     private void projectTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectTreeMouseClicked
-        projectTree.revalidate();
-        projectTreeScrollPane.revalidate();
         String p = null;
         try {
             p = (String)projectTree.getSelectionPath().getPathComponent(1).toString();
@@ -405,6 +402,15 @@ public class ProjectWindow extends javax.swing.JFrame {
             int id = proj.getProjectID((DefaultMutableTreeNode)projectTree.getSelectionPath().getLastPathComponent());
             proj.setCurrentProjectID(id);
             TreePath t = projectTree.getSelectionPath();
+            try {
+                Object selected = ((DefaultMutableTreeNode)t.getLastPathComponent()).getUserObject();
+                JPanel pnl = proj.getExistingEditor(selected, this);
+                if (pnl != null) {
+                    this.selectPanel(pnl);
+                    return;
+                }
+            }
+            catch (Exception eIgnore) {}
             ec = proj.getEditorComponent(t);
             if (ec == null) {
                 // See if we have a ViewComponent instead... add getViewComponent(TreePath t) to Project
