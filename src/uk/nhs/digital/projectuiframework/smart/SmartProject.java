@@ -1099,9 +1099,9 @@ public class SmartProject
     public synchronized void addNotificationSubscriber(DataNotificationSubscriber n) {
         if (!notificationSubscribers.contains(n)) {
             notificationSubscribers.add(n);
-            java.lang.System.out.println("Subscribed " + n.hashCode());
-        } else {
-            java.lang.System.out.println("Attempt to re-subscribe " + n.hashCode());
+//            java.lang.System.out.println("Subscribed " + n.hashCode());
+//        } else {
+//            java.lang.System.out.println("Attempt to re-subscribe " + n.hashCode());
         }
     }
 
@@ -1109,9 +1109,9 @@ public class SmartProject
     public synchronized void removeNotificationSubscriber(DataNotificationSubscriber n) {
         if (notificationSubscribers.contains(n)) {
             notificationSubscribers.remove(n);
-            java.lang.System.out.println("Unsubscribed " + n.hashCode());
-        } else {
-            java.lang.System.out.println("Attempt to unsubscribe already unsubscribed object " + n.hashCode());
+//            java.lang.System.out.println("Unsubscribed " + n.hashCode());
+//        } else {
+//            java.lang.System.out.println("Attempt to unsubscribe already unsubscribed object " + n.hashCode());
         }
     }
     
