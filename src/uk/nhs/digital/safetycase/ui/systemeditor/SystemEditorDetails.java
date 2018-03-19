@@ -451,7 +451,9 @@ public class SystemEditorDetails extends javax.swing.JPanel
         tp.setTabComponentAt(tp.getSelectedIndex(), new UndockTabComponent(tp, SmartProject.getProject().getIcon("System")));  
     }//GEN-LAST:event_systemEditorButtonActionPerformed
 
-    private HashMap<String,DiagramEditorElement> getExistingGraph(String xml) {
+    public void setSystem(System s) { system = s; }
+    
+    public HashMap<String,DiagramEditorElement> getExistingGraph(String xml) {
 
         if ((xml == null) || (xml.length() == 0))
             return null;

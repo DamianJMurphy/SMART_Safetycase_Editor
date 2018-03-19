@@ -687,7 +687,9 @@ public class HazardEditor extends javax.swing.JPanel
         residualRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)residualLikelihoodSpinner.getValue(), (String)residualSeveritySpinner.getValue())));
     }//GEN-LAST:event_residualLikelihoodSpinnerStateChanged
     
-    private HashMap<String,DiagramEditorElement> getExistingBowtie(String xml)
+    void setHazard(Hazard h) { hazard = h; }
+    
+    HashMap<String,DiagramEditorElement> getExistingBowtie(String xml)
     {
         try {
         HashMap<String, DiagramEditorElement> bowtieElements = new HashMap<>();

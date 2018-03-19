@@ -5,8 +5,6 @@ NOT FOR MARCH:
     - TODO: See if it is possible to auto-wrap the text in boxes in the graphical editors
     - Auto set hazard and root system names
     - Auto-create hazard and root system
-- TODO: Look at putting in a check routine to cascade deletes... maybe. Uncontrolled
-    that could accidentally wipe out an entire project and safe rules will be tricky.
 - TODO: Probably need to detect name collisions within a set of child nodes in the tree.
 - TODO: "Undelete" and housekeeping functions from main menu
 - TODO: DQ checking and issues system
@@ -19,8 +17,6 @@ Functional
 - BUGFIX: There are some cases where the graphical editor buttons don't work. But it
     is intermittent. Might be a problem with the notification system.
 
-- TODO: Make a smart_new3 with a fresh database in it, plus a "refresh" copy of the
-    fresh database to replace one that has become cluttered up with demo content
 
 - TODO: Reports
 

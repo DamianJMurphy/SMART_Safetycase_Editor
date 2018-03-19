@@ -41,7 +41,7 @@ public class ProjectUIFramework {
         java.lang.System.setProperty(Database.CONNECTIONURLPROPERTY, args[0]);
         java.lang.System.setProperty("user", "SA");
         java.lang.System.setProperty("password", "");
-        java.lang.System.setProperty("uk.nhs.digital.safetycase.applicationidentity", "NHS Digital SMART Safety Case Editor DEVELOPMENT 20180316");
+        java.lang.System.setProperty("uk.nhs.digital.safetycase.applicationidentity", "NHS Digital SMART Safety Case Editor DEVELOPMENT 20180319");
 //        java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Process","uk.nhs.digital.safetycase.ui.processeditor.ProcessEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Process","uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorForm");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Location","uk.nhs.digital.safetycase.ui.LocationEditor");
@@ -51,7 +51,7 @@ public class ProjectUIFramework {
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Control","uk.nhs.digital.safetycase.ui.ControlEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Cause","uk.nhs.digital.safetycase.ui.CauseEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.System","uk.nhs.digital.safetycase.ui.systemeditor.SystemEditorDetails");
-        java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Report","uk.nhs.digital.safetycase.ui.ReportEditor");
+        java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Report","uk.nhs.digital.safetycase.ui.SafetyReportEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Project","uk.nhs.digital.safetycase.ui.ProjectEditor");
         java.lang.System.setProperty("uk.nhs.digital.projectuiframework.initialtab", "internal:/uk/nhs/digital/projectuiframework/smart/frontpage.pdf");
         java.lang.System.setProperty("uk.nhs.digital.projectuiframework.initialtabtitle", "SMART");
