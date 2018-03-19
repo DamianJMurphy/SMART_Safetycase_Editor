@@ -313,7 +313,7 @@ private EditorComponent editorComponent = null;
             .addComponent(safetyTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
-        sectionsPanel.addTab("Safety system", safetySystemPanel);
+        sectionsPanel.addTab("Safety statement", safetySystemPanel);
 
         javax.swing.GroupLayout qaPanelLayout = new javax.swing.GroupLayout(qaPanel);
         qaPanel.setLayout(qaPanelLayout);

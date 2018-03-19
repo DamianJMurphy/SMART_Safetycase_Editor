@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -138,6 +137,7 @@ public class SmartProject
     }
     public static final SmartProject getProject() { return project; }
     
+    @SuppressWarnings("UseSpecificCatch")
     private EditorComponent resolveNonContainedComponent(TreePath t) {
         
         Project p = null;
@@ -204,6 +204,7 @@ public class SmartProject
         }
         catch (Exception e) {
             e.printStackTrace();
+            @SuppressWarnings("null")
             JLabel l = new JLabel("Editor for " + p.getEditorType() + ":" + p.getTitle() + " not found");
             ec = new EditorComponent(l, p.getTitle(), this);
         }   
@@ -262,6 +263,7 @@ public class SmartProject
         catch (ClassCastException e) {
             return resolveNonContainedComponent(t);
         }
+        @SuppressWarnings("null")
         String s = p.getEditorType();
         if (s == null) {
             log("No editor type: " + p.getDatabaseObjectName(), null);
@@ -487,6 +489,7 @@ public class SmartProject
     }    
 
     @Override
+    @SuppressWarnings("UseSpecificCatch")
     public int getProjectID(DefaultMutableTreeNode n) {
         
         if (n == null)
@@ -654,6 +657,7 @@ public class SmartProject
     }
     
     @Override
+    @SuppressWarnings({"UseSpecificCatch", "ConvertToStringSwitch"})
     public void editorEvent(int ev, Object o) {
         Persistable p = (Persistable)o;
         DefaultMutableTreeNode containerNode = null;
@@ -1092,18 +1096,22 @@ public class SmartProject
     }
 
     @Override
-    public void addNotificationSubscriber(DataNotificationSubscriber n) {
-        synchronized(this) {
-            if (!notificationSubscribers.contains(n))
-                notificationSubscribers.add(n);
+    public synchronized void addNotificationSubscriber(DataNotificationSubscriber n) {
+        if (!notificationSubscribers.contains(n)) {
+            notificationSubscribers.add(n);
+            java.lang.System.out.println("Subscribed " + n.hashCode());
+        } else {
+            java.lang.System.out.println("Attempt to re-subscribe " + n.hashCode());
         }
     }
 
     @Override
-    public void removeNotificationSubscriber(DataNotificationSubscriber n) {
-        synchronized(this) {
-            if (notificationSubscribers.contains(n))
-                notificationSubscribers.remove(n);
+    public synchronized void removeNotificationSubscriber(DataNotificationSubscriber n) {
+        if (notificationSubscribers.contains(n)) {
+            notificationSubscribers.remove(n);
+            java.lang.System.out.println("Unsubscribed " + n.hashCode());
+        } else {
+            java.lang.System.out.println("Attempt to unsubscribe already unsubscribed object " + n.hashCode());
         }
     }
     

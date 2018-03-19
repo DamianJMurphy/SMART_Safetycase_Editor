@@ -125,8 +125,8 @@
         <Container class="javax.swing.JPanel" name="safetySystemPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Safety system">
-                <Property name="tabTitle" type="java.lang.String" value="Safety system"/>
+              <JTabbedPaneConstraints tabName="Safety statement">
+                <Property name="tabTitle" type="java.lang.String" value="Safety statement"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>

@@ -56,17 +56,17 @@ public class RoleEditor extends javax.swing.JPanel
         SmartProject.getProject().addNotificationSubscriber(this);
     }
 
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        SmartProject.getProject().addNotificationSubscriber(this);
-    }
+//    @Override
+//    public void addNotify() {
+//        super.addNotify();
+//        SmartProject.getProject().addNotificationSubscriber(this);
+//    }
     
-    @Override
-    public void removeNotify() {
-        super.removeNotify();
-        SmartProject.getProject().removeNotificationSubscriber(this);
-    }
+//    @Override
+//    public void removeNotify() {
+//        super.removeNotify();
+//        SmartProject.getProject().removeNotificationSubscriber(this);
+//    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

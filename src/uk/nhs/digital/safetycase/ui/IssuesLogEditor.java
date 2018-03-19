@@ -89,17 +89,17 @@ public class IssuesLogEditor
         }
     }
 
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        SmartProject.getProject().addNotificationSubscriber(this);
-    }
+//    @Override
+//    public void addNotify() {
+//        super.addNotify();
+//        SmartProject.getProject().addNotificationSubscriber(this);
+//    }
     
-    @Override
-    public void removeNotify() {
-        super.removeNotify();
-        SmartProject.getProject().removeNotificationSubscriber(this);
-    }
+//    @Override
+//    public void removeNotify() {
+//        super.removeNotify();
+//        SmartProject.getProject().removeNotificationSubscriber(this);
+//    }
     
     /**
      * This method is called from within the constructor to initialize the form.
