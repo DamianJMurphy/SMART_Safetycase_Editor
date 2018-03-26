@@ -56,7 +56,7 @@ public class ControlEditor extends javax.swing.JPanel
         linksTable.setModel(linkModel);
         linksTable.setDefaultEditor(Object.class, null);
         linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
-        
+        linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         try {
             ValueSet controlType = MetaFactory.getInstance().getValueSet("ControlType");
             Iterator<String> ctypes = controlType.iterator();

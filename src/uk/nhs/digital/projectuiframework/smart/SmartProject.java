@@ -18,6 +18,7 @@
 package uk.nhs.digital.projectuiframework.smart;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Image;
 import java.io.File;
 import java.util.ArrayList;
@@ -86,6 +87,7 @@ public class SmartProject
     private ProjectWindow projectWindow;
     private final HashMap<String,ImageIcon> icons = new HashMap<>();
     private ImageIcon helpAboutIcon = null;
+    private Font applicationFont = null;
     
     private final ArrayList<DataNotificationSubscriber> notificationSubscribers = new ArrayList<>();
 
@@ -105,6 +107,9 @@ public class SmartProject
             throw new Exception("Failed to initialise database access", e);
         }
     }
+    
+    public void setDisplayFont(Font f) { applicationFont = f; }
+    public Font getDisplayFont() { return applicationFont; }
     
     @Override
     public String getApplicationIdentifier() {
@@ -925,9 +930,14 @@ public class SmartProject
         return null;        
     }
 
+    public int getTableRowHeight() {
+        return (int)(applicationFont.getSize() * 1.3);        
+    }
+    
     @Override
     public void setProjectWindow(ProjectWindow pw) {
         projectWindow = pw;
+        applicationFont = projectWindow.getDisplayFont();
         ProjectTreeCellRenderer r = new ProjectTreeCellRenderer(this);
         icons.put("Report", getIcon(SAFETYREPORT_ICON, r));
         icons.put("System", getIcon(SYSTEM_ICON, r));

@@ -63,6 +63,7 @@ public class SingleProcessEditorPanel
         initComponents();
         linksTable.setDefaultEditor(Object.class, null);
         linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());
+        linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
     }
     
     void setProcessId(int i) 

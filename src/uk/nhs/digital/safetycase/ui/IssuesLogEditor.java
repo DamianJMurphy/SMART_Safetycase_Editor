@@ -48,6 +48,8 @@ public class IssuesLogEditor
     public IssuesLogEditor() {
         initComponents();
         SmartProject.getProject().addNotificationSubscriber(this);
+        issuesTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
+        linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         ListSelectionModel lsm = issuesTable.getSelectionModel();
         lsm.addListSelectionListener((ListSelectionEvent evt) -> {
             int sel = issuesTable.getSelectedRow();
@@ -73,6 +75,7 @@ public class IssuesLogEditor
             issuesTable.setModel(dtm);
             dtm = new DefaultTableModel(LINKSCOLUMNS, 0);
             linksTable.setModel(dtm);
+            linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());
             Collection<Persistable> log = MetaFactory.getInstance().getFactory("IssuesLog").getEntries();
             if (log == null)
                 return;
@@ -457,7 +460,6 @@ public class IssuesLogEditor
         resolutionTextArea.setText(issue.getAttributeValue("Resolution"));
         resolutionTypeComboBox.setSelectedItem(issue.getAttributeValue("ResolutionType"));
         resolutionDateTextField.setText(issue.getAttributeValue("ResolvedDate"));
-        
         try {
             DefaultTableModel dtm = new DefaultTableModel(LINKSCOLUMNS, 0);
             HashMap<String,ArrayList<Relationship>> rels = issue.getRelationshipsForLoad();
@@ -466,10 +468,9 @@ public class IssuesLogEditor
                     ArrayList<Relationship> a = rels.get(t);
                     if (a != null) {
                         for (Relationship r : a) {
-                            String[] row = new String[LINKSCOLUMNS.length];
-                            row[0] = t;
-                            row[1] = MetaFactory.getInstance().getFactory(t).get(r.getTarget()).getAttributeValue("Name");
-                            row[2] = r.getComment();
+                            Object[] row = new Object[LINKSCOLUMNS.length];
+                            for (int i = 0; i < LINKSCOLUMNS.length; i++)
+                                row[i] = r;
                             dtm.addRow(row);
                         }
                     }

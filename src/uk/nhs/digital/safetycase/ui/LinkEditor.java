@@ -78,6 +78,7 @@ public class LinkEditor extends javax.swing.JPanel {
                 }
             }
         }
+        relationshipsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         relationshipsTable.setModel(dtm);
         relationshipsTable.setDefaultEditor(Object.class, null);
         relationshipsTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());

@@ -55,6 +55,8 @@ public class CauseEditor extends javax.swing.JPanel
         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
         SmartProject.getProject().addNotificationSubscriber(this);
         linksTable.setModel(dtm);
+        linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
+
         try {
             ArrayList<String> conds = MetaFactory.getInstance().getFactory("Cause").getDistinctSet("GroupingType");
             if (conds.isEmpty()) {

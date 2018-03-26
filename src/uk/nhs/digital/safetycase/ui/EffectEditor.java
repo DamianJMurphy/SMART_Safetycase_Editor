@@ -57,7 +57,7 @@ public class EffectEditor extends javax.swing.JPanel
         linksTable.setModel(linkModel);
         linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
         linksTable.setDefaultEditor(Object.class, null);
-        
+        linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         try {
             ValueSet effectType = MetaFactory.getInstance().getValueSet("EffectType");
             Iterator<String> etypes = effectType.iterator();

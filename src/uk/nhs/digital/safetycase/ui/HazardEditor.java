@@ -141,6 +141,7 @@ public class HazardEditor extends javax.swing.JPanel
         }
         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
         linksTable.setModel(dtm);
+        linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         bowtieButton.setText("Create bowtie");                
     }
     /**

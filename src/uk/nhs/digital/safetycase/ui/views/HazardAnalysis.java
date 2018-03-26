@@ -43,6 +43,7 @@ public class HazardAnalysis
         hazardsTable.setModel(dtm);
         hazardsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         hazardsTable.setCellSelectionEnabled(false);
+        hazardsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         ListSelectionModel lsm = hazardsTable.getSelectionModel();
         lsm.addListSelectionListener(new ListSelectionListener() {
             @Override

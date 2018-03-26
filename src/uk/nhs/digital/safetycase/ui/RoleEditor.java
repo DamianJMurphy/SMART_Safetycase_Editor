@@ -50,6 +50,7 @@ public class RoleEditor extends javax.swing.JPanel
     public RoleEditor() {
         initComponents();
         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+        linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         linksTable.setDefaultEditor(Object.class, null);
         linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
         linksTable.setModel(dtm);

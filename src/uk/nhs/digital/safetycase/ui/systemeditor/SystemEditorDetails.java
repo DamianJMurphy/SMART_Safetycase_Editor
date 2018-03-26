@@ -67,6 +67,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
      public SystemEditorDetails() {
         initComponents();
         functionsTable.setDefaultEditor(Object.class, null);
+        functionsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
      }
     @Override
     public void unsubscribe() {

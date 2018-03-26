@@ -18,9 +18,7 @@
 package uk.nhs.digital.projectuiframework.smart;
 
 import java.awt.Component;
-import java.awt.Image;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JTree;
 import uk.nhs.digital.projectuiframework.Project;
 /**
@@ -42,7 +40,6 @@ public class ProjectTreeCellRenderer
             boolean leaf, int row, boolean hasFocus) {
         
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-
         ImageIcon icon = project.getIcon(value);
         if (icon == null) {
             return this;

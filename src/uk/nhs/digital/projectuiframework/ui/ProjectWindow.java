@@ -19,7 +19,9 @@ package uk.nhs.digital.projectuiframework.ui;
 import com.sun.glass.events.MouseEvent;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
+import java.util.Enumeration;
 import uk.nhs.digital.projectuiframework.Project;
 import java.util.HashMap;
 import javax.swing.JDialog;
@@ -27,6 +29,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
@@ -58,6 +61,7 @@ public class ProjectWindow extends javax.swing.JFrame {
     }
 
     public JTree getProjectTree() { return projectTree; }
+    public Font getDisplayFont() { return projectTree.getFont(); }
     
     public void setTreeCellRenderer(TreeCellRenderer r) {
         projectTree.setCellRenderer(r);
@@ -71,6 +75,7 @@ public class ProjectWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        fontsizes = new javax.swing.ButtonGroup();
         mainWindowSplitPane = new javax.swing.JSplitPane();
         projectTreeScrollPane = new javax.swing.JScrollPane();
         projectTree = new javax.swing.JTree();
@@ -82,6 +87,10 @@ public class ProjectWindow extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         mainMenuExit = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
+        textSizeMenu = new javax.swing.JMenu();
+        smallFontMenu = new javax.swing.JRadioButtonMenuItem();
+        mediumFontMenu = new javax.swing.JRadioButtonMenuItem();
+        largeFontMenu = new javax.swing.JRadioButtonMenuItem();
         libraryMenuItem = new javax.swing.JMenuItem();
         undeleteMenuItem = new javax.swing.JMenuItem();
         importMenuItem = new javax.swing.JMenuItem();
@@ -157,6 +166,38 @@ public class ProjectWindow extends javax.swing.JFrame {
         mainMenu.add(mainFileMenu);
 
         toolsMenu.setText("Tools");
+
+        textSizeMenu.setText("Text sizes");
+
+        fontsizes.add(smallFontMenu);
+        smallFontMenu.setSelected(true);
+        smallFontMenu.setText("Small");
+        smallFontMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                smallFontMenuActionPerformed(evt);
+            }
+        });
+        textSizeMenu.add(smallFontMenu);
+
+        fontsizes.add(mediumFontMenu);
+        mediumFontMenu.setText("Medium");
+        mediumFontMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mediumFontMenuActionPerformed(evt);
+            }
+        });
+        textSizeMenu.add(mediumFontMenu);
+
+        fontsizes.add(largeFontMenu);
+        largeFontMenu.setText("Large");
+        largeFontMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                largeFontMenuActionPerformed(evt);
+            }
+        });
+        textSizeMenu.add(largeFontMenu);
+
+        toolsMenu.add(textSizeMenu);
 
         libraryMenuItem.setText("Library");
         libraryMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -491,6 +532,43 @@ public class ProjectWindow extends javax.swing.JFrame {
         new RiskMatrix(this, false).setVisible(true);
     }//GEN-LAST:event_riskMatrixMenuItemActionPerformed
 
+    private void setUIFont(Font f) {
+        Enumeration keys = UIManager.getDefaults().keys();
+        while (keys.hasMoreElements()) {
+            Object k = keys.nextElement();
+            Object v = UIManager.get(k);
+            if ((v != null) && (v instanceof java.awt.Font)) {
+                UIManager.put(k, f);
+            }
+        }
+        projectTree.setFont(f);
+  //      pack();
+    }
+    
+    private void smallFontMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smallFontMenuActionPerformed
+        SmartProject sp = SmartProject.getProject();
+        Font f1 = sp.getDisplayFont();
+        Font f2 = f1.deriveFont((float)12.0);
+        sp.setDisplayFont(f2);
+        setUIFont(f2);
+    }//GEN-LAST:event_smallFontMenuActionPerformed
+
+    private void mediumFontMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mediumFontMenuActionPerformed
+        SmartProject sp = SmartProject.getProject();
+        Font f1 = sp.getDisplayFont();
+        Font f2 = f1.deriveFont((float)16.0);
+        sp.setDisplayFont(f2);
+        setUIFont(f2);
+    }//GEN-LAST:event_mediumFontMenuActionPerformed
+
+    private void largeFontMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_largeFontMenuActionPerformed
+        SmartProject sp = SmartProject.getProject();
+        Font f1 = sp.getDisplayFont();
+        Font f2 = f1.deriveFont((float)20.0);
+        sp.setDisplayFont(f2);
+        setUIFont(f2);
+    }//GEN-LAST:event_largeFontMenuActionPerformed
+
     
     public void addProject(String n, Project p) {
         lastProjectAdded = p;
@@ -544,10 +622,12 @@ public class ProjectWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup fontsizes;
     private javax.swing.JMenuItem helpAboutMenuItem;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem importMenuItem;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JRadioButtonMenuItem largeFontMenu;
     private javax.swing.JMenuItem libraryMenuItem;
     private javax.swing.JMenu mainFileMenu;
     private javax.swing.JMenuBar mainMenu;
@@ -555,11 +635,14 @@ public class ProjectWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem mainMenuNew;
     private javax.swing.JSplitPane mainWindowSplitPane;
     private javax.swing.JTabbedPane mainWindowTabbedPane;
+    private javax.swing.JRadioButtonMenuItem mediumFontMenu;
     private javax.swing.JTree projectTree;
     private javax.swing.JScrollPane projectTreeScrollPane;
     private javax.swing.JMenuItem riskMatrixMenuItem;
     private javax.swing.JMenu saveAllMenu;
     private javax.swing.JMenuItem showProcessMenuItem;
+    private javax.swing.JRadioButtonMenuItem smallFontMenu;
+    private javax.swing.JMenu textSizeMenu;
     private javax.swing.JMenu toolsMenu;
     private javax.swing.JMenuItem undeleteMenuItem;
     // End of variables declaration//GEN-END:variables
