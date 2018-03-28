@@ -73,6 +73,8 @@ public class ProjectEditor
         SmartProject.getProject().addNotificationSubscriber(this);
     }
     
+    @Override
+    public boolean wantsScrollPane() { return false; }
     
 //    @Override
 //    public void addNotify() {

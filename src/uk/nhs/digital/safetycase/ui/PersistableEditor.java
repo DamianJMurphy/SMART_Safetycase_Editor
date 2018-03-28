@@ -33,4 +33,5 @@ public interface PersistableEditor
     public void setEditorComponent(EditorComponent ed);
     public Component getComponent();
     public void setNewObjectProjectId(int i);
+    public boolean wantsScrollPane();
 }

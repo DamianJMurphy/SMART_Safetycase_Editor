@@ -92,6 +92,9 @@ public class IssuesLogEditor
         }
     }
 
+    @Override
+    public boolean wantsScrollPane() { return true; }
+    
 //    @Override
 //    public void addNotify() {
 //        super.addNotify();

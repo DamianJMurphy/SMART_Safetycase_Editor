@@ -56,6 +56,10 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         nameTextField.setText(n);
         descriptionTextArea.setText(d);        
     }
+ 
+    
+    @Override
+    public boolean wantsScrollPane() { return false; }
     
     /**
      * This method is called from within the constructor to initialize the form.

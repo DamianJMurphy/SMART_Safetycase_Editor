@@ -56,6 +56,7 @@ public class ProjectUIFramework {
         java.lang.System.setProperty("uk.nhs.digital.projectuiframework.initialtab", "internal:/uk/nhs/digital/projectuiframework/smart/frontpage.pdf");
         java.lang.System.setProperty("uk.nhs.digital.projectuiframework.initialtabtitle", "SMART");
         java.lang.System.setProperty("uk.nhs.digial.projectuiframework.appicon", "/uk/nhs/digital/projectuiframework/smart/nhsd-16x16.png");
+        System.out.println("Running on " + System.getProperty("os.name"));
         ProjectWindow p = new ProjectWindow();
         try {
             smart = ProjectHelper.createProject();

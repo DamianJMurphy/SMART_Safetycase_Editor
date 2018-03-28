@@ -11,7 +11,6 @@ import java.util.HashMap;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
@@ -45,15 +44,12 @@ public class HazardAnalysis
         hazardsTable.setCellSelectionEnabled(false);
         hazardsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         ListSelectionModel lsm = hazardsTable.getSelectionModel();
-        lsm.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent evt) {
-                int sel = hazardsTable.getSelectedRow();
-                if (sel == -1)
-                    return;
-                Hazard h = displayedHazards.get(sel);
-                populateHazardPanel(h);
-            }
+        lsm.addListSelectionListener((ListSelectionEvent evt) -> {
+            int sel = hazardsTable.getSelectedRow();
+            if (sel == -1)
+                return;
+            Hazard h = displayedHazards.get(sel);
+            populateHazardPanel(h);
         });
         SmartProject.getProject().addNotificationSubscriber(this);
     }

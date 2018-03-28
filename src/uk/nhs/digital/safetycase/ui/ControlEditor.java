@@ -85,6 +85,9 @@ public class ControlEditor extends javax.swing.JPanel
         
     }
 
+    @Override
+    public boolean wantsScrollPane() { return false; }
+    
 //    @Override
 //    public void addNotify() {
 //        super.addNotify();

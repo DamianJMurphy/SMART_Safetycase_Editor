@@ -106,6 +106,10 @@ public class SystemEditorDetails extends javax.swing.JPanel
         }
     }
 
+    
+    @Override
+    public boolean wantsScrollPane() { return true; }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -610,8 +614,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
         try {
             if (relatedObject.getDatabaseObjectName().equals("System")) {
 
-                uk.nhs.digital.safetycase.data.System system = pfs.get(relatedObject.getId());
-                HashMap<String, ArrayList<Relationship>> hrels = system.getRelationshipsForLoad();
+                uk.nhs.digital.safetycase.data.System sys = pfs.get(relatedObject.getId());
+                HashMap<String, ArrayList<Relationship>> hrels = sys.getRelationshipsForLoad();
                 if (hrels != null) {
                     for (ArrayList<Relationship> a : hrels.values()) {
                         for (Relationship r : a) {

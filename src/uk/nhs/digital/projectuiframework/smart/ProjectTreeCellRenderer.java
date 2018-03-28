@@ -37,14 +37,14 @@ public class ProjectTreeCellRenderer
     
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, 
-            boolean leaf, int row, boolean hasFocus) {
+            boolean leaf, int row, boolean hasFocus) 
+    {
         
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
         ImageIcon icon = project.getIcon(value);
-        if (icon == null) {
-            return this;
+        if (icon != null) {
+            setIcon(icon);
         }
-        setIcon(icon);
         return this;
 //        ImageIcon labelIcon = new ImageIcon(icon.getImage().getScaledInstance(c.getHeight(), c.getHeight(), Image.SCALE_DEFAULT));
 //        JLabel cell = new JLabel(value.toString(), labelIcon, JLabel.LEADING);

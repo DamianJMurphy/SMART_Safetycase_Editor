@@ -91,6 +91,8 @@ public class ProjectWindow extends javax.swing.JFrame {
         smallFontMenu = new javax.swing.JRadioButtonMenuItem();
         mediumFontMenu = new javax.swing.JRadioButtonMenuItem();
         largeFontMenu = new javax.swing.JRadioButtonMenuItem();
+        surfaceMediumMenu = new javax.swing.JRadioButtonMenuItem();
+        surfaceLargeMenu = new javax.swing.JRadioButtonMenuItem();
         libraryMenuItem = new javax.swing.JMenuItem();
         undeleteMenuItem = new javax.swing.JMenuItem();
         importMenuItem = new javax.swing.JMenuItem();
@@ -124,6 +126,7 @@ public class ProjectWindow extends javax.swing.JFrame {
 
         mainWindowSplitPane.setLeftComponent(projectTreeScrollPane);
 
+        mainWindowTabbedPane.setAutoscrolls(true);
         mainWindowTabbedPane.setPreferredSize(new java.awt.Dimension(600, 600));
         mainWindowSplitPane.setRightComponent(mainWindowTabbedPane);
 
@@ -189,13 +192,31 @@ public class ProjectWindow extends javax.swing.JFrame {
         textSizeMenu.add(mediumFontMenu);
 
         fontsizes.add(largeFontMenu);
-        largeFontMenu.setText("Large");
+        largeFontMenu.setText("Large/Surface small");
         largeFontMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 largeFontMenuActionPerformed(evt);
             }
         });
         textSizeMenu.add(largeFontMenu);
+
+        fontsizes.add(surfaceMediumMenu);
+        surfaceMediumMenu.setText("Surface medium");
+        surfaceMediumMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                surfaceMediumMenuActionPerformed(evt);
+            }
+        });
+        textSizeMenu.add(surfaceMediumMenu);
+
+        fontsizes.add(surfaceLargeMenu);
+        surfaceLargeMenu.setText("Surface large");
+        surfaceLargeMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                surfaceLargeMenuActionPerformed(evt);
+            }
+        });
+        textSizeMenu.add(surfaceLargeMenu);
 
         toolsMenu.add(textSizeMenu);
 
@@ -556,7 +577,7 @@ public class ProjectWindow extends javax.swing.JFrame {
     private void mediumFontMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mediumFontMenuActionPerformed
         SmartProject sp = SmartProject.getProject();
         Font f1 = sp.getDisplayFont();
-        Font f2 = f1.deriveFont((float)16.0);
+        Font f2 = f1.deriveFont((float)14.0);
         sp.setDisplayFont(f2);
         setUIFont(f2);
     }//GEN-LAST:event_mediumFontMenuActionPerformed
@@ -564,10 +585,33 @@ public class ProjectWindow extends javax.swing.JFrame {
     private void largeFontMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_largeFontMenuActionPerformed
         SmartProject sp = SmartProject.getProject();
         Font f1 = sp.getDisplayFont();
-        Font f2 = f1.deriveFont((float)20.0);
+        Font f2 = f1.deriveFont((float)18.0);
         sp.setDisplayFont(f2);
         setUIFont(f2);
     }//GEN-LAST:event_largeFontMenuActionPerformed
+
+    private void surfaceMediumMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_surfaceMediumMenuActionPerformed
+        SmartProject sp = SmartProject.getProject();
+        Font f1 = sp.getDisplayFont();
+        Font f2 = f1.deriveFont((float)22.0);
+        sp.setDisplayFont(f2);
+        setUIFont(f2);
+        if (System.getProperty("os.name").contains("Windows")) {
+            projectTree.setRowHeight((int)(f2.getSize() * 1.3));
+        }
+    }//GEN-LAST:event_surfaceMediumMenuActionPerformed
+
+    private void surfaceLargeMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_surfaceLargeMenuActionPerformed
+        SmartProject sp = SmartProject.getProject();
+        Font f1 = sp.getDisplayFont();
+        Font f2 = f1.deriveFont((float)24.0);
+        sp.setDisplayFont(f2);
+        setUIFont(f2);
+        if (System.getProperty("os.name").contains("Windows")) {
+            projectTree.setRowHeight((int)(f2.getSize() * 1.3));
+        }
+        
+    }//GEN-LAST:event_surfaceLargeMenuActionPerformed
 
     
     public void addProject(String n, Project p) {
@@ -642,6 +686,8 @@ public class ProjectWindow extends javax.swing.JFrame {
     private javax.swing.JMenu saveAllMenu;
     private javax.swing.JMenuItem showProcessMenuItem;
     private javax.swing.JRadioButtonMenuItem smallFontMenu;
+    private javax.swing.JRadioButtonMenuItem surfaceLargeMenu;
+    private javax.swing.JRadioButtonMenuItem surfaceMediumMenu;
     private javax.swing.JMenu textSizeMenu;
     private javax.swing.JMenu toolsMenu;
     private javax.swing.JMenuItem undeleteMenuItem;

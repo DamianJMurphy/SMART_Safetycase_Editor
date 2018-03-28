@@ -79,6 +79,10 @@ public class SingleProcessEditorForm
         SmartProject.getProject().addNotificationSubscriber(this);
     }
     
+    
+    @Override
+    public boolean wantsScrollPane() { return false; }
+    
     SingleProcessEditorForm setParent(JDialog p) {
         parent = p;
         processEditor.setParent(p);

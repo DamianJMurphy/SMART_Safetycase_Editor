@@ -57,6 +57,10 @@ public class RoleEditor extends javax.swing.JPanel
         SmartProject.getProject().addNotificationSubscriber(this);
     }
 
+    
+    @Override
+    public boolean wantsScrollPane() { return false; }
+    
 //    @Override
 //    public void addNotify() {
 //        super.addNotify();
