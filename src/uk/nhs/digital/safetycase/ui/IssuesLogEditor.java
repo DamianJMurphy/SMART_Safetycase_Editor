@@ -116,10 +116,12 @@ public class IssuesLogEditor
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane2 = new javax.swing.JScrollPane();
-        issuesTable = new javax.swing.JTable();
+        controlsPanel = new javax.swing.JPanel();
         closedIssuesCheckbox = new javax.swing.JCheckBox();
         currentProjectOnlyCheckbox = new javax.swing.JCheckBox();
+        newButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        issuesTable = new javax.swing.JTable();
         detailPanel = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
@@ -142,7 +144,51 @@ public class IssuesLogEditor
         jLabel7 = new javax.swing.JLabel();
         resolutionDateTextField = new javax.swing.JTextField();
         unresolveButton = new javax.swing.JButton();
-        newButton = new javax.swing.JButton();
+
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
+
+        closedIssuesCheckbox.setText("Also show closed issues");
+        closedIssuesCheckbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                closedIssuesCheckboxActionPerformed(evt);
+            }
+        });
+
+        currentProjectOnlyCheckbox.setSelected(true);
+        currentProjectOnlyCheckbox.setText("Show issues for current project only");
+
+        newButton.setText("Create new");
+        newButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout controlsPanelLayout = new javax.swing.GroupLayout(controlsPanel);
+        controlsPanel.setLayout(controlsPanelLayout);
+        controlsPanelLayout.setHorizontalGroup(
+            controlsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(controlsPanelLayout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(closedIssuesCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(currentProjectOnlyCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+                .addComponent(newButton)
+                .addContainerGap())
+        );
+        controlsPanelLayout.setVerticalGroup(
+            controlsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(controlsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(controlsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(closedIssuesCheckbox)
+                    .addComponent(currentProjectOnlyCheckbox)
+                    .addComponent(newButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        add(controlsPanel);
 
         issuesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -157,15 +203,7 @@ public class IssuesLogEditor
         ));
         jScrollPane2.setViewportView(issuesTable);
 
-        closedIssuesCheckbox.setText("Also show closed issues");
-        closedIssuesCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                closedIssuesCheckboxActionPerformed(evt);
-            }
-        });
-
-        currentProjectOnlyCheckbox.setSelected(true);
-        currentProjectOnlyCheckbox.setText("Show issues for current project only");
+        add(jScrollPane2);
 
         detailPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -279,7 +317,7 @@ public class IssuesLogEditor
                         .addComponent(resolutionDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(unresolveButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
                         .addComponent(saveButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(discardButton)))
@@ -317,7 +355,7 @@ public class IssuesLogEditor
                         .addComponent(jLabel7)
                         .addComponent(resolutionDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(unresolveButton)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addGroup(detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(editLinksButton, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -326,44 +364,7 @@ public class IssuesLogEditor
                 .addContainerGap())
         );
 
-        newButton.setText("Create new");
-        newButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(closedIssuesCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(currentProjectOnlyCheckbox, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(newButton))
-                    .addComponent(detailPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(9, 9, 9)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(closedIssuesCheckbox)
-                    .addComponent(currentProjectOnlyCheckbox)
-                    .addComponent(newButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(detailPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+        add(detailPanel);
     }// </editor-fold>//GEN-END:initComponents
 
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
@@ -530,6 +531,7 @@ public class IssuesLogEditor
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox closedIssuesCheckbox;
+    private javax.swing.JPanel controlsPanel;
     private javax.swing.JCheckBox currentProjectOnlyCheckbox;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JPanel detailPanel;

@@ -1,27 +1,26 @@
 
 NOT FOR MARCH:
 
-- TODO: Modifications inside the graphical editors:
-    - TODO: See if it is possible to auto-wrap the text in boxes in the graphical editors
-    - Auto set hazard and root system names
-    - Auto-create hazard and root system
 - TODO: Probably need to detect name collisions within a set of child nodes in the tree.
-- TODO: "Undelete" and housekeeping functions from main menu
 - TODO: DQ checking and issues system
-- TODO: Library functions and object copy/paste
-- TODO: Project tree display management is a serious mess. Refactor.
-
 
 Functional
 
-- BUGFIX: There are some cases where the graphical editor buttons don't work. But it
-    is intermittent. Might be a problem with the notification system.
+TODO: Layout manager for the HazardAnalysis and HazardType views
+TODO: Check if layout manager needed for process editor form
 
-
-- TODO: Reports
-
+TODO: Implement the Risk matrix as a resizable panel build of abutting JLabel instances,
+    and use in Hazard editor form and the Risk Matrix help view
     
+TODO:  Auto-create hazard and root system (on new)
 
+TODO: "Undelete" and housekeeping functions from main menu
+
+TODO: See if it is possible to auto-wrap the text in boxes in the graphical editors
+
+TODO: Library functions and object copy/paste
+
+TODO: Project tree display management is a serious mess. Refactor.
 
 
 
