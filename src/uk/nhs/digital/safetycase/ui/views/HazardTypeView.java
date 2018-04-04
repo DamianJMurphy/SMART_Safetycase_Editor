@@ -94,13 +94,14 @@ public class HazardTypeView
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        hazardSelectionPanel = new javax.swing.JPanel();
         typesListPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         typesList = new javax.swing.JList<>();
         hazardsPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         hazardsTable = new javax.swing.JTable();
-        hazardPanel = new javax.swing.JPanel();
+        selectedHazardPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -126,7 +127,9 @@ public class HazardTypeView
         residualSeverityTextField = new javax.swing.JTextField();
         residualRatingTextField = new javax.swing.JTextField();
 
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
+
+        hazardSelectionPanel.setLayout(new javax.swing.BoxLayout(hazardSelectionPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
         typesListPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazard types"));
 
@@ -143,15 +146,16 @@ public class HazardTypeView
             typesListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(typesListPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE))
         );
         typesListPanelLayout.setVerticalGroup(
             typesListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 648, Short.MAX_VALUE)
+            .addGroup(typesListPanelLayout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
-        add(typesListPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, 420, 670));
+        hazardSelectionPanel.add(typesListPanel);
 
         hazardsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazards"));
 
@@ -172,26 +176,28 @@ public class HazardTypeView
         hazardsPanel.setLayout(hazardsPanelLayout);
         hazardsPanelLayout.setHorizontalGroup(
             hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 557, Short.MAX_VALUE)
+            .addGap(0, 595, Short.MAX_VALUE)
             .addGroup(hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(hazardsPanelLayout.createSequentialGroup()
                     .addGap(5, 5, 5)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         hazardsPanelLayout.setVerticalGroup(
             hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 176, Short.MAX_VALUE)
+            .addGap(0, 314, Short.MAX_VALUE)
             .addGroup(hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(hazardsPanelLayout.createSequentialGroup()
-                    .addGap(4, 4, 4)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap()
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                    .addGap(23, 23, 23)))
         );
 
-        add(hazardsPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 10, 560, 190));
+        hazardSelectionPanel.add(hazardsPanel);
 
-        hazardPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazard"));
+        add(hazardSelectionPanel);
+
+        selectedHazardPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazard"));
 
         jLabel1.setText("Name");
 
@@ -245,72 +251,73 @@ public class HazardTypeView
 
         residualRatingTextField.setEditable(false);
 
-        javax.swing.GroupLayout hazardPanelLayout = new javax.swing.GroupLayout(hazardPanel);
-        hazardPanel.setLayout(hazardPanelLayout);
-        hazardPanelLayout.setHorizontalGroup(
-            hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(hazardPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout selectedHazardPanelLayout = new javax.swing.GroupLayout(selectedHazardPanel);
+        selectedHazardPanel.setLayout(selectedHazardPanelLayout);
+        selectedHazardPanelLayout.setHorizontalGroup(
+            selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(selectedHazardPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(hazardPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(39, 39, 39)
-                        .addComponent(nameTextField))
+                .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3)
                     .addComponent(jScrollPane4)
-                    .addGroup(hazardPanelLayout.createSequentialGroup()
-                        .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(conditionTextField)
-                            .addComponent(statusTextField)))
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel3)
-                    .addGroup(hazardPanelLayout.createSequentialGroup()
-                        .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(hazardPanelLayout.createSequentialGroup()
+                    .addGroup(selectedHazardPanelLayout.createSequentialGroup()
+                        .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(selectedHazardPanelLayout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addGap(37, 37, 37)
                                 .addComponent(initialSeverityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(hazardPanelLayout.createSequentialGroup()
-                                .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(selectedHazardPanelLayout.createSequentialGroup()
+                                .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
                                     .addComponent(jLabel8))
                                 .addGap(21, 21, 21)
-                                .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(initialLikelihoodTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(initialRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(hazardPanelLayout.createSequentialGroup()
-                                .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(selectedHazardPanelLayout.createSequentialGroup()
+                                .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel9)
                                     .addComponent(jLabel10))
                                 .addGap(16, 16, 16))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, hazardPanelLayout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, selectedHazardPanelLayout.createSequentialGroup()
                                 .addComponent(jLabel11)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(residualLikelihoodTextField)
-                            .addComponent(residualRatingTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                            .addComponent(residualSeverityTextField))))
+                        .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(residualLikelihoodTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                            .addComponent(residualRatingTextField)
+                            .addComponent(residualSeverityTextField)))
+                    .addGroup(selectedHazardPanelLayout.createSequentialGroup()
+                        .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(selectedHazardPanelLayout.createSequentialGroup()
+                        .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nameTextField)
+                            .addComponent(conditionTextField)
+                            .addComponent(statusTextField))))
                 .addContainerGap())
         );
-        hazardPanelLayout.setVerticalGroup(
-            hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(hazardPanelLayout.createSequentialGroup()
+        selectedHazardPanelLayout.setVerticalGroup(
+            selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(selectedHazardPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(conditionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(7, 7, 7)
-                .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(statusTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
@@ -320,31 +327,31 @@ public class HazardTypeView
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(hazardPanelLayout.createSequentialGroup()
+                .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(selectedHazardPanelLayout.createSequentialGroup()
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel7))
-                    .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(residualSeverityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel10)
                         .addComponent(initialSeverityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel9)
                     .addComponent(residualLikelihoodTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(initialLikelihoodTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(initialRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
                     .addComponent(residualRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(271, Short.MAX_VALUE))
         );
 
-        add(hazardPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 210, 560, 470));
+        add(selectedHazardPanel);
     }// </editor-fold>//GEN-END:initComponents
 
     private void typesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_typesListValueChanged
@@ -374,7 +381,7 @@ public class HazardTypeView
     private javax.swing.JTextArea clinicalJustificationTextArea;
     private javax.swing.JTextField conditionTextField;
     private javax.swing.JTextArea descriptionTextArea;
-    private javax.swing.JPanel hazardPanel;
+    private javax.swing.JPanel hazardSelectionPanel;
     private javax.swing.JPanel hazardsPanel;
     private javax.swing.JTable hazardsTable;
     private javax.swing.JTextField initialLikelihoodTextField;
@@ -399,6 +406,7 @@ public class HazardTypeView
     private javax.swing.JTextField residualLikelihoodTextField;
     private javax.swing.JTextField residualRatingTextField;
     private javax.swing.JTextField residualSeverityTextField;
+    private javax.swing.JPanel selectedHazardPanel;
     private javax.swing.JTextField statusTextField;
     private javax.swing.JList<String> typesList;
     private javax.swing.JPanel typesListPanel;

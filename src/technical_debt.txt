@@ -5,12 +5,6 @@ NOT FOR MARCH:
 - TODO: DQ checking and issues system
 
 Functional
-
-TODO: Layout manager for the HazardAnalysis and HazardType views
-TODO: Check if layout manager needed for process editor form
-
-TODO: Implement the Risk matrix as a resizable panel build of abutting JLabel instances,
-    and use in Hazard editor form and the Risk Matrix help view
     
 TODO:  Auto-create hazard and root system (on new)
 

@@ -120,6 +120,16 @@ public class HazardAnalysis
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        selectorPanel = new javax.swing.JPanel();
+        statePanel = new javax.swing.JPanel();
+        wipCountLabel = new javax.swing.JLabel();
+        acceptedCountLabel = new javax.swing.JLabel();
+        notAcceptedCountLabel = new javax.swing.JLabel();
+        justifiedCountLabel = new javax.swing.JLabel();
+        wipButton = new javax.swing.JButton();
+        acceptedButton = new javax.swing.JButton();
+        notAcceptedButton = new javax.swing.JButton();
+        justifiedButton = new javax.swing.JButton();
         hazardsPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         hazardsTable = new javax.swing.JTable();
@@ -148,17 +158,91 @@ public class HazardAnalysis
         residualLikelihoodTextField = new javax.swing.JTextField();
         residualSeverityTextField = new javax.swing.JTextField();
         residualRatingTextField = new javax.swing.JTextField();
-        jPanel1 = new javax.swing.JPanel();
-        wipCountLabel = new javax.swing.JLabel();
-        acceptedCountLabel = new javax.swing.JLabel();
-        notAcceptedCountLabel = new javax.swing.JLabel();
-        justifiedCountLabel = new javax.swing.JLabel();
-        wipButton = new javax.swing.JButton();
-        acceptedButton = new javax.swing.JButton();
-        notAcceptedButton = new javax.swing.JButton();
-        justifiedButton = new javax.swing.JButton();
 
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
+
+        selectorPanel.setLayout(new javax.swing.BoxLayout(selectorPanel, javax.swing.BoxLayout.PAGE_AXIS));
+
+        statePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazards in state"));
+
+        wipCountLabel.setText("jLabel12");
+
+        acceptedCountLabel.setText("jLabel12");
+
+        notAcceptedCountLabel.setText("jLabel12");
+
+        justifiedCountLabel.setText("jLabel12");
+
+        wipButton.setText("New or work-in-progress");
+        wipButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                wipButtonActionPerformed(evt);
+            }
+        });
+
+        acceptedButton.setText("Accepted");
+        acceptedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                acceptedButtonActionPerformed(evt);
+            }
+        });
+
+        notAcceptedButton.setText("Not accepted");
+        notAcceptedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                notAcceptedButtonActionPerformed(evt);
+            }
+        });
+
+        justifiedButton.setText("Accepted due to clinical justification");
+        justifiedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                justifiedButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout statePanelLayout = new javax.swing.GroupLayout(statePanel);
+        statePanel.setLayout(statePanelLayout);
+        statePanelLayout.setHorizontalGroup(
+            statePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(statePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(wipButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(acceptedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(notAcceptedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(justifiedButton, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(statePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(wipCountLabel)
+                    .addComponent(acceptedCountLabel)
+                    .addComponent(notAcceptedCountLabel)
+                    .addComponent(justifiedCountLabel))
+                .addContainerGap(91, Short.MAX_VALUE))
+        );
+        statePanelLayout.setVerticalGroup(
+            statePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(statePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(statePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(wipCountLabel)
+                    .addComponent(wipButton))
+                .addGap(18, 18, 18)
+                .addGroup(statePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(acceptedCountLabel)
+                    .addComponent(acceptedButton))
+                .addGap(18, 18, 18)
+                .addGroup(statePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(notAcceptedCountLabel)
+                    .addComponent(notAcceptedButton))
+                .addGap(18, 18, 18)
+                .addGroup(statePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(justifiedCountLabel)
+                    .addComponent(justifiedButton))
+                .addContainerGap(38, Short.MAX_VALUE))
+        );
+
+        selectorPanel.add(statePanel);
 
         hazardsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazards"));
 
@@ -179,18 +263,20 @@ public class HazardAnalysis
         hazardsPanel.setLayout(hazardsPanelLayout);
         hazardsPanelLayout.setHorizontalGroup(
             hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 562, Short.MAX_VALUE)
+            .addGap(0, 597, Short.MAX_VALUE)
             .addGroup(hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE))
         );
         hazardsPanelLayout.setVerticalGroup(
             hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 229, Short.MAX_VALUE)
+            .addGap(0, 244, Short.MAX_VALUE)
             .addGroup(hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
         );
 
-        add(hazardsPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 231, -1, 251));
+        selectorPanel.add(hazardsPanel);
+
+        add(selectorPanel);
 
         hazardPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazard"));
 
@@ -295,7 +381,7 @@ public class HazardAnalysis
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(hazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(residualLikelihoodTextField)
-                            .addComponent(residualRatingTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                            .addComponent(residualRatingTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
                             .addComponent(residualSeverityTextField))))
                 .addContainerGap())
         );
@@ -342,91 +428,10 @@ public class HazardAnalysis
                     .addComponent(jLabel8)
                     .addComponent(residualRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
-                .addContainerGap(55, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
 
-        add(hazardPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(584, 12, -1, -1));
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazards in state"));
-
-        wipCountLabel.setText("jLabel12");
-
-        acceptedCountLabel.setText("jLabel12");
-
-        notAcceptedCountLabel.setText("jLabel12");
-
-        justifiedCountLabel.setText("jLabel12");
-
-        wipButton.setText("New or work-in-progress");
-        wipButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                wipButtonActionPerformed(evt);
-            }
-        });
-
-        acceptedButton.setText("Accepted");
-        acceptedButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                acceptedButtonActionPerformed(evt);
-            }
-        });
-
-        notAcceptedButton.setText("Not accepted");
-        notAcceptedButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                notAcceptedButtonActionPerformed(evt);
-            }
-        });
-
-        justifiedButton.setText("Accepted due to clinical justification");
-        justifiedButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                justifiedButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(wipButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(acceptedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(notAcceptedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(justifiedButton, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(wipCountLabel)
-                    .addComponent(acceptedCountLabel)
-                    .addComponent(notAcceptedCountLabel)
-                    .addComponent(justifiedCountLabel))
-                .addContainerGap(56, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(wipCountLabel)
-                    .addComponent(wipButton))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(acceptedCountLabel)
-                    .addComponent(acceptedButton))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(notAcceptedCountLabel)
-                    .addComponent(notAcceptedButton))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(justifiedCountLabel)
-                    .addComponent(justifiedButton))
-                .addContainerGap(25, Short.MAX_VALUE))
-        );
-
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 12, -1, -1));
+        add(hazardPanel);
     }// </editor-fold>//GEN-END:initComponents
 
     private void wipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wipButtonActionPerformed
@@ -470,7 +475,6 @@ public class HazardAnalysis
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -482,6 +486,8 @@ public class HazardAnalysis
     private javax.swing.JTextField residualLikelihoodTextField;
     private javax.swing.JTextField residualRatingTextField;
     private javax.swing.JTextField residualSeverityTextField;
+    private javax.swing.JPanel selectorPanel;
+    private javax.swing.JPanel statePanel;
     private javax.swing.JTextField statusTextField;
     private javax.swing.JButton wipButton;
     private javax.swing.JLabel wipCountLabel;

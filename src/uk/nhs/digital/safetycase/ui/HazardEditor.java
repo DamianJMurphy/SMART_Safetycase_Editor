@@ -73,6 +73,7 @@ public class HazardEditor extends javax.swing.JPanel
     private final String[] linkcolumns = {"Type", "Name", "Comment"};
     private int newObjectProjectId = -1;
     private boolean create;
+    private RiskMatrixPanel riskMatrixPanel = new RiskMatrixPanel();
     
     private static ImageIcon riskMatrixImageIcon = null;
     private static final SpinnerListModel initialSeveritySpinnerModel = new SpinnerListModel();
@@ -113,7 +114,7 @@ public class HazardEditor extends javax.swing.JPanel
         linksTable.setDefaultEditor(Object.class, null);
         linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());
         
-        riskMatrixImageLabel.setIcon(riskMatrixImageIcon);
+//        riskMatrixImageLabel.setIcon(riskMatrixImageIcon);
         initialSeveritySpinner.setModel(initialSeveritySpinnerModel);
         initialLikelihoodSpinner.setModel(initialLikelihoodSpinnerModel);
         residualSeveritySpinner.setModel(residualSeveritySpinnerModel);
@@ -196,8 +197,6 @@ public class HazardEditor extends javax.swing.JPanel
         analysisContainer = new javax.swing.JPanel();
         analysisScrollPane = new javax.swing.JScrollPane();
         analysisPanel = new javax.swing.JPanel();
-        riskMatrixPanel = new javax.swing.JPanel();
-        riskMatrixImageLabel = new javax.swing.JLabel();
         ratingsPanel = new javax.swing.JPanel();
         initialPanel = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
@@ -324,13 +323,6 @@ public class HazardEditor extends javax.swing.JPanel
 
         analysisPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Create Bowtie before completing analysis"));
         analysisPanel.setLayout(new javax.swing.BoxLayout(analysisPanel, javax.swing.BoxLayout.PAGE_AXIS));
-
-        riskMatrixPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Risk matrix"));
-
-        riskMatrixImageLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        riskMatrixImageLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        riskMatrixPanel.add(riskMatrixImageLabel);
-
         analysisPanel.add(riskMatrixPanel);
 
         ratingsPanel.setLayout(new java.awt.GridLayout(1, 0));
@@ -387,7 +379,7 @@ public class HazardEditor extends javax.swing.JPanel
                 .addGroup(initialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(initialRiskRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         ratingsPanel.add(initialPanel);
@@ -488,11 +480,11 @@ public class HazardEditor extends javax.swing.JPanel
         );
         clinicalJustificationPanelLayout.setVerticalGroup(
             clinicalJustificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 156, Short.MAX_VALUE)
+            .addGap(0, 170, Short.MAX_VALUE)
             .addGroup(clinicalJustificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clinicalJustificationPanelLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(clinicalJustificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                    .addComponent(clinicalJustificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 
@@ -838,8 +830,6 @@ public class HazardEditor extends javax.swing.JPanel
     private javax.swing.JPanel residualPanel;
     private javax.swing.JTextField residualRiskRatingTextField;
     private javax.swing.JSpinner residualSeveritySpinner;
-    private javax.swing.JLabel riskMatrixImageLabel;
-    private javax.swing.JPanel riskMatrixPanel;
     private javax.swing.JButton saveButton;
     private javax.swing.JComboBox<String> statusComboBox;
     private javax.swing.JTextField summaryTextField;

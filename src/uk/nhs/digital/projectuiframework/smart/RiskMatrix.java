@@ -37,8 +37,9 @@ public class RiskMatrix extends javax.swing.JDialog {
     public RiskMatrix(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        riskMatrixImageLabel.setText("");
-        riskMatrixImageLabel.setIcon(riskMatrixImageIcon);
+        
+//        riskMatrixImageLabel.setText("");
+//        riskMatrixImageLabel.setIcon(riskMatrixImageIcon);
         
     }
 
@@ -51,14 +52,14 @@ public class RiskMatrix extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        closeButton = new javax.swing.JButton();
+        riskMatrixPanel1 = new uk.nhs.digital.safetycase.ui.RiskMatrixPanel();
         jPanel1 = new javax.swing.JPanel();
-        riskMatrixImageLabel = new javax.swing.JLabel();
+        closeButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Risk matrix");
-        setResizable(false);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.PAGE_AXIS));
+        getContentPane().add(riskMatrixPanel1);
 
         closeButton.setText("Close");
         closeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -66,31 +67,25 @@ public class RiskMatrix extends javax.swing.JDialog {
                 closeButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(closeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 290, -1, -1));
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        riskMatrixImageLabel.setText("jLabel1");
-        riskMatrixImageLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(riskMatrixImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 783, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(91, 91, 91))
+                .addContainerGap(725, Short.MAX_VALUE)
+                .addComponent(closeButton)
+                .addGap(26, 26, 26))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(riskMatrixImageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(40, Short.MAX_VALUE)
+                .addComponent(closeButton)
+                .addGap(35, 35, 35))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 12, 810, 270));
+        getContentPane().add(jPanel1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -144,6 +139,6 @@ public class RiskMatrix extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel riskMatrixImageLabel;
+    private uk.nhs.digital.safetycase.ui.RiskMatrixPanel riskMatrixPanel1;
     // End of variables declaration//GEN-END:variables
 }
