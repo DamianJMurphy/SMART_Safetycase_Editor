@@ -6,8 +6,6 @@ NOT FOR MARCH:
 
 Functional
     
-TODO:  Auto-create hazard and root system (on new)
-
 TODO: "Undelete" and housekeeping functions from main menu
 
 TODO: See if it is possible to auto-wrap the text in boxes in the graphical editors

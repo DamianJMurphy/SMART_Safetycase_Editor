@@ -20,6 +20,9 @@ package uk.nhs.digital.safetycase.ui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,6 +64,7 @@ public class HazardEditor extends javax.swing.JPanel
     implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
     private static final String RISK_MATRIX_IMAGE = "/uk/nhs/digital/safetycase/ui/risk_matrix_image.jpg";
+    private static final String NEW_HAZARD_BOWTIE_TEMPLATE = "/uk/nhs/digital/safetycase/ui/single_new_hazard_template.txt";
     private static final int RISK_MATRIX_X = 722;
     private static final int RISK_MATRIX_Y = 186;
     private EditorComponent editorComponent = null;
@@ -69,6 +73,7 @@ public class HazardEditor extends javax.swing.JPanel
     private Hazard hazard = null;
     
     private ProcessStep parentProcessStep = null;
+    private static String newBowtieTemplate = null;
     
     private final String[] linkcolumns = {"Type", "Name", "Comment"};
     private int newObjectProjectId = -1;
@@ -83,7 +88,7 @@ public class HazardEditor extends javax.swing.JPanel
 
     
     static {
-        try {
+        try {            
             riskMatrixImageIcon = ResourceUtils.getImageIcon(RISK_MATRIX_IMAGE);
             riskMatrixImageIcon = new ImageIcon(riskMatrixImageIcon.getImage().getScaledInstance(RISK_MATRIX_X, RISK_MATRIX_Y, Image.SCALE_DEFAULT));
             ArrayList<String> severity = new ArrayList<>();
@@ -111,6 +116,20 @@ public class HazardEditor extends javax.swing.JPanel
     
     private void init() {
         initComponents();
+        if (newBowtieTemplate == null) {
+            try {
+                BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(NEW_HAZARD_BOWTIE_TEMPLATE)));
+                String line = null;
+                StringBuilder sb = new StringBuilder();
+                while ((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                newBowtieTemplate = sb.toString();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         linksTable.setDefaultEditor(Object.class, null);
         linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());
         
@@ -643,11 +662,18 @@ public class HazardEditor extends javax.swing.JPanel
 
         BowtieGraphEditor bge = new BowtieGraphEditor();
         String xml = hazard.getAttributeValue("GraphXml");
+        if ((xml == null) || (xml.trim().length() == 0)) {
+            StringBuilder sb = new StringBuilder(newBowtieTemplate);
+            int start = newBowtieTemplate.indexOf("__HAZARD_NAME__"); 
+            sb.replace(start, start + "__HAZARD_NAME__".length(), summaryTextField.getText());
+            xml = sb.toString();
+        }
         bge.setHazardId(hazard.getId(), xml);
         if ((xml != null) && (xml.trim().length() > 0)) {
             HashMap<String,DiagramEditorElement> ex = getExistingBowtie(xml);
             if (ex != null)
-            bge.setExistingBowtie(ex);
+                bge.setExistingBowtie(ex);
+            hazard.setAttribute("GraphCellId", "2");
         }
         JTabbedPane tp = null;
         ProjectWindow pw = SmartProject.getProject().getProjectWindow();

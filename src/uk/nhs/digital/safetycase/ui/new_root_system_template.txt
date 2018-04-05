@@ -1,0 +1,1 @@
+<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" parent="1" style="image;image=/uk/nhs/digital/safetycase/ui/systemeditor/system.png" value="__SYSTEM_NAME__" vertex="1"><mxGeometry as="geometry" height="50.0" width="50.0" x="500.0" y="110.0"/></mxCell></root></mxGraphModel>

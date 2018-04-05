@@ -19,6 +19,9 @@ package uk.nhs.digital.safetycase.ui.systemeditor;
 
 import uk.nhs.digital.safetycase.ui.*;
 import java.awt.Component;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,8 +54,11 @@ import uk.nhs.digital.safetycase.data.SystemFunction;
  * @author shul1
  */
 public class SystemEditorDetails extends javax.swing.JPanel
-        implements uk.nhs.digital.safetycase.ui.PersistableEditor {
-
+        implements uk.nhs.digital.safetycase.ui.PersistableEditor 
+{
+    private static final String NEW_ROOT_SYSTEM_TEMPLATE = "/uk/nhs/digital/safetycase/ui/new_root_system_template.txt";
+    private static String newRootSystemTemplate = null;
+    
     private JDialog parent = null;
     private EditorComponent editorComponent = null;
     private ArrayList<System> systems = new ArrayList<>();
@@ -66,6 +72,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
      */
      public SystemEditorDetails() {
         initComponents();
+        loadNewTemplate();
         functionsTable.setDefaultEditor(Object.class, null);
         functionsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
      }
@@ -74,8 +81,26 @@ public class SystemEditorDetails extends javax.swing.JPanel
         SmartProject.getProject().removeNotificationSubscriber(this);
     }
     
+    private void loadNewTemplate() {
+        if (newRootSystemTemplate != null)
+            return;
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(NEW_ROOT_SYSTEM_TEMPLATE)));
+            String line = null;
+            StringBuilder sb = new StringBuilder();
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            newRootSystemTemplate = sb.toString();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public SystemEditorDetails(Persistable p) {
         initComponents();
+        loadNewTemplate();
         functionsTable.setDefaultEditor(Object.class, null);
         DefaultTableModel dsftm = new DefaultTableModel(functioncolumns, 0);
         SmartProject.getProject().addNotificationSubscriber(this);
@@ -369,7 +394,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
             try {
                 String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("System", "System", nameTextField.getText(),SmartProject.getProject().getCurrentProjectID(), null);
                 if (duplicateWarning != null) {
-                    JOptionPane.showMessageDialog(this, duplicateWarning, "Duplicate hazard name", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, duplicateWarning, "Duplicate system name", JOptionPane.ERROR_MESSAGE);
                     saveButton.setEnabled(true);
                     return;
                 }
@@ -445,6 +470,13 @@ public class SystemEditorDetails extends javax.swing.JPanel
 //        SystemEditor sge = new SystemEditor();
         SystemGraphEditor sge = new SystemGraphEditor();
         String xml = system.getAttributeValue("GraphXml");
+        if ((xml == null) || (xml.trim().length() == 0)) {
+            StringBuilder sb = new StringBuilder(newRootSystemTemplate);
+            int start = newRootSystemTemplate.indexOf("__SYSTEM_NAME__"); 
+            sb.replace(start, start + "__SYSTEM_NAME__".length(), nameTextField.getText());
+            xml = sb.toString();     
+            system.setAttribute("GraphCellId", "2");
+        }
         sge.setExistingGraph(getExistingGraph(xml));
         sge.setSystemId(system.getId(), xml);
 //        sge.setPersistableObject(system);
