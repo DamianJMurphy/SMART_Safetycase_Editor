@@ -61,6 +61,7 @@ public class PersistableFactory <T extends Persistable> {
     
     public Collection<T> getEntries() { return instances.values(); }
     
+    @SuppressWarnings("null")
     public Collection<T> getEntries(ArrayList<PersistableFilter> filter)
     {
         Collection<T> f1 = instances.values();
@@ -76,14 +77,13 @@ public class PersistableFactory <T extends Persistable> {
                             f2.add(e);
                     }
                 }
-                catch (Exception ex) {
-                    continue;
-                }
+                catch (Exception ex) {}
             }
         }
         return f2;
     }
     
+    @SuppressWarnings("UseSpecificCatch")
     public Collection<T> getEntries(int projectid)
     {
         Collection<T> c = instances.values();

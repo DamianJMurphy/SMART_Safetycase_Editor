@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * 
+ *   Copyright 2018  NHS Digital
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *  
  */
 package uk.nhs.digital.safetycase.ui.views;
 
@@ -29,7 +41,7 @@ public class HazardAnalysis
     private static final String[] COLUMNS = {"Name", "Status", "Initial rating", "Residual rating"};
 
     private Project project = null;
-    private ArrayList<Hazard> hazards = new ArrayList<>();
+//    private ArrayList<Hazard> hazards = new ArrayList<>();
     private ArrayList<Hazard> displayedHazards = new ArrayList<>();
     private HashMap<String, ArrayList<Hazard>> hazardStates = new HashMap<>();
 
@@ -503,7 +515,7 @@ public class HazardAnalysis
         for (Hazard h : hcollection) {
             if (h.isDeleted())
                 continue;
-            hazards.add(h);
+//            hazards.add(h);
             // Rules:
             // A hazard with a residual rating of > 3 goes in "unacceptable" UNLESS
             // it has a non-empty clinical justification

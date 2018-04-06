@@ -37,6 +37,7 @@ import javax.swing.tree.TreePath;
 import uk.nhs.digital.projectuiframework.InitialTab;
 import uk.nhs.digital.projectuiframework.smart.RiskMatrix;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.safetycase.ui.Housekeeper;
 import uk.nhs.digital.safetycase.ui.LibraryEditorDialog;
 import uk.nhs.digital.safetycase.ui.ProjectEditor;
 /**
@@ -229,6 +230,11 @@ public class ProjectWindow extends javax.swing.JFrame {
         toolsMenu.add(libraryMenuItem);
 
         undeleteMenuItem.setText("Undelete");
+        undeleteMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undeleteMenuItemActionPerformed(evt);
+            }
+        });
         toolsMenu.add(undeleteMenuItem);
 
         importMenuItem.setText("Import");
@@ -612,6 +618,10 @@ public class ProjectWindow extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_surfaceLargeMenuActionPerformed
+
+    private void undeleteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undeleteMenuItemActionPerformed
+        (new Housekeeper(this, true)).setVisible(true);
+    }//GEN-LAST:event_undeleteMenuItemActionPerformed
 
     
     public void addProject(String n, Project p) {

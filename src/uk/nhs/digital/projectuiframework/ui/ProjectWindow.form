@@ -125,6 +125,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Undelete"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="undeleteMenuItemActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="importMenuItem">
               <Properties>

@@ -7,6 +7,8 @@ NOT FOR MARCH:
 Functional
     
 TODO: "Undelete" and housekeeping functions from main menu
+    - TODO NEXT: Undelete function
+    - TODO THEN: Cascade purge
 
 TODO: See if it is possible to auto-wrap the text in boxes in the graphical editors
 
