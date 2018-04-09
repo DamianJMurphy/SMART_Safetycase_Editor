@@ -683,6 +683,43 @@ public class Database {
         return t;
     }
     
+    void purgePersistable(String t)
+            throws Exception
+    {
+        purgeRelationships(t);
+        StringBuilder sb = new StringBuilder("delete from ");
+        sb.append(t);
+        sb.append(" where DeletedDate is not null");
+        java.lang.System.err.println(sb);
+        try (Statement s = connection.createStatement()) {
+            int r = s.executeUpdate(sb.toString());
+            connection.commit();            
+            java.lang.System.out.println("Deleted " + r + " " + t + " records");
+        }
+        catch(Exception e) {
+            Exception edetail = new Exception(sb.toString(), e);
+            throw edetail;
+        }
+    }
+    
+    private void purgeRelationships(String t) 
+            throws Exception
+    {
+        StringBuilder sb = new StringBuilder("delete from ");
+        sb.append(t);
+        sb.append("Relationship where DeletedDate is not null");
+        java.lang.System.err.println(sb);
+        try (Statement s = connection.createStatement()) {
+            int r = s.executeUpdate(sb.toString());
+            connection.commit();            
+            java.lang.System.out.println("Deleted " + r + " " + t + "Relationship records");
+        }
+        catch(Exception e) {
+            Exception edetail = new Exception(sb.toString(), e);
+            throw edetail;
+        }
+    }
+    
     Persistable delete(Persistable t)
         throws Exception
     {

@@ -62,6 +62,7 @@ public class Housekeeper extends javax.swing.JDialog {
             selectedObject = currentSelection.get(sel);
             populateDetails(selectedObject);
         });
+        selectedTable.setModel(new DefaultTableModel(COLUMNS, 0));
         dependenciesTree.setCellRenderer(new HousekeeperDependencyTreeCellRenderer());
         DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode("Nothing selected...");
         DefaultTreeModel ntm = new DefaultTreeModel(dmtn);
@@ -170,7 +171,6 @@ public class Housekeeper extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         deletedOnTextField = new javax.swing.JTextField();
         undeleteButton = new javax.swing.JButton();
-        cleanButton = new javax.swing.JButton();
         dependenciesTreeScrollPane = new javax.swing.JScrollPane();
         dependenciesTree = new javax.swing.JTree();
 
@@ -191,9 +191,21 @@ public class Housekeeper extends javax.swing.JDialog {
         topPanel.add(objectTypeComboBox);
 
         cleanSelectedButton.setText("Clean up selected");
+        cleanSelectedButton.setEnabled(false);
+        cleanSelectedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cleanSelectedButtonActionPerformed(evt);
+            }
+        });
         topPanel.add(cleanSelectedButton);
 
         cleanAllButton.setText("Clean up all");
+        cleanAllButton.setEnabled(false);
+        cleanAllButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cleanAllButtonActionPerformed(evt);
+            }
+        });
         topPanel.add(cleanAllButton);
 
         closeButton.setText("Close");
@@ -211,7 +223,10 @@ public class Housekeeper extends javax.swing.JDialog {
         bottomPanelSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         objectSelectionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Deleted records"));
+        objectSelectionPanel.setPreferredSize(new java.awt.Dimension(463, 180));
         objectSelectionPanel.setLayout(new javax.swing.BoxLayout(objectSelectionPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        selectedTableScrollPane.setPreferredSize(new java.awt.Dimension(453, 164));
 
         selectedTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -224,6 +239,8 @@ public class Housekeeper extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        selectedTable.setPreferredSize(null);
+        selectedTable.setRequestFocusEnabled(false);
         selectedTableScrollPane.setViewportView(selectedTable);
 
         objectSelectionPanel.add(selectedTableScrollPane);
@@ -231,6 +248,7 @@ public class Housekeeper extends javax.swing.JDialog {
         bottomPanelSplitPane.setLeftComponent(objectSelectionPanel);
 
         detailsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Details"));
+        detailsPanel.setPreferredSize(new java.awt.Dimension(1010, 400));
         detailsPanel.setLayout(new java.awt.BorderLayout());
 
         detailControlPanel.setMaximumSize(new java.awt.Dimension(65536, 80));
@@ -243,14 +261,12 @@ public class Housekeeper extends javax.swing.JDialog {
         detailControlPanel.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 14, -1, -1));
 
         nameTextField.setEditable(false);
-        nameTextField.setText("jTextField1");
         detailControlPanel.add(nameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(102, 12, 740, -1));
 
         jLabel3.setText("Deleted on");
         detailControlPanel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 48, -1, -1));
 
         deletedOnTextField.setEditable(false);
-        deletedOnTextField.setText("jTextField1");
         detailControlPanel.add(deletedOnTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(102, 46, 217, -1));
 
         undeleteButton.setText("Undelete");
@@ -259,10 +275,7 @@ public class Housekeeper extends javax.swing.JDialog {
                 undeleteButtonActionPerformed(evt);
             }
         });
-        detailControlPanel.add(undeleteButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 40, -1, -1));
-
-        cleanButton.setText("Clean");
-        detailControlPanel.add(cleanButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 40, -1, -1));
+        detailControlPanel.add(undeleteButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 40, -1, -1));
 
         detailsPanel.add(detailControlPanel, java.awt.BorderLayout.NORTH);
 
@@ -323,6 +336,39 @@ public class Housekeeper extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_undeleteButtonActionPerformed
 
+    private void cleanAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanAllButtonActionPerformed
+        try {
+            for (String s : MetaFactory.getInstance().getFactories()) {
+                clean(s);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_cleanAllButtonActionPerformed
+
+    private void cleanSelectedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanSelectedButtonActionPerformed
+        int s = objectTypeComboBox.getSelectedIndex();
+        switch (s) {
+            case -1: return;
+            
+            case 0: cleanAllButtonActionPerformed(evt);
+                    break;
+                    
+            default:
+                    clean(PERSISTABLES[s]);
+        }
+    }//GEN-LAST:event_cleanSelectedButtonActionPerformed
+
+    private void clean(String t) {
+        try {
+            MetaFactory.getInstance().getFactory(t).purge();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }        
+    }
+    
     private void populateSelectionTable(String typeFilter) 
     {
         currentSelection.clear();
@@ -364,7 +410,6 @@ public class Housekeeper extends javax.swing.JDialog {
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JSplitPane bottomPanelSplitPane;
     private javax.swing.JButton cleanAllButton;
-    private javax.swing.JButton cleanButton;
     private javax.swing.JButton cleanSelectedButton;
     private javax.swing.JButton closeButton;
     private javax.swing.JTextField deletedOnTextField;

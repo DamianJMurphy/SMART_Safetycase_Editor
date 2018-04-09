@@ -166,6 +166,17 @@ public class PersistableFactory <T extends Persistable> {
         database.delete(thing);
     }
     
+    public void purge()
+            throws Exception
+    {
+        for (Integer id : instances.keySet()) {
+            T p = instances.get(id);
+            if (p.isDeleted())
+                instances.remove(id);
+        }
+        database.purgePersistable(typeName);
+    }
+    
     public void undelete(T thing)
             throws Exception
     {

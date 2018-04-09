@@ -6,9 +6,8 @@ NOT FOR MARCH:
 
 Functional
     
-TODO: "Undelete" and housekeeping functions from main menu
+TODO: "Undelete" and housekeeping functions from main menu. Needs tidying up.
     - TODO THEN: Cascade purge
-    - THEN cleanup of old/dead automatic relationships from the graphical editors
 
 TODO: See if it is possible to auto-wrap the text in boxes in the graphical editors
 
