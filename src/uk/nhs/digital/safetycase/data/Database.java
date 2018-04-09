@@ -659,6 +659,30 @@ public class Database {
         }
     }
     
+    Persistable undelete(Persistable t)
+            throws Exception
+    {
+        StringBuilder sb = new StringBuilder("update ");
+        sb.append(t.getDatabaseObjectName());
+        sb.append(" set DeletedDate=null  where ");
+        sb.append(t.getDatabaseObjectName());
+        sb.append("ID = ");
+        sb.append(t.getId());
+        java.lang.System.err.println(sb);
+        try (Statement s = connection.createStatement()) {
+            if (s.executeUpdate(sb.toString()) != 1) {
+                throw new Exception("Cannot mark object deleted - not found");
+            }
+            connection.commit();            
+        }
+        catch(Exception e) {
+            Exception edetail = new Exception(sb.toString(), e);
+            throw edetail;
+        }
+        t.setUndeleted();
+        return t;
+    }
+    
     Persistable delete(Persistable t)
         throws Exception
     {

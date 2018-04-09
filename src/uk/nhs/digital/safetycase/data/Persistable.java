@@ -46,6 +46,12 @@ public abstract class Persistable {
     void setDeleted() { deleted = true; }
     void clearChange() { changed = false; }
     String getOrderBy() { return orderby; }
+
+    void setUndeleted() { 
+        deleted = false; 
+        readOnlyAttributes.put("DeletedDate", Database.empty);
+    }
+
     
     public boolean isReferenceData() { return referenceData; }
     public boolean isDeleted() { return deleted; }

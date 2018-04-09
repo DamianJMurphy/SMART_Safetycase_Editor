@@ -337,8 +337,8 @@ public class SmartProject
     {    
         root = new DefaultMutableTreeNode(getName());
 
-        PersistableFactory<uk.nhs.digital.safetycase.data.System> sf = metaFactory.getFactory("System");
-        PersistableFactory<SystemFunction> sff = metaFactory.getFactory("SystemFunction");
+//        PersistableFactory<uk.nhs.digital.safetycase.data.System> sf = metaFactory.getFactory("System");
+//        PersistableFactory<SystemFunction> sff = metaFactory.getFactory("SystemFunction");
         DefaultMutableTreeNode projectsNode = new DefaultMutableTreeNode("Projects");
         root.add(projectsNode);
         PersistableFactory<Project> pf = metaFactory.getFactory("Project");
@@ -357,6 +357,14 @@ public class SmartProject
         ((DefaultMutableTreeNode)treeModel.getRoot()).add(root);
     }
 
+    @Override
+    public void reInitialiseProjectView()
+            throws Exception
+    {
+        initialise();
+        projectWindow.resetTreeModel(treeModel);
+    }
+    
     private DefaultMutableTreeNode populateProject(uk.nhs.digital.safetycase.data.Project proj) {
         DefaultMutableTreeNode p = new DefaultMutableTreeNode(proj.getTitle());
         p.setUserObject(proj);

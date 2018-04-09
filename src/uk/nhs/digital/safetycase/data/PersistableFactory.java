@@ -166,6 +166,14 @@ public class PersistableFactory <T extends Persistable> {
         database.delete(thing);
     }
     
+    public void undelete(T thing)
+            throws Exception
+    {
+        if (thing.getId() == -1) 
+            return;        
+        database.undelete(thing);
+    }
+    
     @SuppressWarnings("unchecked")
     private T loadFromDatabase(int id)
             throws Exception

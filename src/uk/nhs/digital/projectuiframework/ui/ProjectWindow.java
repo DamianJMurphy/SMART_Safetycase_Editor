@@ -634,6 +634,11 @@ public class ProjectWindow extends javax.swing.JFrame {
         projectTree.expandRow(0);
     }
     
+    public void resetTreeModel(DefaultTreeModel m) {
+        projectTree.setModel(m);
+        projectTree.expandRow(0);        
+    }
+    
     public void setTreeModel(DefaultTreeModel m, String n, Project p) {
         lastProjectAdded = p;
         projects.put(n, p);

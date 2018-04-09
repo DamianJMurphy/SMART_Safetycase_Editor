@@ -25,6 +25,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
@@ -43,6 +44,7 @@ public class Housekeeper extends javax.swing.JDialog {
     private static final String[] COLUMNS = {"Name", "Type", "Deleted date", "Relationships"};
     
     private final ArrayList<Persistable> currentSelection = new ArrayList<>();
+    private Persistable selectedObject = null;
     /**
      * Creates new form Housekeeper
      * @param parent
@@ -57,10 +59,13 @@ public class Housekeeper extends javax.swing.JDialog {
             int sel = selectedTable.getSelectedRow();
             if (sel == -1)
                 return;
-            Persistable p = currentSelection.get(sel);
-            populateDetails(p);
+            selectedObject = currentSelection.get(sel);
+            populateDetails(selectedObject);
         });
         dependenciesTree.setCellRenderer(new HousekeeperDependencyTreeCellRenderer());
+        DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode("Nothing selected...");
+        DefaultTreeModel ntm = new DefaultTreeModel(dmtn);
+        dependenciesTree.setModel(ntm);        
     }
 
     
@@ -249,6 +254,11 @@ public class Housekeeper extends javax.swing.JDialog {
         detailControlPanel.add(deletedOnTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(102, 46, 217, -1));
 
         undeleteButton.setText("Undelete");
+        undeleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undeleteButtonActionPerformed(evt);
+            }
+        });
         detailControlPanel.add(undeleteButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 40, -1, -1));
 
         cleanButton.setText("Clean");
@@ -284,6 +294,35 @@ public class Housekeeper extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_closeButtonActionPerformed
 
+    private void undeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undeleteButtonActionPerformed
+        if (selectedObject == null)
+            return;
+        
+        try {
+            MetaFactory.getInstance().getFactory(selectedObject.getDatabaseObjectName()).undelete(selectedObject);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        DefaultTableModel dtm = (DefaultTableModel)selectedTable.getModel();
+        int i = currentSelection.indexOf(selectedObject);
+        dtm.removeRow(i);
+        currentSelection.remove(i);
+        DefaultMutableTreeNode dmtn = new DefaultMutableTreeNode("Nothing selected...");
+        DefaultTreeModel ntm = new DefaultTreeModel(dmtn);
+        dependenciesTree.setModel(ntm);
+        nameTextField.setText("");
+        deletedOnTextField.setText("");
+        selectedObject = null;
+        try {
+            SmartProject.getProject().reInitialiseProjectView();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_undeleteButtonActionPerformed
+
     private void populateSelectionTable(String typeFilter) 
     {
         currentSelection.clear();
@@ -299,6 +338,9 @@ public class Housekeeper extends javax.swing.JDialog {
                                 row[0] = p.getAttributeValue("Name");
                                 row[1] = p.getDisplayName();
                                 row[2] = p.getAttributeValue("DeletedDate");
+                                if ((row[2] == null) || (row[2].trim().length() == 0)) { // Just done and not reloaded from the database
+                                    row[2] = "Just now";
+                                }
                                 if (p.getRelationshipsForLoad() != null) {
                                     row[3] = "Yes";
                                 } else {

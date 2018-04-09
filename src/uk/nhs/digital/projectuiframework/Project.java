@@ -61,6 +61,7 @@ public interface Project {
     DefaultTreeModel getTreeModel();
 
     void initialise() throws Exception;
+    void reInitialiseProjectView() throws Exception;
 
     void load(File f) throws Exception;
     void load() throws Exception;
