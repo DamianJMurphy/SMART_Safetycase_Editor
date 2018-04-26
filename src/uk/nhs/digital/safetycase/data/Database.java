@@ -374,6 +374,7 @@ public class Database {
         sb.append(source);
         sb.append("RelationshipID = ");
         sb.append(rid);
+        java.lang.System.out.println(sb.toString());
         try (Statement s = connection.createStatement()) {
             if (s.executeUpdate(sb.toString()) != 1) {
                 throw new Exception("Cannot update object - not found");

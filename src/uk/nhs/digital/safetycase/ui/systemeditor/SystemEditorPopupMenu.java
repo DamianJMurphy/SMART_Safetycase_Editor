@@ -13,8 +13,7 @@ import javax.swing.TransferHandler;
 import com.mxgraph.examples.swing.editor.EditorActions.HistoryAction;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.util.mxResources;
-import uk.nhs.digital.safetycase.ui.AddHazardAction;
-import uk.nhs.digital.safetycase.ui.LinkAction;
+import uk.nhs.digital.safetycase.ui.SystemFunctionLinkAction;
 
 public class SystemEditorPopupMenu extends JPopupMenu {
 
@@ -32,10 +31,10 @@ public class SystemEditorPopupMenu extends JPopupMenu {
 //                    "/com/mxgraph/examples/swing/images/collapse.gif"));
 //            add(editor.bind("SystemFunction", new AddHazardAction(editor.getGraphComponent().getGraph().getSelectionCell()),
 //                    "/com/mxgraph/examples/swing/images/maximize.gif"));
-            add(editor.bind("Link", new LinkAction(editor.getGraphComponent().getGraph().getSelectionCell()),
+            add(editor.bind("Link", new SystemFunctionLinkAction(editor.getGraphComponent().getGraph().getSelectionCell()),
                     "/com/mxgraph/examples/swing/images/entity.gif"));
         } else {
-            add(editor.bind("Link", new LinkAction(),
+            add(editor.bind("Link", new SystemFunctionLinkAction(),
                     "/com/mxgraph/examples/swing/images/entity.gif"));
         }
 

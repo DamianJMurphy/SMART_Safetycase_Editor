@@ -59,12 +59,12 @@ public class EffectEditor extends javax.swing.JPanel
         linksTable.setDefaultEditor(Object.class, null);
         linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         try {
-            ValueSet effectType = MetaFactory.getInstance().getValueSet("EffectType");
-            Iterator<String> etypes = effectType.iterator();
-            while(etypes.hasNext()) {
-                String s = etypes.next();
-                typeComboBox.addItem(s);
-            }
+//            ValueSet effectType = MetaFactory.getInstance().getValueSet("EffectType");
+//            Iterator<String> etypes = effectType.iterator();
+//            while(etypes.hasNext()) {
+//                String s = etypes.next();
+//                typeComboBox.addItem(s);
+//            }
             ArrayList<String> conds = MetaFactory.getInstance().getFactory("Effect").getDistinctSet("GroupingType");
             if (conds.isEmpty()) {
                 conditionsComboBox.addItem("Generic");
@@ -109,11 +109,9 @@ public class EffectEditor extends javax.swing.JPanel
         linksTable = new javax.swing.JTable();
         linksEditorButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
-        typeComboBox = new javax.swing.JComboBox<>();
         conditionsComboBox = new javax.swing.JComboBox<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
@@ -164,8 +162,6 @@ public class EffectEditor extends javax.swing.JPanel
 
         jLabel1.setText("Name");
 
-        jLabel2.setText("Type");
-
         jLabel3.setText("Condition");
 
         jLabel4.setText("Description");
@@ -196,13 +192,11 @@ public class EffectEditor extends javax.swing.JPanel
                     .addGroup(editorPanelLayout.createSequentialGroup()
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4))
                         .addGap(23, 23, 23)
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(nameTextField)
-                            .addComponent(typeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(editorPanelLayout.createSequentialGroup()
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -220,11 +214,7 @@ public class EffectEditor extends javax.swing.JPanel
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(48, 48, 48)
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(conditionsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -256,6 +246,28 @@ public class EffectEditor extends javax.swing.JPanel
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+//        if (typeComboBox.getSelectedIndex() == -1)
+//        typeComboBox.setSelectedIndex(0);
+        //        f.setAttribute("Name", nameTextField.getText());
+        effect.setAttribute("Description", descriptionTextArea.getText());
+//        effect.setAttribute("Type", (String)typeComboBox.getSelectedItem());
+        effect.setAttribute("GroupingType", (String)conditionsComboBox.getSelectedItem());
+        //        if (newObjectProjectId == -1)
+        //            effect.setAttribute("ProjectID", Integer.parseInt(effect.getAttributeValue("ProjectID")));
+        //        else
+        effect.setAttribute("ProjectID",SmartProject.getProject().getCurrentProjectID());
+        try {
+            MetaFactory.getInstance().getFactory(effect.getDatabaseObjectName()).put(effect);
+            SmartProject.getProject().editorEvent(Project.UPDATE, effect);
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(editorPanel, "Failed to save Effect. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in EffectEditor", e);
+        }
+
+    }//GEN-LAST:event_saveButtonActionPerformed
+
     private void linksEditorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linksEditorButtonActionPerformed
         JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
         linkEditor.add(new LinkEditor(effect).setParent(linkEditor));
@@ -269,10 +281,10 @@ public class EffectEditor extends javax.swing.JPanel
                 ArrayList<Relationship> a = rels.get(t);
                 for (Relationship r : a) {
                     String m = r.getManagementClass();
-                    if ((m == null) || (!m.contentEquals("Diagram"))) {                    
+                    if ((m == null) || (!m.contentEquals("Diagram"))) {
                         Object[] row = new Object[linkcolumns.length];
                         for (int i = 0; i < linkcolumns.length; i++)
-                            row[i] = r;
+                        row[i] = r;
                         dtm.addRow(row);
                     }
                 }
@@ -283,30 +295,7 @@ public class EffectEditor extends javax.swing.JPanel
             SmartProject.getProject().log("Failed to process editLinks action in EffectEditor", e);
         }
 
-
     }//GEN-LAST:event_linksEditorButtonActionPerformed
-
-    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        if (typeComboBox.getSelectedIndex() == -1)
-            typeComboBox.setSelectedIndex(0);
-//        f.setAttribute("Name", nameTextField.getText());
-        effect.setAttribute("Description", descriptionTextArea.getText());
-        effect.setAttribute("Type", (String)typeComboBox.getSelectedItem());
-        effect.setAttribute("GroupingType", (String)conditionsComboBox.getSelectedItem());
-//        if (newObjectProjectId == -1)
-//            effect.setAttribute("ProjectID", Integer.parseInt(effect.getAttributeValue("ProjectID")));
-//        else 
-            effect.setAttribute("ProjectID",SmartProject.getProject().getCurrentProjectID());
-        try {
-            MetaFactory.getInstance().getFactory(effect.getDatabaseObjectName()).put(effect);
-            SmartProject.getProject().editorEvent(Project.UPDATE, effect);
-        }
-        catch (Exception e) {
-            JOptionPane.showMessageDialog(editorPanel, "Failed to save Effect. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
-            SmartProject.getProject().log("Failed to save in EffectEditor", e);
-        }
-     
-    }//GEN-LAST:event_saveButtonActionPerformed
 
     @Override
     public void setPersistableObject(Persistable p) {
@@ -323,6 +312,7 @@ public class EffectEditor extends javax.swing.JPanel
                 break;
             }
         }
+/*
         String s = effect.getAttributeValue("Type");
         for (int j = 0; j < typeComboBox.getItemCount(); j++) {
             if (s.contentEquals(typeComboBox.getItemAt(j))) {
@@ -330,7 +320,8 @@ public class EffectEditor extends javax.swing.JPanel
                 break;
             }
         }
-        
+*/
+
         try {
             HashMap<String,ArrayList<Relationship>> rels = effect.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
@@ -371,7 +362,6 @@ public class EffectEditor extends javax.swing.JPanel
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JPanel editorPanel;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane2;
@@ -381,7 +371,6 @@ public class EffectEditor extends javax.swing.JPanel
     private javax.swing.JTable linksTable;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JButton saveButton;
-    private javax.swing.JComboBox<String> typeComboBox;
     // End of variables declaration//GEN-END:variables
 
     @Override

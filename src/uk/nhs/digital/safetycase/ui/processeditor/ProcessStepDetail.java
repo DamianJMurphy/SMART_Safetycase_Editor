@@ -121,10 +121,10 @@ public class ProcessStepDetail
         hazardsTable = new javax.swing.JTable();
         editSelectedHazardButton = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        functionsLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
         locationsLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
         rolesLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
         systemLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
+        functionsLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
         editLinksButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Process step"));
@@ -199,12 +199,12 @@ public class ProcessStepDetail
 
         add(hazardsPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 171, 661, 210));
 
-        jTabbedPane1.addTab("Functions", functionsLinksPanel);
         jTabbedPane1.addTab("Care settings", locationsLinksPanel);
         jTabbedPane1.addTab("Roles", rolesLinksPanel);
         jTabbedPane1.addTab("Systems", systemLinksPanel);
+        jTabbedPane1.addTab("Functions", functionsLinksPanel);
 
-        add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 400, 661, 180));
+        add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 430, 661, 180));
 
         editLinksButton.setText("Links...");
         editLinksButton.addActionListener(new java.awt.event.ActionListener() {
@@ -212,7 +212,7 @@ public class ProcessStepDetail
                 editLinksButtonActionPerformed(evt);
             }
         });
-        add(editLinksButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 590, -1, -1));
+        add(editLinksButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 390, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed

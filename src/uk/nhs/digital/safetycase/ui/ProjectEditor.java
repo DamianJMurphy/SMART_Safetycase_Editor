@@ -216,6 +216,7 @@ public class ProjectEditor
             JOptionPane.showMessageDialog(this, "Failed to save Porject. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in ProjectEditor", e);
         }
+        unsubscribe();
         parent.dispose();
     }//GEN-LAST:event_createProjectButtonActionPerformed
 

@@ -36,7 +36,7 @@ import uk.nhs.digital.safetycase.ui.processeditor.ProcessGraphEditor;
  *
  * @author damian
  */
-public class LinkAction 
+public class ProcessStepLinkAction 
         implements Action
 {
 
@@ -45,11 +45,11 @@ public class LinkAction
     private HashMap<String,Object> values = null;
     private mxCell selected = null;
     
-    public LinkAction(Object o) {
+    public ProcessStepLinkAction(Object o) {
         selected = (mxCell)o;
     }
     
-    public LinkAction() {
+    public ProcessStepLinkAction() {
         
     }
     

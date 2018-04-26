@@ -49,7 +49,8 @@ public class LinkTableCellRenderer
             String content = null;
             switch (column) {
                 case TYPE:
-                    content = r.getTargetType();
+//                    content = r.getTargetType();
+                    content = target.getDisplayName();
                     break;
                 case NAME:
                     content = target.getAttributeValue("Name");

@@ -221,7 +221,7 @@ public class LinkEditor extends javax.swing.JPanel {
         commentTextArea.setWrapStyleWord(true);
         jScrollPane3.setViewportView(commentTextArea);
 
-        discardButton.setText("Discard");
+        discardButton.setText("Clear");
         discardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 discardButtonActionPerformed(evt);
@@ -440,7 +440,7 @@ public class LinkEditor extends javax.swing.JPanel {
             focus.deleteRelationship(r);
             MetaFactory.getInstance().getFactory(focus.getDatabaseObjectName()).put(focus);
             ((DefaultTableModel)relationshipsTable.getModel()).removeRow(selected);
-            tableMap.remove(r);
+            tableMap.remove(selected);
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Failed to delete link. Send logs to support", "Delete failed", JOptionPane.ERROR_MESSAGE);
@@ -490,6 +490,7 @@ public class LinkEditor extends javax.swing.JPanel {
             }
         }
         editedRelationship = null;
+        targetList.clearSelection();
     }//GEN-LAST:event_saveButtonActionPerformed
 
 

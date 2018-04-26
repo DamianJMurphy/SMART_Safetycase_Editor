@@ -6,6 +6,8 @@ NOT FOR MARCH:
 
 Functional
     
+BUGFIX: Link in System/Function popup menu
+
 TODO: "Undelete" and housekeeping functions from main menu. Needs tidying up.
     - TODO THEN: Cascade purge
 

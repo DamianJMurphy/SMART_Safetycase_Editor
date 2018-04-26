@@ -623,6 +623,10 @@ public class ProjectWindow extends javax.swing.JFrame {
         (new Housekeeper(this, true)).setVisible(true);
     }//GEN-LAST:event_undeleteMenuItemActionPerformed
 
+    public void newProject(String n, Project p) {
+        lastProjectAdded = p;
+        projects.put(n, p);        
+    }
     
     public void addProject(String n, Project p) {
         lastProjectAdded = p;

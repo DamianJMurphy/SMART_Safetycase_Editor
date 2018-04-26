@@ -8,7 +8,7 @@ import com.mxgraph.examples.swing.editor.EditorActions.HistoryAction;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.util.mxResources;
 import uk.nhs.digital.safetycase.ui.AddHazardAction;
-import uk.nhs.digital.safetycase.ui.LinkAction;
+import uk.nhs.digital.safetycase.ui.ProcessStepLinkAction;
 import uk.nhs.digital.safetycase.ui.ProcessStepDetailsAction;
 
 public class ProcessEditorPopupMenu_old extends JPopupMenu
@@ -29,10 +29,10 @@ public class ProcessEditorPopupMenu_old extends JPopupMenu
                         "/com/mxgraph/examples/swing/images/collapse.gif"));
                     add(editor.bind("Hazards", new AddHazardAction(editor.getGraphComponent().getGraph().getSelectionCell()),
                         "/com/mxgraph/examples/swing/images/maximize.gif"));                    
-                    add(editor.bind("Link", new LinkAction(editor.getGraphComponent().getGraph().getSelectionCell()),
+                    add(editor.bind("Link", new ProcessStepLinkAction(editor.getGraphComponent().getGraph().getSelectionCell()),
 				"/com/mxgraph/examples/swing/images/entity.gif"));
                 } else {
-                    add(editor.bind("Link", new LinkAction(),
+                    add(editor.bind("Link", new ProcessStepLinkAction(),
 				"/com/mxgraph/examples/swing/images/entity.gif"));
                 }    
                 

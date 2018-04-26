@@ -681,6 +681,11 @@ public class SmartProject
         } else if (p.getDatabaseObjectName().contentEquals("Location")) {
             search = "Care Settings";
         } else if (p.getDatabaseObjectName().contentEquals("Project")) {
+            if (ev == uk.nhs.digital.projectuiframework.Project.ADD) {
+                // TODO: For "can't open editor on new project" bug, an existing panel
+                // is being returned but with no editor component. Check. Something might
+                // need to be done here to make sure that it is populated properly.
+            }
             updateProjectNodeInTree(p, ev);
             return;
         } else if ("HazardCauseControlEffect".contains(p.getDatabaseObjectName())) {

@@ -116,8 +116,10 @@ public abstract class Persistable {
         ArrayList<Relationship> rels = relationships.get(t);
         for (Relationship  x : rels) {
             if (r.getTargetType().contentEquals(x.getTargetType()) && (r.getTarget() == x.getTarget())) {
-                x.setDeleted();
-                break;
+                if (x.getId() == r.getId()) {
+                    x.setDeleted();
+                    break;
+                }
             }
         }
         changed = true;

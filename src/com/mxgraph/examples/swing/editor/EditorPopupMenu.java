@@ -7,7 +7,7 @@ import javax.swing.TransferHandler;
 import com.mxgraph.examples.swing.editor.EditorActions.HistoryAction;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.util.mxResources;
-import uk.nhs.digital.safetycase.ui.LinkAction;
+import uk.nhs.digital.safetycase.ui.ProcessStepLinkAction;
 
 public class EditorPopupMenu extends JPopupMenu
 {
@@ -22,10 +22,10 @@ public class EditorPopupMenu extends JPopupMenu
 		boolean selected = !editor.getGraphComponent().getGraph()
 				.isSelectionEmpty();
                 if (selected)
-                    add(editor.bind("Link", new LinkAction(editor.getGraphComponent().getGraph().getSelectionCell()),
+                    add(editor.bind("Link", new ProcessStepLinkAction(editor.getGraphComponent().getGraph().getSelectionCell()),
 				"/com/mxgraph/examples/swing/images/entity.gif"));
                 else
-                    add(editor.bind("Link", new LinkAction(),
+                    add(editor.bind("Link", new ProcessStepLinkAction(),
 				"/com/mxgraph/examples/swing/images/entity.gif"));
                     
                 

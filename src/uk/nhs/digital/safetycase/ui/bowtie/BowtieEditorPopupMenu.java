@@ -26,7 +26,7 @@ import com.mxgraph.examples.swing.editor.EditorActions.HistoryAction;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.util.mxResources;
 import uk.nhs.digital.safetycase.ui.AddHazardAction;
-import uk.nhs.digital.safetycase.ui.LinkAction;
+import uk.nhs.digital.safetycase.ui.ProcessStepLinkAction;
 import uk.nhs.digital.safetycase.ui.ProcessStepDetailsAction;
 
 public class BowtieEditorPopupMenu extends JPopupMenu
