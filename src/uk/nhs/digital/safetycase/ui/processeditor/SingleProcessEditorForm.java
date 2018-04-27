@@ -158,18 +158,22 @@ public class SingleProcessEditorForm
         newObjectProjectId = i;
     }
     
+    void setNewProcess(Process p) { process = p; }
+    
     @Override
     public boolean notification(int evtype, Object o) {
-        if (process != null)
+        
+        if (process != null) {
             SmartProject.getProject().getProjectWindow().setViewTitle(this, "Process:" + process.getAttributeValue("Name"));
-        else 
+            setPersistableObject(process);
+        } else { 
             SmartProject.getProject().getProjectWindow().setViewTitle(this, "Process:" + processEditor.getProcessName());
+        }
         if (evtype == Project.SAVE) {
             processEditor.save();
-            return false;
         }
         
-        return true;
+        return false;
     }
     
    @Override

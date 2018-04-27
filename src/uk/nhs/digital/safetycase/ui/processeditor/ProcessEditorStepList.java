@@ -40,12 +40,13 @@ public class ProcessEditorStepList extends javax.swing.JPanel {
     }
 
     void populateList(ArrayList<Persistable> a) {
+        steps.clear();
         DefaultListModel dlm = new DefaultListModel();
         if (a == null)
             return;
         for (Persistable p : a) {
             ProcessStep ps = (ProcessStep)p;
-            if (ps.getAttributeValue("DeletedDate").length() == 0) {
+            if (!ps.isDeleted()) {
                 dlm.addElement(ps);
                 steps.add(ps);
             }

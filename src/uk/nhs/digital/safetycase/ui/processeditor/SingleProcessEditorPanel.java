@@ -312,6 +312,7 @@ public class SingleProcessEditorPanel
             } else {
                 SmartProject.getProject().editorEvent(Project.UPDATE, process);
             }
+            containerForm.setNewProcess(process);
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Failed to save Process. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
