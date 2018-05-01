@@ -63,7 +63,7 @@ public class SingleProcessEditorForm
             processEditor.setProcessId(pid);
             processEditor.setParent(this);
             ArrayList<Persistable> ps = MetaFactory.getInstance().getChildren("ProcessStep", "ProcessID", pid);
-            stepList.populateList(ps);
+            processSteps.populateList(ps);
         }
     }
     @Override
@@ -105,13 +105,13 @@ public class SingleProcessEditorForm
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        stepList = new uk.nhs.digital.safetycase.ui.processeditor.ProcessEditorStepList();
+        processSteps = new uk.nhs.digital.safetycase.ui.processeditor.ProcessEditorStepList();
         processEditor = new uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorPanel();
 
         setLayout(new java.awt.CardLayout());
 
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        jSplitPane1.setRightComponent(stepList);
+        jSplitPane1.setBottomComponent(processSteps);
         jSplitPane1.setLeftComponent(processEditor);
 
         add(jSplitPane1, "card2");
@@ -121,7 +121,7 @@ public class SingleProcessEditorForm
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane jSplitPane1;
     private uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorPanel processEditor;
-    private uk.nhs.digital.safetycase.ui.processeditor.ProcessEditorStepList stepList;
+    private uk.nhs.digital.safetycase.ui.processeditor.ProcessEditorStepList processSteps;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -135,7 +135,7 @@ public class SingleProcessEditorForm
                     process.getAttributeValue("Source"), process.getAttributeValue("Description"));
             processEditor.populateLinks();
             ArrayList<Persistable> ps = MetaFactory.getInstance().getChildren("ProcessStep", "ProcessID", process.getId());
-            stepList.populateList(ps);
+            processSteps.populateList(ps);
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Failed to load Care process for editing", "Load failed", JOptionPane.ERROR_MESSAGE);

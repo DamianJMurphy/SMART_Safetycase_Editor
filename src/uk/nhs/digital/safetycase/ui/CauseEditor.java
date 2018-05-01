@@ -383,6 +383,9 @@ public class CauseEditor extends javax.swing.JPanel
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
                 for (Relationship r : a) {
+                    if (r.isDeleted())
+                        continue;
+
                     String m = r.getManagementClass();
                     if ((m == null) || (!m.contentEquals("Diagram"))) {    
                         Object[] row = new Object[linkcolumns.length];

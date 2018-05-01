@@ -307,18 +307,17 @@ public class Database {
     void loadValueSet(ValueSet v)
             throws Exception
     {
-        StringBuilder sb = new StringBuilder("select * from ");
-        sb.append(v.getDbObjectName());
+        StringBuilder sb = new StringBuilder("select * from ValueSetItem where SetName = ");
+        sb.append(prepareString(v.getSetName()));
+        sb.append(" order by OrderInSet");
         try (Statement s = connection.createStatement()) {
             if (!s.execute(sb.toString())) {
-                throw new Exception("Cannot read value set from " + v.getDbObjectName());
+                throw new Exception("Cannot read value set " + v.getSetName());
             }
             try (ResultSet r = s.getResultSet()) {
                 while (r.next()) {
-                    String val = r.getString(v.getValueFieldName());
-                    String add = r.getString("AddedDate");
-                    String dep = r.getString("DeprecatedDate");
-                    v.add(val, add, dep);
+                    String val = r.getString("ItemName");
+                    v.add(val);
                 }
             }
         }

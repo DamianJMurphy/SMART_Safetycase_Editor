@@ -82,24 +82,24 @@ public class MetaFactory {
     private void loadValueSets()
             throws Exception
     {
-        ValueSet v = new ValueSet("EffectType", "EffectType",	"Type");
+//        ValueSet v = new ValueSet("EffectType", "EffectType",	"Type");
+//        database.loadValueSet(v);
+//        valueSets.put(v.getName(), v);
+        ValueSet v = new ValueSet("HazardStatus");
         database.loadValueSet(v);
-        valueSets.put(v.getName(), v);
-        v = new ValueSet("HazardStatus", "HazardStatus", "Status");
+        valueSets.put(v.getSetName(), v);
+        v = new ValueSet("ControlType");
         database.loadValueSet(v);
-        valueSets.put(v.getName(), v);
-        v = new ValueSet("ControlType","ControlType", "Type");
+        valueSets.put(v.getSetName(), v);
+        v = new ValueSet("ControlState");
         database.loadValueSet(v);
-        valueSets.put(v.getName(), v);
-        v = new ValueSet("ControlState", "ControlState", "State");
+        valueSets.put(v.getSetName(), v);
+        v = new ValueSet("ProcessStepType");
         database.loadValueSet(v);
-        valueSets.put(v.getName(), v);
-        v = new ValueSet("ProcessStepType", "ProcessStepType", "Type");
-        database.loadValueSet(v);
-        valueSets.put(v.getName(), v);
-        v = new ValueSet("DataQualityIssueResolutionType", "DataQualityIssueResolutionType", "ResolutionType");        
-        database.loadValueSet(v);
-        valueSets.put(v.getName(), v);
+        valueSets.put(v.getSetName(), v);
+//        v = new ValueSet("DataQualityIssueResolutionType", "DataQualityIssueResolutionType", "ResolutionType");        
+//        database.loadValueSet(v);
+//        valueSets.put(v.getName(), v);
     }
     
     public String getDuplicateCheckMessage(String type, String display, String name, int pid, Persistable object) {

@@ -25,7 +25,7 @@ public class IssuesLog
     extends Persistable
 {
 
-    private static final String[] FIELDS = {"ProjectID", "Description", "Name", "Resolution", "GroupingType", "ResolutionType", "ResolvedDate"};
+    private static final String[] FIELDS = {"ProjectID", "Description", "Name", "Resolution", "ExternalIdentifier", "GroupingType", "ResolutionType", "ResolvedDate"};
     
     public IssuesLog() 
     {

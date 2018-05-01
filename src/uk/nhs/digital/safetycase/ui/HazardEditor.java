@@ -937,6 +937,9 @@ public class HazardEditor extends javax.swing.JPanel
                 ArrayList<Relationship> a = rels.get(t);
                 if (a != null) {
                     for (Relationship r : a) {
+                        if (r.isDeleted())
+                            continue;
+                        
                         String m = r.getManagementClass();
                         if ((m == null) || (!m.contentEquals("Diagram"))) {
                             displayedLinks.add(r);

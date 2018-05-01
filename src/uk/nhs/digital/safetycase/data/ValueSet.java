@@ -26,42 +26,25 @@ import java.util.Iterator;
  */
 public class ValueSet 
 {
-    private String name = null;
-    private String dbObject = null;
-    private String valueField = null;
-    private ArrayList<ValueSetItem> items = new ArrayList<>();
+    private String setName = null;
+    private ArrayList<String> items = new ArrayList<>();
 
-    ValueSet(String n, String d, String f) {
-        name = n;
-        dbObject = d;
-        valueField = f;
+    ValueSet(String n) {
+        setName = n;
     }
     
-    void add(String v, String a, String d) {
-        items.add(new ValueSetItem(v,a,d));
+    void add(String v) {
+        items.add(v);
     }
-    public String getName() { return name; }
-    String getDbObjectName() { return dbObject; }
-    String getValueFieldName() { return valueField; }
+    public String getSetName() { return setName; }
     
     public boolean contains(String n) { 
         if (n == null)
             return false;
-        for (ValueSetItem v : items) {
-            if (v.getValue().contentEquals(n)) {
-                return true;
-            }                
-        }
-        return false;
+        return items.contains(n);
     }
     
     public Iterator<String> iterator() {
-        ArrayList<String> a = new ArrayList<>();
-        for (ValueSetItem v : items) {
-            if (!v.isDeprecated()) {
-                a.add(v.getValue());
-            }
-        }
-        return a.iterator();
+        return items.iterator();
     }
 }

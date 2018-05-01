@@ -62,7 +62,7 @@ public class ControlEditor extends javax.swing.JPanel
             Iterator<String> ctypes = controlType.iterator();
             while(ctypes.hasNext()) {
                 String s = ctypes.next();
-                typeComboBox.addItem(s);
+                conditionsComboBox.addItem(s);
             }
             ValueSet controlState = MetaFactory.getInstance().getValueSet("ControlState");
             Iterator<String> cstates = controlState.iterator();
@@ -114,11 +114,9 @@ public class ControlEditor extends javax.swing.JPanel
         editorPanel = new javax.swing.JPanel();
         mainPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
-        typeComboBox = new javax.swing.JComboBox<>();
         stateComboBox = new javax.swing.JComboBox<>();
         conditionsComboBox = new javax.swing.JComboBox<>();
         descriptionAndJustificationContainer = new javax.swing.JPanel();
@@ -155,57 +153,54 @@ public class ControlEditor extends javax.swing.JPanel
 
         jLabel1.setText("Name");
 
-        jLabel2.setText("Type");
-
         jLabel3.setText("State");
 
-        jLabel4.setText("Condition");
-
-        conditionsComboBox.setEditable(true);
+        jLabel4.setText("Type");
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 770, Short.MAX_VALUE)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGap(13, 13, 13)
+                        .addComponent(jLabel3))
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(stateComboBox, 0, 694, Short.MAX_VALUE))
+                .addContainerGap())
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel1)
-                        .addComponent(jLabel2)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel4))
+                    .addComponent(jLabel1)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(stateComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(typeComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(nameTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(conditionsComboBox, 0, 666, Short.MAX_VALUE))
+                    .addComponent(nameTextField)
                     .addContainerGap()))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 139, Short.MAX_VALUE)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(stateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(conditionsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addContainerGap(38, Short.MAX_VALUE))
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelLayout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
                         .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel3)
-                        .addComponent(stateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel4)
-                        .addComponent(conditionsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addContainerGap(108, Short.MAX_VALUE)))
         );
 
         editorPanel.add(mainPanel);
@@ -401,12 +396,12 @@ public class ControlEditor extends javax.swing.JPanel
     
     
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        if (typeComboBox.getSelectedIndex() == -1)
-            typeComboBox.setSelectedIndex(0);
+        if (conditionsComboBox.getSelectedIndex() == -1)
+            conditionsComboBox.setSelectedIndex(0);
         control.setAttribute("Name", nameTextField.getText());
         control.setAttribute("Description", descriptionTextArea.getText());
         control.setAttribute("ClinicalJustification", clinicalJustificationTextArea.getText());
-        control.setAttribute("Type", (String)typeComboBox.getSelectedItem());
+//        control.setAttribute("Type", (String)conditionsComboBox.getSelectedItem());
         control.setAttribute("State", (String)stateComboBox.getSelectedItem());
         control.setAttribute("GroupingType", (String)conditionsComboBox.getSelectedItem());
         control.setAttribute("Evidence", evidenceTextArea.getText());
@@ -464,7 +459,6 @@ public class ControlEditor extends javax.swing.JPanel
     private javax.swing.JPanel evidenceContainer;
     private javax.swing.JTextArea evidenceTextArea;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
@@ -480,7 +474,6 @@ public class ControlEditor extends javax.swing.JPanel
     private javax.swing.JTextField nameTextField;
     private javax.swing.JButton saveButton;
     private javax.swing.JComboBox<String> stateComboBox;
-    private javax.swing.JComboBox<String> typeComboBox;
     // End of variables declaration//GEN-END:variables
 
     private void newControl() {
@@ -513,14 +506,14 @@ public class ControlEditor extends javax.swing.JPanel
                 break;
             }
         }
-        String s = control.getAttributeValue("Type");
-        for (int j = 0; j < typeComboBox.getItemCount(); j++) {
-            if (s.contentEquals(typeComboBox.getItemAt(j))) {
-                typeComboBox.setSelectedIndex(j);
-                break;
-            }
-        }
-        s = control.getAttributeValue("State");
+//        String s = control.getAttributeValue("Type");
+//        for (int j = 0; j < typeComboBox.getItemCount(); j++) {
+//            if (s.contentEquals(typeComboBox.getItemAt(j))) {
+//                typeComboBox.setSelectedIndex(j);
+//                break;
+//            }
+//        }
+        String s = control.getAttributeValue("State");
         for (int j = 0; j < stateComboBox.getItemCount(); j++) {
             if (s.contentEquals(stateComboBox.getItemAt(j))) {
                 stateComboBox.setSelectedIndex(j);
@@ -533,6 +526,9 @@ public class ControlEditor extends javax.swing.JPanel
             for (String t : rels.keySet()) {
                 ArrayList<Relationship> a = rels.get(t);
                 for (Relationship r : a) {
+                    if (r.isDeleted())
+                        continue;
+                    
                     String m = r.getManagementClass();
                     if ((m == null) || (!m.contentEquals("Diagram"))) {                    
                         Object[] row = new Object[linkcolumns.length];

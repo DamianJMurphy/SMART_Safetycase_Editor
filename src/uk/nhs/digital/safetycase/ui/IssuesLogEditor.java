@@ -32,7 +32,7 @@ public class IssuesLogEditor
         extends javax.swing.JPanel 
         implements PersistableEditor
 {
-    private static final String[] ISSUESCOLUMNS = {"Name", "Created", "Type", "Reolution Type"};
+    private static final String[] ISSUESCOLUMNS = {"Name", "Reference", "Created", "Type", "Reolution Type"};
     private static final String[] LINKSCOLUMNS = {"Type", "Name", "Comment"};
     private EditorComponent editorComponent = null;
     private int newObjectProjectId = -1;
@@ -144,6 +144,8 @@ public class IssuesLogEditor
         jLabel7 = new javax.swing.JLabel();
         resolutionDateTextField = new javax.swing.JTextField();
         unresolveButton = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        externalIdentifierTextField = new javax.swing.JTextField();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -280,6 +282,8 @@ public class IssuesLogEditor
             }
         });
 
+        jLabel8.setText("Ref");
+
         javax.swing.GroupLayout detailPanelLayout = new javax.swing.GroupLayout(detailPanel);
         detailPanel.setLayout(detailPanelLayout);
         detailPanelLayout.setHorizontalGroup(
@@ -293,20 +297,11 @@ public class IssuesLogEditor
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(editLinksButton))
-                    .addGroup(detailPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nameTextField))
                     .addComponent(jScrollPane4)
                     .addGroup(detailPanelLayout.createSequentialGroup()
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(typeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(detailPanelLayout.createSequentialGroup()
-                        .addGroup(detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel3))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(detailPanelLayout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -320,21 +315,37 @@ public class IssuesLogEditor
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
                         .addComponent(saveButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(discardButton)))
+                        .addComponent(discardButton))
+                    .addGroup(detailPanelLayout.createSequentialGroup()
+                        .addGroup(detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel3))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(detailPanelLayout.createSequentialGroup()
+                        .addGroup(detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nameTextField)
+                            .addComponent(externalIdentifierTextField))))
                 .addContainerGap())
         );
         detailPanelLayout.setVerticalGroup(
             detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detailPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(7, 7, 7)
+                .addGroup(detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(externalIdentifierTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
+                    .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -355,7 +366,7 @@ public class IssuesLogEditor
                         .addComponent(jLabel7)
                         .addComponent(resolutionDateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(unresolveButton)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(detailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(editLinksButton, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -392,6 +403,7 @@ public class IssuesLogEditor
             created = true;
         }
         currentIssue.setAttribute("Name", nameTextField.getText());
+        currentIssue.setAttribute("ExternalIdentifier", externalIdentifierTextField.getText());
         currentIssue.setAttribute("GroupingType", (String)typeComboBox.getSelectedItem());
         currentIssue.setAttribute("ResolutionType", (String)resolutionTypeComboBox.getSelectedItem());
         currentIssue.setAttribute("Description", descriptionTextArea.getText());
@@ -425,9 +437,7 @@ public class IssuesLogEditor
         populateIssuesTable();
     }//GEN-LAST:event_closedIssuesCheckboxActionPerformed
 
-    private void populateLinksTable() {
-        
-    }
+
     
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
         if (currentIssue == null) {
@@ -448,6 +458,7 @@ public class IssuesLogEditor
 
     private void clearIssuesDisplay() {
         nameTextField.setText("");
+        externalIdentifierTextField.setText("");
         descriptionTextArea.setText("");
         resolutionTextArea.setText("");
         resolutionDateTextField.setText("");
@@ -459,6 +470,7 @@ public class IssuesLogEditor
         currentIssue = issue;
         currentIssue.getAttribute("ResolvedDate").setIsDate(true);
         nameTextField.setText(issue.getAttributeValue("Name"));
+        externalIdentifierTextField.setText(issue.getAttributeValue("ExternalIdentifier"));
         typeComboBox.setSelectedItem(issue.getAttributeValue("GroupingType"));
         descriptionTextArea.setText(issue.getAttributeValue("Description"));
         resolutionTextArea.setText(issue.getAttributeValue("Resolution"));
@@ -501,11 +513,12 @@ public class IssuesLogEditor
                     (SmartProject.getProject().getCurrentProjectID() == issue.getAttribute("ProjectID").getIntValue())) {
                 String[] row = new String[ISSUESCOLUMNS.length];
                 row[0] = issue.getAttributeValue("Name");
-                row[1] = issue.getAttributeValue("CreatedDate");
-                if ((row[1] == null) || (row[1].trim().length() == 0))
-                        row[1] = "Today";
-                row[2] = issue.getAttributeValue("GroupingType");
-                row[3] = issue.getAttributeValue("ResolutionType");
+                row[1] = issue.getAttributeValue("ExternalIdentifier");
+                row[2] = issue.getAttributeValue("CreatedDate");
+                if ((row[2] == null) || (row[2].trim().length() == 0))
+                        row[2] = "Today";
+                row[3] = issue.getAttributeValue("GroupingType");
+                row[4] = issue.getAttributeValue("ResolutionType");
                 dtm.addRow(row);
                 displayedEntries.add(issue);
             }
@@ -537,6 +550,7 @@ public class IssuesLogEditor
     private javax.swing.JPanel detailPanel;
     private javax.swing.JButton discardButton;
     private javax.swing.JButton editLinksButton;
+    private javax.swing.JTextField externalIdentifierTextField;
     private javax.swing.JTable issuesTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -545,6 +559,7 @@ public class IssuesLogEditor
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;

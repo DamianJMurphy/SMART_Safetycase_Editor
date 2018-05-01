@@ -252,12 +252,8 @@ public class BowtieSaveHandler
                    if (p == null) {
                        throw new Exception("Unknown Bowtie Element type " + bt.type);
                    }
-                   if (bt.type.contentEquals("Effect")) {
-                       p.setAttribute("Type", "Select...");
-                   }
                    if (bt.type.contentEquals("Control")) {
-                       p.setAttribute("Type", "Select...");
-                       p.setAttribute("State", "Select...");
+                       p.setAttribute("State", "To be implemented");
                    }
                    p.setAttribute("Name", bt.name);
                    p.setAttribute("GraphCellId", bt.cellId);
@@ -375,7 +371,6 @@ public class BowtieSaveHandler
         }
         if (t.contentEquals("Effect")) {
             p = new Effect();
-            p.setAttribute("Type", "Select...");
         }
         if (p != null)
             p.setAttribute("GroupingType", "Generic");

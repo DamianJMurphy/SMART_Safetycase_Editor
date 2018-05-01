@@ -24,7 +24,7 @@ package uk.nhs.digital.safetycase.data;
 public class Effect 
         extends Persistable
 {
-    private static final String[] FIELDS = {"ProjectID", "Name", "Description", "Type", "GraphCellId", "GroupingType"};
+    private static final String[] FIELDS = {"ProjectID", "Name", "Description", "GraphCellId", "GroupingType"};
     
     public Effect() 
     {

@@ -28,10 +28,17 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
       <SubComponents>
-        <Component class="uk.nhs.digital.safetycase.ui.processeditor.ProcessEditorStepList" name="stepList">
+        <Component class="uk.nhs.digital.safetycase.ui.processeditor.ProcessEditorStepList" name="processSteps">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
-              <JSplitPaneConstraints position="right"/>
+              <JSplitPaneConstraints position="bottom"/>
+            </Constraint>
+          </Constraints>
+        </Component>
+        <Component class="uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorPanel" name="processEditor">
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
+              <JSplitPaneConstraints position="left"/>
             </Constraint>
           </Constraints>
         </Component>
