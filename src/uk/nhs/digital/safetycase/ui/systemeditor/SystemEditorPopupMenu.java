@@ -27,15 +27,15 @@ public class SystemEditorPopupMenu extends JPopupMenu {
         boolean selected = !editor.getGraphComponent().getGraph()
                 .isSelectionEmpty();
         if (selected) {
-//            add(editor.bind("Details", new SystemStepDetailsAction(editor.getGraphComponent().getGraph().getSelectionCell()),
-//                    "/com/mxgraph/examples/swing/images/collapse.gif"));
+            add(editor.bind("Details", new SystemFunctionDetailsAction(editor.getGraphComponent().getGraph().getSelectionCell()),
+                    "/com/mxgraph/examples/swing/images/collapse.gif"));
 //            add(editor.bind("SystemFunction", new AddHazardAction(editor.getGraphComponent().getGraph().getSelectionCell()),
 //                    "/com/mxgraph/examples/swing/images/maximize.gif"));
-            add(editor.bind("Link", new SystemFunctionLinkAction(editor.getGraphComponent().getGraph().getSelectionCell()),
-                    "/com/mxgraph/examples/swing/images/entity.gif"));
-        } else {
-            add(editor.bind("Link", new SystemFunctionLinkAction(),
-                    "/com/mxgraph/examples/swing/images/entity.gif"));
+//            add(editor.bind("Link", new SystemFunctionLinkAction(editor.getGraphComponent().getGraph().getSelectionCell()),
+//                    "/com/mxgraph/examples/swing/images/entity.gif"));
+//        } else {
+//            add(editor.bind("Link", new SystemFunctionLinkAction(),
+//                    "/com/mxgraph/examples/swing/images/entity.gif"));
         }
 
         addSeparator();

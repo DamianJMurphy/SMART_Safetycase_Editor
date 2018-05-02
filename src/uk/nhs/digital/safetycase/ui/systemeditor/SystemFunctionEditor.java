@@ -18,14 +18,20 @@
 package uk.nhs.digital.safetycase.ui.systemeditor;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
+import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.data.SystemFunction;
+import uk.nhs.digital.safetycase.ui.LinkEditor;
 
 /**
  *
@@ -38,6 +44,7 @@ public class SystemFunctionEditor extends javax.swing.JPanel
        
     private EditorComponent editorComponent = null;
     private final String[] functioncolumns = {"Name", "Description", "ParentFunction", "System"};
+    private final String[] linkcolumns = {"Type", "Name", "Comment"};
 
 
     /**
@@ -45,6 +52,7 @@ public class SystemFunctionEditor extends javax.swing.JPanel
      */
     public SystemFunctionEditor() {
         initComponents();
+        SmartProject.getProject().addNotificationSubscriber(this);
               
     }    
     @Override
@@ -76,9 +84,12 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
-        cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
         parentFunctionTextField = new javax.swing.JTextField();
+        linksPanel = new javax.swing.JPanel();
+        editLinksButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        linksTable = new javax.swing.JTable();
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -96,13 +107,6 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         descriptionTextArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(descriptionTextArea);
 
-        cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-
         okButton.setText("Save");
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -111,6 +115,49 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         });
 
         parentFunctionTextField.setEditable(false);
+
+        linksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Linked to"));
+
+        editLinksButton.setText("Edit links");
+        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editLinksButtonActionPerformed(evt);
+            }
+        });
+
+        linksTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(linksTable);
+
+        javax.swing.GroupLayout linksPanelLayout = new javax.swing.GroupLayout(linksPanel);
+        linksPanel.setLayout(linksPanelLayout);
+        linksPanelLayout.setHorizontalGroup(
+            linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(linksPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(linksPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(editLinksButton))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 737, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        linksPanelLayout.setVerticalGroup(
+            linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(linksPanelLayout.createSequentialGroup()
+                .addComponent(editLinksButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -125,20 +172,22 @@ public class SystemFunctionEditor extends javax.swing.JPanel
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1)
                             .addComponent(parentFunctionTextField)
-                            .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)))
+                            .addComponent(nameTextField)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9)
-                        .addComponent(cancelButton)))
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(linksPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(16, 16, 16)
+                .addContainerGap(16, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -148,26 +197,18 @@ public class SystemFunctionEditor extends javax.swing.JPanel
                     .addComponent(parentFunctionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE))
+                    .addComponent(jLabel4)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(okButton)
-                    .addComponent(cancelButton))
-                .addGap(96, 96, 96))
+                .addComponent(okButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
     SystemFunctionEditor setParent(JDialog p) {
         parent = p;
         return this;
     }
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        this.revalidate();
-         parent.dispose();
-    }//GEN-LAST:event_cancelButtonActionPerformed
-
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
          try {
@@ -182,14 +223,50 @@ public class SystemFunctionEditor extends javax.swing.JPanel
             } 
     }//GEN-LAST:event_okButtonActionPerformed
 
+    private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
+
+        JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
+        linkEditor.add(new LinkEditor(sf).setParent(linkEditor));
+        linkEditor.pack();
+        linkEditor.setVisible(true);
+
+        try {
+            HashMap<String,ArrayList<Relationship>> rels = sf.getRelationshipsForLoad();
+            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+            for (String t : rels.keySet()) {
+                ArrayList<Relationship> a = rels.get(t);
+                if (a != null) {
+                    for (Relationship r : a) {
+
+                        Object[] row = new Object[linkcolumns.length];
+                        for (int i = 0; i < linkcolumns.length; i++) {
+                            row[i] = r;
+                        }
+
+                        dtm.addRow(row);
+
+                    }
+                }
+            }
+            linksTable.setModel(dtm);
+        }
+        catch (Exception e) {
+            SmartProject.getProject().log("Failed to process editLinks action in SystemFunctionEditor", e);
+        }
+        
+    }//GEN-LAST:event_editLinksButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelButton;
     private javax.swing.JTextArea descriptionTextArea;
+    private javax.swing.JButton editLinksButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPanel linksPanel;
+    private javax.swing.JTable linksTable;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JButton okButton;
     private javax.swing.JTextField parentFunctionTextField;
@@ -201,7 +278,7 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         if (p == null)
             return;
          try{
-          this.sf = (SystemFunction)p;
+          sf = (SystemFunction)p;
           nameTextField.setText(this.sf.getTitle());
           descriptionTextArea.setText(this.sf.getAttributeValue("Description"));
           int parentId = Integer.parseInt(this.sf.getAttributeValue("ParentSystemFunctionID"));
@@ -214,7 +291,30 @@ public class SystemFunctionEditor extends javax.swing.JPanel
                 e.printStackTrace();
                 return;
             } 
-         
+        try {
+            HashMap<String,ArrayList<Relationship>> rels = sf.getRelationshipsForLoad();
+            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+            for (String t : rels.keySet()) {
+                ArrayList<Relationship> a = rels.get(t);
+                if (a != null) {
+                    for (Relationship r : a) {
+                        if (r.isDeleted())
+                            continue;
+                        
+                        Object[] row = new Object[linkcolumns.length];
+                        for (int i = 0; i < linkcolumns.length; i++) {
+                            row[i] = r;
+                        }
+                        dtm.addRow(row);
+                    }
+                }
+            }
+            linksTable.setModel(dtm);
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to load Function relationshis for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load function relationships", e);
+        }         
            
 //         HideTableColumnsMethod();
     }

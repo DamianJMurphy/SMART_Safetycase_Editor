@@ -46,7 +46,7 @@ public class SystemFunctionEditorPanel extends javax.swing.JPanel {
         initComponents();
          //if(sf != null)
          try{
-          this.sf = SF;
+          sf = SF;
           nameTextField.setText(this.sf.getTitle());
           descriptionTextArea.setText(this.sf.getAttributeValue("Description"));
           int parentId = Integer.parseInt(this.sf.getAttributeValue("ParentSystemFunctionID"));

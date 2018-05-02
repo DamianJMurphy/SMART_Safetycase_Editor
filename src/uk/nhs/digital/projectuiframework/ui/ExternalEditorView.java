@@ -42,6 +42,7 @@ public class ExternalEditorView
     private String title = null;
     private ImageIcon icon = null;
     private boolean defaultIcon = false;
+    private boolean redocking = false;
     /**
      * Creates new form ExternalEditorView
      */
@@ -140,6 +141,7 @@ public class ExternalEditorView
     }// </editor-fold>//GEN-END:initComponents
 
     private void dockButtonMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_dockButtonMenuSelected
+        redocking = true;
         redockTabbedPane.setSelectedComponent(redockTabbedPane.add(title, editorComponent));
         if ((defaultIcon) || (icon == null))
             redockTabbedPane.setTabComponentAt(redockTabbedPane.getSelectedIndex(), new UndockTabComponent(redockTabbedPane));                    
@@ -149,10 +151,11 @@ public class ExternalEditorView
     }//GEN-LAST:event_dockButtonMenuSelected
 
     private void closeButtonMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_closeButtonMenuSelected
-        
-        if (editorComponent instanceof DataNotificationSubscriber) {
-            DataNotificationSubscriber d = (DataNotificationSubscriber)editorComponent;
-            d.unsubscribe();
+        if (!redocking) {
+            if (editorComponent instanceof DataNotificationSubscriber) {
+                DataNotificationSubscriber d = (DataNotificationSubscriber)editorComponent;
+                d.unsubscribe();
+            }
         }
         this.dispose();
     }//GEN-LAST:event_closeButtonMenuSelected

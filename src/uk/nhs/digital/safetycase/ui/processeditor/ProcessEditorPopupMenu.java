@@ -47,11 +47,11 @@ public class ProcessEditorPopupMenu extends JPopupMenu
                         "/com/mxgraph/examples/swing/images/collapse.gif"));
                     add(editor.bind("Add new Hazard", new AddHazardAction(editor.getGraphComponent().getGraph().getSelectionCell()),
                         "/com/mxgraph/examples/swing/images/maximize.gif"));                    
-                    add(editor.bind("Link", new ProcessStepLinkAction(editor.getGraphComponent().getGraph().getSelectionCell()),
-				"/com/mxgraph/examples/swing/images/entity.gif"));
-                } else {
-                    add(editor.bind("Link", new ProcessStepLinkAction(),
-				"/com/mxgraph/examples/swing/images/entity.gif"));
+//                    add(editor.bind("Link", new ProcessStepLinkAction(editor.getGraphComponent().getGraph().getSelectionCell()),
+//				"/com/mxgraph/examples/swing/images/entity.gif"));
+  //              } else {
+  //                  add(editor.bind("Link", new ProcessStepLinkAction(),
+//				"/com/mxgraph/examples/swing/images/entity.gif"));
                 }    
                 
                 addSeparator();

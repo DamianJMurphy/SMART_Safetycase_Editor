@@ -40,6 +40,7 @@ import org.xml.sax.InputSource;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
+import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.projectuiframework.ui.UndockTabComponent;
 import uk.nhs.digital.safetycase.data.System;
@@ -75,6 +76,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
         loadNewTemplate();
         functionsTable.setDefaultEditor(Object.class, null);
         functionsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
+        SmartProject.getProject().addNotificationSubscriber(this);
+
      }
     @Override
     public void unsubscribe() {
@@ -431,12 +434,22 @@ public class SystemEditorDetails extends javax.swing.JPanel
         }
         try {
             SystemFunction sf = systemfunctions.get(selected);
-            JDialog singleFunctionEditor = new JDialog(JOptionPane.getFrameForComponent(this), "System Function ", true);
-            singleFunctionEditor.add(new SystemFunctionEditorPanel(sf).setParent(singleFunctionEditor));
-            singleFunctionEditor.pack();
-            singleFunctionEditor.setVisible(true);
-            populateFunctionTable(system);
-            singleFunctionEditor.dispose();
+            
+            JPanel pnl = SmartProject.getProject().getExistingEditor(sf, this);
+            if (pnl != null) {
+                SmartProject.getProject().getProjectWindow().selectPanel(pnl);
+                return;
+            }
+            
+            SystemFunctionEditor sfe = new SystemFunctionEditor();
+            sfe.setPersistableObject(sf);
+            ExternalEditorView systemView = new ExternalEditorView(sfe, "Function:" + sf.getAttributeValue("Name"), SmartProject.getProject().getProjectWindow().getMainWindowTabbedPane());
+//            JDialog singleFunctionEditor = new JDialog(JOptionPane.getFrameForComponent(this), "System Function ", true);
+//            singleFunctionEditor.add(new SystemFunctionEditorPanel(sf).setParent(singleFunctionEditor));
+//            singleFunctionEditor.pack();
+//            singleFunctionEditor.setVisible(true);
+//            populateFunctionTable(system);
+//            singleFunctionEditor.dispose();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(editorPanel, "Failed to load Function. Send logs to support", "Load failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to load function in SystemEditorDetails", e);
