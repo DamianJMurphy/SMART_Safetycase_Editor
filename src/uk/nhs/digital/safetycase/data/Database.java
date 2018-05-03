@@ -323,6 +323,52 @@ public class Database {
         }
     }
     
+    ArrayList<Relationship> loadFromRelationships(Persistable p, String fromType, boolean automatic, boolean manual)
+            throws Exception
+    {
+        ArrayList<Relationship> results = new ArrayList<>();
+        
+        StringBuilder sb = new StringBuilder("select * from ");
+        sb.append(fromType);
+        sb.append("Relationship where ");
+        sb.append("RelatedObjectType = ");
+        sb.append(p.getDatabaseObjectName());
+        sb.append(" and RelatedObjectID = ");
+        sb.append(p.getId());
+        sb.append(" and DeletedDate Is Null ");
+        if (automatic) {
+            if (!manual) {
+                sb.append(" and ManagementClass Is Not Null ");
+            }
+        } else {
+            if (manual) {
+                sb.append(" and ManagementClass Is Null");
+            } else {
+                throw new Exception("Invalid request: neither automatic nor manual requests will return no results");
+            }
+        }
+        try (Statement s = connection.createStatement()) {
+            if (!s.execute(sb.toString())) {
+                throw new Exception("Cannot read allowed relationship types: " + sb.toString());
+            }
+            try (ResultSet r = s.getResultSet()) {
+                while (r.next()) {
+                    int rid = r.getInt(fromType + "RelationshipID");
+                    int sid = r.getInt(fromType + "ID");
+                    int tid = r.getInt("RelatedObjectID");
+                    String rot = r.getString("RelatedObjectType");
+                    Relationship rs = new Relationship(rid, sid, tid, rot);
+                    rs.setSourceType(p.getDatabaseObjectName());
+                    rs.setManagementClass(r.getString("ManagementClass"));
+                    rs.setComment(r.getString("Comment"));
+                    results.add(rs);
+                }
+            }
+        }
+                        
+        return results;
+    }
+    
     void loadRelationships(Persistable p)
             throws Exception
     {

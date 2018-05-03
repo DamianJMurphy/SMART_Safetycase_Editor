@@ -77,6 +77,23 @@ public class MetaFactory {
         }
     }
     
+    public HashMap<String,ArrayList<Relationship>> findFirstOrderRelationshipsForTarget(Persistable p, boolean automatic, boolean manual)
+            throws Exception
+    {
+        // Returns a HashMap, keyed on relationship source type, of non-deleted first-order relationships TO the given Persistable.
+        // If automatic is false, only managementclass == null are returned, if manual is false, only managementclass != null
+        // are returned, if both are true, everything is returned
+        
+        HashMap<String,ArrayList<Relationship>> results = new HashMap<>();
+        for (String s : factories.keySet()) {
+            if (!s.contentEquals("Report") && !s.contentEquals("IssuesLog")) {
+                ArrayList<Relationship> a = database.loadFromRelationships(p, s, automatic, manual);
+                results.put(s, a);
+            }
+        }
+        return results;
+    }
+    
     public Library getLibrary() { return library; }
     
     private void loadValueSets()
