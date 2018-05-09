@@ -200,7 +200,6 @@ public class Housekeeper extends javax.swing.JDialog {
         topPanel.add(cleanSelectedButton);
 
         cleanAllButton.setText("Clean up all");
-        cleanAllButton.setEnabled(false);
         cleanAllButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cleanAllButtonActionPerformed(evt);
@@ -345,6 +344,7 @@ public class Housekeeper extends javax.swing.JDialog {
         catch (Exception e) {
             e.printStackTrace();
         }
+        objectTypeComboBox.setSelectedIndex(-1);
     }//GEN-LAST:event_cleanAllButtonActionPerformed
 
     private void cleanSelectedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanSelectedButtonActionPerformed
@@ -387,7 +387,7 @@ public class Housekeeper extends javax.swing.JDialog {
                                 if ((row[2] == null) || (row[2].trim().length() == 0)) { // Just done and not reloaded from the database
                                     row[2] = "Just now";
                                 }
-                                if (p.getRelationshipsForLoad() != null) {
+                                if (p.getRelationshipsForLoad().size() != 0) {
                                     row[3] = "Yes";
                                 } else {
                                     row[3] = "No";

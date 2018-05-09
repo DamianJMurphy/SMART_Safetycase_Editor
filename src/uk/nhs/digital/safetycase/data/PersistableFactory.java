@@ -174,7 +174,13 @@ public class PersistableFactory <T extends Persistable> {
             if (p.isDeleted())
                 instances.remove(id);
         }
+        if (contentsHaveRelationships(typeName))
+            database.purgeRelationships(typeName);
         database.purgePersistable(typeName);
+    }
+    
+    private boolean contentsHaveRelationships(String t) {
+        return !"ProjectReportLocation".contains(t);
     }
     
     public void undelete(T thing)

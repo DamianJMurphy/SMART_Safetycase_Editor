@@ -732,7 +732,7 @@ public class Database {
     void purgePersistable(String t)
             throws Exception
     {
-        purgeRelationships(t);
+//        purgeRelationships(t);
         StringBuilder sb = new StringBuilder("delete from ");
         sb.append(t);
         sb.append(" where DeletedDate is not null");
@@ -748,7 +748,7 @@ public class Database {
         }
     }
     
-    private void purgeRelationships(String t) 
+    void purgeRelationships(String t) 
             throws Exception
     {
         StringBuilder sb = new StringBuilder("delete from ");

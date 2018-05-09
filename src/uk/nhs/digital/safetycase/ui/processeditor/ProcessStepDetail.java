@@ -18,6 +18,7 @@
 package uk.nhs.digital.safetycase.ui.processeditor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,6 +33,7 @@ import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.ui.HazardEditor;
 import uk.nhs.digital.safetycase.ui.LinkEditor;
+import uk.nhs.digital.safetycase.ui.LinkTableCellRenderer;
 
 /**
  *
@@ -43,6 +45,8 @@ public class ProcessStepDetail
 {
 
     private static final String[] COLUMNS = {"Name", "Status", "Initial rating", "Residual rating"};
+    private final String[] linkcolumns = {"Type", "Name", "Comment"};
+    
     private JDialog parent = null;
     private ProcessStep processStep = null;
     private ArrayList<Hazard> hazardList = new ArrayList<>();
@@ -59,6 +63,11 @@ public class ProcessStepDetail
         } else {
             DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
             hazardsTable.setModel(dtm);
+            dtm = new DefaultTableModel(linkcolumns, 0);
+            linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
+            linksTable.setDefaultEditor(Object.class, null);
+            linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
+            linksTable.setModel(dtm);            
         }
     }
 
@@ -78,17 +87,31 @@ public class ProcessStepDetail
                         row[0] = h.getAttributeValue("Name");
                         row[1] = h.getAttributeValue("Status");
                         row[2] = h.getAttributeValue("InitialRiskRating");
-                        row[3] = h.getAttributeValue("ResidualRiskRating");
+                        row[3] = h.getAttributeValue("ResidualRiskRating") ;
                         hazardList.add(h);
                         dtm.addRow(row);
                     }
                 }
             }
             hazardsTable.setModel(dtm);
-            systemLinksPanel.setDisplay(processStep, "System");
-            functionsLinksPanel.setDisplay(processStep, "SystemFunction");
-            locationsLinksPanel.setDisplay(processStep, "Location");
-            rolesLinksPanel.setDisplay(processStep, "Role");
+            dtm = new DefaultTableModel(linkcolumns, 0);
+            HashMap<String,ArrayList<Relationship>> rels = processStep.getRelationshipsForLoad();
+            if (rels != null) {
+                for (String t : rels.keySet()) {
+                    ArrayList<Relationship> a = rels.get(t);
+                    if (a == null)
+                        continue;
+                    for (Relationship r : a) {
+                        if (! r.isDeleted()) {
+                            Object[] row = new Object[linkcolumns.length];
+                            for (int i = 0; i < linkcolumns.length; i++)
+                                row[i] = r;
+                            dtm.addRow(row);
+                        }
+                    }
+                }
+            }
+            linksTable.setModel(dtm);
             
         }
         catch (Exception e) {
@@ -120,12 +143,10 @@ public class ProcessStepDetail
         jScrollPane2 = new javax.swing.JScrollPane();
         hazardsTable = new javax.swing.JTable();
         editSelectedHazardButton = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        locationsLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
-        rolesLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
-        systemLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
-        functionsLinksPanel = new uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel();
         editLinksButton = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        linksTable = new javax.swing.JTable();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(100, 20), new java.awt.Dimension(100, 20), new java.awt.Dimension(100, 20));
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Process step"));
         setMaximumSize(new java.awt.Dimension(695, 505));
@@ -199,13 +220,6 @@ public class ProcessStepDetail
 
         add(hazardsPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 171, 661, 210));
 
-        jTabbedPane1.addTab("Care settings", locationsLinksPanel);
-        jTabbedPane1.addTab("Roles", rolesLinksPanel);
-        jTabbedPane1.addTab("Systems", systemLinksPanel);
-        jTabbedPane1.addTab("Functions", functionsLinksPanel);
-
-        add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 430, 661, 180));
-
         editLinksButton.setText("Links...");
         editLinksButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -213,6 +227,22 @@ public class ProcessStepDetail
             }
         });
         add(editLinksButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 390, -1, -1));
+
+        linksTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(linksTable);
+
+        add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 420, 660, 180));
+        add(filler1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 610, 660, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
@@ -241,18 +271,16 @@ public class ProcessStepDetail
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton editLinksButton;
     private javax.swing.JButton editSelectedHazardButton;
-    private uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel functionsLinksPanel;
+    private javax.swing.Box.Filler filler1;
     private javax.swing.JPanel hazardsPanel;
     private javax.swing.JTable hazardsTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel locationsLinksPanel;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable linksTable;
     private javax.swing.JTextField nameTextField;
-    private uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel rolesLinksPanel;
-    private uk.nhs.digital.safetycase.ui.processeditor.OtherLinksPanel systemLinksPanel;
     // End of variables declaration//GEN-END:variables
 
     @Override

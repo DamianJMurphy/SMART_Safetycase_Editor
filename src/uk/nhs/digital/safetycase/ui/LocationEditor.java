@@ -241,10 +241,12 @@ public class LocationEditor extends javax.swing.JPanel
             location.setAttribute("ProjectID", Integer.parseInt(location.getAttributeValue("ProjectID")));
         else 
             location.setAttribute("ProjectID",newObjectProjectId);
-        int parent = parentLocationComboBox.getSelectedIndex();
-        if (parentLocationComboBox.getSelectedIndex() != -1) {
-            Location p = projectLocs.get(parent);
-            location.setAttribute("ParentLocationID", p.getId());
+        int parent = parentLocationComboBox.getSelectedIndex() - 1;
+        if (parent != -1) {
+            if (!parentLocationComboBox.getSelectedItem().toString().contentEquals("N/A")) {
+                Location p = projectLocs.get(parent);
+                location.setAttribute("ParentLocationID", p.getId());
+            }
         } else {
             location.setAttribute("ParentLocationID", -1);
         }
@@ -275,11 +277,11 @@ public class LocationEditor extends javax.swing.JPanel
         nameTextField.setText(location.getAttributeValue("Name"));
         mnemonicTextField.setText(location.getAttributeValue("Mnemonic"));
         if (location.getAttribute("ParentLocationID").getIntValue() == -1) {
-            parentLocationComboBox.setSelectedIndex(-1);
+            parentLocationComboBox.setSelectedIndex(0);
         } else {
             for (int i = 0; i < projectLocs.size(); i++) {
                 if (projectLocs.get(i).getId() == location.getAttribute("ParentLocationID").getIntValue()) {
-                    parentLocationComboBox.setSelectedIndex(i);
+                    parentLocationComboBox.setSelectedIndex(i + 1);
                     break;
                 }
             }
@@ -306,6 +308,7 @@ public class LocationEditor extends javax.swing.JPanel
         try {
             projectLocs.clear();
             DefaultComboBoxModel dlm = new DefaultComboBoxModel();
+            dlm.addElement("N/A");
             ArrayList<Persistable> locs = MetaFactory.getInstance().getChildren("Location", "ProjectID", SmartProject.getProject().getCurrentProjectID());
             if (locs != null) {
                 for (Persistable s : locs) {
@@ -317,7 +320,7 @@ public class LocationEditor extends javax.swing.JPanel
                 }                    
             }
             parentLocationComboBox.setModel(dlm);
-            parentLocationComboBox.setSelectedIndex(-1);
+            parentLocationComboBox.setSelectedIndex(0);
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(editorPanel, "Failed to load list of potential parent care settings. Send logs to support", "Warning", JOptionPane.INFORMATION_MESSAGE);

@@ -74,7 +74,6 @@
         <Component class="javax.swing.JButton" name="cleanAllButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Clean up all"/>
-            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cleanAllButtonActionPerformed"/>
