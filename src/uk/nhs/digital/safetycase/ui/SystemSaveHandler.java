@@ -46,7 +46,7 @@ public class SystemSaveHandler
 
 //    private final ArrayList<Persistable> added = new ArrayList<>();
 //    private final ArrayList<Persistable> updated = new ArrayList<>();
-//    private final ArrayList<Persistable> removed = new ArrayList<>();
+    private final ArrayList<Persistable> removed = new ArrayList<>();
 
     private final ArrayList<String> processedElements = new ArrayList<>();
     private System system = null;
@@ -116,7 +116,7 @@ public class SystemSaveHandler
                             }
                         }
                     } else {
-//                        removed.add(bt.object);
+                        removed.add(bt.object);
                     }
                 }
             }
@@ -134,6 +134,7 @@ public class SystemSaveHandler
             } else {
                 sp.editorEvent(Project.ADD, system);
             }
+            deleteRemovedNodes();
 //            for (Persistable n : added) {
 ////                MetaFactory.getInstance().getFactory(n.getDatabaseObjectName()).refresh(n.getId());
 //                sp.editorEvent(Project.ADD, n);
@@ -152,26 +153,23 @@ public class SystemSaveHandler
             SmartProject.getProject().log("Failed to save in SystemSaveEditor", ex);
         }
     }
+    
+    private void deleteRemovedNodes()
+    {
+        if (removed == null)
+            return;
+        for (Persistable p : removed) {
+            try {
+                MetaFactory.getInstance().getFactory(p.getDatabaseObjectName()).delete(p);
+            }
+            catch (Exception e) {
+                SmartProject.getProject().log("Removing deleted node failed: " + p.getTitle(), e);
+            }
+        }
+    }
+    
 
-    // <editor-fold defaultstate="collapsed" desc=" Unused Code ">
-//    private void createSystemSystemFunctionRelationship(System s, int ssid)
-//            throws Exception {
-//        PersistableFactory<System> psf = MetaFactory.getInstance().getFactory("System");
-//        System ss = psf.get(ssid);
-//        ArrayList<Relationship> rels = ss.getRelationships("System");
-//        if (rels != null) {
-//            // See if this already exists
-//            for (Relationship r : rels) {
-//                if (r.getTarget() == s.getId()) {
-//                    return;
-//                }
-//            }
-//        }
-//        Relationship pr = new Relationship(ssid, s.getId(), "System");
-//        ss.addRelationship(pr);
-//        psf.put(ss);
-//    }
-// </editor-fold>
+
     private HashMap<String, DiagramEditorElement> parseSystem(NodeList nl, int projectid)
             throws Exception {
         // Get the list of subsystems, functions and subFunctions in the bowtie...
@@ -474,7 +472,9 @@ public class SystemSaveHandler
                     
                     if (cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/systemeditor/system.png")) {
                         try {
-                            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("System", "System", name,pid, system);
+//                            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("System", "System", name,pid, system);
+                            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("System", "System", name,pid, p);
+
                             if (duplicateWarning != null) {
                                 JOptionPane.showMessageDialog(sge, duplicateWarning, "Duplicate hazard name", JOptionPane.ERROR_MESSAGE);
                                 return true;

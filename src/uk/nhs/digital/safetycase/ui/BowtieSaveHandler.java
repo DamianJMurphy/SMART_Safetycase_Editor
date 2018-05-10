@@ -53,7 +53,7 @@ public class BowtieSaveHandler
 {
 //    private final ArrayList<Persistable> added = new ArrayList<>();
 //    private final ArrayList<Persistable> updated = new ArrayList<>();
-//    private final ArrayList<Persistable> removed = new ArrayList<>();
+    private final ArrayList<Persistable> removed = new ArrayList<>();
     
     private BowtieGraphEditor bge = null; 
     private Hazard hazard = null;
@@ -120,10 +120,9 @@ public class BowtieSaveHandler
 //                                updated.add(btupdate.object);
                             }
                         }
-                    } 
-//                    else {
-//                        removed.add(bt.object);
-//                    }
+                    } else {
+                        removed.add(bt.object);
+                    }
                 }
             } else {
                 createProcessStepHazardRelationship(hazard, processStepId);
@@ -138,12 +137,13 @@ public class BowtieSaveHandler
             } else {
                 sp.editorEvent(Project.ADD, hazard);
             }
+            deleteRemovedNodes();
 //            HazardListForm hlf = bge.getHazardListForm();
 //            if (hlf != null)
 //                hlf.updateHazard(hazard);
         } 
         catch (BrokenConnectionException bce) {
-            JOptionPane.showMessageDialog(ge, "The diagram has a broken link and has not been saved", "Diagram incomplete", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(ge, "The diagram has a broken link and has not been saved: " + bce.getMessage(), "Diagram incomplete", JOptionPane.ERROR_MESSAGE);
 //            System.err.println("TODO: Notify user that the diagram has a broken link and has not been saved: " + bce.getMessage());
         }
         catch (Exception ex) {
@@ -151,6 +151,20 @@ public class BowtieSaveHandler
         }            
     }
 
+    private void deleteRemovedNodes()
+    {
+        if (removed == null)
+            return;
+        for (Persistable p : removed) {
+            try {
+                MetaFactory.getInstance().getFactory(p.getDatabaseObjectName()).delete(p);
+            }
+            catch (Exception e) {
+                SmartProject.getProject().log("Removing deleted node failed: " + p.getTitle(), e);
+            }
+        }
+    }
+    
     private void createProcessStepHazardRelationship(Hazard h, int psid) 
             throws Exception
     {
@@ -197,18 +211,22 @@ public class BowtieSaveHandler
                         throw new BrokenConnectionException("Unconnected bowtie link");
                     } else {
                         String c = getCellName(nl, t);
-                        throw new BrokenConnectionException("Link to " + c + " has no source bowtie element");
+                        throw new BrokenConnectionException("Link to " + c + " with no source bowtie element");
                     }
                 }
                 if (t.length() == 0) {
-                    String c = getCellName(nl, t);
-                    throw new BrokenConnectionException("Link from " + c + " has no target bowtie element");
+                    String c = cell.getAttribute("value");
+                    throw new BrokenConnectionException("Link from " + c + " with no target bowtie element");
                 }
                 DiagramEditorElement bt = bowtieElements.get(s);
 //                bt.fromCell = Integer.parseInt(s);
 //                bt.toCell = Integer.parseInt(t);
                 bt.connections.add(t);
             }
+        }
+        for (DiagramEditorElement dee : bowtieElements.values()) {
+            if (!dee.type.contentEquals("Effect") && (dee.connections.size() == 0))
+                throw new BrokenConnectionException("Bowtie element " + dee.name + " is not connected to anything");
         }
         return bowtieElements;
     }

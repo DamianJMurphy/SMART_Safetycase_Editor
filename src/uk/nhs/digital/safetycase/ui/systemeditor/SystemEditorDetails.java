@@ -790,7 +790,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
             c = (uk.nhs.digital.safetycase.data.System)o;
         nameTextField.setText(c.getAttributeValue("Name"));
         SmartProject.getProject().getProjectWindow().setViewTitle(this, "System:" + c.getTitle());
-        return true;
+        return false;
     }
     
    @Override

@@ -690,11 +690,19 @@ public class HazardEditor extends javax.swing.JPanel
             return;
         }
 
-        int r = JOptionPane.showConfirmDialog(this, "Really delete this Hazard ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int r = JOptionPane.showConfirmDialog(this, "Really delete this Hazard (this will also remove any Causes, Controls and Effects on the Hazard's bowtie) ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (r == JOptionPane.CANCEL_OPTION) {
             return;
         }
         try {
+            ArrayList<Relationship> rels = hazard.getRelationshipsForClass("Diagram");
+            if (rels != null) {
+                for (Relationship l : rels) {
+                    Persistable p = MetaFactory.getInstance().getFactory(l.getTargetType()).get(l.getTarget());
+                    MetaFactory.getInstance().getFactory(l.getTargetType()).delete(p);    
+                }
+            }
+            // Get the other objects on this hazard's bowtie (if there are any) and delete these too.
             MetaFactory.getInstance().getFactory("Hazard").delete(hazard);
             SmartProject.getProject().editorEvent(Project.DELETE, hazard);
             //            SmartProject.getProject().removeNotificationSubscriber(this);

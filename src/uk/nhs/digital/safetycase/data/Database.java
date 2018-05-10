@@ -332,7 +332,7 @@ public class Database {
         sb.append(fromType);
         sb.append("Relationship where ");
         sb.append("RelatedObjectType = ");
-        sb.append(p.getDatabaseObjectName());
+        sb.append(prepareString(p.getDatabaseObjectName()));
         sb.append(" and RelatedObjectID = ");
         sb.append(p.getId());
         sb.append(" and DeletedDate Is Null ");
@@ -779,6 +779,17 @@ public class Database {
         try (Statement s = connection.createStatement()) {
             if (s.executeUpdate(sb.toString()) != 1) {
                 throw new Exception("Cannot mark object deleted - not found");
+            }
+            if (!t.isReferenceData()) {
+                StringBuilder dr = new StringBuilder("update ");
+                dr.append(t.getDatabaseObjectName());
+                dr.append("Relationship ");
+                dr.append(" set DeletedDate=CURRENT_DATE  where ");
+                dr.append(t.getDatabaseObjectName());
+                dr.append("ID = ");
+                dr.append(t.getId());      
+                Statement sr = connection.createStatement();
+                s.executeUpdate(dr.toString());
             }
             connection.commit();            
         }

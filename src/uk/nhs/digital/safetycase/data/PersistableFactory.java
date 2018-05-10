@@ -169,14 +169,18 @@ public class PersistableFactory <T extends Persistable> {
     public void purge()
             throws Exception
     {
+        ArrayList<Integer> toRemove = new ArrayList<>();
         for (Integer id : instances.keySet()) {
             T p = instances.get(id);
             if (p.isDeleted())
-                instances.remove(id);
+                toRemove.add(id);
         }
         if (contentsHaveRelationships(typeName))
             database.purgeRelationships(typeName);
         database.purgePersistable(typeName);
+        for (Integer id : toRemove) {
+            instances.remove(id);
+        }
     }
     
     private boolean contentsHaveRelationships(String t) {
