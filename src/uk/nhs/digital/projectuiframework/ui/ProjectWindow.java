@@ -39,6 +39,7 @@ import uk.nhs.digital.projectuiframework.smart.RiskMatrix;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.ui.Housekeeper;
 import uk.nhs.digital.safetycase.ui.LibraryEditorDialog;
+import uk.nhs.digital.safetycase.ui.LinkExplorer;
 import uk.nhs.digital.safetycase.ui.ProjectEditor;
 /**
  *
@@ -97,6 +98,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         libraryMenuItem = new javax.swing.JMenuItem();
         undeleteMenuItem = new javax.swing.JMenuItem();
         importMenuItem = new javax.swing.JMenuItem();
+        linkExplorerMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         showProcessMenuItem = new javax.swing.JMenuItem();
         riskMatrixMenuItem = new javax.swing.JMenuItem();
@@ -239,6 +241,14 @@ public class ProjectWindow extends javax.swing.JFrame {
 
         importMenuItem.setText("Import");
         toolsMenu.add(importMenuItem);
+
+        linkExplorerMenuItem.setText("Link explorer");
+        linkExplorerMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linkExplorerMenuItemActionPerformed(evt);
+            }
+        });
+        toolsMenu.add(linkExplorerMenuItem);
 
         mainMenu.add(toolsMenu);
 
@@ -623,6 +633,10 @@ public class ProjectWindow extends javax.swing.JFrame {
         (new Housekeeper(this, true)).setVisible(true);
     }//GEN-LAST:event_undeleteMenuItemActionPerformed
 
+    private void linkExplorerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkExplorerMenuItemActionPerformed
+        (new LinkExplorer(this, false)).setVisible(true);
+    }//GEN-LAST:event_linkExplorerMenuItemActionPerformed
+
     public void newProject(String n, Project p) {
         lastProjectAdded = p;
         projects.put(n, p);        
@@ -692,6 +706,7 @@ public class ProjectWindow extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JRadioButtonMenuItem largeFontMenu;
     private javax.swing.JMenuItem libraryMenuItem;
+    private javax.swing.JMenuItem linkExplorerMenuItem;
     private javax.swing.JMenu mainFileMenu;
     private javax.swing.JMenuBar mainMenu;
     private javax.swing.JMenuItem mainMenuExit;

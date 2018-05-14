@@ -5,17 +5,23 @@
  */
 package uk.nhs.digital.safetycase.ui;
 
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
+
 /**
  *
  * @author damian
  */
-public class LinkExplorer extends javax.swing.JPanel {
+public class LinkExplorer extends javax.swing.JDialog {
 
     /**
      * Creates new form LinkExplorer
      */
-    public LinkExplorer() {
+    public LinkExplorer(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
+        projectTree.setModel(SmartProject.getProject().getTreeModel());
+        projectTree.setPreferredSize(null);
+        setTitle("Link explorer");
     }
 
     /**
@@ -27,19 +33,82 @@ public class LinkExplorer extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane2 = new javax.swing.JScrollPane();
-        linksTree = new javax.swing.JTree();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        projectTree = new javax.swing.JTree();
+        linksTabbedPane = new javax.swing.JTabbedPane();
 
-        setLayout(new java.awt.BorderLayout());
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
 
-        jScrollPane2.setViewportView(linksTree);
+        projectTree.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                projectTreeMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(projectTree);
 
-        add(jScrollPane2, java.awt.BorderLayout.CENTER);
+        jSplitPane1.setLeftComponent(jScrollPane1);
+        jSplitPane1.setRightComponent(linksTabbedPane);
+
+        getContentPane().add(jSplitPane1);
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void projectTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectTreeMouseClicked
+        // TODO NEXT:
+        // Ignore if the user has not selected a Persistable. Otherwise make an ObjectLinkReporter
+        // passing the Persistable to it, and have that ObjectLinkReporter appear in the tabbed
+        // control with the tab title being the name of the Persistable
+    }//GEN-LAST:event_projectTreeMouseClicked
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(LinkExplorer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(LinkExplorer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(LinkExplorer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(LinkExplorer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                LinkExplorer dialog = new LinkExplorer(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTree linksTree;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTabbedPane linksTabbedPane;
+    private javax.swing.JTree projectTree;
     // End of variables declaration//GEN-END:variables
 }
