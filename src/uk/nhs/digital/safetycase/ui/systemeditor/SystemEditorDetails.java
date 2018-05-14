@@ -785,11 +785,14 @@ public class SystemEditorDetails extends javax.swing.JPanel
             saveButtonActionPerformed(null);
             return false;
         }
+        if (o == null)
+            return false;
         uk.nhs.digital.safetycase.data.System c = null;
         if (o instanceof uk.nhs.digital.safetycase.data.System)
             c = (uk.nhs.digital.safetycase.data.System)o;
-        nameTextField.setText(c.getAttributeValue("Name"));
-        SmartProject.getProject().getProjectWindow().setViewTitle(this, "System:" + c.getTitle());
+        setPersistableObject(c);
+//            nameTextField.setText(c.getAttributeValue("Name"));
+//            SmartProject.getProject().getProjectWindow().setViewTitle(this, "System:" + c.getTitle());
         return false;
     }
     

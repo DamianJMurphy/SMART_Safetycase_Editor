@@ -135,19 +135,8 @@ public class SystemSaveHandler
                 sp.editorEvent(Project.ADD, system);
             }
             deleteRemovedNodes();
-//            for (Persistable n : added) {
-////                MetaFactory.getInstance().getFactory(n.getDatabaseObjectName()).refresh(n.getId());
-//                sp.editorEvent(Project.ADD, n);
-//            }
-//            for (Persistable n : updated) {
-////                MetaFactory.getInstance().getFactory(n.getDatabaseObjectName()).refresh(n.getId());
-//                sp.editorEvent(Project.UPDATE, n);
-//            }
-//            for (Persistable n : removed) {
-//                sp.editorEvent(Project.DELETE, n);
-//            }
         } catch (BrokenConnectionException bce) {
-            JOptionPane.showMessageDialog(sge, "The diagram has a broken link and has not been saved", "Diagram incomplete", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(sge, "The diagram has a broken link and has not been saved: " + bce.getMessage(), "Diagram incomplete", JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(sge, "Failed to save. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in SystemSaveEditor", ex);
@@ -200,7 +189,7 @@ public class SystemSaveHandler
                     }
                 }
                 if (t.length() == 0) {
-                    String c = getCellName(nl, t);
+                    String c = cell.getAttribute("value");
                     throw new BrokenConnectionException("Link from " + c + " has no target system/function element");
                 }
                 DiagramEditorElement se = systemElements.get(s);
