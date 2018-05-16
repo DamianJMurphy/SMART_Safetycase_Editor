@@ -948,10 +948,16 @@ public class SmartProject
     }
     
     @Override
+    public ProjectTreeCellRenderer getProjectTreeCellRenderer() {
+        ProjectTreeCellRenderer r = new ProjectTreeCellRenderer(this);
+        return r;
+    }
+    
+    @Override
     public void setProjectWindow(ProjectWindow pw) {
         projectWindow = pw;
         applicationFont = projectWindow.getDisplayFont();
-        ProjectTreeCellRenderer r = new ProjectTreeCellRenderer(this);
+        ProjectTreeCellRenderer r = getProjectTreeCellRenderer();
         icons.put("Report", getIcon(SAFETYREPORT_ICON, r));
         icons.put("System", getIcon(SYSTEM_ICON, r));
         icons.put("SystemFunction", getIcon(FUNCTION_ICON, r));

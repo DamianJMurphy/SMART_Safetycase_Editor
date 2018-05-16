@@ -20,6 +20,7 @@ package uk.nhs.digital.safetycase.data;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 
@@ -77,6 +78,81 @@ public class MetaFactory {
         }
     }
     
+    public HashSet<ProjectLink> exploreLinks(Persistable p, HashSet<ProjectLink> working) 
+            throws Exception
+    {
+        if (working == null) 
+            working = new HashSet<>();
+        HashMap<String,ArrayList<Relationship>> immediate = p.getRelationshipsForLoad();
+        
+        // Direct relationships from this object
+        if (immediate != null) {
+            doImmediateLinks(p, immediate, working, ProjectLink.TO);
+        }
+        immediate = findFirstOrderRelationshipsForTarget(p, true, true);
+        if (immediate != null) {
+            doImmediateLinks(p, immediate, working, ProjectLink.FROM);
+        }
+        doRemoteLinks(p, working);
+        return working;
+    }
+    
+    private void doRemoteLinks(Persistable p, HashSet<ProjectLink> working) 
+            throws Exception
+    {
+        // Go through the "working" set until everything in it is checked. This means
+        // for each unchecked ProjectLink, get the target, grab the immediate from and to
+        // relationships. Mark each "checked" as it is processed.
+        
+        boolean stillprocessing = true;
+        while (stillprocessing) {
+            stillprocessing = false;
+            for (ProjectLink l : working) {
+                if (!l.isChecked()) {
+                    stillprocessing = true;
+                    Persistable t = l.getTarget();
+                    exploreLinks(t, working);
+                    doRemoteLinks(t, working);
+                    l.setChecked();
+                }
+            }
+        }
+    }
+    
+    private void doImmediateLinks(Persistable p, HashMap<String,ArrayList<Relationship>> relationships, HashSet<ProjectLink> working, int d) 
+            throws Exception
+    {
+        for (String s : relationships.keySet()) {
+            ArrayList<Relationship> rels = relationships.get(s);
+            if (rels != null) {
+                for (Relationship r : rels) {
+                    ProjectLink l = makeProjectLink(p, r, d, ProjectLink.DIRECTONLY);
+                    working.add(l);
+//                    if (!working.add(l)) {
+//                        l.setChecked();
+//                    }
+                }
+            }
+        }
+
+    }
+    
+    private ProjectLink makeProjectLink(Persistable s, Relationship r, int d, int o) 
+            throws Exception
+    {
+        Persistable p = MetaFactory.getInstance().getFactory(r.getSourceType()).get(r.getSource());
+        ProjectLink l = new ProjectLink(p, s, d, o);
+        
+        // Check if this is direct or remote and set things accordingly
+        if (o == ProjectLink.DIRECTONLY) {
+            l.setDirectComment(r.getComment());
+        } else {
+            l.addRemotePath(p, r.getComment(), d);
+        }
+        
+        return l;
+    }
+    
     public HashMap<String,ArrayList<Relationship>> findFirstOrderRelationshipsForTarget(Persistable p, boolean automatic, boolean manual)
             throws Exception
     {
@@ -86,7 +162,7 @@ public class MetaFactory {
         
         HashMap<String,ArrayList<Relationship>> results = new HashMap<>();
         for (String s : factories.keySet()) {
-            if (!s.contentEquals("Report") && !s.contentEquals("IssuesLog")) {
+            if (!s.contentEquals("Report") && !s.contentEquals("IssuesLog") && !s.contentEquals("Project") && !s.contentEquals("Location")) {
                 ArrayList<Relationship> a = database.loadFromRelationships(p, s, automatic, manual);
                 results.put(s, a);
             }

@@ -58,16 +58,15 @@ public class ProcessStepDetail
         initComponents();
         processStep = ps;
         SmartProject.getProject().addNotificationSubscriber(this);
+        DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
+        hazardsTable.setModel(dtm);
+        dtm = new DefaultTableModel(linkcolumns, 0);
+        linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
+        linksTable.setDefaultEditor(Object.class, null);
+        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());
+        linksTable.setModel(dtm);
         if (ps != null) {
             populate();
-        } else {
-            DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
-            hazardsTable.setModel(dtm);
-            dtm = new DefaultTableModel(linkcolumns, 0);
-            linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
-            linksTable.setDefaultEditor(Object.class, null);
-            linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
-            linksTable.setModel(dtm);            
         }
     }
 
@@ -110,8 +109,8 @@ public class ProcessStepDetail
                         }
                     }
                 }
+                linksTable.setModel(dtm);
             }
-            linksTable.setModel(dtm);
             
         }
         catch (Exception e) {

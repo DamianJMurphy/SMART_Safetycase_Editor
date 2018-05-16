@@ -356,9 +356,9 @@ public class Database {
                     int rid = r.getInt(fromType + "RelationshipID");
                     int sid = r.getInt(fromType + "ID");
                     int tid = r.getInt("RelatedObjectID");
-                    String rot = r.getString("RelatedObjectType");
+                    String rot = p.getDatabaseObjectName();
                     Relationship rs = new Relationship(rid, sid, tid, rot);
-                    rs.setSourceType(p.getDatabaseObjectName());
+                    rs.setSourceType(fromType);
                     rs.setManagementClass(r.getString("ManagementClass"));
                     rs.setComment(r.getString("Comment"));
                     results.add(rs);

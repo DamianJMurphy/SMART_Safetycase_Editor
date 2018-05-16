@@ -1,11 +1,26 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * 
+ *   Copyright 2018  NHS Digital
+ * 
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ * 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *  
  */
 package uk.nhs.digital.safetycase.ui;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.safetycase.data.Persistable;
 
 /**
  *
@@ -22,6 +37,7 @@ public class LinkExplorer extends javax.swing.JDialog {
         projectTree.setModel(SmartProject.getProject().getTreeModel());
         projectTree.setPreferredSize(null);
         setTitle("Link explorer");
+        projectTree.setCellRenderer(SmartProject.getProject().getProjectTreeCellRenderer());
     }
 
     /**
@@ -57,10 +73,25 @@ public class LinkExplorer extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void projectTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_projectTreeMouseClicked
-        // TODO NEXT:
+
         // Ignore if the user has not selected a Persistable. Otherwise make an ObjectLinkReporter
         // passing the Persistable to it, and have that ObjectLinkReporter appear in the tabbed
         // control with the tab title being the name of the Persistable
+        
+        TreePath tp = projectTree.getPathForLocation(evt.getX(), evt.getY());    
+        if (tp == null)
+           return;
+        try {
+            Object o = tp.getLastPathComponent();
+            DefaultMutableTreeNode d = (DefaultMutableTreeNode)o;
+            Object u = d.getUserObject();
+            if (u instanceof uk.nhs.digital.safetycase.data.Persistable) {
+                Persistable p = (Persistable)u;
+                ObjectLinkReporter olr = new ObjectLinkReporter(p);
+                linksTabbedPane.add(p.getTitle(), olr);
+            }
+        }
+        catch (Exception e) {}
     }//GEN-LAST:event_projectTreeMouseClicked
 
     /**

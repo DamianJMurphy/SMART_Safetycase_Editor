@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import uk.nhs.digital.projectuiframework.smart.ProjectTreeCellRenderer;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.projectuiframework.ui.ViewComponent;
@@ -47,6 +48,7 @@ public interface Project {
 
     void setProjectWindow(ProjectWindow pw);
     ProjectWindow getProjectWindow();
+    ProjectTreeCellRenderer getProjectTreeCellRenderer();
 
     String getApplicationIdentifier();
     String getName();
