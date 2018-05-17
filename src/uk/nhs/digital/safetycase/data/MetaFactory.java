@@ -78,26 +78,26 @@ public class MetaFactory {
         }
     }
     
-    public HashSet<ProjectLink> exploreLinks(Persistable p, HashSet<ProjectLink> working) 
+    public ArrayList<ProjectLink> exploreLinks(Persistable start, Persistable p, ArrayList<ProjectLink> working) 
             throws Exception
     {
         if (working == null) 
-            working = new HashSet<>();
+            working = new ArrayList<>();
         HashMap<String,ArrayList<Relationship>> immediate = p.getRelationshipsForLoad();
         
         // Direct relationships from this object
         if (immediate != null) {
-            doImmediateLinks(p, immediate, working, ProjectLink.TO);
+            doImmediateLinks(start, p, immediate, working, ProjectLink.TO);
         }
         immediate = findFirstOrderRelationshipsForTarget(p, true, true);
         if (immediate != null) {
-            doImmediateLinks(p, immediate, working, ProjectLink.FROM);
+            doImmediateLinks(start, p, immediate, working, ProjectLink.FROM);
         }
-        doRemoteLinks(p, working);
+        doRemoteLinks(start, p, working);
         return working;
     }
-    
-    private void doRemoteLinks(Persistable p, HashSet<ProjectLink> working) 
+
+    private void doRemoteLinks(Persistable start, Persistable p, ArrayList<ProjectLink> working) 
             throws Exception
     {
         // Go through the "working" set until everything in it is checked. This means
@@ -107,27 +107,33 @@ public class MetaFactory {
         boolean stillprocessing = true;
         while (stillprocessing) {
             stillprocessing = false;
-            for (ProjectLink l : working) {
+            int limit = working.size();
+            for (int i = 0; i < limit; i++) {
+                ProjectLink l = working.get(i);
                 if (!l.isChecked()) {
                     stillprocessing = true;
-                    Persistable t = l.getTarget();
-                    exploreLinks(t, working);
-                    doRemoteLinks(t, working);
                     l.setChecked();
+                    Persistable t = l.getRemote();
+                    exploreLinks(start, t, working);
                 }
             }
         }
     }
     
-    private void doImmediateLinks(Persistable p, HashMap<String,ArrayList<Relationship>> relationships, HashSet<ProjectLink> working, int d) 
+    private void doImmediateLinks(Persistable start, Persistable p, HashMap<String,ArrayList<Relationship>> relationships, ArrayList<ProjectLink> working, int d) 
             throws Exception
     {
         for (String s : relationships.keySet()) {
             ArrayList<Relationship> rels = relationships.get(s);
             if (rels != null) {
                 for (Relationship r : rels) {
-                    ProjectLink l = makeProjectLink(p, r, d, ProjectLink.DIRECTONLY);
-                    working.add(l);
+                    ProjectLink l = makeProjectLink(start, r, d);
+                    if (!working.contains(l)) {
+                        working.add(l);
+                    } else {
+                        // TODO: add the details of the current link to the comments and remote path
+                        // if necessary
+                    }
 //                    if (!working.add(l)) {
 //                        l.setChecked();
 //                    }
@@ -137,17 +143,34 @@ public class MetaFactory {
 
     }
     
-    private ProjectLink makeProjectLink(Persistable s, Relationship r, int d, int o) 
+    private ProjectLink makeProjectLink(Persistable s, Relationship r, int d) 
             throws Exception
     {
-        Persistable p = MetaFactory.getInstance().getFactory(r.getSourceType()).get(r.getSource());
-        ProjectLink l = new ProjectLink(p, s, d, o);
+        Persistable p = null;
         
-        // Check if this is direct or remote and set things accordingly
-        if (o == ProjectLink.DIRECTONLY) {
+        if (d == ProjectLink.FROM) {
+            p = MetaFactory.getInstance().getFactory(r.getSourceType()).get(r.getSource());            
+        } else { 
+            p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());            
+        }
+        ProjectLink l = new ProjectLink(s, p, d);
+        
+        boolean isDirect = false;
+
+        // A link is direct if one of the ends of the relationship is s
+        //
+        if ((s.getId() == r.getSource()) && s.getDatabaseObjectName().contentEquals(r.getSourceType())) {
+            isDirect = true;
+        } else {
+            if ((s.getId() == r.getTarget()) && s.getDatabaseObjectName().contentEquals(r.getTargetType())) {
+                isDirect = true;
+            }
+        }
+                
+        if (isDirect) {
             l.setDirectComment(r.getComment());
         } else {
-            l.addRemotePath(p, r.getComment(), d);
+            l.addRemotePath(p, r, d);
         }
         
         return l;

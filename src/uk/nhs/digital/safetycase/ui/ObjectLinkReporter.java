@@ -17,7 +17,9 @@
  */
 package uk.nhs.digital.safetycase.ui;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.ProjectLink;
@@ -29,20 +31,31 @@ import uk.nhs.digital.safetycase.data.ProjectLink;
 public class ObjectLinkReporter 
         extends javax.swing.JPanel 
 {
-    private HashSet<ProjectLink> links = null;
+    private ArrayList<ProjectLink> links = null;
+    private static final String[] LINKCOLUMNS = {"Link", "Type", "Comment", "Via"};
     
     /**
      * Creates new form ObjectLinkReporter
      */
     public ObjectLinkReporter(Persistable p) {
         initComponents();
+        DefaultTableModel dtm = new DefaultTableModel(LINKCOLUMNS, 0);
+        projectLinksTable.setModel(dtm);
+        projectLinksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());
         try {
-            links = MetaFactory.getInstance().exploreLinks(p, links);
+            links = MetaFactory.getInstance().exploreLinks(p, p, links);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        
+        for (ProjectLink l : links) {
+            Object[] row = new Object[LINKCOLUMNS.length];
+            for (int i = 0; i < LINKCOLUMNS.length; i++) {
+                row[i] = l;
+            }
+            dtm.addRow(row);
+        }
+        projectLinksTable.setModel(dtm);
     }
 
     /**
@@ -66,7 +79,7 @@ public class ObjectLinkReporter
         controlsCheckBox = new javax.swing.JCheckBox();
         effectsCheckBox = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        projectLinksTable = new javax.swing.JTable();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -122,7 +135,7 @@ public class ObjectLinkReporter
                     .addComponent(causesCheckBox)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(hazardsCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(effectsCheckBox))
                     .addComponent(controlsCheckBox))
                 .addContainerGap())
@@ -151,7 +164,7 @@ public class ObjectLinkReporter
 
         add(jPanel1);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        projectLinksTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -162,7 +175,7 @@ public class ObjectLinkReporter
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(projectLinksTable);
 
         add(jScrollPane1);
     }// </editor-fold>//GEN-END:initComponents
@@ -175,10 +188,10 @@ public class ObjectLinkReporter
     private javax.swing.JCheckBox hazardsCheckBox;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JCheckBox locationsCheckBox;
     private javax.swing.JCheckBox processStepsCheckBox;
     private javax.swing.JCheckBox processesCheckBox;
+    private javax.swing.JTable projectLinksTable;
     private javax.swing.JCheckBox rolesCheckBox;
     private javax.swing.JCheckBox systemFunctionsCheckBox;
     private javax.swing.JCheckBox systemsCheckBox;

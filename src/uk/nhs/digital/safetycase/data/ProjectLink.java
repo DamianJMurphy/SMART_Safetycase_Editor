@@ -27,37 +27,37 @@ public class ProjectLink {
     public static final int NOTSET = -1;
     public static final int TO = 0;
     public static final int FROM = 1;
-    public static final int BOTH = 2;
-    public static final int DIRECTONLY = 0;
-    public static final int REMOTEONLY = 1;
     
     private Persistable source = null;
-    private Persistable target = null;
+    private Persistable remote = null;
     private int directDirection = NOTSET;
-    private int order = NOTSET;
     private String remotePath = null;
     private String directComment = null;
     private String id = null;
     private boolean checked = false;
+    private boolean pathContainsDeletedNode = false;
     
-    ProjectLink(Persistable s, Persistable t, int d, int o) {
+    ProjectLink(Persistable s, Persistable r, int d) {
         source = s;
-        target = t;
+        remote = r;
         directDirection = d;
-        order = o;
         StringBuilder sb = new StringBuilder(s.getDatabaseObjectName());
         sb.append(s.getId());
-        sb.append(t.getDatabaseObjectName());
-        sb.append(t.getId());
+        sb.append(r.getDatabaseObjectName());
+        sb.append(r.getId());
         id = sb.toString();
     }
     
     public String getId() { return id; }
-    public String getTargetDisplayName() { return target.getDisplayName(); }
-    public String getTargetTitle() { return target.getTitle(); }
+    public String getLocalDisplayName()  { return source.getDisplayName(); }
+    public String getLocalTitle() { return source.getTitle(); }
+    public String getRemoteDisplayName() { return remote.getDisplayName(); }
+    public String getRemoteTitle() { return remote.getTitle(); }
     public String getDirectComment() { return (directComment == null) ? "" : directComment; }
     public String getRemotePath() { return (remotePath == null) ? "" : remotePath; }
     public boolean isChecked() { return checked; }
+    public boolean remoteIsDeleted() { return remote.isDeleted(); }
+    public boolean pathHasDeleted() { return pathContainsDeletedNode; }
     
     @Override
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
@@ -69,32 +69,52 @@ public class ProjectLink {
         catch (Exception e) { return false; }
     }
 
-    Persistable getTarget() { return target; }    
+    Persistable getRemote() { return remote; }    
     void setChecked() { checked = true; }
     void setDirectComment(String s) { directComment = s; }
 
-    void addRemotePath(Persistable t, String c, int d) {
+    void addRemotePath(Persistable t, Relationship r, int d) {
+        String src = null;
+        String tgt = null;
+        Persistable x = null;
+        try {
+            x = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+            tgt = x.getTitle();
+            if (x.isDeleted())
+                pathContainsDeletedNode = true;
+        }
+        catch (Exception e1) {
+            tgt = "Could not resolve link target";
+        }
+        try {
+            x = MetaFactory.getInstance().getFactory(r.getSourceType()).get(r.getSource());
+            src = x.getTitle();
+            if (x.isDeleted())
+                pathContainsDeletedNode = true;
+        }
+        catch (Exception e2) {
+            src = "Failed to link source";
+        }
+        
         StringBuilder sb = null;
         if (remotePath == null) {
-            if (d == TO) {
-                sb = new StringBuilder("To ");
-            } else {
-                sb = new StringBuilder("From ");
-            }
+            sb = new StringBuilder();         
         } else {
             sb = new StringBuilder(remotePath);
-            if (d == TO) {
-                sb = new StringBuilder(" and to ");
-            } else {
-                sb = new StringBuilder(" and from ");
-            }
+            sb.append(";");
         }
-        sb.append(t.getDisplayName());
-        sb.append(":");
-        sb.append(t.getTitle());
-        if (c != null) {
-            sb.append(" (");
-            sb.append(c);
+        if (d == TO) {
+            sb.append(src);
+            sb.append("/");
+            sb.append(tgt);
+        } else {
+            sb.append(tgt);
+            sb.append("/");
+            sb.append(src);
+        }
+        if ((r.getComment() != null) && (r.getComment().trim().length() != 0)) {
+            sb.append("(");
+            sb.append(r.getComment());
             sb.append(")");
         }
         remotePath = sb.toString();
