@@ -339,7 +339,21 @@ public class LinkEditor extends javax.swing.JPanel {
             } else {
                 id = Integer.parseInt(focus.getAttributeValue("ProjectID"));
             }
-            ArrayList<Persistable> targets = MetaFactory.getInstance().getChildren(dbtype, "ProjectID", id);
+            // BUG: This doesn't work for ProcessStep because ProcessSteps are owned by a process and don't actually
+            // have a ProjectID. Could add one (new database) or do some query hack specifically for them.
+            //
+            ArrayList<Persistable> targets = null;
+            if(!dbtype.contentEquals("ProcessStep")) {
+                targets = MetaFactory.getInstance().getChildren(dbtype, "ProjectID", id);
+            } else {
+                ArrayList<Persistable> procs = MetaFactory.getInstance().getChildren("Process", "ProjectID", id);
+                targets = new ArrayList<>();
+                for (Persistable pr : procs) {
+                    ArrayList<Persistable> ps = MetaFactory.getInstance().getChildren("ProcessStep", "ProcessID", pr.getId());
+                    if (ps != null)
+                        targets.addAll(ps);
+                }
+            }
             if (targets == null) {
                 DefaultListModel dlm = new DefaultListModel();
                 targetList.setModel(dlm);

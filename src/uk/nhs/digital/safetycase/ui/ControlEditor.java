@@ -58,12 +58,12 @@ public class ControlEditor extends javax.swing.JPanel
         linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
         linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         try {
-            ValueSet controlType = MetaFactory.getInstance().getValueSet("ControlType");
-            Iterator<String> ctypes = controlType.iterator();
-            while(ctypes.hasNext()) {
-                String s = ctypes.next();
-                conditionsComboBox.addItem(s);
-            }
+//            ValueSet controlType = MetaFactory.getInstance().getValueSet("ControlType");
+//            Iterator<String> ctypes = controlType.iterator();
+//            while(ctypes.hasNext()) {
+//                String s = ctypes.next();
+//                conditionsComboBox.addItem(s);
+//            }
             ValueSet controlState = MetaFactory.getInstance().getValueSet("ControlState");
             Iterator<String> cstates = controlState.iterator();
             while(cstates.hasNext()) {
@@ -156,6 +156,13 @@ public class ControlEditor extends javax.swing.JPanel
         jLabel3.setText("State");
 
         jLabel4.setText("Type");
+
+        conditionsComboBox.setEditable(true);
+        conditionsComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                conditionsComboBoxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -396,8 +403,8 @@ public class ControlEditor extends javax.swing.JPanel
     
     
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        if (conditionsComboBox.getSelectedIndex() == -1)
-            conditionsComboBox.setSelectedIndex(0);
+//        if (conditionsComboBox.getSelectedIndex() == -1)
+//            conditionsComboBox.setSelectedIndex(0);
         control.setAttribute("Name", nameTextField.getText());
         control.setAttribute("Description", descriptionTextArea.getText());
         control.setAttribute("ClinicalJustification", clinicalJustificationTextArea.getText());
@@ -446,6 +453,10 @@ public class ControlEditor extends javax.swing.JPanel
             SmartProject.getProject().log("Failed to process editLinks action in ControlEditor", e);
         }
     }//GEN-LAST:event_editLinksButtonActionPerformed
+
+    private void conditionsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conditionsComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_conditionsComboBoxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
