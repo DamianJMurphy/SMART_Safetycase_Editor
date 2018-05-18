@@ -17,6 +17,7 @@
  */
 package uk.nhs.digital.safetycase.ui;
 
+import java.awt.Dimension;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
@@ -38,6 +39,7 @@ public class LinkExplorer extends javax.swing.JDialog {
         projectTree.setPreferredSize(null);
         setTitle("Link explorer");
         projectTree.setCellRenderer(SmartProject.getProject().getProjectTreeCellRenderer());
+        setSize(new Dimension(1300,650));
     }
 
     /**
@@ -53,10 +55,14 @@ public class LinkExplorer extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         projectTree = new javax.swing.JTree();
         linksTabbedPane = new javax.swing.JTabbedPane();
+        manuBar = new javax.swing.JMenuBar();
+        closeButton = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(503, 365));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.LINE_AXIS));
+
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(400, 363));
 
         projectTree.setPreferredSize(new java.awt.Dimension(283, 72));
         projectTree.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -70,6 +76,21 @@ public class LinkExplorer extends javax.swing.JDialog {
         jSplitPane1.setRightComponent(linksTabbedPane);
 
         getContentPane().add(jSplitPane1);
+
+        closeButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        closeButton.setText("Close");
+        closeButton.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                closeButtonMenuSelected(evt);
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+        });
+        manuBar.add(closeButton);
+
+        setJMenuBar(manuBar);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -89,12 +110,16 @@ public class LinkExplorer extends javax.swing.JDialog {
             Object u = d.getUserObject();
             if (u instanceof uk.nhs.digital.safetycase.data.Persistable) {
                 Persistable p = (Persistable)u;
-                ObjectLinkReporter olr = new ObjectLinkReporter(p);
+                ObjectLinkReporter olr = new ObjectLinkReporter(p, linksTabbedPane);
                 linksTabbedPane.add(p.getTitle(), olr);
             }
         }
         catch (Exception e) {}
     }//GEN-LAST:event_projectTreeMouseClicked
+
+    private void closeButtonMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_closeButtonMenuSelected
+        this.dispose();
+    }//GEN-LAST:event_closeButtonMenuSelected
 
     /**
      * @param args the command line arguments
@@ -139,9 +164,11 @@ public class LinkExplorer extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu closeButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane linksTabbedPane;
+    private javax.swing.JMenuBar manuBar;
     private javax.swing.JTree projectTree;
     // End of variables declaration//GEN-END:variables
 }

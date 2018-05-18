@@ -52,6 +52,7 @@ public class ProjectLink {
     public String getLocalDisplayName()  { return source.getDisplayName(); }
     public String getLocalTitle() { return source.getTitle(); }
     public String getRemoteDisplayName() { return remote.getDisplayName(); }
+    public String getRemoteType() { return remote.getDatabaseObjectName(); }
     public String getRemoteTitle() { return remote.getTitle(); }
     public String getDirectComment() { return (directComment == null) ? "" : directComment; }
     public String getRemotePath() { return (remotePath == null) ? "" : remotePath; }
