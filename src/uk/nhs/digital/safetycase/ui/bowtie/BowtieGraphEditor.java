@@ -167,28 +167,28 @@ public class BowtieGraphEditor
 						new ImageIcon(
 								BowtieGraphEditor.class
 										.getResource("/uk/nhs/digital/safetycase/ui/bowtie/hazard.png")),
-						"image;image=/uk/nhs/digital/safetycase/ui/bowtie/hazard.png",
+						"image;image=/uk/nhs/digital/safetycase/ui/bowtie/hazard.png;whiteSpace=wrap",
 						50, 50, "Hazard");
 		bowtiePalette
 				.addTemplate("Cause",
 						new ImageIcon(
 								BowtieGraphEditor.class
 										.getResource("/uk/nhs/digital/safetycase/ui/bowtie/cause.png")),
-						"image;image=/uk/nhs/digital/safetycase/ui/bowtie/cause.png",
+						"image;image=/uk/nhs/digital/safetycase/ui/bowtie/cause.png;whiteSpace=wrap",
 						50, 50, "Cause");
 		bowtiePalette
 				.addTemplate("Control",
 						new ImageIcon(
 								BowtieGraphEditor.class
 										.getResource("/uk/nhs/digital/safetycase/ui/bowtie/control.jpg")),
-						"image;image=/uk/nhs/digital/safetycase/ui/bowtie/control.jpg",
+						"image;image=/uk/nhs/digital/safetycase/ui/bowtie/control.jpg;whiteSpace=wrap",
 						50, 50, "Control");
 		bowtiePalette
 				.addTemplate("Effect",
 						new ImageIcon(
 								BowtieGraphEditor.class
 										.getResource("/uk/nhs/digital/safetycase/ui/bowtie/effect.png")),
-						"image;image=/uk/nhs/digital/safetycase/ui/bowtie/effect.png",
+						"image;image=/uk/nhs/digital/safetycase/ui/bowtie/effect.png;whiteSpace=wrap",
 						50, 50, "Effect");
 		bowtiePalette
 				.addEdgeTemplate("Straight",

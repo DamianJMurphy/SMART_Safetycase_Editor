@@ -732,6 +732,7 @@ public class HazardEditor extends javax.swing.JPanel
             }
             hazard = new Hazard();
             hazard.setAttribute("Name", summaryTextField.getText());
+            hazard.setAttribute("GraphCellId", "2");
         }
         hazard.setAttribute("Description", descriptionTextArea.getText());
         hazard.setAttribute("ClinicalJustification", clinicalJustificationTextArea.getText());
