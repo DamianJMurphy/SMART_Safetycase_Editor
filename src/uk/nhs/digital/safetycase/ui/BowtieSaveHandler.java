@@ -410,7 +410,7 @@ public class BowtieSaveHandler
         for (int i = 0; i < nl.getLength(); i++) {
             Element cell = (Element)nl.item(i);
             if (cell.hasAttribute("style") && 
-                    cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/bowtie/hazard.png")) {
+                    cell.getAttribute("style").contains("image=/uk/nhs/digital/safetycase/ui/bowtie/hazard.png")) {
                 String id = cell.getAttribute("id");
                 String name = cell.getAttribute("value");
                 h.setAttribute("Name", name);
@@ -446,7 +446,7 @@ public class BowtieSaveHandler
                             p = dee.object;
                     }    
                     
-                    if (cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/bowtie/hazard.png")) {
+                    if (cell.getAttribute("style").contains("image=/uk/nhs/digital/safetycase/ui/bowtie/hazard.png")) {
                         try {
                             String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Hazard", "Hazard", name,pid, hazard);
                             if (duplicateWarning != null) {
@@ -456,7 +456,7 @@ public class BowtieSaveHandler
                         }
                         catch (Exception e) {}                        
                     }
-                    if (cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/bowtie/cause.png")) {
+                    if (cell.getAttribute("style").contains("image=/uk/nhs/digital/safetycase/ui/bowtie/cause.png")) {
                         try {
                             String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Cause", "Cause", name,pid, p);
                             if (duplicateWarning != null) {
@@ -467,7 +467,7 @@ public class BowtieSaveHandler
                         catch (Exception e) {}                        
                         
                     }
-                    if (cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/bowtie/effect.png")) {
+                    if (cell.getAttribute("style").contains("image=/uk/nhs/digital/safetycase/ui/bowtie/effect.png")) {
                         try {
                             String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Effect", "Effect", name,pid, p);
                             if (duplicateWarning != null) {
@@ -477,7 +477,7 @@ public class BowtieSaveHandler
                         }
                         catch (Exception e) {}                                                
                     }
-                    if (cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/bowtie/control.png")) {
+                    if (cell.getAttribute("style").contains("image=/uk/nhs/digital/safetycase/ui/bowtie/control.png")) {
                         try {
                             String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Control", "Control", name,pid, p);
                             if (duplicateWarning != null) {
