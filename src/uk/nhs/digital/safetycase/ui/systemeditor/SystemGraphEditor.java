@@ -165,7 +165,7 @@ public class SystemGraphEditor
                         new ImageIcon(
                                 GraphEditor.class
                                         .getResource("/uk/nhs/digital/safetycase/ui/systemeditor/system.png")),
-						"image;image=/uk/nhs/digital/safetycase/ui/systemeditor/system.png",50, 50, "System");
+						"image;image=/uk/nhs/digital/safetycase/ui/systemeditor/system.png;whiteSpace=wrap",50, 50, "System");
 
 //        systemPalette
 //                .addTemplate(
@@ -180,7 +180,7 @@ public class SystemGraphEditor
                         new ImageIcon(
                                 GraphEditor.class
                                         .getResource("/uk/nhs/digital/safetycase/ui/systemeditor/SystemFunction.png")),
-						"image;image=/uk/nhs/digital/safetycase/ui/systemeditor/SystemFunction.png",50, 50, "Function");
+						"image;image=/uk/nhs/digital/safetycase/ui/systemeditor/SystemFunction.png;whiteSpace=wrap",50, 50, "Function");
 //        systemPalette
 //                .addTemplate(
 //                        "SystemFunction",

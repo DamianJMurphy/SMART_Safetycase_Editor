@@ -459,7 +459,7 @@ public class SystemSaveHandler
                             p = dee.object;
                     }    
                     
-                    if (cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/systemeditor/system.png")) {
+                    if (cell.getAttribute("style").contains("image=/uk/nhs/digital/safetycase/ui/systemeditor/system.png")) {
                         try {
 //                            String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("System", "System", name,pid, system);
                             String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("System", "System", name,pid, p);
@@ -499,7 +499,7 @@ public class SystemSaveHandler
         for (int i = 0; i < nl.getLength(); i++) {
             Element cell = (Element) nl.item(i);
             if (cell.hasAttribute("style")
-                    && cell.getAttribute("style").contentEquals("image;image=/uk/nhs/digital/safetycase/ui/systemeditor/system.png")) {
+                    && cell.getAttribute("style").contains("image=/uk/nhs/digital/safetycase/ui/systemeditor/system.png")) {
                 String id = cell.getAttribute("id");
                 dic.put(id, cell);
             }
