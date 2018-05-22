@@ -481,7 +481,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
             
         }
 //        SystemEditor sge = new SystemEditor();
-        SystemGraphEditor sge = new SystemGraphEditor();
+        SystemGraphEditor sge = new SystemGraphEditor(system.getId());
         String xml = system.getAttributeValue("GraphXml");
         if ((xml == null) || (xml.trim().length() == 0)) {
             StringBuilder sb = new StringBuilder(newRootSystemTemplate);

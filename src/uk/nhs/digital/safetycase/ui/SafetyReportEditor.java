@@ -1611,7 +1611,7 @@ private Persistable findParent(Persistable ch, String parentType)
         String xml = p.getAttributeValue("GraphXml");
         if (p.getDatabaseObjectName().contentEquals("System")) {
             SystemEditorDetails sed = new SystemEditorDetails();
-            SystemGraphEditor sge = new SystemGraphEditor();
+            SystemGraphEditor sge = new SystemGraphEditor(p.getId());
             sed.setSystem((System) p);
             ex = sed.getExistingGraph(xml);
             sge.setExistingGraph(ex);
@@ -1619,7 +1619,7 @@ private Persistable findParent(Persistable ch, String parentType)
                 editor = (BasicGraphEditor) sge;
             }
         } else if(p.getDatabaseObjectName() == "Process"){
-                    ProcessGraphEditor pge = new ProcessGraphEditor();
+                    ProcessGraphEditor pge = new ProcessGraphEditor(p.getId());
                     pge.setProcessId(p.getId(), xml);
                    try{
                     PersistableFactory<ProcessStep> pfs = MetaFactory.getInstance().getFactory("ProcessStep");
@@ -1640,7 +1640,7 @@ private Persistable findParent(Persistable ch, String parentType)
                    }
                 } 
         else if (p.getDatabaseObjectName().contentEquals("Hazard")) {
-            BowtieGraphEditor bge = new BowtieGraphEditor();
+            BowtieGraphEditor bge = new BowtieGraphEditor(p.getId());
             bge.setHazardId(p.getId(), xml);
             HazardEditor he = new HazardEditor();
             if ((xml != null) && (xml.trim().length() > 0)) {

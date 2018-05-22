@@ -26,6 +26,7 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.CustomGraphComponent;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -90,9 +91,9 @@ public class ProcessStepDetailsAction
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        uk.nhs.digital.safetycase.ui.processeditor.ProcessGraphEditor.CustomGraphComponent c = (uk.nhs.digital.safetycase.ui.processeditor.ProcessGraphEditor.CustomGraphComponent)o;
+        CustomGraphComponent c = (CustomGraphComponent)o;
         ProcessGraphEditor container = (ProcessGraphEditor)c.getParent().getParent();
-        int processid = c.getProcessId();
+        int processid = c.getObjectId();
         if (processid != -1) {
             try {
                 if (selected != null) {

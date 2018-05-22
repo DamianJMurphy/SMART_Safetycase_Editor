@@ -391,7 +391,7 @@ public class SingleProcessEditorPanel
             }
         }
         try {
-            ProcessGraphEditor pge = new ProcessGraphEditor();
+            ProcessGraphEditor pge = new ProcessGraphEditor(process.getId());
             String xml = process.getAttributeValue("GraphXml");
             pge.setProcessId(process.getId(), xml);
             PersistableFactory<ProcessStep> pfs = MetaFactory.getInstance().getFactory("ProcessStep");

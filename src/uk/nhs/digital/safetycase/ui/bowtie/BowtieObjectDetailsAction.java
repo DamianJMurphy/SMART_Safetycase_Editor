@@ -26,6 +26,7 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.CustomGraphComponent;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
@@ -91,8 +92,9 @@ public class BowtieObjectDetailsAction
     @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
-        uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor.CustomGraphComponent c = (uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor.CustomGraphComponent)o;
-        int hazardid = c.getHazardId();
+//        uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor.CustomGraphComponent c = (uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor.CustomGraphComponent)o;
+        CustomGraphComponent c = (CustomGraphComponent)o;
+        int hazardid = c.getObjectId();
         BowtieGraphEditor container = (BowtieGraphEditor)c.getParent().getParent();
         
         // this.selected is the cell, which tells us what type of thing has been clicked and its cell id.

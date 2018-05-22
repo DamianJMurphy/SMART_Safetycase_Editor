@@ -25,6 +25,7 @@ import java.util.HashMap;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.CustomGraphComponent;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -91,8 +92,8 @@ public class AddHazardAction
             
         boolean didsomething = false;
         Object o = e.getSource();
-        uk.nhs.digital.safetycase.ui.processeditor.ProcessGraphEditor.CustomGraphComponent c = (uk.nhs.digital.safetycase.ui.processeditor.ProcessGraphEditor.CustomGraphComponent)o;
-        int processid = c.getProcessId();
+        CustomGraphComponent c = (CustomGraphComponent)o;
+        int processid = c.getObjectId();
         if (processid != -1) {
             try {
                 if (selected != null) {

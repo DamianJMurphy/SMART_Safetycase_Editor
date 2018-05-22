@@ -26,6 +26,7 @@ import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.CustomGraphComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
@@ -96,8 +97,8 @@ public class SystemFunctionLinkAction
     public void actionPerformed(ActionEvent e) {
         
         Object o = e.getSource();
-        SystemGraphEditor.CustomGraphComponent c = (SystemGraphEditor.CustomGraphComponent)o;
-        int systemid = c.getSystemId();
+        CustomGraphComponent c = (CustomGraphComponent)o;
+        int systemid = c.getObjectId();
         if (systemid != -1) {
             try {
                 if (selected == null) {

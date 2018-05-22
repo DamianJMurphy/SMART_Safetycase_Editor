@@ -26,6 +26,7 @@ import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.CustomGraphComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
@@ -95,8 +96,8 @@ public class ProcessStepLinkAction
     public void actionPerformed(ActionEvent e) {
         
         Object o = e.getSource();
-        ProcessGraphEditor.CustomGraphComponent c = (ProcessGraphEditor.CustomGraphComponent)o;
-        int processid = c.getProcessId();
+        CustomGraphComponent c = (CustomGraphComponent)o;
+        int processid = c.getObjectId();
         if (processid != -1) {
             try {
                 if (selected == null) {

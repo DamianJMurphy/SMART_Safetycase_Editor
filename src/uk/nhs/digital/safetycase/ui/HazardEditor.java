@@ -660,7 +660,7 @@ public class HazardEditor extends javax.swing.JPanel
             return;
         }
 
-        BowtieGraphEditor bge = new BowtieGraphEditor();
+        BowtieGraphEditor bge = new BowtieGraphEditor(hazard.getId());
         String xml = hazard.getAttributeValue("GraphXml");
         if ((xml == null) || (xml.trim().length() == 0)) {
             StringBuilder sb = new StringBuilder(newBowtieTemplate);

@@ -40,6 +40,7 @@ import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.projectuiframework.ui.ViewComponent;
 import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 import uk.nhs.digital.safetycase.data.*;
+import uk.nhs.digital.safetycase.ui.GraphicalEditor;
 import uk.nhs.digital.safetycase.ui.IssuesLogEditor;
 import uk.nhs.digital.safetycase.ui.PersistableEditor;
 import uk.nhs.digital.safetycase.ui.views.ViewConstructor;
@@ -662,8 +663,12 @@ public class SmartProject
         if (notificationSubscribers != null) {
             for (DataNotificationSubscriber d : notificationSubscribers) {
                 JPanel p = d.getEditor(o);
-                if ((p != null) && (p != caller))
-                    return p;
+                if ((p != null) && (p != caller)) {
+                    if ((caller == projectWindow) && !(p instanceof GraphicalEditor))
+                        return p;
+                    if ((caller instanceof PersistableEditor) && (p instanceof GraphicalEditor))
+                        return p;
+                }
             }
         }
         return null;

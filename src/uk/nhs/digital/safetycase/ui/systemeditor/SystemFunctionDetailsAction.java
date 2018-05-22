@@ -25,6 +25,7 @@ import java.util.HashMap;
 import javax.swing.Action;
 import javax.swing.JPanel;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.CustomGraphComponent;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -92,9 +93,9 @@ public class SystemFunctionDetailsAction
     {
         try {
             Object o = e.getSource();
-            SystemGraphEditor.CustomGraphComponent sgec = (SystemGraphEditor.CustomGraphComponent)o;
+            CustomGraphComponent sgec = (CustomGraphComponent)o;
 
-            int rootSystem = sgec.getSystemId();
+            int rootSystem = sgec.getObjectId();
             SystemGraphEditor sge = (SystemGraphEditor)sgec.getParent().getParent();
             Persistable p = getSelectedObject(rootSystem, selected.getId());
             if (p != null) {
