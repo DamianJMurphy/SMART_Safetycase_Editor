@@ -78,6 +78,10 @@ public class ControlEditor extends javax.swing.JPanel
                     conditionsComboBox.addItem(s);
                 }
             }
+            ArrayList<String> states = MetaFactory.getInstance().getFactory("Control").getDistinctSet("State");
+            for (String s : states) {
+                stateComboBox.addItem(s);
+            }
         }
         catch (Exception e) {
             SmartProject.getProject().log("Failed to initialise ControlEditor", e);
@@ -119,6 +123,8 @@ public class ControlEditor extends javax.swing.JPanel
         nameTextField = new javax.swing.JTextField();
         stateComboBox = new javax.swing.JComboBox<>();
         conditionsComboBox = new javax.swing.JComboBox<>();
+        groupComboBox = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
         descriptionAndJustificationContainer = new javax.swing.JPanel();
         descriptionPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -157,12 +163,18 @@ public class ControlEditor extends javax.swing.JPanel
 
         jLabel4.setText("Type");
 
+        stateComboBox.setEditable(true);
+
         conditionsComboBox.setEditable(true);
         conditionsComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 conditionsComboBoxActionPerformed(evt);
             }
         });
+
+        groupComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Additional", "Existing" }));
+
+        jLabel2.setText("Group");
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -175,9 +187,11 @@ public class ControlEditor extends javax.swing.JPanel
                         .addComponent(jLabel3))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel4)))
+                        .addComponent(jLabel4))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(groupComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(stateComboBox, 0, 694, Short.MAX_VALUE))
                 .addContainerGap())
@@ -196,18 +210,22 @@ public class ControlEditor extends javax.swing.JPanel
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(conditionsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(groupComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addContainerGap(17, Short.MAX_VALUE))
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelLayout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
                         .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(108, Short.MAX_VALUE)))
+                    .addContainerGap(111, Short.MAX_VALUE)))
         );
 
         editorPanel.add(mainPanel);
@@ -235,11 +253,11 @@ public class ControlEditor extends javax.swing.JPanel
         );
         descriptionPanelLayout.setVerticalGroup(
             descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGap(0, 99, Short.MAX_VALUE)
             .addGroup(descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(descriptionPanelLayout.createSequentialGroup()
                     .addGap(11, 11, 11)
-                    .addComponent(jScrollPane4)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
                     .addGap(11, 11, 11)))
         );
 
@@ -266,11 +284,11 @@ public class ControlEditor extends javax.swing.JPanel
         );
         justificationPanelLayout.setVerticalGroup(
             justificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGap(0, 99, Short.MAX_VALUE)
             .addGroup(justificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(justificationPanelLayout.createSequentialGroup()
                     .addGap(11, 11, 11)
-                    .addComponent(jScrollPane5)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
                     .addGap(11, 11, 11)))
         );
 
@@ -299,11 +317,11 @@ public class ControlEditor extends javax.swing.JPanel
         );
         evidenceContainerLayout.setVerticalGroup(
             evidenceContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGap(0, 97, Short.MAX_VALUE)
             .addGroup(evidenceContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(evidenceContainerLayout.createSequentialGroup()
                     .addGap(11, 11, 11)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
                     .addGap(11, 11, 11)))
         );
 
@@ -408,7 +426,7 @@ public class ControlEditor extends javax.swing.JPanel
         control.setAttribute("Name", nameTextField.getText());
         control.setAttribute("Description", descriptionTextArea.getText());
         control.setAttribute("ClinicalJustification", clinicalJustificationTextArea.getText());
-//        control.setAttribute("Type", (String)conditionsComboBox.getSelectedItem());
+        control.setAttribute("Type", (String)groupComboBox.getSelectedItem());
         control.setAttribute("State", (String)stateComboBox.getSelectedItem());
         control.setAttribute("GroupingType", (String)conditionsComboBox.getSelectedItem());
         control.setAttribute("Evidence", evidenceTextArea.getText());
@@ -469,7 +487,9 @@ public class ControlEditor extends javax.swing.JPanel
     private javax.swing.JPanel editorPanel;
     private javax.swing.JPanel evidenceContainer;
     private javax.swing.JTextArea evidenceTextArea;
+    private javax.swing.JComboBox<String> groupComboBox;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
@@ -511,6 +531,10 @@ public class ControlEditor extends javax.swing.JPanel
         clinicalJustificationTextArea.setText(control.getAttributeValue("ClinicalJustification"));
         descriptionTextArea.setText(control.getAttributeValue("Description"));
         evidenceTextArea.setText(control.getAttributeValue("Evidence"));
+        if (control.getAttributeValue("Type").contentEquals("Additional"))
+            groupComboBox.setSelectedIndex(0);
+        else
+            groupComboBox.setSelectedIndex(1);
         for (int i = 0; i < conditionsComboBox.getModel().getSize(); i++) {
             if (conditionsComboBox.getItemAt(i).contentEquals(control.getAttributeValue("GroupingType"))) {
                 conditionsComboBox.setSelectedIndex(i);

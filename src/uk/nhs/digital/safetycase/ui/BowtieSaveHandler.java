@@ -384,8 +384,8 @@ public class BowtieSaveHandler
             p = new Cause();
         if (t.contentEquals("Control")) {
             p = new Control();
-            p.setAttribute("Type", "Select...");
-            p.setAttribute("State", "Select...");
+            p.setAttribute("Type", "Additional");
+            p.setAttribute("State", "To be implemented");
         }
         if (t.contentEquals("Effect")) {
             p = new Effect();

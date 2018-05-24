@@ -65,6 +65,7 @@ public class HazardEditor extends javax.swing.JPanel
 {
     private static final String RISK_MATRIX_IMAGE = "/uk/nhs/digital/safetycase/ui/risk_matrix_image.jpg";
     private static final String NEW_HAZARD_BOWTIE_TEMPLATE = "/uk/nhs/digital/safetycase/ui/single_new_hazard_template.txt";
+    private static final Color DEFAULT_BUTTON_COLOUR = new Color(238,238,238);
     private static final int RISK_MATRIX_X = 722;
     private static final int RISK_MATRIX_Y = 186;
     private EditorComponent editorComponent = null;
@@ -77,7 +78,7 @@ public class HazardEditor extends javax.swing.JPanel
     
     private final String[] linkcolumns = {"Type", "Name", "Comment"};
     private int newObjectProjectId = -1;
-    private boolean create;
+    private boolean create = false;
     private RiskMatrixPanel riskMatrixPanel = new RiskMatrixPanel();
     
     private static ImageIcon riskMatrixImageIcon = null;
@@ -752,6 +753,7 @@ public class HazardEditor extends javax.swing.JPanel
             MetaFactory.getInstance().getFactory(hazard.getDatabaseObjectName()).put(hazard);
             if (create) {
                 SmartProject.getProject().editorEvent(Project.ADD, hazard);
+                create = false;
             } else {
                 SmartProject.getProject().editorEvent(Project.UPDATE, hazard);
             }
@@ -899,6 +901,7 @@ public class HazardEditor extends javax.swing.JPanel
         int populated = -1;
         try {
             hazard = (Hazard) p;
+            create = false;
             String g = hazard.getAttributeValue("GraphXml");
             if ((g == null) || (g.trim().length() == 0)) {
                 bowtieButton.setText("Create bowtie");
@@ -907,6 +910,7 @@ public class HazardEditor extends javax.swing.JPanel
                 analysisPanel.setEnabled(false);
             } else {
                 bowtieButton.setText("Edit bowtie");
+                bowtieButton.setBackground(null);
                 ((TitledBorder)analysisPanel.getBorder()).setTitle("");
                 analysisPanel.setEnabled(true);
             }    
