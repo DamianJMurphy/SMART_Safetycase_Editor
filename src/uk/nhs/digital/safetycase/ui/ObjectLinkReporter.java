@@ -28,6 +28,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableModel;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.ProjectLink;
@@ -55,6 +56,7 @@ public class ObjectLinkReporter
         DefaultTableModel dtm = new DefaultTableModel(LINKCOLUMNS, 0);
         projectLinksTable.setModel(dtm);
         projectLinksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());
+        projectLinksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         try {
             links = MetaFactory.getInstance().exploreLinks(p, p, links);
         }

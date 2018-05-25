@@ -1,17 +1,10 @@
 
 NOT FOR MARCH:
 
-- TODO: Probably need to detect name collisions within a set of child nodes in the tree.
 - TODO: DQ checking and issues system
 
 Functional
     
-BUGFIX: Link in System/Function popup menu
-
-TODO: "Undelete" and housekeeping functions from main menu. Needs tidying up.
-    - TODO THEN: Cascade purge
-
-TODO: See if it is possible to auto-wrap the text in boxes in the graphical editors
 
 TODO: Library functions and object copy/paste
 
