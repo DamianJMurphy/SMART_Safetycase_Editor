@@ -77,6 +77,7 @@ public class SmartProject
 //    private static final String[] PROJECTOTHERCOMPONENTS = { "Care Settings", "Role", "Report"};
     private static final String[] PROJECTEDITORS = {"Process", "Hazard", "Cause", "Effect", "Control", "Location", "Role", "Report"};
     private static final String[] PROJECTNEWABLES = {"Care Process", "Hazard", "Cause", "Effect", "Control", "Care Settings", "Role"};
+    private static final String[] ALLOW_DUPLICATES_FOR = {"Control", "Cause", "Effect"};
     private static final String PROJECTNAME = "SMART";
     private MetaFactory metaFactory = null;
     private int currentProjectId = -1;
@@ -656,6 +657,18 @@ public class SmartProject
                 return;
             }
         }
+    }
+    
+    @Override
+    public boolean doDuplicateObjectCheck(String type)
+    {
+        if (type == null)
+            return false;
+        for (String s : ALLOW_DUPLICATES_FOR) {
+            if (s.contentEquals(type))
+                return false;
+        }
+        return true;
     }
     
     @Override

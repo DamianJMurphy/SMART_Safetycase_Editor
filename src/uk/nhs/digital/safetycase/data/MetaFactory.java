@@ -227,6 +227,11 @@ public class MetaFactory {
         if (pf == null)
             return null;
         
+        // See if the Project wants us to do name de-duplication on this type
+        if (!SmartProject.getProject().doDuplicateObjectCheck(type))
+            return null;
+                
+                
         Collection<Persistable> c = null;
         if (pid != -1) {
             c = pf.getEntries(pid);

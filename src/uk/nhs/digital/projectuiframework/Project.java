@@ -83,6 +83,8 @@ public interface Project {
     void removeNotificationSubscriber(DataNotificationSubscriber n);
     void saveAll();
     
+    boolean doDuplicateObjectCheck(String type);
+    
     void log(String message, Throwable thrown);
     void log(Level level, String message, Throwable thrown);
 }
