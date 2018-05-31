@@ -53,15 +53,15 @@ public class HelpAboutDialog extends javax.swing.JDialog {
                 closeButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(closeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 640, -1, -1));
+        getContentPane().add(closeButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 670, -1, -1));
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setText("Copyright 2018 NHS Digital. Licensed under the Apache License, Version 2.0.\n\nMade in Yorkshire by: Hannah McCann (UX Lead, Safety Engineering SME), Damian Murphy and \nSharif Ullah (development team)\n\nGraphical editors powered by mxGraph (http://www.jgraph.com), licenced under Apache Licence, version 2.0\nHTML editors powered by Ekit (http://www.hexidec.com) licenced under LGPL, copyright Howard Kistler.\nPDF SMART methodology display powered by Apache PDFbox, copyright Apache Software Foundation.\n\n");
+        jTextArea1.setText("Copyright 2018 NHS Digital. Licensed under the Apache License, Version 2.0.\n\nMade in Yorkshire by: Hannah McCann (UX Lead, Safety Engineering SME), Damian Murphy and \nSharif Ullah (development team).\n\nAided and abetted by Sean White (NHS Digital Safety Team) and Ibrahim Habli (University of York)\n\nGraphical editors powered by mxGraph (http://www.jgraph.com), licenced under Apache Licence, version 2.0\nHTML editors powered by Ekit (http://www.hexidec.com) licenced under LGPL, copyright Howard Kistler.\nPDF SMART methodology display powered by Apache PDFbox, copyright Apache Software Foundation.\n\n");
         jScrollPane1.setViewportView(jTextArea1);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 470, 730, 160));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 470, 730, 190));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

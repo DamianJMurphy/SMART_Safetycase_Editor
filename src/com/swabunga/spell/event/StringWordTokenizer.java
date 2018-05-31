@@ -164,28 +164,4 @@ public class StringWordTokenizer implements WordTokenizer {
   }
 
 
-  public static void main(String args[]) {
-    StringWordTokenizer t = new StringWordTokenizer("  This is a  test   problem");
-    while(t.hasMoreWords()) {
-      String word = t.nextWord();
-      System.out.println("Word is '"+word+"'");
-      if ("test".equals(word)) t.replaceWord("mightly big");
-    }
-    System.out.println("End text is: '"+t.getFinalText()+"'");
-
-    t = new StringWordTokenizer("    README   ");
-    while(t.hasMoreWords()) {
-      String word = t.nextWord();
-      System.out.println("Word is '"+word+"'");
-    }
-    System.out.println("End text is: '"+t.getFinalText()+"'");
-
-    t = new StringWordTokenizer("This is a acronym (A.C.M.E). This is the second sentance.");
-    while(t.hasMoreWords()) {
-      String word = t.nextWord();
-      System.out.println("Word is '"+word+"'. Starts Sentance?="+t.isNewSentance());
-      if (word.equals("acronym"))
-        t.replaceWord("test");
-    }
-  }
 }

@@ -214,18 +214,6 @@ public class JSpellForm extends JPanel
     fireActionEvent(e);
   }
 
-  public static void main (String[] args) {
-    try {
-      JSpellForm pane = new JSpellForm();
-      JFrame frm = new JFrame("Spelling");
-      frm.getContentPane().add(pane);
-      frm.setSize(300, 300);
-      frm.setVisible(true);
-      frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
-  }
 }
 
 

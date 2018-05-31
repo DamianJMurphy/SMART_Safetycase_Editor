@@ -16,6 +16,7 @@
  *  
  */
 package uk.nhs.digital.projectuiframework;
+import java.io.FileInputStream;
 import javax.swing.UIManager;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.safetycase.data.Database;
@@ -30,19 +31,37 @@ public class ProjectUIFramework {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        boolean gotDBFromProperties = true;
+        try {
+            String u = System.getProperty("user.home");
+            System.out.println("Trying to load database URL from default " + u + "/smart.properties location");
+            System.getProperties().load(new FileInputStream(u + "/smart.properties"));
+            System.setProperty(Database.CONNECTIONURLPROPERTY, System.getProperty("SMART.dburl"));
+        }
+        catch (Exception e1) {
+            gotDBFromProperties = false;
+        }
+        
         System.setProperty(ProjectHelper.PROJECTCLASSPROPERTY, "uk.nhs.digital.projectuiframework.smart.SmartProject");
         Project smart = null;
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
-        catch (Exception e) {
-            e.printStackTrace();
+        catch (Exception e2) {
+            e2.printStackTrace();
         }
         java.lang.System.setProperty("user.minimum.wrap.width", "132");
-        java.lang.System.setProperty(Database.CONNECTIONURLPROPERTY, args[0]);
+        if (!gotDBFromProperties) {
+            if (args.length == 0) {
+                System.err.println("Default URL property file not found and nothing given on the command line");
+                System.exit(1);
+            } else {
+                java.lang.System.setProperty(Database.CONNECTIONURLPROPERTY, args[0]);
+            }
+        }
         java.lang.System.setProperty("user", "SA");
         java.lang.System.setProperty("password", "");
-        java.lang.System.setProperty("uk.nhs.digital.safetycase.applicationidentity", "NHS Digital SMART Safety Case Editor DEVELOPMENT 20180525");
+        java.lang.System.setProperty("uk.nhs.digital.safetycase.applicationidentity", "NHS Digital SMART Safety Case Editor DEVELOPMENT 20180531");
 //        java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Process","uk.nhs.digital.safetycase.ui.processeditor.ProcessEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Process","uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorForm");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Location","uk.nhs.digital.safetycase.ui.LocationEditor");
@@ -52,6 +71,7 @@ public class ProjectUIFramework {
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Control","uk.nhs.digital.safetycase.ui.ControlEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Cause","uk.nhs.digital.safetycase.ui.CauseEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.System","uk.nhs.digital.safetycase.ui.systemeditor.SystemEditorDetails");
+        java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.SystemFunction","uk.nhs.digital.safetycase.ui.systemeditor.SystemFunctionEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Report","uk.nhs.digital.safetycase.ui.SafetyReportEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Project","uk.nhs.digital.safetycase.ui.ProjectEditor");
         java.lang.System.setProperty("uk.nhs.digital.projectuiframework.initialtab", "internal:/uk/nhs/digital/projectuiframework/smart/frontpage.pdf");

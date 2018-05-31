@@ -42,17 +42,6 @@ public class EditDistance {
         return matrix[a_size - 1][b_size - 1];
     }
 
-    public static void main(String[] args) throws Exception {
-        EditDistance ed = new EditDistance();
-        BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-        String input = "";
-        String input2 = "";
-        while (input != null) {
-            input = stdin.readLine();
-            input2 = stdin.readLine();
-            System.out.println(ed.getDistance(input, input2));
-        }
-    }
 }
 
 
