@@ -224,9 +224,18 @@ public class BowtieSaveHandler
                 bt.connections.add(t);
             }
         }
+        boolean effectDefined = false;
         for (DiagramEditorElement dee : bowtieElements.values()) {
-            if (!dee.type.contentEquals("Effect") && (dee.connections.size() == 0))
-                throw new BrokenConnectionException("Bowtie element " + dee.name + " is not connected to anything");
+            if (dee.type.contentEquals("Effect"))
+                effectDefined = true;
+        }
+        if (effectDefined) {
+            for (DiagramEditorElement dee : bowtieElements.values()) {
+                if (!dee.type.contentEquals("Effect") && (dee.connections.size() == 0))
+                    throw new BrokenConnectionException("Bowtie element " + dee.name + " is not connected to anything");
+            }
+        } else {
+            throw new BrokenConnectionException("Please add an Effect before saving (it can be defined properly later)");
         }
         return bowtieElements;
     }
