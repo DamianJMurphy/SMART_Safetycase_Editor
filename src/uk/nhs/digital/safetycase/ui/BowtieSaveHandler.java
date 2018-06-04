@@ -231,12 +231,13 @@ public class BowtieSaveHandler
         }
         if (effectDefined) {
             for (DiagramEditorElement dee : bowtieElements.values()) {
-                if (!dee.type.contentEquals("Effect") && (dee.connections.size() == 0))
+                if (!dee.type.contentEquals("Effect") && (dee.connections.isEmpty()))
                     throw new BrokenConnectionException("Bowtie element " + dee.name + " is not connected to anything");
             }
         } else {
             throw new BrokenConnectionException("Please add an Effect before saving (it can be defined properly later)");
         }
+        
         return bowtieElements;
     }
     
