@@ -412,7 +412,7 @@ public class SystemSaveHandler
                     }
                 }
             }
-            //MetaFactory.getInstance().getFactory(parent.type).put(parent.object);
+            MetaFactory.getInstance().getFactory(parent.type).put(parent.object);
         }
     }
     Persistable createPersistable(String t) {

@@ -40,11 +40,13 @@ public class SmartLogger
     private static final String LIMIT_PROPERTY = "uk.nhs.digital.projectuiframework.smart.logging.filesizelimit";
     private static final String FILECOUNT_PROPERTY = "uk.nhs.digital.projectuiframework.smart.logging.filecount";
     
+    @SuppressWarnings({"OverridableMethodCallInConstructor", "LeakingThisInConstructor"})
     public SmartLogger() {
         super(LOGGER_NAME, null);
         super.setLevel(Level.ALL);
         addHandler(makeHandler());        
         LogManager.getLogManager().addLogger(this);
+        System.out.println("Logging to " + System.getProperty("java.io.tmpdir"));
     }
     
     private Handler makeHandler() {
@@ -65,6 +67,7 @@ public class SmartLogger
                 count = Integer.parseInt(s);
         }
         catch (NumberFormatException e) {}
+        @SuppressWarnings("UnusedAssignment")
         Handler f = null;
         try {
             f = new FileHandler(pattern, limit, count, true);          

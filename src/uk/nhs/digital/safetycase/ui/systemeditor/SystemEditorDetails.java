@@ -550,9 +550,11 @@ public class SystemEditorDetails extends javax.swing.JPanel
                     String src = cell.getAttribute("source");
                     String t = cell.getAttribute("target");
                     DiagramEditorElement bt = systemElements.get(src);
-//                    bt.fromCell = Integer.parseInt(s);
-//                    bt.toCell = Integer.parseInt(t);
-                    bt.connections.add(t);
+                    if (bt == null) {
+                        java.lang.System.err.println("Error in diagram XML: " + src + " node not found");
+                    } else {
+                        bt.connections.add(t);
+                    }
                 }
             }
             return systemElements;
