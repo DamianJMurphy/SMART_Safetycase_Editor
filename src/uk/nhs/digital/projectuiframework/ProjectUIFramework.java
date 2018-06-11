@@ -17,7 +17,9 @@
  */
 package uk.nhs.digital.projectuiframework;
 import java.io.FileInputStream;
+import java.io.IOException;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.safetycase.data.Database;
 import uk.nhs.digital.safetycase.data.MetaFactory;
@@ -38,16 +40,17 @@ public class ProjectUIFramework {
             System.getProperties().load(new FileInputStream(u + "/smart.properties"));
             System.setProperty(Database.CONNECTIONURLPROPERTY, System.getProperty("SMART.dburl"));
         }
-        catch (Exception e1) {
+        catch (IOException e1) {
             gotDBFromProperties = false;
         }
         
         System.setProperty(ProjectHelper.PROJECTCLASSPROPERTY, "uk.nhs.digital.projectuiframework.smart.SmartProject");
+        @SuppressWarnings("UnusedAssignment")
         Project smart = null;
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
-        catch (Exception e2) {
+        catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e2) {
             e2.printStackTrace();
         }
         java.lang.System.setProperty("user.minimum.wrap.width", "132");
