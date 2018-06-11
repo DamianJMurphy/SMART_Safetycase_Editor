@@ -47,6 +47,7 @@ public class SingleProcessEditorForm
     private ArrayList<ProcessStep> steps = null;
     private int newObjectProjectId = -1;
     private EditorComponent editorComponent = null;
+    private boolean modified = false;
     /**
      * Creates new form SingleProcessEditorForm
      */
@@ -66,6 +67,9 @@ public class SingleProcessEditorForm
             processSteps.populateList(ps);
         }
     }
+    
+    void setModified(boolean b) { modified = b; }
+    
     @Override
     public void unsubscribe() {
         SmartProject.getProject().removeNotificationSubscriber(this);
@@ -186,5 +190,10 @@ public class SingleProcessEditorForm
         catch (Exception e) {}
         return null;
     }    
+
+    @Override
+    public boolean isModified() {
+        return modified;
+    }
     
 }

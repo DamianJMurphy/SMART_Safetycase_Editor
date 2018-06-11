@@ -47,6 +47,7 @@ public class ProjectEditor
     private SmartProject smartProject = null;
     private EditorComponent editorComponent = null;
     private uk.nhs.digital.safetycase.data.Project project = null;
+    private boolean modified = false;
     /**
      * Creates new form ProjectEditor
      * @param sp
@@ -131,7 +132,25 @@ public class ProjectEditor
 
         jLabel1.setText("Name");
 
+        nameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nameTextFieldKeyTyped(evt);
+            }
+        });
+
         jLabel2.setText("Owner");
+
+        ownerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                ownerTextFieldKeyTyped(evt);
+            }
+        });
+
+        customerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                customerTextFieldKeyTyped(evt);
+            }
+        });
 
         jLabel3.setText("Author");
 
@@ -184,6 +203,11 @@ public class ProjectEditor
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(descriptionTextArea);
 
         jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
@@ -232,6 +256,7 @@ public class ProjectEditor
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Project summary"));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
+        projectSummaryTextPane.setEditable(false);
         jScrollPane2.setViewportView(projectSummaryTextPane);
 
         jPanel1.add(jScrollPane2, java.awt.BorderLayout.CENTER);
@@ -307,6 +332,7 @@ public class ProjectEditor
             SmartProject.getProject().log("Failed to save in ProjectEditor", e);
         }
         makeProjectSummary();
+        modified = false;
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
@@ -327,6 +353,22 @@ public class ProjectEditor
             SmartProject.getProject().log("Failed to delete in ProjectEditor", e);
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_nameTextFieldKeyTyped
+
+    private void ownerTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ownerTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_ownerTextFieldKeyTyped
+
+    private void customerTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_customerTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_customerTextFieldKeyTyped
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -588,6 +630,11 @@ public class ProjectEditor
     @Override
     public void unsubscribe() {
         SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+
+    @Override
+    public boolean isModified() {
+        return modified;
     }
     
 }

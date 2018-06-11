@@ -95,6 +95,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="nameTextField">
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nameTextFieldKeyTyped"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
@@ -102,8 +105,14 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="ownerTextField">
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="ownerTextFieldKeyTyped"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="customerTextField">
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="customerTextFieldKeyTyped"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
@@ -146,6 +155,9 @@
                     <Property name="rows" type="int" value="5"/>
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="descriptionTextAreaKeyTyped"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -246,6 +258,9 @@
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
             <Component class="javax.swing.JTextPane" name="projectSummaryTextPane">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

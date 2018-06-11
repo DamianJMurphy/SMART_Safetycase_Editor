@@ -34,10 +34,12 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicButtonUI;
 import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
+import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 
 /**
@@ -146,12 +148,20 @@ public class UndockTabComponent extends JPanel {
             int i = pane.indexOfTabComponent(UndockTabComponent.this);
             if (i != -1) {
                 Component c = pane.getComponentAt(i);
-                String t = pane.getTitleAt(i);
-                pane.remove(i);
                 if (c instanceof DataNotificationSubscriber) {
                     DataNotificationSubscriber d = (DataNotificationSubscriber)c;
+                    
+                    // TODO: See if this needs saving
+                    if (d.isModified()) {
+                        int r = JOptionPane.showConfirmDialog(c, "Save first ?", "Unsaved changes", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                        if (r == JOptionPane.YES_OPTION) {
+                            d.notification(SmartProject.SAVE, d);
+                        }
+                    }
                     d.unsubscribe();
                 }
+                String t = pane.getTitleAt(i);
+                pane.remove(i);
             }
         }        
     }

@@ -160,12 +160,23 @@ public class SingleProcessEditorPanel
 
         jLabel1.setText("Name");
 
+        nameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nameTextFieldKeyTyped(evt);
+            }
+        });
+
         jLabel4.setText("Description");
 
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(descriptionTextArea);
 
         deleteButton.setText("Delete");
@@ -321,7 +332,7 @@ public class SingleProcessEditorPanel
             JOptionPane.showMessageDialog(this, "Failed to save Process. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in SingleProcessEditor", e);
         }
-        
+        containerForm.setModified(false);
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
@@ -417,6 +428,14 @@ public class SingleProcessEditorPanel
             SmartProject.getProject().log("Failed to build details for graphical Process editor in SingleProcessEditor", e);
         }
     }//GEN-LAST:event_processEditorButtonActionPerformed
+
+    private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
+       containerForm.setModified(true);
+    }//GEN-LAST:event_nameTextFieldKeyTyped
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        containerForm.setModified(true);
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

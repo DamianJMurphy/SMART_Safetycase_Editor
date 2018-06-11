@@ -22,6 +22,7 @@ import java.awt.ComponentOrientation;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
@@ -154,6 +155,15 @@ public class ExternalEditorView
         if (!redocking) {
             if (editorComponent instanceof DataNotificationSubscriber) {
                 DataNotificationSubscriber d = (DataNotificationSubscriber)editorComponent;
+                
+                // TODO: See if this needs saving first
+                if (d.isModified()) {
+                        int r = JOptionPane.showConfirmDialog(this, "Save first ?", "Unsaved changes", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                        if (r == JOptionPane.YES_OPTION) {
+                            d.notification(SmartProject.SAVE, d);
+                        }
+                    
+                }
                 d.unsubscribe();
             }
         }

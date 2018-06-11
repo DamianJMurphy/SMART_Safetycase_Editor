@@ -46,7 +46,7 @@ public class SystemFunctionEditor extends javax.swing.JPanel
     private final String[] functioncolumns = {"Name", "Description", "ParentFunction", "System"};
     private final String[] linkcolumns = {"Type", "Name", "Comment"};
 
-
+    private boolean modified = false;
     /**
      * Creates new form SystemFunctionEditorPanel
      */
@@ -105,6 +105,11 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(descriptionTextArea);
 
         okButton.setText("Save");
@@ -221,6 +226,7 @@ public class SystemFunctionEditor extends javax.swing.JPanel
                 e.printStackTrace();
                 return;
             } 
+         modified = false;
     }//GEN-LAST:event_okButtonActionPerformed
 
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
@@ -255,6 +261,10 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         }
         
     }//GEN-LAST:event_editLinksButtonActionPerformed
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -354,5 +364,10 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         catch (Exception e) {}
         return null;
     }    
+
+    @Override
+    public boolean isModified() {
+        return modified;
+    }
     
 }

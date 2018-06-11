@@ -46,7 +46,7 @@ public class EffectEditor extends javax.swing.JPanel
     private EditorComponent editorComponent = null;
     private Effect effect = null;
     private int newObjectProjectId = -1;
-
+    private boolean modified = false;
     /**
      * Creates new form EffectEditor
      */
@@ -166,12 +166,29 @@ public class EffectEditor extends javax.swing.JPanel
 
         jLabel4.setText("Description");
 
+        nameTextField.setEditable(false);
+
         conditionsComboBox.setEditable(true);
+        conditionsComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                conditionsComboBoxMouseClicked(evt);
+            }
+        });
+        conditionsComboBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                conditionsComboBoxKeyTyped(evt);
+            }
+        });
 
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane3.setViewportView(descriptionTextArea);
 
         saveButton.setText("Save");
@@ -265,7 +282,7 @@ public class EffectEditor extends javax.swing.JPanel
             JOptionPane.showMessageDialog(editorPanel, "Failed to save Effect. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in EffectEditor", e);
         }
-
+        modified = false;
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void linksEditorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linksEditorButtonActionPerformed
@@ -296,6 +313,18 @@ public class EffectEditor extends javax.swing.JPanel
         }
 
     }//GEN-LAST:event_linksEditorButtonActionPerformed
+
+    private void conditionsComboBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_conditionsComboBoxKeyTyped
+        modified = true;
+    }//GEN-LAST:event_conditionsComboBoxKeyTyped
+
+    private void conditionsComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_conditionsComboBoxMouseClicked
+        modified = true;
+    }//GEN-LAST:event_conditionsComboBoxMouseClicked
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
 
     @Override
     public void setPersistableObject(Persistable p) {
@@ -423,6 +452,11 @@ public class EffectEditor extends javax.swing.JPanel
     @Override
     public void unsubscribe() {
         SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+
+    @Override
+    public boolean isModified() {
+        return modified;
     }
     
 }

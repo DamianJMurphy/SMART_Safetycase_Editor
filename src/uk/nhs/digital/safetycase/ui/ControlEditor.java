@@ -46,6 +46,7 @@ public class ControlEditor extends javax.swing.JPanel
     private EditorComponent editorComponent = null;
     private Control control = null;
     private int newObjectProjectId = -1;
+    private boolean modified = false;
     /**
      * Creates new form ControlEditor
      */
@@ -71,12 +72,20 @@ public class ControlEditor extends javax.swing.JPanel
                 stateComboBox.addItem(s);
             }
             ArrayList<String> conds = MetaFactory.getInstance().getFactory("Control").getDistinctSet("GroupingType");
-            if (conds.isEmpty()) {
-                conditionsComboBox.addItem("Generic");
-            } else {
-                for (String s : conds) {
-                    conditionsComboBox.addItem(s);
-                }
+            groupComboBox.addItem("Additional");
+            for (String s : conds) {
+                groupComboBox.addItem(s);
+            }
+            
+            
+            ArrayList<String> typelist = MetaFactory.getInstance().getFactory("Control").getDistinctSet("Type");
+            conditionsComboBox.addItem("Design");
+            conditionsComboBox.addItem("Test");
+            conditionsComboBox.addItem("Training");
+            conditionsComboBox.addItem("Business process change");
+
+            for (String s : typelist) {
+                conditionsComboBox.addItem(s);
             }
             ArrayList<String> states = MetaFactory.getInstance().getFactory("Control").getDistinctSet("State");
             for (String s : states) {
@@ -163,16 +172,48 @@ public class ControlEditor extends javax.swing.JPanel
 
         jLabel4.setText("Type");
 
+        nameTextField.setEditable(false);
+
         stateComboBox.setEditable(true);
+        stateComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                stateComboBoxMouseClicked(evt);
+            }
+        });
+        stateComboBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                stateComboBoxKeyTyped(evt);
+            }
+        });
 
         conditionsComboBox.setEditable(true);
+        conditionsComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                conditionsComboBoxMouseClicked(evt);
+            }
+        });
         conditionsComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 conditionsComboBoxActionPerformed(evt);
             }
         });
+        conditionsComboBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                conditionsComboBoxKeyTyped(evt);
+            }
+        });
 
         groupComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Additional", "Existing" }));
+        groupComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                groupComboBoxMouseClicked(evt);
+            }
+        });
+        groupComboBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                groupComboBoxKeyTyped(evt);
+            }
+        });
 
         jLabel2.setText("Group");
 
@@ -238,6 +279,11 @@ public class ControlEditor extends javax.swing.JPanel
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane4.setViewportView(descriptionTextArea);
 
         javax.swing.GroupLayout descriptionPanelLayout = new javax.swing.GroupLayout(descriptionPanel);
@@ -269,6 +315,11 @@ public class ControlEditor extends javax.swing.JPanel
         clinicalJustificationTextArea.setLineWrap(true);
         clinicalJustificationTextArea.setRows(5);
         clinicalJustificationTextArea.setWrapStyleWord(true);
+        clinicalJustificationTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                clinicalJustificationTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane5.setViewportView(clinicalJustificationTextArea);
 
         javax.swing.GroupLayout justificationPanelLayout = new javax.swing.GroupLayout(justificationPanel);
@@ -302,6 +353,11 @@ public class ControlEditor extends javax.swing.JPanel
         evidenceTextArea.setLineWrap(true);
         evidenceTextArea.setRows(5);
         evidenceTextArea.setWrapStyleWord(true);
+        evidenceTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                evidenceTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane1.setViewportView(evidenceTextArea);
 
         javax.swing.GroupLayout evidenceContainerLayout = new javax.swing.GroupLayout(evidenceContainer);
@@ -442,6 +498,7 @@ public class ControlEditor extends javax.swing.JPanel
             JOptionPane.showMessageDialog(editorPanel, "Failed to save Control. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in ControlEditor", e);
         }
+        modified = false;
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
@@ -473,8 +530,44 @@ public class ControlEditor extends javax.swing.JPanel
     }//GEN-LAST:event_editLinksButtonActionPerformed
 
     private void conditionsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conditionsComboBoxActionPerformed
-        // TODO add your handling code here:
+        modified = true;
     }//GEN-LAST:event_conditionsComboBoxActionPerformed
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
+
+    private void stateComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stateComboBoxMouseClicked
+        modified = true;
+    }//GEN-LAST:event_stateComboBoxMouseClicked
+
+    private void conditionsComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_conditionsComboBoxMouseClicked
+        modified = true;
+    }//GEN-LAST:event_conditionsComboBoxMouseClicked
+
+    private void groupComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_groupComboBoxMouseClicked
+        modified = true;
+    }//GEN-LAST:event_groupComboBoxMouseClicked
+
+    private void stateComboBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_stateComboBoxKeyTyped
+        modified = true;
+    }//GEN-LAST:event_stateComboBoxKeyTyped
+
+    private void conditionsComboBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_conditionsComboBoxKeyTyped
+        modified = true;
+    }//GEN-LAST:event_conditionsComboBoxKeyTyped
+
+    private void groupComboBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_groupComboBoxKeyTyped
+        modified = true;
+    }//GEN-LAST:event_groupComboBoxKeyTyped
+
+    private void clinicalJustificationTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_clinicalJustificationTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_clinicalJustificationTextAreaKeyTyped
+
+    private void evidenceTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_evidenceTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_evidenceTextAreaKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -641,5 +734,9 @@ public class ControlEditor extends javax.swing.JPanel
     public void unsubscribe() {
         SmartProject.getProject().removeNotificationSubscriber(this);
     }
-    
+
+    @Override
+    public boolean isModified() {
+        return modified;
+    }    
 }

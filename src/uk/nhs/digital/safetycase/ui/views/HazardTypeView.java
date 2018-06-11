@@ -470,5 +470,10 @@ public class HazardTypeView
     public JPanel getEditor(Object o) {
         return null;
     }    
+
+    @Override
+    public boolean isModified() {
+        return false;
+    }
     
 }

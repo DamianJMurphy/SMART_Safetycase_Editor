@@ -42,6 +42,7 @@ public class LocationEditor extends javax.swing.JPanel
     private Location location = null;
     private final ArrayList<Location> projectLocs = new ArrayList<>();
     private int newObjectProjectId = -1;
+    private boolean modified = false;
     
     /**
      * Creates new form LocationEditor
@@ -103,6 +104,11 @@ public class LocationEditor extends javax.swing.JPanel
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane3.setViewportView(descriptionTextArea);
 
         discardButton.setText("Delete");
@@ -120,6 +126,24 @@ public class LocationEditor extends javax.swing.JPanel
         });
 
         jLabel4.setText("Parent care setting");
+
+        nameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nameTextFieldKeyTyped(evt);
+            }
+        });
+
+        mnemonicTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                mnemonicTextFieldKeyTyped(evt);
+            }
+        });
+
+        parentLocationComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                parentLocationComboBoxMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
         editorPanel.setLayout(editorPanelLayout);
@@ -265,7 +289,24 @@ public class LocationEditor extends javax.swing.JPanel
             JOptionPane.showMessageDialog(editorPanel, "Failed to save Care setting. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in LocationEditor", e);
         }
+        modified = false;
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_nameTextFieldKeyTyped
+
+    private void mnemonicTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mnemonicTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_mnemonicTextFieldKeyTyped
+
+    private void parentLocationComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parentLocationComboBoxMouseClicked
+        modified = true;
+    }//GEN-LAST:event_parentLocationComboBoxMouseClicked
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
 
     private void displayLocation() {
         if (location == null) {
@@ -401,6 +442,11 @@ public class LocationEditor extends javax.swing.JPanel
     @Override
     public void unsubscribe() {
         SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+
+    @Override
+    public boolean isModified() {
+        return modified;
     }
     
 }

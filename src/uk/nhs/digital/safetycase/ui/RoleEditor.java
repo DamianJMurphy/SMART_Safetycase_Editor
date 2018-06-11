@@ -43,6 +43,7 @@ public class RoleEditor extends javax.swing.JPanel
     private Role role = null;
     private EditorComponent editorComponent = null;
     private int newObjectProjectId = -1;
+    private boolean modified = false;
 
     /**
      * Creates new form RoleEditor
@@ -102,6 +103,12 @@ public class RoleEditor extends javax.swing.JPanel
 
         jLabel1.setText("Name");
 
+        nameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nameTextFieldKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -131,6 +138,11 @@ public class RoleEditor extends javax.swing.JPanel
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane2.setViewportView(descriptionTextArea);
 
         javax.swing.GroupLayout descriptionPanelLayout = new javax.swing.GroupLayout(descriptionPanel);
@@ -318,6 +330,7 @@ public class RoleEditor extends javax.swing.JPanel
         // Check to see if the Role has at least one link to a Location, if not
         // display a warning that one needs to be added.
         SmartProject.getProject().getProjectWindow().setViewTitle(this, "Role:"  + role.getAttributeValue("Name"));
+        modified = false;
 //        ArrayList<Relationship> r = role.getRelationships("Location");
 //        if ((r == null) || (r.isEmpty())) {
 //            JOptionPane.showMessageDialog(this, "Role has no links to Care Settings, at least one must be added before this Role is valid for a report", "Add link to Care Setting", JOptionPane.INFORMATION_MESSAGE);            
@@ -335,6 +348,14 @@ public class RoleEditor extends javax.swing.JPanel
         linkEditor.setVisible(true);
         setPersistableObject(role);        
     }//GEN-LAST:event_editLinksButtonActionPerformed
+
+    private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
+       modified = true;
+    }//GEN-LAST:event_nameTextFieldKeyTyped
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
 
     @Override
     public void setEditorComponent(EditorComponent ed) {
@@ -450,6 +471,11 @@ public class RoleEditor extends javax.swing.JPanel
     @Override
     public void unsubscribe() {
         SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+
+    @Override
+    public boolean isModified() {
+        return modified;
     }
     
 }

@@ -40,6 +40,7 @@ public class IssuesLogEditor
     private ArrayList<IssuesLog> displayedEntries = new ArrayList<>();
     
     private IssuesLog currentIssue = null;
+    private boolean modified = false;
     
     private static final SimpleDateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");
     /**
@@ -233,17 +234,38 @@ public class IssuesLogEditor
 
         jLabel2.setText("Name");
 
+        nameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nameTextFieldKeyTyped(evt);
+            }
+        });
+
         jLabel3.setText("Description");
 
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane4.setViewportView(descriptionTextArea);
 
         jLabel4.setText("Resolution type");
 
         resolutionTypeComboBox.setEditable(true);
+        resolutionTypeComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                resolutionTypeComboBoxMouseClicked(evt);
+            }
+        });
+        resolutionTypeComboBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                resolutionTypeComboBoxKeyPressed(evt);
+            }
+        });
 
         jLabel5.setText("Resolution");
 
@@ -251,11 +273,26 @@ public class IssuesLogEditor
         resolutionTextArea.setLineWrap(true);
         resolutionTextArea.setRows(5);
         resolutionTextArea.setWrapStyleWord(true);
+        resolutionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                resolutionTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane5.setViewportView(resolutionTextArea);
 
         jLabel6.setText("Type");
 
         typeComboBox.setEditable(true);
+        typeComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                typeComboBoxMouseClicked(evt);
+            }
+        });
+        typeComboBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                typeComboBoxKeyTyped(evt);
+            }
+        });
 
         discardButton.setText("Discard");
         discardButton.addActionListener(new java.awt.event.ActionListener() {
@@ -283,6 +320,12 @@ public class IssuesLogEditor
         });
 
         jLabel8.setText("Ref");
+
+        externalIdentifierTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                externalIdentifierTextFieldKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout detailPanelLayout = new javax.swing.GroupLayout(detailPanel);
         detailPanel.setLayout(detailPanelLayout);
@@ -424,6 +467,7 @@ public class IssuesLogEditor
             JOptionPane.showMessageDialog(this, "Failed to save Issue. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in IssuessLogEditor", e);
         }
+        modified = false;
         populateIssuesTable();
     }//GEN-LAST:event_saveButtonActionPerformed
 
@@ -431,6 +475,7 @@ public class IssuesLogEditor
         currentIssue.setAttribute("ResolutionType", "");
         currentIssue.setAttribute("ResolvedDate", "");
         resolutionDateTextField.setText("");
+        modified = true;
     }//GEN-LAST:event_unresolveButtonActionPerformed
 
     private void closedIssuesCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closedIssuesCheckboxActionPerformed
@@ -452,6 +497,38 @@ public class IssuesLogEditor
         linkEditor.setVisible(true);
         populateIssuesDisplay(currentIssue);
     }//GEN-LAST:event_editLinksButtonActionPerformed
+
+    private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_nameTextFieldKeyTyped
+
+    private void externalIdentifierTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_externalIdentifierTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_externalIdentifierTextFieldKeyTyped
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
+
+    private void typeComboBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_typeComboBoxKeyTyped
+        modified = true;
+    }//GEN-LAST:event_typeComboBoxKeyTyped
+
+    private void typeComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_typeComboBoxMouseClicked
+        modified = true;
+    }//GEN-LAST:event_typeComboBoxMouseClicked
+
+    private void resolutionTypeComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resolutionTypeComboBoxMouseClicked
+       modified = true;
+    }//GEN-LAST:event_resolutionTypeComboBoxMouseClicked
+
+    private void resolutionTypeComboBoxKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_resolutionTypeComboBoxKeyPressed
+        modified = true;
+    }//GEN-LAST:event_resolutionTypeComboBoxKeyPressed
+
+    private void resolutionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_resolutionTextAreaKeyTyped
+       modified = true;
+    }//GEN-LAST:event_resolutionTextAreaKeyTyped
 
     @Override
     public void setPersistableObject(Persistable p) {}
@@ -588,6 +665,11 @@ public class IssuesLogEditor
     @Override
     public void unsubscribe() {
         SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+
+    @Override
+    public boolean isModified() {
+        return modified; 
     }
 
 }

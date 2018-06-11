@@ -76,10 +76,12 @@ public class HazardEditor extends javax.swing.JPanel
     private ProcessStep parentProcessStep = null;
     private static String newBowtieTemplate = null;
     
+    private boolean modified = false;
+    
     private final String[] linkcolumns = {"Type", "Name", "Comment"};
     private int newObjectProjectId = -1;
     private boolean create = false;
-    private RiskMatrixPanel riskMatrixPanel = new RiskMatrixPanel();
+    private final RiskMatrixPanel riskMatrixPanel = new RiskMatrixPanel();
     
     private static ImageIcon riskMatrixImageIcon = null;
     private static final SpinnerListModel initialSeveritySpinnerModel = new SpinnerListModel();
@@ -251,9 +253,25 @@ public class HazardEditor extends javax.swing.JPanel
 
         jLabel1.setText("Name");
 
+        summaryTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                summaryTextFieldKeyTyped(evt);
+            }
+        });
+
         jLabel2.setText("Type");
 
         conditionsComboBox.setEditable(true);
+        conditionsComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                conditionsComboBoxMouseClicked(evt);
+            }
+        });
+        conditionsComboBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                conditionsComboBoxKeyTyped(evt);
+            }
+        });
 
         jLabel4.setText("Description");
 
@@ -261,6 +279,11 @@ public class HazardEditor extends javax.swing.JPanel
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane2.setViewportView(descriptionTextArea);
 
         saveButton.setText("Save");
@@ -367,6 +390,12 @@ public class HazardEditor extends javax.swing.JPanel
             }
         });
 
+        initialRiskRatingTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                initialRiskRatingTextFieldKeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout initialPanelLayout = new javax.swing.GroupLayout(initialPanel);
         initialPanel.setLayout(initialPanelLayout);
         initialPanelLayout.setHorizontalGroup(
@@ -421,6 +450,12 @@ public class HazardEditor extends javax.swing.JPanel
         residualLikelihoodSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 residualLikelihoodSpinnerStateChanged(evt);
+            }
+        });
+
+        residualRiskRatingTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                residualRiskRatingTextFieldKeyTyped(evt);
             }
         });
 
@@ -485,6 +520,11 @@ public class HazardEditor extends javax.swing.JPanel
         clinicalJustificationTextArea.setLineWrap(true);
         clinicalJustificationTextArea.setRows(8);
         clinicalJustificationTextArea.setWrapStyleWord(true);
+        clinicalJustificationTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                clinicalJustificationTextAreaKeyTyped(evt);
+            }
+        });
         clinicalJustificationScrollPane.setViewportView(clinicalJustificationTextArea);
 
         javax.swing.GroupLayout clinicalJustificationPanelLayout = new javax.swing.GroupLayout(clinicalJustificationPanel);
@@ -511,6 +551,17 @@ public class HazardEditor extends javax.swing.JPanel
         analysisPanel.add(clinicalJustificationPanel);
 
         jLabel3.setText("Status");
+
+        statusComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                statusComboBoxMouseClicked(evt);
+            }
+        });
+        statusComboBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                statusComboBoxKeyTyped(evt);
+            }
+        });
 
         editLinksButton.setText("Links ...");
         editLinksButton.addActionListener(new java.awt.event.ActionListener() {
@@ -632,20 +683,23 @@ public class HazardEditor extends javax.swing.JPanel
 
     private void initialSeveritySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_initialSeveritySpinnerStateChanged
         initialRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)initialLikelihoodSpinner.getValue(), (String)initialSeveritySpinner.getValue())));
+        modified = true;
     }//GEN-LAST:event_initialSeveritySpinnerStateChanged
 
     private void initialLikelihoodSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_initialLikelihoodSpinnerStateChanged
         
         initialRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)initialLikelihoodSpinner.getValue(), (String)initialSeveritySpinner.getValue())));
-        
+        modified = true;
     }//GEN-LAST:event_initialLikelihoodSpinnerStateChanged
 
     private void residualSeveritySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_residualSeveritySpinnerStateChanged
         residualRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)residualLikelihoodSpinner.getValue(), (String)residualSeveritySpinner.getValue())));
+        modified = true;
     }//GEN-LAST:event_residualSeveritySpinnerStateChanged
 
     private void residualLikelihoodSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_residualLikelihoodSpinnerStateChanged
         residualRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)residualLikelihoodSpinner.getValue(), (String)residualSeveritySpinner.getValue())));
+        modified = true;
     }//GEN-LAST:event_residualLikelihoodSpinnerStateChanged
 
     private void bowtieButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bowtieButtonActionPerformed
@@ -676,6 +730,7 @@ public class HazardEditor extends javax.swing.JPanel
                 bge.setExistingBowtie(ex);
             hazard.setAttribute("GraphCellId", "2");
         }
+        @SuppressWarnings("UnusedAssignment")
         JTabbedPane tp = null;
         ProjectWindow pw = SmartProject.getProject().getProjectWindow();
         tp = pw.getMainWindowTabbedPane();
@@ -778,8 +833,45 @@ public class HazardEditor extends javax.swing.JPanel
             ((TitledBorder) analysisPanel.getBorder()).setTitle("");
             analysisPanel.setEnabled(true);
         }
+        modified = false;
         saveButton.setEnabled(true);
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void conditionsComboBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_conditionsComboBoxKeyTyped
+       modified = true;
+    }//GEN-LAST:event_conditionsComboBoxKeyTyped
+
+    private void conditionsComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_conditionsComboBoxMouseClicked
+        modified = true;
+    }//GEN-LAST:event_conditionsComboBoxMouseClicked
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
+
+    private void initialRiskRatingTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_initialRiskRatingTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_initialRiskRatingTextFieldKeyTyped
+
+    private void residualRiskRatingTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_residualRiskRatingTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_residualRiskRatingTextFieldKeyTyped
+
+    private void clinicalJustificationTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_clinicalJustificationTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_clinicalJustificationTextAreaKeyTyped
+
+    private void statusComboBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_statusComboBoxKeyTyped
+        modified = true;
+    }//GEN-LAST:event_statusComboBoxKeyTyped
+
+    private void statusComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_statusComboBoxMouseClicked
+        modified = true;
+    }//GEN-LAST:event_statusComboBoxMouseClicked
+
+    private void summaryTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_summaryTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_summaryTextFieldKeyTyped
     
     void setHazard(Hazard h) { hazard = h; }
     
@@ -1030,6 +1122,11 @@ public class HazardEditor extends javax.swing.JPanel
     @Override
     public void unsubscribe() {
         SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+
+    @Override
+    public boolean isModified() {
+        return modified;
     }
     
 }

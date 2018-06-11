@@ -41,7 +41,7 @@ public class CauseEditor extends javax.swing.JPanel
 {
     private EditorComponent editorComponent = null;
     private Cause cause = null;
-    
+    private boolean modified = false;
  
     private final String[] linkcolumns = {"Type", "Name", "Comment"};
     private int newObjectProjectId = -1;
@@ -116,9 +116,21 @@ public class CauseEditor extends javax.swing.JPanel
 
         jLabel1.setText("Name");
 
+        nameTextField.setEditable(false);
+
         jLabel2.setText("Condition");
 
         conditionsComboBox.setEditable(true);
+        conditionsComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                conditionsComboBoxMousePressed(evt);
+            }
+        });
+        conditionsComboBox.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                conditionsComboBoxKeyTyped(evt);
+            }
+        });
 
         jLabel4.setText("Description");
 
@@ -126,6 +138,11 @@ public class CauseEditor extends javax.swing.JPanel
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane2.setViewportView(descriptionTextArea);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -300,7 +317,20 @@ public class CauseEditor extends javax.swing.JPanel
             JOptionPane.showMessageDialog(editorPanel, "Failed to save Cause. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in CauseEditor", e);
         }
+        modified = false;
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
+
+    private void conditionsComboBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_conditionsComboBoxKeyTyped
+        modified = true;
+    }//GEN-LAST:event_conditionsComboBoxKeyTyped
+
+    private void conditionsComboBoxMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_conditionsComboBoxMousePressed
+        modified = true;
+    }//GEN-LAST:event_conditionsComboBoxMousePressed
     
     private void doDelete() {
                 
@@ -461,5 +491,10 @@ public class CauseEditor extends javax.swing.JPanel
     @Override
     public void unsubscribe() {
         SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+
+    @Override
+    public boolean isModified() {
+        return modified;
     }
 }

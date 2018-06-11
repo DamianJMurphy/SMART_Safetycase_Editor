@@ -574,4 +574,9 @@ public class HazardAnalysis
         return null;
     }    
 
+    @Override
+    public boolean isModified() {
+        return false;
+    }
+
 }

@@ -65,6 +65,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
     private ArrayList<System> systems = new ArrayList<>();
      private ArrayList<SystemFunction> systemfunctions = new ArrayList<>();
     private System system = null;
+    private boolean modified = false;
 
     private final String[] functioncolumns = {"Name", "Description", "ParentFunction", "System"};
 
@@ -174,6 +175,12 @@ public class SystemEditorDetails extends javax.swing.JPanel
 
         jLabel1.setText("Name");
 
+        nameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nameTextFieldKeyTyped(evt);
+            }
+        });
+
         jLabel2.setText("Mnemonic");
 
         jLabel4.setText("Description");
@@ -182,6 +189,11 @@ public class SystemEditorDetails extends javax.swing.JPanel
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setRows(5);
         descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
+            }
+        });
         jScrollPane2.setViewportView(descriptionTextArea);
 
         linksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Functions"));
@@ -238,6 +250,12 @@ public class SystemEditorDetails extends javax.swing.JPanel
             }
         });
 
+        mnemonicTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                mnemonicTextFieldKeyTyped(evt);
+            }
+        });
+
         jLabel3.setText("Parent system");
 
         parentSystemTextField.setEditable(false);
@@ -268,6 +286,12 @@ public class SystemEditorDetails extends javax.swing.JPanel
                 .addComponent(jScrollPane1)
                 .addContainerGap())
         );
+
+        versionTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                versionTextFieldKeyTyped(evt);
+            }
+        });
 
         jLabel5.setText("Version");
 
@@ -425,6 +449,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
             JOptionPane.showMessageDialog(editorPanel, "Failed to save System. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in SystemEditorDetails", e);            
         }
+        modified = false;
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void functionEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_functionEditActionPerformed
@@ -500,6 +525,22 @@ public class SystemEditorDetails extends javax.swing.JPanel
         tp.setSelectedComponent(tp.add(ec.getTitle(), ec.getComponent()));
         tp.setTabComponentAt(tp.getSelectedIndex(), new UndockTabComponent(tp, SmartProject.getProject().getIcon("System")));  
     }//GEN-LAST:event_systemEditorButtonActionPerformed
+
+    private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_nameTextFieldKeyTyped
+
+    private void versionTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_versionTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_versionTextFieldKeyTyped
+
+    private void mnemonicTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mnemonicTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_mnemonicTextFieldKeyTyped
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
 
     public void setSystem(System s) { system = s; }
     
@@ -808,5 +849,10 @@ public class SystemEditorDetails extends javax.swing.JPanel
         catch (Exception e) {}
         return null;
     }    
+
+    @Override
+    public boolean isModified() {
+        return modified;
+    }
     
 }

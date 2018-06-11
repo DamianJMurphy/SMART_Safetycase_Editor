@@ -49,7 +49,8 @@ public class ProcessStepDetail
     
     private JDialog parent = null;
     private ProcessStep processStep = null;
-    private ArrayList<Hazard> hazardList = new ArrayList<>();
+    private final ArrayList<Hazard> hazardList = new ArrayList<>();
+    private boolean modified = false;
     /**
      * Creates new form ProcessStepDetail
      * @param ps
@@ -154,6 +155,8 @@ public class ProcessStepDetail
 
         jLabel1.setText("Name");
         add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 31, -1, -1));
+
+        nameTextField.setEditable(false);
         add(nameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(109, 29, 569, -1));
 
         jLabel2.setText("Description");
@@ -166,6 +169,11 @@ public class ProcessStepDetail
         descriptionTextArea.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 descriptionTextAreaFocusLost(evt);
+            }
+        });
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
             }
         });
         jScrollPane1.setViewportView(descriptionTextArea);
@@ -265,6 +273,10 @@ public class ProcessStepDetail
         EditorComponent ec = new EditorComponent(he, "Hazard:" + h.getTitle(), SmartProject.getProject());
         ExternalEditorView editorView = new ExternalEditorView(he.getComponent(), ec.getTitle(), SmartProject.getProject().getProjectWindow().getMainWindowTabbedPane());    }//GEN-LAST:event_editSelectedHazardButtonActionPerformed
 
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea descriptionTextArea;
@@ -302,6 +314,11 @@ public class ProcessStepDetail
     @Override
     public void unsubscribe() {
         SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+
+    @Override
+    public boolean isModified() {
+        return modified;
     }
 
 

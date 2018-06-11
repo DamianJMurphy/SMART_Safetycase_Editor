@@ -41,8 +41,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -51,8 +49,6 @@ import org.w3c.dom.Document;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.Project;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
-import uk.nhs.digital.safetycase.data.Cause;
-import uk.nhs.digital.safetycase.data.Effect;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -79,6 +75,8 @@ public class SafetyReportEditor
 
     private EditorComponent editorComponent = null;
     private Project project = null;
+    
+    private boolean modified = false;
 
     private Report report = null;
 
@@ -135,8 +133,8 @@ public class SafetyReportEditor
     private static final String QA_OCUMENT_APPROVAL = H1_START + "Quality Assurance and Document Approval " + H1_END;
     private static final String CONFIG_CONTROL = H1_START + "Configuration Control and Management " + H1_END;
 
-    private static String HTML = "<html>\n<head>\n<title> Project Report</title>\n__CSSSTYLES__\n</head>\n<body bgcolor=\"#FBFCFC\">\n __HTMLBODY__ \n</body>\n</html>";
-    private static String CSS = "<style type=\"text/css\">\n"
+    private static final String HTML = "<html>\n<head>\n<title> Project Report</title>\n__CSSSTYLES__\n</head>\n<body bgcolor=\"#FBFCFC\">\n __HTMLBODY__ \n</body>\n</html>";
+    private static final String CSS = "<style type=\"text/css\">\n"
             + " .LinksTable{\n"
             + "		border-collapse:collapse; \n"
             + "	}\n"
@@ -1720,6 +1718,11 @@ private Persistable findParent(Persistable ch, String parentType)
                     } else {
                         return p.getAttributeValue("Description");
                     }
+    }
+
+    @Override
+    public boolean isModified() {
+        return modified;
     }
 
     public class processStepRelations {

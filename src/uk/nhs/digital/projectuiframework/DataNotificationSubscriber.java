@@ -27,4 +27,7 @@ public interface DataNotificationSubscriber {
     boolean notification(int evtype, Object o);
     JPanel getEditor(Object o);
     void unsubscribe();
+    
+    boolean isModified();
+    
 }

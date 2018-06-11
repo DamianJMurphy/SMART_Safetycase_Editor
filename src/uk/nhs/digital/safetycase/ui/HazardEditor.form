@@ -101,6 +101,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="summaryTextField">
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="summaryTextFieldKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
@@ -114,6 +117,10 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="conditionsComboBoxMouseClicked"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="conditionsComboBoxKeyTyped"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -137,6 +144,9 @@
                 <Property name="rows" type="int" value="5"/>
                 <Property name="wrapStyleWord" type="boolean" value="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="descriptionTextAreaKeyTyped"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -281,6 +291,9 @@
                           </Events>
                         </Component>
                         <Component class="javax.swing.JTextField" name="initialRiskRatingTextField">
+                          <Events>
+                            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="initialRiskRatingTextFieldKeyTyped"/>
+                          </Events>
                         </Component>
                       </SubComponents>
                     </Container>
@@ -387,6 +400,9 @@
                           </Events>
                         </Component>
                         <Component class="javax.swing.JTextField" name="residualRiskRatingTextField">
+                          <Events>
+                            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="residualRiskRatingTextFieldKeyTyped"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.Box$Filler" name="filler1">
                           <Properties>
@@ -458,6 +474,9 @@
                             <Property name="rows" type="int" value="8"/>
                             <Property name="wrapStyleWord" type="boolean" value="true"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="clinicalJustificationTextAreaKeyTyped"/>
+                          </Events>
                         </Component>
                       </SubComponents>
                     </Container>
@@ -507,6 +526,10 @@
                           <StringArray count="0"/>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="statusComboBoxMouseClicked"/>
+                        <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="statusComboBoxKeyTyped"/>
+                      </Events>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                       </AuxValues>
