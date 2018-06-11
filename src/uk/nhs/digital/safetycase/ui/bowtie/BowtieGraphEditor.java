@@ -31,6 +31,7 @@ import uk.nhs.digital.projectuiframework.ui.CustomGraph;
 import uk.nhs.digital.projectuiframework.ui.CustomGraphComponent;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.ProcessStep;
+import uk.nhs.digital.safetycase.ui.BowtieSaveHandler;
 import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 import uk.nhs.digital.safetycase.ui.GraphicalEditor;
 
@@ -208,6 +209,15 @@ public class BowtieGraphEditor
 
     @Override
     public boolean notification(int evtype, Object o) {
+        if (evtype == SmartProject.SAVE) {
+            BowtieSaveHandler bsh = new BowtieSaveHandler();
+            try {
+                bsh.handle(this);
+            }
+            catch (Exception e) {
+               SmartProject.getProject().log("Failed to save bowtie from SaveAll request", e);
+            }
+       }
         return false;
     }
     

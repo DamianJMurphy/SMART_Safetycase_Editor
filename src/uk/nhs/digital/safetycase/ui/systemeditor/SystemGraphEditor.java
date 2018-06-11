@@ -34,6 +34,7 @@ import uk.nhs.digital.projectuiframework.ui.CustomGraph;
 import uk.nhs.digital.projectuiframework.ui.CustomGraphComponent;
 import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 import uk.nhs.digital.safetycase.ui.GraphicalEditor;
+import uk.nhs.digital.safetycase.ui.SystemSaveHandler;
 
 /**
  *
@@ -207,6 +208,15 @@ public class SystemGraphEditor
 
     @Override
     public boolean notification(int evtype, Object o) {
+        if (evtype == SmartProject.SAVE) {
+            SystemSaveHandler ssh = new SystemSaveHandler();
+            try {
+                ssh.handle(this);
+            }
+            catch (Exception e) {
+                SmartProject.getProject().log("Failed to save system diagram from SaveAll request", e);
+            }
+        }
         return false;
     }
 
