@@ -432,6 +432,7 @@ public class RoleEditor extends javax.swing.JPanel
        
         if (evtype == Project.SAVE) {
             saveButtonActionPerformed(null);
+            modified = false;
             return false;
         }
         

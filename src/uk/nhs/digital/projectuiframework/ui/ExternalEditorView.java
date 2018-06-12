@@ -44,6 +44,7 @@ public class ExternalEditorView
     private ImageIcon icon = null;
     private boolean defaultIcon = false;
     private boolean redocking = false;
+    private boolean alreadyclosing = false;
     /**
      * Creates new form ExternalEditorView
      */
@@ -156,13 +157,15 @@ public class ExternalEditorView
             if (editorComponent instanceof DataNotificationSubscriber) {
                 DataNotificationSubscriber d = (DataNotificationSubscriber)editorComponent;
                 
-                // TODO: See if this needs saving first
-                if (d.isModified()) {
-                        int r = JOptionPane.showConfirmDialog(this, "Save first ?", "Unsaved changes", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                        if (r == JOptionPane.YES_OPTION) {
-                            d.notification(SmartProject.SAVE, d);
-                        }
-                    
+                if (!alreadyclosing) {
+                    if (d.isModified()) {
+                            int r = JOptionPane.showConfirmDialog(this, "Save first ?", "Unsaved changes", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                            if (r == JOptionPane.YES_OPTION) {
+                                d.notification(SmartProject.SAVE, d);
+                            }
+
+                    }
+                    alreadyclosing = true;
                 }
                 d.unsubscribe();
             }
