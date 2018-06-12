@@ -40,6 +40,10 @@ public class InitialTab extends javax.swing.JPanel {
             catch (IOException e) {
                 SmartProject.getProject().log("Error loading initial tab", e);
             }
+            catch (Exception eother) {
+                eother.printStackTrace();
+                System.exit(1);
+            }
         }
     }
 

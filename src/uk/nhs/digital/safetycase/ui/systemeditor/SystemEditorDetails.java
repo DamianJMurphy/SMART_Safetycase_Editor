@@ -515,7 +515,8 @@ public class SystemEditorDetails extends javax.swing.JPanel
             xml = sb.toString();     
             system.setAttribute("GraphCellId", "2");
         }
-        sge.setExistingGraph(getExistingGraph(xml));
+//        sge.setExistingGraph(getExistingGraph(xml));
+        sge.setExistingGraph(getExistingGraph(system, null));
         sge.setSystemId(system.getId(), xml);
 //        sge.setPersistableObject(system);
         JTabbedPane tp = null;
@@ -544,8 +545,39 @@ public class SystemEditorDetails extends javax.swing.JPanel
 
     public void setSystem(System s) { system = s; }
     
+    public HashMap<String,DiagramEditorElement> getExistingGraph(Persistable p, HashMap<String,DiagramEditorElement> elems)
+    {
+        HashMap<String,DiagramEditorElement> systemElements = elems;
+        if (systemElements == null) 
+            systemElements = new HashMap<>();
+        systemElements.put(p.getAttributeValue("GraphCellId"), new DiagramEditorElement(p));
+       
+        HashMap<String, ArrayList<Relationship>> hrels = p.getRelationshipsForLoad();
+        for (ArrayList<Relationship> a : hrels.values()) {
+            for (Relationship r : a) {
+                if ((r.getManagementClass() != null) && (r.getManagementClass().contentEquals("Diagram"))) {
+                    Persistable child = null;
+                    try {
+                        child = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                    }
+                    catch (Exception e) {
+                        SmartProject.getProject().log("Error retrieving original diagram", e);
+                    }
+                    systemElements.put(child.getAttributeValue("GraphCellId"), new DiagramEditorElement(child));
+                    systemElements = getExistingGraph(child, systemElements);
+                }
+            }
+        }
+        return systemElements;
+    }
+    
     public HashMap<String,DiagramEditorElement> getExistingGraph(String xml) {
 
+        // TODO: Build the existing graph from the database relationships, *RECURSIVELY*
+        // so that everything gets picked up. Do root system... then call for system
+        // functions and then call for systems, then for systems call systems again
+        
+/*
         if ((xml == null) || (xml.length() == 0))
             return null;
         try { 
@@ -561,6 +593,9 @@ public class SystemEditorDetails extends javax.swing.JPanel
                 return null;
             }
             // to do. check the relation of child systems and system fucntions
+            
+            // FIXME: This isn't properly recursive and is missing sub-sub systems
+            
             for (ArrayList<Relationship> a : hrels.values()) {
                 for (Relationship r : a) {
                     if ((r.getManagementClass() != null) && (r.getManagementClass().contentEquals("Diagram"))) {
@@ -604,6 +639,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
             JOptionPane.showMessageDialog(editorPanel, "Failed to load System/Function diagram. Send logs to support", "Load failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to load System/Function diagram in system editor details", e);
         }
+*/
         return null;
     }
     

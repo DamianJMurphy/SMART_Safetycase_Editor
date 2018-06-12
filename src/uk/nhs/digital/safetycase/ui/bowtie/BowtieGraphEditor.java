@@ -64,6 +64,7 @@ public class BowtieGraphEditor
         getUndoManager().clear();
         getGraphComponent().zoomAndCenter();        
     }
+
     
     @Override
 	protected void showGraphPopupMenu(MouseEvent e)
@@ -158,13 +159,13 @@ public class BowtieGraphEditor
 		});
 
 		// Adds some template cells for dropping into the graph
-                bowtiePalette
-				.addTemplate("Hazard",
-						new ImageIcon(
-								BowtieGraphEditor.class
-										.getResource("/uk/nhs/digital/safetycase/ui/bowtie/hazard.png")),
-						"image;image=/uk/nhs/digital/safetycase/ui/bowtie/hazard.png;whiteSpace=wrap",
-						50, 50, "Hazard");
+//                bowtiePalette
+//				.addTemplate("Hazard",
+//						new ImageIcon(
+//								BowtieGraphEditor.class
+//										.getResource("/uk/nhs/digital/safetycase/ui/bowtie/hazard.png")),
+//						"image;image=/uk/nhs/digital/safetycase/ui/bowtie/hazard.png;whiteSpace=wrap",
+//						50, 50, "Hazard");
 		bowtiePalette
 				.addTemplate("Cause",
 						new ImageIcon(

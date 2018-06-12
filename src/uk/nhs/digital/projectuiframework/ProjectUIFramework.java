@@ -52,6 +52,7 @@ public class ProjectUIFramework {
         }
         catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e2) {
             e2.printStackTrace();
+            System.exit(1);
         }
         java.lang.System.setProperty("user.minimum.wrap.width", "132");
         if (!gotDBFromProperties) {
