@@ -15,20 +15,13 @@
  *    limitations under the License.
  *  
  */
-package uk.nhs.digital.projectuiframework;
-
-import javax.swing.JPanel;
-import uk.nhs.digital.projectuiframework.ui.SaveRejectedException;
+package uk.nhs.digital.projectuiframework.ui;
 
 /**
  *
  * @author damian
  */
-public interface DataNotificationSubscriber {
-    boolean notification(int evtype, Object o) throws SaveRejectedException;
-    JPanel getEditor(Object o);
-    void unsubscribe();
-    
-    boolean isModified();
-    
+public class SaveRejectedException extends Exception
+{
+    public SaveRejectedException() {}
 }

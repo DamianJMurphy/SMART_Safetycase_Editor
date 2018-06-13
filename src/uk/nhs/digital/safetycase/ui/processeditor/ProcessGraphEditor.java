@@ -29,6 +29,7 @@ import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.CustomGraph;
 import uk.nhs.digital.projectuiframework.ui.CustomGraphComponent;
+import uk.nhs.digital.projectuiframework.ui.SaveRejectedException;
 import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 import uk.nhs.digital.safetycase.ui.GraphicalEditor;
 import uk.nhs.digital.safetycase.ui.ProcessSaveHandler;
@@ -46,12 +47,15 @@ public class ProcessGraphEditor
     public int getProcessId() { return processId; }
 
     @Override
-    public boolean notification(int evtype, Object o) {
+    public boolean notification(int evtype, Object o) 
+            throws SaveRejectedException    
+    {
         if (evtype == SmartProject.SAVE) {
             ProcessSaveHandler psh = new ProcessSaveHandler();
             try {
                 psh.handle(this);
             }
+            catch (SaveRejectedException sre) { throw sre; }
             catch (Exception e) {
                 SmartProject.getProject().log("Failed to save process diagram from SaveAll request", e);
             }

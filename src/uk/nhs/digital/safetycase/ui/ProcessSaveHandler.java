@@ -29,6 +29,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.SaveRejectedException;
 import uk.nhs.digital.safetycase.data.Attribute;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
@@ -65,6 +66,7 @@ public class ProcessSaveHandler
 // Re-add this later
 //       catch (BrokenConnectionException bce) {
 //            System.err.println("TODO: Notify user that the diagram has a broken link and has not been saved: " + bce.getMessage());
+//            throw new SaveRejectedException();
 //       }
        catch (Exception ex) {
             JOptionPane.showMessageDialog(ge, "Failed to save Process. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);

@@ -161,7 +161,12 @@ public class ExternalEditorView
                     if (d.isModified()) {
                             int r = JOptionPane.showConfirmDialog(this, "Save first ?", "Unsaved changes", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                             if (r == JOptionPane.YES_OPTION) {
-                                d.notification(SmartProject.SAVE, d);
+                                try {
+                                    d.notification(SmartProject.SAVE, d);
+                                }
+                                catch (SaveRejectedException esr) {
+                                    return;
+                                }
                             }
 
                     }

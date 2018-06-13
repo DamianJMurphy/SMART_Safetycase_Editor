@@ -29,6 +29,7 @@ import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.CustomGraph;
 import uk.nhs.digital.projectuiframework.ui.CustomGraphComponent;
+import uk.nhs.digital.projectuiframework.ui.SaveRejectedException;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.ui.BowtieSaveHandler;
@@ -209,12 +210,15 @@ public class BowtieGraphEditor
 	}
 
     @Override
-    public boolean notification(int evtype, Object o) {
+    public boolean notification(int evtype, Object o) 
+        throws SaveRejectedException
+    {
         if (evtype == SmartProject.SAVE) {
             BowtieSaveHandler bsh = new BowtieSaveHandler();
             try {
                 bsh.handle(this);
             }
+            catch (SaveRejectedException sre) { throw sre; }
             catch (Exception e) {
                SmartProject.getProject().log("Failed to save bowtie from SaveAll request", e);
             }

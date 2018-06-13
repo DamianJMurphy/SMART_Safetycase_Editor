@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.SaveRejectedException;
 /**
  *
  * @author damian
@@ -55,8 +56,9 @@ public class SmartSaveAction
                 return;
             }
         }
+        catch (SaveRejectedException sre) {}
         catch (Exception ex) {
-            JOptionPane.showMessageDialog(editor, "Failed to save", "Save failed", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(editor, "Failed to save", "Save failed, send logs to support", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in SmartSaveAction", ex);
         }
     }

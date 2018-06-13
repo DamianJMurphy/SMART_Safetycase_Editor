@@ -29,6 +29,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.SaveRejectedException;
 import uk.nhs.digital.safetycase.data.System;
 import uk.nhs.digital.safetycase.data.SystemFunction;
 import uk.nhs.digital.safetycase.data.MetaFactory;
@@ -91,9 +92,27 @@ public class SystemSaveHandler
             // this can be done using mxCell id value . if this id value is not be used as target in any of the edsge cell i.e having no target value of the system. that cell is root system.
             // e.g mxCell edge="1" id="6" parent="1" source="2" style="straight" target="3" value=""> value 2 is not used at target in the whole xml string
             NodeList cells = parseSystem(xml, system);
-            //todo check if this is working correctly............
             HashMap<String, DiagramEditorElement> systemElements = parseSystem(cells, projectid);
-
+            
+            // See if the user has done anything dumb, like multiply-linked anything
+            //
+            for (DiagramEditorElement d : systemElements.values()) {
+                if (d.connections.contains("2")) {
+                    throw new BrokenConnectionException("The root system cannot have anything pointing to it");
+                } else {
+                    int linkCount = 0;
+                    for (DiagramEditorElement other : systemElements.values()) {
+                        if (other.connections.contains(Integer.toString(d.cellId))) {
+                            linkCount++;
+                            if (linkCount == 2)
+                                throw new BrokenConnectionException(d.type + " " + d.name + " has more than one link to it. System diagram elements can only have one parent");
+                        }
+                    }
+                    if ((d.cellId != 2) && (linkCount == 0)) {
+                        throw new BrokenConnectionException(d.type + " " + d.name + " is not the root system and has nothing pointing to it.");
+                    }
+                }
+            }
             sf.put(system);
             //systemID = system.getId();
 
@@ -137,7 +156,9 @@ public class SystemSaveHandler
             deleteRemovedNodes();
         } catch (BrokenConnectionException bce) {
             JOptionPane.showMessageDialog(sge, "The diagram has a broken link and has not been saved: " + bce.getMessage(), "Diagram incomplete", JOptionPane.ERROR_MESSAGE);
+            throw new SaveRejectedException();
         } catch (Exception ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(sge, "Failed to save. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in SystemSaveEditor", ex);
         }
@@ -512,6 +533,12 @@ public class SystemSaveHandler
                     dic.remove(id);// reomve as it not the root node
                 }
             }
+        }
+        if (dic.entrySet().isEmpty()) {
+            throw new BrokenConnectionException("Root system not found. This is probably because there is something pointing to the root system, and it cannot have anything pointing to it");    
+        }
+        if (dic.entrySet().size() > 1) {
+            throw new BrokenConnectionException("More than one root system found. This is probably because there are more than one systems with nothing pointing to them. Make a new system from the project instead.");    
         }
         HashMap.Entry<String, Element> entry = dic.entrySet().iterator().next();
         Element cell = entry.getValue();

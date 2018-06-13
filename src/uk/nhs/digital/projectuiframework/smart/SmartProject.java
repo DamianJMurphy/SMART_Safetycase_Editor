@@ -37,6 +37,7 @@ import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.smart.logging.SmartLogger;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
+import uk.nhs.digital.projectuiframework.ui.SaveRejectedException;
 import uk.nhs.digital.projectuiframework.ui.ViewComponent;
 import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 import uk.nhs.digital.safetycase.data.*;
@@ -866,6 +867,7 @@ public class SmartProject
                notificationSubscribers.remove(d);
             }
         }
+        catch (SaveRejectedException esr) {}
         catch (java.util.ConcurrentModificationException e) {
             log("Conflict managing notificationSubscribers", e);
         }
@@ -879,6 +881,7 @@ public class SmartProject
                 d.notification(SAVE, null);
             }
         }
+        catch (SaveRejectedException esr) {}
         catch (Exception e) {
             log("Exception caught processing notifications in SaveAll from main menu", e);
         }

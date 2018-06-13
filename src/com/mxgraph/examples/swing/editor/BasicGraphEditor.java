@@ -134,6 +134,7 @@ public class BasicGraphEditor extends JPanel
 	 */
 	protected mxIEventListener undoHandler = new mxIEventListener()
 	{
+                @Override
 		public void invoke(Object source, mxEventObject evt)
 		{
 			undoManager.undoableEditHappened((mxUndoableEdit) evt
@@ -144,13 +145,9 @@ public class BasicGraphEditor extends JPanel
 	/**
 	 * 
 	 */
-	protected mxIEventListener changeTracker = new mxIEventListener()
-	{
-		public void invoke(Object source, mxEventObject evt)
-		{
-			setModified(true);
-		}
-	};
+	protected mxIEventListener changeTracker = (Object source, mxEventObject evt) -> {
+            setModified(true);
+        };
 
 	/**
 	 * 
@@ -277,6 +274,7 @@ public class BasicGraphEditor extends JPanel
 		graphComponent.getGraph().addListener(mxEvent.REPAINT,
 				new mxIEventListener()
 				{
+                                        @Override
 					public void invoke(Object source, mxEventObject evt)
 					{
 						String buffer = (graphComponent.getTripleBuffer() != null) ? ""
@@ -507,7 +505,10 @@ public class BasicGraphEditor extends JPanel
 				if (e.isPopupTrigger())
 				{
 					showGraphPopupMenu(e);
-				}
+				} else {
+                                    setModified(true);
+                                }
+                                
 			}
 
 		});

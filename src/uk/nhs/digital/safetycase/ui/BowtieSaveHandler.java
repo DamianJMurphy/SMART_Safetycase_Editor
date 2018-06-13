@@ -32,6 +32,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
+import uk.nhs.digital.projectuiframework.ui.SaveRejectedException;
 import uk.nhs.digital.safetycase.data.Cause;
 import uk.nhs.digital.safetycase.data.Control;
 import uk.nhs.digital.safetycase.data.Effect;
@@ -145,6 +146,7 @@ public class BowtieSaveHandler
         catch (BrokenConnectionException bce) {
             JOptionPane.showMessageDialog(ge, "The diagram has a broken link and has not been saved: " + bce.getMessage(), "Diagram incomplete", JOptionPane.ERROR_MESSAGE);
 //            System.err.println("TODO: Notify user that the diagram has a broken link and has not been saved: " + bce.getMessage());
+            throw new SaveRejectedException();
         }
         catch (Exception ex) {
             SmartProject.getProject().log("Failed to save bowtie", ex);

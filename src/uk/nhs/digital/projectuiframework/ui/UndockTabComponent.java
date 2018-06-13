@@ -17,13 +17,9 @@
  */
 package uk.nhs.digital.projectuiframework.ui;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -153,10 +149,16 @@ public class UndockTabComponent extends JPanel {
                     
                     // TODO: See if this needs saving
                     if (d.isModified()) {
+                        
                         int r = JOptionPane.showConfirmDialog(c, "Save first ?", "Unsaved changes", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                        if (r == JOptionPane.YES_OPTION) {
-                            d.notification(SmartProject.SAVE, d);
-                        }
+                            if (r == JOptionPane.YES_OPTION) {
+                                try {
+                                    d.notification(SmartProject.SAVE, d);
+                                } 
+                                catch (SaveRejectedException ex) {
+                                    return;
+                                }
+                            }
                     }
                     d.unsubscribe();
                 }
