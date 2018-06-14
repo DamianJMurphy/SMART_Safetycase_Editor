@@ -58,7 +58,7 @@ public class SmartSaveAction
         }
         catch (SaveRejectedException sre) {}
         catch (Exception ex) {
-            JOptionPane.showMessageDialog(editor, "Failed to save", "Save failed, send logs to support", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(editor, "Failed to save", "Save failed, send logs to support ", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in SmartSaveAction", ex);
         }
     }

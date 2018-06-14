@@ -41,6 +41,7 @@ public class ProjectTreeCellRenderer
     {
         
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+        setFont(SmartProject.getProject().getDisplayFont());
         ImageIcon icon = project.getIcon(value);
         if (icon != null) {
             setIcon(icon);

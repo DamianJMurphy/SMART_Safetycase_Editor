@@ -155,7 +155,7 @@ public class BasicGraphEditor extends JPanel
 	public BasicGraphEditor(String appTitle, mxGraphComponent component)
 	{
 		// Stores and updates the frame title
-		this.appTitle = appTitle;
+		//this.appTitle = appTitle;
 
 		// Stores a reference to the graph and creates the command history
 		graphComponent = component;
@@ -573,11 +573,12 @@ public class BasicGraphEditor extends JPanel
 		this.modified = modified;
 
 		firePropertyChange("modified", oldValue, modified);
-
+/*
 		if (oldValue != modified)
 		{
 			updateTitle();
 		}
+*/
 	}
 
 	/**

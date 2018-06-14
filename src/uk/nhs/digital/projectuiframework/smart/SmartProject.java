@@ -21,10 +21,13 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import javax.swing.ImageIcon;
@@ -623,7 +626,8 @@ public class SmartProject
             return populateSingleHazard(h);
         } else if (p.getDatabaseObjectName().contentEquals("System")) {
             uk.nhs.digital.safetycase.data.System sys = (uk.nhs.digital.safetycase.data.System)p;
-            return populateSystemWithChildren(sys);
+            ArrayList<Persistable> alreadySeen = new ArrayList<>();
+            return populateSystemWithChildren(sys, alreadySeen);
         } else {
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(p.getTitle());
             node.setUserObject(o);
@@ -975,6 +979,20 @@ public class SmartProject
     }
     
     @Override
+    public void saveUserProperties() {
+        try {
+            FileWriter fw = new FileWriter(java.lang.System.getProperty("user.home") + "/smart.properties");
+            Properties p = new Properties();
+            p.setProperty("SMART.userfont", java.lang.System.getProperty("SMART.userfont"));
+            p.setProperty("SMART.dburl", java.lang.System.getProperty("SMART.dburl"));
+            p.store(fw, "Font size change");
+        }
+        catch (IOException e) {
+            log("Failed to save properties", e);
+        }
+    }
+    
+    @Override
     public void setProjectWindow(ProjectWindow pw) {
         projectWindow = pw;
         applicationFont = projectWindow.getDisplayFont();
@@ -1041,6 +1059,9 @@ public class SmartProject
     private DefaultMutableTreeNode populateSystem(int id) {
         DefaultMutableTreeNode systemsNode = new DefaultMutableTreeNode("Systems");
 
+        // Protection against any circular references
+        ArrayList<Persistable> alreadySeen = new ArrayList<>();
+        
         ArrayList<Persistable> list = metaFactory.getChildren("System", "ProjectID", id);
         if (list != null) {
             for (Persistable p : list) {
@@ -1048,7 +1069,7 @@ public class SmartProject
                     uk.nhs.digital.safetycase.data.System sy = (uk.nhs.digital.safetycase.data.System) p;
                     int pid = Integer.parseInt(sy.getAttributeValue("ParentSystemID"));
                     if (pid == -1) {
-                        systemsNode.add(populateSystemWithChildren(sy));
+                        systemsNode.add(populateSystemWithChildren(sy, alreadySeen));
                     }
                 }
             }
@@ -1056,9 +1077,11 @@ public class SmartProject
         return systemsNode;
     }
 
-    private DefaultMutableTreeNode populateSystemWithChildren(uk.nhs.digital.safetycase.data.System s) {
+    private DefaultMutableTreeNode populateSystemWithChildren(uk.nhs.digital.safetycase.data.System s, ArrayList<Persistable> alreadySeen) {
+        
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(s.getTitle());
         DefaultMutableTreeNode sy = new DefaultMutableTreeNode(s.getTitle());
+        
         sy.setUserObject(s);
         try {
             ArrayList<Relationship> funcs = s.getRelationships("SystemFunction");
@@ -1068,7 +1091,7 @@ public class SmartProject
                         Persistable p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
                         DefaultMutableTreeNode subsysnode = new DefaultMutableTreeNode(p.getTitle());
                         subsysnode.setUserObject(p);
-                        populateChildrenDependents(subsysnode, p);
+                        populateChildrenDependents(subsysnode, p, alreadySeen);
                         sy.add(subsysnode);
                     }
                 }
@@ -1080,7 +1103,7 @@ public class SmartProject
                         Persistable p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
                         DefaultMutableTreeNode subsysnode = new DefaultMutableTreeNode(p.getTitle());
                         subsysnode.setUserObject(p);
-                        populateChildrenDependents(subsysnode, p);
+                        populateChildrenDependents(subsysnode, p, alreadySeen);
                         sy.add(subsysnode);
                     }
                 }                
@@ -1096,9 +1119,12 @@ public class SmartProject
         return node;
     }
 
-    private void populateChildrenDependents(DefaultMutableTreeNode childnode, Persistable relatedObject)
+    private void populateChildrenDependents(DefaultMutableTreeNode childnode, Persistable relatedObject, ArrayList<Persistable> alreadySeen)
             throws Exception {
 
+        if (alreadySeen.contains(relatedObject))
+            return;
+        alreadySeen.add(relatedObject);
         PersistableFactory<uk.nhs.digital.safetycase.data.System> pfs = MetaFactory.getInstance().getFactory("System");
         PersistableFactory<uk.nhs.digital.safetycase.data.SystemFunction> pfsf = MetaFactory.getInstance().getFactory("SystemFunction");
         Persistable p;
@@ -1115,7 +1141,7 @@ public class SmartProject
                                 gcnode.setUserObject(p);
                                 childnode.add(gcnode);
                                 //  find any grand children realtions
-                                populateChildrenDependents(gcnode, p);
+                                populateChildrenDependents(gcnode, p, alreadySeen);
                             }
                         }
                     }
@@ -1133,7 +1159,7 @@ public class SmartProject
                                 gcnode.setUserObject(p);
                                 childnode.add(gcnode);
                                 //  find any grand children realtions
-                                populateChildrenDependents(gcnode, p);
+                                populateChildrenDependents(gcnode, p, alreadySeen);
                             }
                         }
                     }

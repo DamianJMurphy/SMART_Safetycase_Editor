@@ -52,6 +52,7 @@ public class ProjectWindow extends javax.swing.JFrame {
     /**
      * Creates new form ProjectWindow
      */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public ProjectWindow() {
         initComponents();
         String s = System.getProperty("uk.nhs.digital.projectuiframework.initialtabtitle");
@@ -60,6 +61,17 @@ public class ProjectWindow extends javax.swing.JFrame {
         // Stop Netbeans' UI builder screwing up the scrolling behaviour of the tree
         projectTree.setPreferredSize(null);
         setSize(new Dimension(1620,950));
+
+        String uf = System.getProperty("SMART.userfont");
+        if (uf != null) {
+           float fs = Float.parseFloat(uf);
+           if ((fs >= 12.0) && (fs <= 30.0)) {
+               Font f = projectTree.getFont();
+               Font f2 = f.deriveFont(fs);
+               setUIFont(f2, null);               
+           }
+        }
+        
     }
 
     public JTree getProjectTree() { return projectTree; }
@@ -569,7 +581,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         new RiskMatrix(this, false).setVisible(true);
     }//GEN-LAST:event_riskMatrixMenuItemActionPerformed
 
-    private void setUIFont(Font f) {
+    private void setUIFont(Font f, SmartProject sp) {
         Enumeration keys = UIManager.getDefaults().keys();
         while (keys.hasMoreElements()) {
             Object k = keys.nextElement();
@@ -579,6 +591,10 @@ public class ProjectWindow extends javax.swing.JFrame {
             }
         }
         projectTree.setFont(f);
+        projectTree.repaint();
+        java.lang.System.setProperty("SMART.userfont", Float.toString(f.getSize2D()));
+        if (sp != null)
+            sp.saveUserProperties();
   //      pack();
     }
     
@@ -587,7 +603,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         Font f1 = sp.getDisplayFont();
         Font f2 = f1.deriveFont((float)12.0);
         sp.setDisplayFont(f2);
-        setUIFont(f2);
+        setUIFont(f2, sp);
     }//GEN-LAST:event_smallFontMenuActionPerformed
 
     private void mediumFontMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mediumFontMenuActionPerformed
@@ -595,7 +611,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         Font f1 = sp.getDisplayFont();
         Font f2 = f1.deriveFont((float)14.0);
         sp.setDisplayFont(f2);
-        setUIFont(f2);
+        setUIFont(f2, sp);
     }//GEN-LAST:event_mediumFontMenuActionPerformed
 
     private void largeFontMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_largeFontMenuActionPerformed
@@ -603,7 +619,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         Font f1 = sp.getDisplayFont();
         Font f2 = f1.deriveFont((float)18.0);
         sp.setDisplayFont(f2);
-        setUIFont(f2);
+        setUIFont(f2, sp);
     }//GEN-LAST:event_largeFontMenuActionPerformed
 
     private void surfaceMediumMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_surfaceMediumMenuActionPerformed
@@ -611,7 +627,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         Font f1 = sp.getDisplayFont();
         Font f2 = f1.deriveFont((float)22.0);
         sp.setDisplayFont(f2);
-        setUIFont(f2);
+        setUIFont(f2, sp);
         if (System.getProperty("os.name").contains("Windows")) {
             projectTree.setRowHeight((int)(f2.getSize() * 1.3));
         }
@@ -622,7 +638,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         Font f1 = sp.getDisplayFont();
         Font f2 = f1.deriveFont((float)24.0);
         sp.setDisplayFont(f2);
-        setUIFont(f2);
+        setUIFont(f2, sp);
         if (System.getProperty("os.name").contains("Windows")) {
             projectTree.setRowHeight((int)(f2.getSize() * 1.3));
         }

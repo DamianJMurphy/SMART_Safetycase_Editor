@@ -38,10 +38,15 @@ public class ProjectUIFramework {
             String u = System.getProperty("user.home");
             System.out.println("Trying to load database URL from default " + u + "/smart.properties location");
             System.getProperties().load(new FileInputStream(u + "/smart.properties"));
-            System.setProperty(Database.CONNECTIONURLPROPERTY, System.getProperty("SMART.dburl"));
+            System.setProperty("SMART.loadeddefault", "Y");
+            if (System.getProperty("SMART.dburl") != null) 
+                System.setProperty(Database.CONNECTIONURLPROPERTY, System.getProperty("SMART.dburl"));
+            else
+                gotDBFromProperties = false;
         }
         catch (IOException e1) {
             gotDBFromProperties = false;
+            System.setProperty("SMART.loadeddefault", "N");
         }
         
         System.setProperty(ProjectHelper.PROJECTCLASSPROPERTY, "uk.nhs.digital.projectuiframework.smart.SmartProject");
@@ -65,7 +70,7 @@ public class ProjectUIFramework {
         }
         java.lang.System.setProperty("user", "SA");
         java.lang.System.setProperty("password", "");
-        java.lang.System.setProperty("uk.nhs.digital.safetycase.applicationidentity", "NHS Digital SMART Safety Case Editor DEVELOPMENT 20180612");
+        java.lang.System.setProperty("uk.nhs.digital.safetycase.applicationidentity", "NHS Digital SMART Safety Case Editor DEVELOPMENT 20180614");
 //        java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Process","uk.nhs.digital.safetycase.ui.processeditor.ProcessEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Process","uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorForm");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Location","uk.nhs.digital.safetycase.ui.LocationEditor");
@@ -82,8 +87,9 @@ public class ProjectUIFramework {
         java.lang.System.setProperty("uk.nhs.digital.projectuiframework.initialtabtitle", "SMART");
         java.lang.System.setProperty("uk.nhs.digial.projectuiframework.appicon", "/uk/nhs/digital/projectuiframework/smart/nhsd-16x16.png");
         System.out.println("Running on " + System.getProperty("os.name"));
-        ProjectWindow p = new ProjectWindow();
+        ProjectWindow p = null;
         try {
+            p= new ProjectWindow();
             smart = ProjectHelper.createProject();
             smart.setProjectWindow(p);
             p.setTitle(smart.getApplicationIdentifier());

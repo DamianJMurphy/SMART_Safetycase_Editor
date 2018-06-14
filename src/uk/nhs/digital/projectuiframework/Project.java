@@ -71,6 +71,8 @@ public interface Project {
     void save(File f) throws Exception;
     void save() throws Exception;
     
+    void saveUserProperties();
+    
     boolean hasChanged();
     
     int getProjectID(DefaultMutableTreeNode n);
