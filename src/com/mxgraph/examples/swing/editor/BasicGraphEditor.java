@@ -443,6 +443,7 @@ public class BasicGraphEditor extends JPanel
 			/**
 			 * 
 			 */
+                        @Override
 			public void mouseWheelMoved(MouseWheelEvent e)
 			{
 				if (e.getSource() instanceof mxGraphOutline
@@ -465,6 +466,7 @@ public class BasicGraphEditor extends JPanel
 			/**
 			 * 
 			 */
+                        @Override
 			public void mousePressed(MouseEvent e)
 			{
 				// Handles context menu on the Mac where the trigger is on mousepressed
@@ -474,6 +476,7 @@ public class BasicGraphEditor extends JPanel
 			/**
 			 * 
 			 */
+                        @Override
 			public void mouseReleased(MouseEvent e)
 			{
 				if (e.isPopupTrigger())
@@ -491,6 +494,7 @@ public class BasicGraphEditor extends JPanel
 			/**
 			 * 
 			 */
+                        @Override
 			public void mousePressed(MouseEvent e)
 			{
 				// Handles context menu on the Mac where the trigger is on mousepressed
@@ -500,6 +504,7 @@ public class BasicGraphEditor extends JPanel
 			/**
 			 * 
 			 */
+                        @Override
 			public void mouseReleased(MouseEvent e)
 			{
 				if (e.isPopupTrigger())
@@ -522,6 +527,7 @@ public class BasicGraphEditor extends JPanel
 					 * (non-Javadoc)
 					 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
 					 */
+                                        @Override
 					public void mouseDragged(MouseEvent e)
 					{
 						mouseLocationChanged(e);
@@ -531,6 +537,7 @@ public class BasicGraphEditor extends JPanel
 					 * (non-Javadoc)
 					 * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
 					 */
+                                        @Override
 					public void mouseMoved(MouseEvent e)
 					{
 						mouseDragged(e);

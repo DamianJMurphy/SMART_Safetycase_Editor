@@ -18,15 +18,18 @@
 package uk.nhs.digital.safetycase.ui;
 
 import com.mxgraph.examples.swing.editor.BasicGraphEditor;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.SaveRejectedException;
@@ -97,7 +100,7 @@ public class SystemSaveHandler
             // See if the user has done anything dumb, like multiply-linked anything
             //
             for (DiagramEditorElement d : systemElements.values()) {
-                if (d.connections.contains("2")) {
+                if (d.connections.contains(system.getAttributeValue("GraphCellId"))) {
                     throw new BrokenConnectionException("The root system cannot have anything pointing to it");
                 } else {
                     int linkCount = 0;
@@ -108,7 +111,7 @@ public class SystemSaveHandler
                                 throw new BrokenConnectionException(d.type + " " + d.name + " has more than one link to it. System diagram elements can only have one parent");
                         }
                     }
-                    if ((d.cellId != 2) && (linkCount == 0)) {
+                    if ((d.cellId != system.getAttribute("GraphCellId").getIntValue()) && (linkCount == 0)) {
                         throw new BrokenConnectionException(d.type + " " + d.name + " is not the root system and has nothing pointing to it.");
                     }
                 }
@@ -486,7 +489,7 @@ public class SystemSaveHandler
                             String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("System", "System", name,pid, p);
 
                             if (duplicateWarning != null) {
-                                JOptionPane.showMessageDialog(sge, duplicateWarning, "Duplicate hazard name", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(sge, duplicateWarning, "Duplicate system name", JOptionPane.ERROR_MESSAGE);
                                 return true;
                             }
                         }
@@ -495,7 +498,7 @@ public class SystemSaveHandler
                 }
             }
         }
-        catch (Exception e) {
+        catch (IOException | ParserConfigurationException | SAXException e) {
             JOptionPane.showMessageDialog(sge, "Error checking for duplicate names, send logs to support", "Error", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Error in system duplicate name check", e);
         }
@@ -510,7 +513,7 @@ public class SystemSaveHandler
         // e.g mxCell edge="1" id="6" parent="1" source="2" style="straight" target="3" value=""> if value 2 is not used at target in the whole xml string then 2 is root element
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        HashMap<String, Element> dic = new HashMap<String, Element>();
+        HashMap<String, Element> dic = new HashMap<>();
         dbf.setNamespaceAware(true);
         DocumentBuilder db = dbf.newDocumentBuilder();
         StringReader sr = new StringReader(xml);
