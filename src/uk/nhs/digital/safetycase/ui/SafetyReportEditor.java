@@ -1611,7 +1611,8 @@ private Persistable findParent(Persistable ch, String parentType)
             SystemEditorDetails sed = new SystemEditorDetails();
             SystemGraphEditor sge = new SystemGraphEditor(p.getId());
             sed.setSystem((System) p);
-            ex = sed.getExistingGraph(xml);
+            //ex = sed.getExistingGraph(xml);
+            ex = sed.getExistingGraph(p, null);
             sge.setExistingGraph(ex);
             if (ex != null) {
                 editor = (BasicGraphEditor) sge;
