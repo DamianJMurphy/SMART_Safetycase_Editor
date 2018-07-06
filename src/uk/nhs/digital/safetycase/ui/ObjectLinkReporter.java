@@ -58,7 +58,7 @@ public class ObjectLinkReporter
         projectLinksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());
         projectLinksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         try {
-            links = MetaFactory.getInstance().exploreLinks(p, p, links);
+            links = MetaFactory.getInstance().exploreLinks(p, p, links, true);
         }
         catch (Exception e) {
             e.printStackTrace();

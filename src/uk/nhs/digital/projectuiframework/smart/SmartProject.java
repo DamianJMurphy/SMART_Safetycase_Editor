@@ -504,6 +504,12 @@ public class SmartProject
 
     @Override
     public boolean hasChanged() {
+        if (notificationSubscribers != null) {
+            for (DataNotificationSubscriber d : notificationSubscribers) {
+                if (d.isModified())
+                    return true;
+            }
+        }
         return false;
     }    
 

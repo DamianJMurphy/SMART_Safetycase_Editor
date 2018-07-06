@@ -116,8 +116,13 @@ public class ProjectWindow extends javax.swing.JFrame {
         riskMatrixMenuItem = new javax.swing.JMenuItem();
         helpAboutMenuItem = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setSize(new java.awt.Dimension(902, 892));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
         projectTreeScrollPane.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -652,6 +657,22 @@ public class ProjectWindow extends javax.swing.JFrame {
     private void linkExplorerMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkExplorerMenuItemActionPerformed
         (new LinkExplorer(this, false)).setVisible(true);
     }//GEN-LAST:event_linkExplorerMenuItemActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        boolean outstandingsaves = false;
+        for (Project p : projects.values()) {
+            if (p.hasChanged()) {
+                outstandingsaves = true;
+                break;
+            }
+        }
+        if (outstandingsaves) {
+            int r = JOptionPane.showConfirmDialog(rootPane, "There are changed projects. Exit without saving ?", "Unsaved projects", JOptionPane.YES_NO_OPTION);
+            if (r == JOptionPane.NO_OPTION)
+                return;
+        }
+        this.dispose();
+    }//GEN-LAST:event_formWindowClosing
 
     public void newProject(String n, Project p) {
         lastProjectAdded = p;

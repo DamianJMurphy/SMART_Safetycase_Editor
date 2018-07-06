@@ -32,6 +32,7 @@ public class LinkExplorer extends javax.swing.JDialog {
     /**
      * Creates new form LinkExplorer
      */
+    @SuppressWarnings("OverridableMethodCallInConstructor")
     public LinkExplorer(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();

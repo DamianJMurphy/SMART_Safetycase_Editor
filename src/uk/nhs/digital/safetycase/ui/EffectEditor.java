@@ -31,6 +31,7 @@ import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.Effect;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
+import uk.nhs.digital.safetycase.data.ProjectLink;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.data.ValueSet;
 
@@ -41,7 +42,7 @@ import uk.nhs.digital.safetycase.data.ValueSet;
 public class EffectEditor extends javax.swing.JPanel 
         implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
-    private final String[] linkcolumns = {"Type", "Name", "Comment"};
+    private final String[] linkcolumns = {"Type", "Name", "Comment", "Via"};
 
     private EditorComponent editorComponent = null;
     private Effect effect = null;
@@ -55,7 +56,7 @@ public class EffectEditor extends javax.swing.JPanel
         DefaultTableModel linkModel = new DefaultTableModel(linkcolumns, 0);
         SmartProject.getProject().addNotificationSubscriber(this);
         linksTable.setModel(linkModel);
-        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
+        linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());        
         linksTable.setDefaultEditor(Object.class, null);
         linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         try {
@@ -108,6 +109,7 @@ public class EffectEditor extends javax.swing.JPanel
         jScrollPane2 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
         linksEditorButton = new javax.swing.JButton();
+        directLinksOnlyCheckBox = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -141,6 +143,14 @@ public class EffectEditor extends javax.swing.JPanel
             }
         });
 
+        directLinksOnlyCheckBox.setSelected(true);
+        directLinksOnlyCheckBox.setText("Show direct links only");
+        directLinksOnlyCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                directLinksOnlyCheckBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout linksPanelLayout = new javax.swing.GroupLayout(linksPanel);
         linksPanel.setLayout(linksPanelLayout);
         linksPanelLayout.setHorizontalGroup(
@@ -148,16 +158,19 @@ public class EffectEditor extends javax.swing.JPanel
             .addComponent(jScrollPane2)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(linksEditorButton)
+                .addGroup(linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(linksEditorButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(directLinksOnlyCheckBox, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         linksPanelLayout.setVerticalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(linksPanelLayout.createSequentialGroup()
+                .addComponent(directLinksOnlyCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(linksEditorButton)
-                .addGap(0, 19, Short.MAX_VALUE))
+                .addComponent(linksEditorButton))
         );
 
         jLabel1.setText("Name");
@@ -238,12 +251,11 @@ public class EffectEditor extends javax.swing.JPanel
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(saveButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -259,7 +271,7 @@ public class EffectEditor extends javax.swing.JPanel
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 19, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -291,27 +303,7 @@ public class EffectEditor extends javax.swing.JPanel
         linkEditor.pack();
         linkEditor.setVisible(true);
 
-        try {
-            HashMap<String,ArrayList<Relationship>> rels = effect.getRelationshipsForLoad();
-            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            for (String t : rels.keySet()) {
-                ArrayList<Relationship> a = rels.get(t);
-                for (Relationship r : a) {
-                    String m = r.getManagementClass();
-                    if ((m == null) || (!m.contentEquals("Diagram"))) {
-                        Object[] row = new Object[linkcolumns.length];
-                        for (int i = 0; i < linkcolumns.length; i++)
-                        row[i] = r;
-                        dtm.addRow(row);
-                    }
-                }
-            }
-            linksTable.setModel(dtm);
-        }
-        catch (Exception e) {
-            SmartProject.getProject().log("Failed to process editLinks action in EffectEditor", e);
-        }
-
+        populateLinks();
     }//GEN-LAST:event_linksEditorButtonActionPerformed
 
     private void conditionsComboBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_conditionsComboBoxKeyTyped
@@ -325,6 +317,10 @@ public class EffectEditor extends javax.swing.JPanel
     private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
         modified = true;
     }//GEN-LAST:event_descriptionTextAreaKeyTyped
+
+    private void directLinksOnlyCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directLinksOnlyCheckBoxActionPerformed
+        populateLinks();
+    }//GEN-LAST:event_directLinksOnlyCheckBoxActionPerformed
 
     @Override
     public void setPersistableObject(Persistable p) {
@@ -351,32 +347,35 @@ public class EffectEditor extends javax.swing.JPanel
         }
 */
 
+        populateLinks();
+        modified = false;
+    }
+
+    private void populateLinks() {
         try {
-            HashMap<String,ArrayList<Relationship>> rels = effect.getRelationshipsForLoad();
+            
+//            HashMap<String,ArrayList<Relationship>> rels = hazard.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            for (String t : rels.keySet()) {
-                ArrayList<Relationship> a = rels.get(t);
-                for (Relationship r : a) {
-                    if (r.isDeleted())
-                        continue;
-                    String m = r.getManagementClass();
-                    if ((m == null) || (!m.contentEquals("Diagram"))) {                    
-                        Object[] row = new Object[linkcolumns.length];
-                        for (int i = 0; i < linkcolumns.length; i++)
-                            row[i] = r;
-                        dtm.addRow(row);
+            ArrayList<ProjectLink> pls = new ArrayList<>();
+            pls = MetaFactory.getInstance().exploreLinks(effect, effect, pls, false);
+            for (ProjectLink pl : pls) {
+                if (!directLinksOnlyCheckBox.isSelected() || (pl.getRemotePath().length() == 0)) {
+                    Object[] row = new Object[linkcolumns.length];
+                    for (int i = 0; i < linkcolumns.length; i++) {
+                        row[i] = pl;
                     }
+                    dtm.addRow(row);
                 }
             }
+              
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            JOptionPane.showMessageDialog(editorPanel, "Failed to load Effect for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
-            SmartProject.getProject().log("Failed to set persistable object in EffectEditor", e);
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load Hazard relationshis for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load hazard relationships", e);
         }
-      
     }
-
+    
     @Override
     public Component getComponent() {
         return this;
@@ -391,6 +390,7 @@ public class EffectEditor extends javax.swing.JPanel
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> conditionsComboBox;
     private javax.swing.JTextArea descriptionTextArea;
+    private javax.swing.JCheckBox directLinksOnlyCheckBox;
     private javax.swing.JPanel editorPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;

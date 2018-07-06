@@ -175,7 +175,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
             }
         });
 
-        jLabel2.setText("Mnemonic");
+        jLabel2.setText("Acronym");
 
         jLabel4.setText("Description");
 

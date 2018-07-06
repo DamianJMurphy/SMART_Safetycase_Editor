@@ -31,6 +31,7 @@ import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.Control;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
+import uk.nhs.digital.safetycase.data.ProjectLink;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.data.ValueSet;
 
@@ -41,7 +42,7 @@ import uk.nhs.digital.safetycase.data.ValueSet;
 public class ControlEditor extends javax.swing.JPanel 
          implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
-    private final String[] linkcolumns = {"Type", "Name", "Comment"};
+    private final String[] linkcolumns = {"Type", "Name", "Comment", "Via"};
 
     private EditorComponent editorComponent = null;
     private Control control = null;
@@ -56,7 +57,7 @@ public class ControlEditor extends javax.swing.JPanel
         SmartProject.getProject().addNotificationSubscriber(this);
         linksTable.setModel(linkModel);
         linksTable.setDefaultEditor(Object.class, null);
-        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
+        linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());        
         linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         try {
 //            ValueSet controlType = MetaFactory.getInstance().getValueSet("ControlType");
@@ -148,6 +149,7 @@ public class ControlEditor extends javax.swing.JPanel
         jScrollPane3 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
         editLinksButton = new javax.swing.JButton();
+        directLinksOnlyCheckBox = new javax.swing.JCheckBox();
         saveButton = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -405,20 +407,33 @@ public class ControlEditor extends javax.swing.JPanel
             }
         });
 
+        directLinksOnlyCheckBox.setSelected(true);
+        directLinksOnlyCheckBox.setText("Show direct links only");
+        directLinksOnlyCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                directLinksOnlyCheckBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout linksPanelLayout = new javax.swing.GroupLayout(linksPanel);
         linksPanel.setLayout(linksPanelLayout);
         linksPanelLayout.setHorizontalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 760, Short.MAX_VALUE)
             .addGroup(linksPanelLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(editLinksButton))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(directLinksOnlyCheckBox)
+                .addContainerGap())
         );
         linksPanelLayout.setVerticalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(linksPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(directLinksOnlyCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editLinksButton))
         );
@@ -506,27 +521,7 @@ public class ControlEditor extends javax.swing.JPanel
         linkEditor.add(new LinkEditor(control).setParent(linkEditor));
         linkEditor.pack();
         linkEditor.setVisible(true);
-
-        try {
-            HashMap<String,ArrayList<Relationship>> rels = control.getRelationshipsForLoad();
-            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            for (String t : rels.keySet()) {
-                ArrayList<Relationship> a = rels.get(t);
-                for (Relationship r : a) {
-                    String m = r.getManagementClass();
-                    if ((m == null) || (!m.contentEquals("Diagram"))) {                    
-                        Object[] row = new Object[linkcolumns.length];
-                        for (int i = 0; i < linkcolumns.length; i++)
-                            row[i] = r;
-                        dtm.addRow(row);
-                    }
-                }
-            }
-            linksTable.setModel(dtm);
-        }
-        catch (Exception e) {
-            SmartProject.getProject().log("Failed to process editLinks action in ControlEditor", e);
-        }
+        populateLinks();
     }//GEN-LAST:event_editLinksButtonActionPerformed
 
     private void conditionsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conditionsComboBoxActionPerformed
@@ -569,6 +564,10 @@ public class ControlEditor extends javax.swing.JPanel
         modified = true;
     }//GEN-LAST:event_evidenceTextAreaKeyTyped
 
+    private void directLinksOnlyCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directLinksOnlyCheckBoxActionPerformed
+        populateLinks();
+    }//GEN-LAST:event_directLinksOnlyCheckBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea clinicalJustificationTextArea;
@@ -576,6 +575,7 @@ public class ControlEditor extends javax.swing.JPanel
     private javax.swing.JPanel descriptionAndJustificationContainer;
     private javax.swing.JPanel descriptionPanel;
     private javax.swing.JTextArea descriptionTextArea;
+    private javax.swing.JCheckBox directLinksOnlyCheckBox;
     private javax.swing.JButton editLinksButton;
     private javax.swing.JPanel editorPanel;
     private javax.swing.JPanel evidenceContainer;
@@ -648,33 +648,35 @@ public class ControlEditor extends javax.swing.JPanel
                 break;
             }
         }        
+        populateLinks();
+        modified = false;
+    }
+
+    private void populateLinks() {
         try {
-            HashMap<String,ArrayList<Relationship>> rels = control.getRelationshipsForLoad();
+            
+//            HashMap<String,ArrayList<Relationship>> rels = hazard.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            for (String t : rels.keySet()) {
-                ArrayList<Relationship> a = rels.get(t);
-                for (Relationship r : a) {
-                    if (r.isDeleted())
-                        continue;
-                    
-                    String m = r.getManagementClass();
-                    if ((m == null) || (!m.contentEquals("Diagram"))) {                    
-                        Object[] row = new Object[linkcolumns.length];
-                        for (int i = 0; i < linkcolumns.length; i++)
-                            row[i] = r;
-                        dtm.addRow(row);
+            ArrayList<ProjectLink> pls = new ArrayList<>();
+            pls = MetaFactory.getInstance().exploreLinks(control, control, pls, false);
+            for (ProjectLink pl : pls) {
+                if (!directLinksOnlyCheckBox.isSelected() || (pl.getRemotePath().length() == 0)) {
+                    Object[] row = new Object[linkcolumns.length];
+                    for (int i = 0; i < linkcolumns.length; i++) {
+                        row[i] = pl;
                     }
+                    dtm.addRow(row);
                 }
             }
+              
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            JOptionPane.showMessageDialog(editorPanel, "Failed to load Control for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
-            SmartProject.getProject().log("Failed to set persistable object in ControlEditor", e);
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load Control relationshis for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load control relationships", e);
         }
-      
     }
-
+    
     @Override
     public Component getComponent() {
         return this;

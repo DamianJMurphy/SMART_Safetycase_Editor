@@ -30,9 +30,11 @@ import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.ProcessStep;
+import uk.nhs.digital.safetycase.data.ProjectLink;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.ui.HazardEditor;
 import uk.nhs.digital.safetycase.ui.LinkEditor;
+import uk.nhs.digital.safetycase.ui.LinkExplorerTableCellRenderer;
 import uk.nhs.digital.safetycase.ui.LinkTableCellRenderer;
 
 /**
@@ -45,7 +47,7 @@ public class ProcessStepDetail
 {
 
     private static final String[] COLUMNS = {"Name", "Status", "Initial rating", "Residual rating"};
-    private final String[] linkcolumns = {"Type", "Name", "Comment"};
+    private final String[] linkcolumns = {"Type", "Name", "Comment", "Via"};
     
     private JDialog parent = null;
     private ProcessStep processStep = null;
@@ -64,13 +66,39 @@ public class ProcessStepDetail
         dtm = new DefaultTableModel(linkcolumns, 0);
         linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         linksTable.setDefaultEditor(Object.class, null);
-        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());
+        linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());
         linksTable.setModel(dtm);
         if (ps != null) {
             populate();
         }
     }
 
+   private void populateLinks() {
+        try {
+            
+//            HashMap<String,ArrayList<Relationship>> rels = hazard.getRelationshipsForLoad();
+            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+            ArrayList<ProjectLink> pls = new ArrayList<>();
+            pls = MetaFactory.getInstance().exploreLinks(processStep, processStep, pls, false);
+            for (ProjectLink pl : pls) {
+                if (!directLinksOnlyCheckBox.isSelected() || (pl.getRemotePath().length() == 0)) {
+                    Object[] row = new Object[linkcolumns.length];
+                    for (int i = 0; i < linkcolumns.length; i++) {
+                        row[i] = pl;
+                    }
+                    dtm.addRow(row);
+                }
+            }
+              
+            linksTable.setModel(dtm);
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to load Hazard relationshis for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load hazard relationships", e);
+        }
+        
+    }
+     
     private void populate() {
         nameTextField.setText(processStep.getAttributeValue("Name"));
         nameTextField.setEditable(false);
@@ -94,25 +122,8 @@ public class ProcessStepDetail
                 }
             }
             hazardsTable.setModel(dtm);
-            dtm = new DefaultTableModel(linkcolumns, 0);
-            HashMap<String,ArrayList<Relationship>> rels = processStep.getRelationshipsForLoad();
-            if (rels != null) {
-                for (String t : rels.keySet()) {
-                    ArrayList<Relationship> a = rels.get(t);
-                    if (a == null)
-                        continue;
-                    for (Relationship r : a) {
-                        if (! r.isDeleted()) {
-                            Object[] row = new Object[linkcolumns.length];
-                            for (int i = 0; i < linkcolumns.length; i++)
-                                row[i] = r;
-                            dtm.addRow(row);
-                        }
-                    }
-                }
-                linksTable.setModel(dtm);
-            }
-            
+            populateLinks();            
+            modified = false;
         }
         catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Cannot make details view. Send logs to support", "Warning", JOptionPane.INFORMATION_MESSAGE);
@@ -147,6 +158,7 @@ public class ProcessStepDetail
         jScrollPane3 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(100, 20), new java.awt.Dimension(100, 20), new java.awt.Dimension(100, 20));
+        directLinksOnlyCheckBox = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Process step"));
         setMaximumSize(new java.awt.Dimension(695, 505));
@@ -250,6 +262,10 @@ public class ProcessStepDetail
 
         add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 420, 660, 180));
         add(filler1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 610, 660, -1));
+
+        directLinksOnlyCheckBox.setSelected(true);
+        directLinksOnlyCheckBox.setText("Show direct links only");
+        add(directLinksOnlyCheckBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 390, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
@@ -280,6 +296,7 @@ public class ProcessStepDetail
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea descriptionTextArea;
+    private javax.swing.JCheckBox directLinksOnlyCheckBox;
     private javax.swing.JButton editLinksButton;
     private javax.swing.JButton editSelectedHazardButton;
     private javax.swing.Box.Filler filler1;

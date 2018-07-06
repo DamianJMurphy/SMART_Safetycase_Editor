@@ -29,9 +29,11 @@ import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
+import uk.nhs.digital.safetycase.data.ProjectLink;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.data.SystemFunction;
 import uk.nhs.digital.safetycase.ui.LinkEditor;
+import uk.nhs.digital.safetycase.ui.LinkExplorerTableCellRenderer;
 
 /**
  *
@@ -44,7 +46,7 @@ public class SystemFunctionEditor extends javax.swing.JPanel
        
     private EditorComponent editorComponent = null;
     private final String[] functioncolumns = {"Name", "Description", "ParentFunction", "System"};
-    private final String[] linkcolumns = {"Type", "Name", "Comment"};
+    private final String[] linkcolumns = {"Type", "Name", "Comment", "Via"};
 
     private boolean modified = false;
     /**
@@ -52,6 +54,10 @@ public class SystemFunctionEditor extends javax.swing.JPanel
      */
     public SystemFunctionEditor() {
         initComponents();
+        linksTable.setDefaultEditor(Object.class, null);
+//        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());
+        linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());
+        
         SmartProject.getProject().addNotificationSubscriber(this);
               
     }    
@@ -90,6 +96,7 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         editLinksButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
+        directLinksOnlyCheckBox = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -143,25 +150,34 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         ));
         jScrollPane2.setViewportView(linksTable);
 
+        directLinksOnlyCheckBox.setSelected(true);
+        directLinksOnlyCheckBox.setText("Show direct links only");
+
         javax.swing.GroupLayout linksPanelLayout = new javax.swing.GroupLayout(linksPanel);
         linksPanel.setLayout(linksPanelLayout);
         linksPanelLayout.setHorizontalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(linksPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 737, Short.MAX_VALUE)
                     .addGroup(linksPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(editLinksButton))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 737, Short.MAX_VALUE))
+                        .addGroup(linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(directLinksOnlyCheckBox)
+                            .addComponent(editLinksButton))))
                 .addContainerGap())
         );
         linksPanelLayout.setVerticalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(linksPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(directLinksOnlyCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addComponent(editLinksButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -192,7 +208,7 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
+                .addContainerGap(75, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -229,37 +245,39 @@ public class SystemFunctionEditor extends javax.swing.JPanel
          modified = false;
     }//GEN-LAST:event_okButtonActionPerformed
 
+    private void populateLinks() {
+        try {
+            
+//            HashMap<String,ArrayList<Relationship>> rels = hazard.getRelationshipsForLoad();
+            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+            ArrayList<ProjectLink> pls = new ArrayList<>();
+            pls = MetaFactory.getInstance().exploreLinks(sf, sf, pls, false);
+            for (ProjectLink pl : pls) {
+                if (!directLinksOnlyCheckBox.isSelected() || (pl.getRemotePath().length() == 0)) {
+                    Object[] row = new Object[linkcolumns.length];
+                    for (int i = 0; i < linkcolumns.length; i++) {
+                        row[i] = pl;
+                    }
+                    dtm.addRow(row);
+                }
+            }
+              
+            linksTable.setModel(dtm);
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to load system function relationshis for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load system function relationships", e);
+        }
+        
+    }
+    
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
 
         JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
         linkEditor.add(new LinkEditor(sf).setParent(linkEditor));
         linkEditor.pack();
         linkEditor.setVisible(true);
-
-        try {
-            HashMap<String,ArrayList<Relationship>> rels = sf.getRelationshipsForLoad();
-            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            for (String t : rels.keySet()) {
-                ArrayList<Relationship> a = rels.get(t);
-                if (a != null) {
-                    for (Relationship r : a) {
-
-                        Object[] row = new Object[linkcolumns.length];
-                        for (int i = 0; i < linkcolumns.length; i++) {
-                            row[i] = r;
-                        }
-
-                        dtm.addRow(row);
-
-                    }
-                }
-            }
-            linksTable.setModel(dtm);
-        }
-        catch (Exception e) {
-            SmartProject.getProject().log("Failed to process editLinks action in SystemFunctionEditor", e);
-        }
-        
+        populateLinks();
     }//GEN-LAST:event_editLinksButtonActionPerformed
 
     private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
@@ -269,6 +287,7 @@ public class SystemFunctionEditor extends javax.swing.JPanel
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea descriptionTextArea;
+    private javax.swing.JCheckBox directLinksOnlyCheckBox;
     private javax.swing.JButton editLinksButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
@@ -301,31 +320,8 @@ public class SystemFunctionEditor extends javax.swing.JPanel
                 e.printStackTrace();
                 return;
             } 
-        try {
-            HashMap<String,ArrayList<Relationship>> rels = sf.getRelationshipsForLoad();
-            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            for (String t : rels.keySet()) {
-                ArrayList<Relationship> a = rels.get(t);
-                if (a != null) {
-                    for (Relationship r : a) {
-                        if (r.isDeleted())
-                            continue;
-                        
-                        Object[] row = new Object[linkcolumns.length];
-                        for (int i = 0; i < linkcolumns.length; i++) {
-                            row[i] = r;
-                        }
-                        dtm.addRow(row);
-                    }
-                }
-            }
-            linksTable.setModel(dtm);
-        }
-        catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Failed to load Function relationshis for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
-            SmartProject.getProject().log("Failed to load function relationships", e);
-        }         
-           
+         populateLinks();
+         modified = false;
 //         HideTableColumnsMethod();
     }
 

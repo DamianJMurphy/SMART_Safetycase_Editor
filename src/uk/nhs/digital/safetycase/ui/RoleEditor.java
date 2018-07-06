@@ -29,6 +29,7 @@ import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
+import uk.nhs.digital.safetycase.data.ProjectLink;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.data.Role;
 
@@ -39,7 +40,7 @@ import uk.nhs.digital.safetycase.data.Role;
 public class RoleEditor extends javax.swing.JPanel
         implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
-    private final String[] linkcolumns = {"Type", "Name", "Comment"};
+    private final String[] linkcolumns = {"Type", "Name", "Comment", "Via"};
     private Role role = null;
     private EditorComponent editorComponent = null;
     private int newObjectProjectId = -1;
@@ -48,16 +49,42 @@ public class RoleEditor extends javax.swing.JPanel
     /**
      * Creates new form RoleEditor
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public RoleEditor() {
         initComponents();
         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
         linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         linksTable.setDefaultEditor(Object.class, null);
-        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
+        linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());        
         linksTable.setModel(dtm);
         SmartProject.getProject().addNotificationSubscriber(this);
     }
 
+    private void populateLinks() {
+        try {
+            
+//            HashMap<String,ArrayList<Relationship>> rels = hazard.getRelationshipsForLoad();
+            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+            ArrayList<ProjectLink> pls = new ArrayList<>();
+            pls = MetaFactory.getInstance().exploreLinks(role, role, pls, false);
+            for (ProjectLink pl : pls) {
+                if (!directLinksOnlyCheckBox.isSelected() || (pl.getRemotePath().length() == 0)) {
+                    Object[] row = new Object[linkcolumns.length];
+                    for (int i = 0; i < linkcolumns.length; i++) {
+                        row[i] = pl;
+                    }
+                    dtm.addRow(row);
+                }
+            }
+              
+            linksTable.setModel(dtm);
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load Hazard relationshis for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to load hazard relationships", e);
+        }
+        
+    }
     
     @Override
     public boolean wantsScrollPane() { return false; }
@@ -91,9 +118,10 @@ public class RoleEditor extends javax.swing.JPanel
         descriptionTextArea = new javax.swing.JTextArea();
         linksPanel = new javax.swing.JPanel();
         editLinksButtonButtonPanel = new javax.swing.JPanel();
-        editLinksButton = new javax.swing.JButton();
+        directLinksOnlyCheckBox = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
+        editLinksButton = new javax.swing.JButton();
         buttonsPanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
         discardButton = new javax.swing.JButton();
@@ -117,7 +145,7 @@ public class RoleEditor extends javax.swing.JPanel
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(83, 83, 83)
-                .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 504, Short.MAX_VALUE)
+                .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -149,11 +177,11 @@ public class RoleEditor extends javax.swing.JPanel
         descriptionPanel.setLayout(descriptionPanelLayout);
         descriptionPanelLayout.setHorizontalGroup(
             descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 641, Short.MAX_VALUE)
+            .addGap(0, 717, Short.MAX_VALUE)
             .addGroup(descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(descriptionPanelLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         descriptionPanelLayout.setVerticalGroup(
@@ -169,32 +197,25 @@ public class RoleEditor extends javax.swing.JPanel
         editorPanel.add(descriptionPanel);
 
         linksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Linked to"));
-        linksPanel.setLayout(new javax.swing.BoxLayout(linksPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
-        editLinksButton.setText("Edit links");
-        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editLinksButtonActionPerformed(evt);
-            }
-        });
+        directLinksOnlyCheckBox.setSelected(true);
+        directLinksOnlyCheckBox.setText("Show direct links only");
 
         javax.swing.GroupLayout editLinksButtonButtonPanelLayout = new javax.swing.GroupLayout(editLinksButtonButtonPanel);
         editLinksButtonButtonPanel.setLayout(editLinksButtonButtonPanelLayout);
         editLinksButtonButtonPanelLayout.setHorizontalGroup(
             editLinksButtonButtonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editLinksButtonButtonPanelLayout.createSequentialGroup()
-                .addContainerGap(531, Short.MAX_VALUE)
-                .addComponent(editLinksButton)
+                .addContainerGap(529, Short.MAX_VALUE)
+                .addComponent(directLinksOnlyCheckBox)
                 .addContainerGap())
         );
         editLinksButtonButtonPanelLayout.setVerticalGroup(
             editLinksButtonButtonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(editLinksButtonButtonPanelLayout.createSequentialGroup()
-                .addComponent(editLinksButton)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(directLinksOnlyCheckBox)
+                .addGap(0, 8, Short.MAX_VALUE))
         );
-
-        linksPanel.add(editLinksButtonButtonPanel);
 
         linksTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -209,7 +230,36 @@ public class RoleEditor extends javax.swing.JPanel
         ));
         jScrollPane1.setViewportView(linksTable);
 
-        linksPanel.add(jScrollPane1);
+        editLinksButton.setText("Edit links");
+        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editLinksButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout linksPanelLayout = new javax.swing.GroupLayout(linksPanel);
+        linksPanel.setLayout(linksPanelLayout);
+        linksPanelLayout.setHorizontalGroup(
+            linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(linksPanelLayout.createSequentialGroup()
+                .addComponent(editLinksButtonButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(editLinksButton)
+                .addContainerGap())
+        );
+        linksPanelLayout.setVerticalGroup(
+            linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(linksPanelLayout.createSequentialGroup()
+                .addComponent(editLinksButtonButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editLinksButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         editorPanel.add(linksPanel);
 
@@ -248,23 +298,27 @@ public class RoleEditor extends javax.swing.JPanel
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        editorPanel.add(buttonsPanel);
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -368,34 +422,10 @@ public class RoleEditor extends javax.swing.JPanel
            discardButtonActionPerformed(null);
            return;
         }
-        try {
-            role = (Role)p;
-            descriptionTextArea.setText(role.getAttributeValue("Description"));
-            nameTextField.setText(role.getAttributeValue("Name"));
-//            categoryTextField.setText(role.getAttributeValue("Category"));
-            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            HashMap<String,ArrayList<Relationship>> rels = role.getRelationshipsForLoad();
-            if (rels != null) {
-                for (String t : rels.keySet()) {
-                    ArrayList<Relationship> a = rels.get(t);
-                    if (a == null)
-                        continue;
-                    for (Relationship r : a) {
-                        if (! r.isDeleted()) {
-                            Object[] row = new Object[linkcolumns.length];
-                            for (int i = 0; i < linkcolumns.length; i++)
-                                row[i] = r;
-                            dtm.addRow(row);
-                        }
-                    }
-                }
-            }
-            linksTable.setModel(dtm);
-        }
-        catch (Exception e) {
-            JOptionPane.showMessageDialog(editorPanel, "Failed to load Role for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
-            SmartProject.getProject().log("Failed to set persistable object in RoleEditor", e);
-        }
+        role = (Role) p;
+        descriptionTextArea.setText(role.getAttributeValue("Description"));
+        nameTextField.setText(role.getAttributeValue("Name"));
+        populateLinks();
     }
 
     @Override
@@ -408,6 +438,7 @@ public class RoleEditor extends javax.swing.JPanel
     private javax.swing.JPanel buttonsPanel;
     private javax.swing.JPanel descriptionPanel;
     private javax.swing.JTextArea descriptionTextArea;
+    private javax.swing.JCheckBox directLinksOnlyCheckBox;
     private javax.swing.JButton discardButton;
     private javax.swing.JButton editLinksButton;
     private javax.swing.JPanel editLinksButtonButtonPanel;

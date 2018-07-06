@@ -78,7 +78,7 @@ public class MetaFactory {
         }
     }
     
-    public ArrayList<ProjectLink> exploreLinks(Persistable start, Persistable p, ArrayList<ProjectLink> working) 
+    public ArrayList<ProjectLink> exploreLinks(Persistable start, Persistable p, ArrayList<ProjectLink> working, boolean includeauto) 
             throws Exception
     {
         if (working == null) 
@@ -87,17 +87,17 @@ public class MetaFactory {
         
         // Direct relationships from this object
         if (immediate != null) {
-            doImmediateLinks(start, p, immediate, working, ProjectLink.TO);
+            doImmediateLinks(start, p, immediate, working, ProjectLink.TO, includeauto);
         }
         immediate = findFirstOrderRelationshipsForTarget(p, true, true);
         if (immediate != null) {
-            doImmediateLinks(start, p, immediate, working, ProjectLink.FROM);
+            doImmediateLinks(start, p, immediate, working, ProjectLink.FROM, includeauto);
         }
-        doRemoteLinks(start, p, working);
+        doRemoteLinks(start, p, working, includeauto);
         return working;
     }
 
-    private void doRemoteLinks(Persistable start, Persistable p, ArrayList<ProjectLink> working) 
+    private void doRemoteLinks(Persistable start, Persistable p, ArrayList<ProjectLink> working, boolean includeauto) 
             throws Exception
     {
         // Go through the "working" set until everything in it is checked. This means
@@ -114,29 +114,32 @@ public class MetaFactory {
                     stillprocessing = true;
                     l.setChecked();
                     Persistable t = l.getRemote();
-                    exploreLinks(start, t, working);
+                    exploreLinks(start, t, working, includeauto);
                 }
             }
         }
     }
     
-    private void doImmediateLinks(Persistable start, Persistable p, HashMap<String,ArrayList<Relationship>> relationships, ArrayList<ProjectLink> working, int d) 
+    private void doImmediateLinks(Persistable start, Persistable p, HashMap<String,ArrayList<Relationship>> relationships, ArrayList<ProjectLink> working, int d, boolean includeauto) 
             throws Exception
     {
         for (String s : relationships.keySet()) {
             ArrayList<Relationship> rels = relationships.get(s);
             if (rels != null) {
                 for (Relationship r : rels) {
-                    ProjectLink l = makeProjectLink(start, r, d);
-                    if (!working.contains(l)) {
-                        working.add(l);
-                    } else {
-                        // TODO: add the details of the current link to the comments and remote path
-                        // if necessary
-                    }
+                    String m = r.getManagementClass();
+                    if (includeauto || (m == null) || (!m.contentEquals("Diagram"))) {
+                        ProjectLink l = makeProjectLink(start, r, d);
+                        if (!working.contains(l)) {
+                            working.add(l);
+                        } else {
+                            // TODO: add the details of the current link to the comments and remote path
+                            // if necessary
+                        }
 //                    if (!working.add(l)) {
 //                        l.setChecked();
 //                    }
+                    }
                 }
             }
         }
