@@ -831,6 +831,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
             JOptionPane.showMessageDialog(editorPanel, "Failed to load System for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to set persistable object in SystemEditorDetails", e);
         }
+        modified = false;
 //         HideTableColumnsMethod();
     }
 

@@ -219,6 +219,12 @@ public class SystemSaveHandler
                 DiagramEditorElement se = systemElements.get(s);
                 // bt.fromCell = Integer.parseInt(s);
                 // bt.toCell = Integer.parseInt(t);
+                if (se.type.contentEquals("SystemFunction")) {
+                    DiagramEditorElement te = systemElements.get(t);
+                    if (te.type.contentEquals("System")) {
+                        throw new BrokenConnectionException("Function " + se.name + " cannot contain a system (" + te.name + ")");
+                    }
+                }
                 se.connections.add(t);
             }
         }

@@ -251,7 +251,7 @@ public class SystemFunctionEditor extends javax.swing.JPanel
 //            HashMap<String,ArrayList<Relationship>> rels = hazard.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             ArrayList<ProjectLink> pls = new ArrayList<>();
-            pls = MetaFactory.getInstance().exploreLinks(sf, sf, pls, false);
+            pls = MetaFactory.getInstance().exploreLinks(sf, sf, pls, true);
             for (ProjectLink pl : pls) {
                 if (!directLinksOnlyCheckBox.isSelected() || (pl.getRemotePath().length() == 0)) {
                     Object[] row = new Object[linkcolumns.length];

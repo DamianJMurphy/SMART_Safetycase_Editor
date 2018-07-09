@@ -33,10 +33,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicButtonUI;
 import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
+import uk.nhs.digital.safetycase.ui.systemeditor.UndockTabPopupMenu;
 
 /**
  *
@@ -53,7 +55,7 @@ public class UndockTabComponent extends JPanel {
     
     private void init(JTabbedPane pane) {
         setOpaque(false);
-        
+
         //make JLabel read titles from JTabbedPane
         JLabel label = new JLabel() {
             @Override
@@ -71,15 +73,30 @@ public class UndockTabComponent extends JPanel {
         add(label);
         //add more space between the label and the button
         label.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    UndockTabPopupMenu menu = new UndockTabPopupMenu(pane, UndockTabComponent.this);
+                    menu.show(UndockTabComponent.this, e.getX(), e.getY());
+                    return;
+                } 
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    MouseEvent f = SwingUtilities.convertMouseEvent((Component)e.getSource(), e, pane);
+                    final int index = pane.indexAtLocation(f.getX(), f.getY());
+                    if ( index != -1 )
+                        pane.setSelectedIndex(index);
+                }
+            }
+        });
         //tab button
         try {
-        JButton undockbutton = new UndockTabComponent.UndockButton();
-        add(undockbutton);
+            JButton undockbutton = new UndockTabComponent.UndockButton();
+            add(undockbutton);
 
-        JButton closebutton = new UndockTabComponent.CloseButton();
-        add(closebutton);
-        }
-        catch (Exception e) {
+            JButton closebutton = new UndockTabComponent.CloseButton();
+            add(closebutton);
+        } catch (Exception e) {
             throw new Error("JARfile corrupted - internal resources missing or unreadable");
         }
             

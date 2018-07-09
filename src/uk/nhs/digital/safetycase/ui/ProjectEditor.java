@@ -613,7 +613,7 @@ public class ProjectEditor
             return false;
         }
         makeProjectSummary();
-        return true;
+        return false;
     }
     
    @Override
