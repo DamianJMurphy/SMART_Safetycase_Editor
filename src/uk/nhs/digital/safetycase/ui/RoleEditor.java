@@ -121,7 +121,6 @@ public class RoleEditor extends javax.swing.JPanel
         directLinksOnlyCheckBox = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
-        editLinksButton = new javax.swing.JButton();
         buttonsPanel = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
         discardButton = new javax.swing.JButton();
@@ -230,13 +229,6 @@ public class RoleEditor extends javax.swing.JPanel
         ));
         jScrollPane1.setViewportView(linksTable);
 
-        editLinksButton.setText("Edit links");
-        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editLinksButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout linksPanelLayout = new javax.swing.GroupLayout(linksPanel);
         linksPanel.setLayout(linksPanelLayout);
         linksPanelLayout.setHorizontalGroup(
@@ -245,20 +237,14 @@ public class RoleEditor extends javax.swing.JPanel
                 .addComponent(editLinksButtonButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(jScrollPane1)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(editLinksButton)
-                .addContainerGap())
         );
         linksPanelLayout.setVerticalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(linksPanelLayout.createSequentialGroup()
                 .addComponent(editLinksButtonButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editLinksButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         editorPanel.add(linksPanel);
@@ -391,18 +377,6 @@ public class RoleEditor extends javax.swing.JPanel
 //        }
     }//GEN-LAST:event_saveButtonActionPerformed
 
-    private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
-        if (role == null) {
-            JOptionPane.showMessageDialog(this, "Save this Role first, before adding links", "Save first", JOptionPane.INFORMATION_MESSAGE);
-            return;            
-        }
-        JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
-        linkEditor.add(new LinkEditor(role).setParent(linkEditor));
-        linkEditor.pack();
-        linkEditor.setVisible(true);
-        setPersistableObject(role);        
-    }//GEN-LAST:event_editLinksButtonActionPerformed
-
     private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
        modified = true;
     }//GEN-LAST:event_nameTextFieldKeyTyped
@@ -440,7 +414,6 @@ public class RoleEditor extends javax.swing.JPanel
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JCheckBox directLinksOnlyCheckBox;
     private javax.swing.JButton discardButton;
-    private javax.swing.JButton editLinksButton;
     private javax.swing.JPanel editLinksButtonButtonPanel;
     private javax.swing.JPanel editorPanel;
     private javax.swing.JLabel jLabel1;

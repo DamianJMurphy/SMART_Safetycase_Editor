@@ -15,7 +15,7 @@
  *    limitations under the License.
  *  
  */
-package uk.nhs.digital.safetycase.ui.systemeditor;
+package uk.nhs.digital.projectuiframework.ui;
 
 import java.awt.Component;
 import javax.swing.JMenuItem;
@@ -42,8 +42,8 @@ public class UndockTabPopupMenu
         pane = tp;
         component = c;
         
-        JMenuItem closeAllMenuItem = new JMenuItem("Close all");
-        JMenuItem closeOtherMenuItem = new JMenuItem("Close others");
+        JMenuItem closeAllMenuItem = new JMenuItem("Close all tabs");
+        JMenuItem closeOtherMenuItem = new JMenuItem("Close other tabs");
         
         closeAllMenuItem.addActionListener(listener -> closeAll());
         closeOtherMenuItem.addActionListener(listener -> closeOther());

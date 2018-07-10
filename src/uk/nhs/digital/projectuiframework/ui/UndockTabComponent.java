@@ -38,7 +38,6 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
-import uk.nhs.digital.safetycase.ui.systemeditor.UndockTabPopupMenu;
 
 /**
  *
