@@ -248,7 +248,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         });
         toolsMenu.add(libraryMenuItem);
 
-        undeleteMenuItem.setText("Undelete");
+        undeleteMenuItem.setText("Undelete and purge");
         undeleteMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 undeleteMenuItemActionPerformed(evt);
