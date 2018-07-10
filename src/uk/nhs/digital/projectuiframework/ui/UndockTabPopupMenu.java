@@ -24,8 +24,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
 import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
-import uk.nhs.digital.projectuiframework.ui.SaveRejectedException;
-import uk.nhs.digital.projectuiframework.ui.UndockTabComponent;
 
 /**
  *
