@@ -684,8 +684,8 @@ public class SafetyReportEditor
                     ssSB.append(H2_END);
                     ssSB.append(P_START);
                     ssSB.append("Sub-System Version: ");
-                    //ssSB.append(ss.getAttributeValue("Version"));
-                    ssSB.append(SmartProject.getProject().getApplicationIdentifier());
+                    ssSB.append(ss.getAttributeValue("Version"));
+                    //ssSB.append(SmartProject.getProject().getApplicationIdentifier());
                     ssSB.append(P_END);
                     ssSB.append(P_START);
                     ssSB.append(ss.getAttributeValue("Description"));
@@ -1090,6 +1090,9 @@ private Persistable findParent(Persistable ch, String parentType)
         } catch (Exception e) {
             e.printStackTrace();
             return "No Hazards found.";
+        }
+        if(hl == null){
+            return (htSB.append("No Hazards found.</td>\n").append(HAZARD_TABLE_END)).toString();
         }
          for (Persistable p : hl) {
                 if (!p.isDeleted()) {
