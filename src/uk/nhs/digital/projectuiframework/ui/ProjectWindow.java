@@ -552,6 +552,7 @@ public class ProjectWindow extends javax.swing.JFrame {
             if (r == JOptionPane.NO_OPTION)
                 return;
         }
+        SmartProject.getProject().shutdown();
         System.exit(0);
     }//GEN-LAST:event_mainMenuExitActionPerformed
 
@@ -671,6 +672,7 @@ public class ProjectWindow extends javax.swing.JFrame {
             if (r == JOptionPane.NO_OPTION)
                 return;
         }
+        SmartProject.getProject().shutdown();
         this.dispose();
     }//GEN-LAST:event_formWindowClosing
 

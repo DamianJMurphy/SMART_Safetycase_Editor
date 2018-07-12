@@ -123,6 +123,16 @@ public class SmartProject
     }
     
     @Override
+    public void shutdown() {
+        try {
+            metaFactory.getDatabase().shutdown(true);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @Override
     public void log(String message, Throwable thrown) {
         log(Level.INFO, message, thrown);
     }

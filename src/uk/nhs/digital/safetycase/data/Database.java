@@ -71,6 +71,7 @@ public class Database {
     public void shutdown(boolean compact) 
             throws Exception
     {
+        connection.commit();
         String sql = (compact) ? "SHUTDOWN COMPACT" : "SHUTDOWN";
         try (Statement s = connection.createStatement()) {
             s.execute(sql);
