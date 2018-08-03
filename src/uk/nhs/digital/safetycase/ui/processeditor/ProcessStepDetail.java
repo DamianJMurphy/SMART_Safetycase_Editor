@@ -57,6 +57,7 @@ public class ProcessStepDetail
      * Creates new form ProcessStepDetail
      * @param ps
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public ProcessStepDetail(ProcessStep ps) {
         initComponents();
         processStep = ps;

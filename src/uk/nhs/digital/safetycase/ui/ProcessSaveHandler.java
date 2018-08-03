@@ -61,7 +61,7 @@ public class ProcessSaveHandler
             process.setAttribute("GraphXml", new Attribute(xml));
             pf.put(process);
             SmartProject.getProject().editorEvent(Project.UPDATE, process);
-            
+            pge.setModified(false);
        }
 // Re-add this later
 //       catch (BrokenConnectionException bce) {
@@ -137,10 +137,10 @@ public class ProcessSaveHandler
                     ps.setAttribute("GraphCellId", cellId);
                     ps.setAttribute("Name", n);
                     ps.setAttribute("ProcessID", processid);
-                    if (style.trim().length() == 0) {
+                    if (style.contentEquals("whiteSpace=wrap")) {
                         ps.setAttribute("Type", "Activity");
                     } else {
-                        if (style.contentEquals("rhombus")) {
+                        if (style.contains("rhombus")) {
                             ps.setAttribute("Type", "Decision");
                         } else {
                             if (n.equals("Start"))

@@ -423,7 +423,7 @@ public class Database {
         java.lang.System.out.println(sb.toString());
         try (Statement s = connection.createStatement()) {
             if (s.executeUpdate(sb.toString()) != 1) {
-                throw new Exception("Cannot update object - not found");
+                throw new Exception("Cannot update object - not found (Relationship " + source + " ID " + rid);
             }
             connection.commit();
         }

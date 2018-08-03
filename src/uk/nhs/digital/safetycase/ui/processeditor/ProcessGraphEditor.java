@@ -195,13 +195,13 @@ public class ProcessGraphEditor
 						new ImageIcon(
 								ProcessGraphEditor.class
 										.getResource("/uk/nhs/digital/safetycase/ui/processeditor/activity.png")),
-						null, 160, 120, "activity");
+						"whiteSpace=wrap", 160, 120, "activity");
 		processPalette
 				.addTemplate("Decision",
 						new ImageIcon(
 								ProcessGraphEditor.class
 										.getResource("/uk/nhs/digital/safetycase/ui/processeditor/decision.png")),
-						"rhombus", 160, 160, "");
+						"rhombus;whiteSpace=wrap", 160, 160, "");
 		processPalette
 				.addEdgeTemplate("Straight",
 						new ImageIcon(

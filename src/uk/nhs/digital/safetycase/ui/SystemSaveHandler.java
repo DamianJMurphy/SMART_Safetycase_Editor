@@ -165,6 +165,7 @@ public class SystemSaveHandler
             JOptionPane.showMessageDialog(sge, "Failed to save. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in SystemSaveEditor", ex);
         }
+        sge.setModified(false);
     }
     
     private void deleteRemovedNodes()

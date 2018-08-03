@@ -507,13 +507,14 @@ public class BasicGraphEditor extends JPanel
                         @Override
 			public void mouseReleased(MouseEvent e)
 			{
+//                            System.out.println("***\nMouse released: " + "Mod: " + e.getModifiers() + " ExtMod: " + e.getModifiersEx() + " State: " + MouseEvent.getMouseModifiersText(e.getModifiers()) + " " + MouseEvent.getModifiersExText(e.getModifiersEx()));
 				if (e.isPopupTrigger())
 				{
 					showGraphPopupMenu(e);
 				} else {
                                     setModified(true);
                                 }
-                                
+                                e.consume();
 			}
 
 		});

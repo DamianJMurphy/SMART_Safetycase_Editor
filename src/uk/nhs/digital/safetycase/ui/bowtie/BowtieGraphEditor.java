@@ -107,6 +107,7 @@ public class BowtieGraphEditor
 		super("mxGraph Editor", new CustomGraphComponent(new CustomGraph(), h));
                 init(this.graphComponent);
                 hazardId = h;
+                this.graphComponent.getGraph().setCellsCloneable(false);
                 
 	}
 

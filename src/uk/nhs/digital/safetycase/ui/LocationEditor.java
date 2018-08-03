@@ -96,7 +96,7 @@ public class LocationEditor extends javax.swing.JPanel
 
         jLabel1.setText("Name");
 
-        jLabel2.setText("Mnemonic");
+        jLabel2.setText("Acronym");
 
         jLabel3.setText("Description");
 
@@ -165,7 +165,7 @@ public class LocationEditor extends javax.swing.JPanel
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                            .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
                             .addComponent(mnemonicTextField)))
                     .addComponent(parentLocationComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(17, 17, 17))

@@ -538,7 +538,7 @@ public class ProjectEditor
                 if (wip == 1) {
                     sb.append(" currently work in progress.");
                 } else if (accepted == 1) {
-                    sb.append(" within acceptable limits of likelyhood and severity.");
+                    sb.append(" within acceptable limits of likelihood and severity.");
                 } else if (justified == 1) {
                     sb.append(" outside those limits but are considered clinically-justified.\n\n");
                 } else {
@@ -559,7 +559,7 @@ public class ProjectEditor
                     sb.append(" is ");
                 else 
                     sb.append(" are ");
-                sb.append(" within acceptable limits of likelyhood and severity and ");
+                sb.append(" within acceptable limits of likelihood and severity and ");
                 sb.append(justified);
                 if (justified == 1)
                     sb.append(" is ");
