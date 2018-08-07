@@ -193,6 +193,8 @@ public class IssuesLogEditor
 
         add(controlsPanel);
 
+        jScrollPane2.setMinimumSize(new java.awt.Dimension(22, 200));
+
         issuesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -204,6 +206,7 @@ public class IssuesLogEditor
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        issuesTable.setMinimumSize(new java.awt.Dimension(60, 200));
         jScrollPane2.setViewportView(issuesTable);
 
         add(jScrollPane2);

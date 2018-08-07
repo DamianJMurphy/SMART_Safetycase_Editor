@@ -146,34 +146,34 @@ public class ProcessStepDetail
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel2 = new javax.swing.JLabel();
+        namePanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
         hazardsPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         hazardsTable = new javax.swing.JTable();
         editSelectedHazardButton = new javax.swing.JButton();
-        editLinksButton = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(100, 20), new java.awt.Dimension(100, 20), new java.awt.Dimension(100, 20));
         directLinksOnlyCheckBox = new javax.swing.JCheckBox();
+        editLinksButton = new javax.swing.JButton();
+
+        jLabel2.setText("Description");
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Process step"));
         setMaximumSize(new java.awt.Dimension(695, 505));
         setMinimumSize(new java.awt.Dimension(695, 505));
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
         jLabel1.setText("Name");
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 31, -1, -1));
 
         nameTextField.setEditable(false);
-        add(nameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(109, 29, 569, -1));
-
-        jLabel2.setText("Description");
-        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 66, -1, -1));
 
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
@@ -191,7 +191,44 @@ public class ProcessStepDetail
         });
         jScrollPane1.setViewportView(descriptionTextArea);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 87, 661, -1));
+        jLabel3.setText("Description");
+
+        javax.swing.GroupLayout namePanelLayout = new javax.swing.GroupLayout(namePanel);
+        namePanel.setLayout(namePanelLayout);
+        namePanelLayout.setHorizontalGroup(
+            namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(namePanelLayout.createSequentialGroup()
+                .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(namePanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE))
+                    .addGroup(namePanelLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(namePanelLayout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(namePanelLayout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(20, 20, 20)
+                                .addComponent(nameTextField)))))
+                .addContainerGap())
+        );
+        namePanelLayout.setVerticalGroup(
+            namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(namePanelLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addGap(2, 2, 2)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        add(namePanel);
+        add(filler1);
 
         hazardsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Identified hazards"));
 
@@ -222,7 +259,7 @@ public class ProcessStepDetail
             .addGroup(hazardsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 905, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, hazardsPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(editSelectedHazardButton)))
@@ -232,21 +269,12 @@ public class ProcessStepDetail
             hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(hazardsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(editSelectedHazardButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(editSelectedHazardButton))
         );
 
-        add(hazardsPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 171, 661, 210));
-
-        editLinksButton.setText("Links...");
-        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editLinksButtonActionPerformed(evt);
-            }
-        });
-        add(editLinksButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 390, -1, -1));
+        add(hazardsPanel);
 
         linksTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -261,12 +289,43 @@ public class ProcessStepDetail
         ));
         jScrollPane3.setViewportView(linksTable);
 
-        add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 420, 660, 180));
-        add(filler1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 610, 660, -1));
-
         directLinksOnlyCheckBox.setSelected(true);
         directLinksOnlyCheckBox.setText("Show direct links only");
-        add(directLinksOnlyCheckBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 390, -1, -1));
+
+        editLinksButton.setText("Links...");
+        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editLinksButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(editLinksButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(directLinksOnlyCheckBox))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(directLinksOnlyCheckBox)
+                    .addComponent(editLinksButton))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
@@ -305,10 +364,13 @@ public class ProcessStepDetail
     private javax.swing.JTable hazardsTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable linksTable;
+    private javax.swing.JPanel namePanel;
     private javax.swing.JTextField nameTextField;
     // End of variables declaration//GEN-END:variables
 
