@@ -669,8 +669,10 @@ public class ProjectWindow extends javax.swing.JFrame {
         }
         if (outstandingsaves) {
             int r = JOptionPane.showConfirmDialog(rootPane, "There are changed projects. Exit without saving ?", "Unsaved projects", JOptionPane.YES_NO_OPTION);
-            if (r == JOptionPane.NO_OPTION)
+            if (r == JOptionPane.NO_OPTION) {
+                JOptionPane.showMessageDialog(rootPane, "Save your work, then exit", "Save work", JOptionPane.OK_OPTION);
                 return;
+            }
         }
         SmartProject.getProject().shutdown();
         this.dispose();

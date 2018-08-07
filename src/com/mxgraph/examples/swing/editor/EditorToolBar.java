@@ -87,12 +87,12 @@ public class EditorToolBar extends JToolBar
 		add(editor.bind("Delete", mxGraphActions.getDeleteAction(),
 				"/com/mxgraph/examples/swing/images/delete.gif"));
 
-		addSeparator();
+//		addSeparator();
 
-		add(editor.bind("Undo", new HistoryAction(true),
-				"/com/mxgraph/examples/swing/images/undo.gif"));
-		add(editor.bind("Redo", new HistoryAction(false),
-				"/com/mxgraph/examples/swing/images/redo.gif"));
+//		add(editor.bind("Undo", new HistoryAction(true),
+//				"/com/mxgraph/examples/swing/images/undo.gif"));
+//		add(editor.bind("Redo", new HistoryAction(false),
+//				"/com/mxgraph/examples/swing/images/redo.gif"));
 
 		addSeparator();
 

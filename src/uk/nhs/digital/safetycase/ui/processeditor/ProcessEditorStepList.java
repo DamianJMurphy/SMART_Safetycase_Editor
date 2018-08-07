@@ -70,7 +70,6 @@ public class ProcessEditorStepList extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
-        cancelButton = new javax.swing.JButton();
         okButton = new javax.swing.JButton();
 
         stepList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -92,13 +91,6 @@ public class ProcessEditorStepList extends javax.swing.JPanel {
         descriptionTextArea.setWrapStyleWord(true);
         jScrollPane2.setViewportView(descriptionTextArea);
 
-        cancelButton.setText("Discard");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-
         okButton.setText("Save");
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -116,8 +108,7 @@ public class ProcessEditorStepList extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(okButton, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(93, 93, 93))
                     .addComponent(typeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 871, Short.MAX_VALUE)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
@@ -142,9 +133,7 @@ public class ProcessEditorStepList extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(okButton)
-                    .addComponent(cancelButton))
+                .addComponent(okButton)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -154,12 +143,6 @@ public class ProcessEditorStepList extends javax.swing.JPanel {
         typeTextField.setText(ps.getAttributeValue("Type"));
         descriptionTextArea.setText(ps.getAttributeValue("Description"));
     }//GEN-LAST:event_stepListValueChanged
-
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        ProcessStep ps = steps.get(stepList.getSelectedIndex());
-        typeTextField.setText(ps.getAttributeValue("Type"));
-        descriptionTextArea.setText(ps.getAttributeValue("Description"));
-    }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         ProcessStep ps = steps.get(stepList.getSelectedIndex());
@@ -175,7 +158,6 @@ public class ProcessEditorStepList extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelButton;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;

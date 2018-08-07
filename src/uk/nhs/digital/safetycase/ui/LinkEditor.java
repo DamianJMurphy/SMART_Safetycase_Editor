@@ -470,10 +470,12 @@ public class LinkEditor extends javax.swing.JPanel {
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        
+        saveButton.setEnabled(false);
         int selectedTarget = targetList.getSelectedIndex();
-        if (selectedTarget == -1)
+        if (selectedTarget == -1) {
+            saveButton.setEnabled(true);
             return;
+        }
         Persistable target = targetInstances.get(selectedTarget);
         if (editedRelationship != null) {
             // Update the relationship (call Database.save()) and the relationships table view
@@ -504,7 +506,10 @@ public class LinkEditor extends javax.swing.JPanel {
             }
         }
         editedRelationship = null;
-        targetList.clearSelection();
+        targetList.setModel(new DefaultListModel());
+        commentTextArea.setText("");
+        linkDetailPanel.setEnabled(false);
+        saveButton.setEnabled(false);
     }//GEN-LAST:event_saveButtonActionPerformed
 
 

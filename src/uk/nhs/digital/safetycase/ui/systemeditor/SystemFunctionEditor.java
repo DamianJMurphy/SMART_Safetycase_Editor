@@ -59,6 +59,7 @@ public class SystemFunctionEditor extends javax.swing.JPanel
         linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());
         
         SmartProject.getProject().addNotificationSubscriber(this);
+        editLinksButton.setVisible(false);
               
     }    
     @Override
@@ -233,10 +234,11 @@ public class SystemFunctionEditor extends javax.swing.JPanel
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
 
          try {
-        //systemFunction.setAttribute("Name", nameTextField.getText());
-        sf.setAttribute("Description", descriptionTextArea.getText());
-        MetaFactory.getInstance().getFactory(sf.getDatabaseObjectName()).put(sf);
-        //this.parent.dispose();
+            //systemFunction.setAttribute("Name", nameTextField.getText());
+            sf.setAttribute("Description", descriptionTextArea.getText());
+            MetaFactory.getInstance().getFactory(sf.getDatabaseObjectName()).put(sf);
+            SmartProject.getProject().editorEvent(Project.UPDATE,sf);
+            //this.parent.dispose();
          }
          catch (Exception e) {
                 e.printStackTrace();

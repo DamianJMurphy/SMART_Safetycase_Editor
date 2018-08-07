@@ -71,7 +71,7 @@ import uk.nhs.digital.safetycase.ui.systemeditor.SystemGraphEditor;
  */
 public class SafetyReportEditor
         extends javax.swing.JPanel
-        implements uk.nhs.digital.safetycase.ui.PersistableEditor {
+        implements uk.nhs.digital.safetycase.ui.PersistableEditor, uk.nhs.digital.safetycase.ui.GraphicalEditor {
 
     private EditorComponent editorComponent = null;
     private Project project = null;
@@ -296,7 +296,7 @@ public class SafetyReportEditor
                 .addComponent(introductionEditor, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE))
         );
 
-        sectionsPanel.addTab("Introduction", introPanel);
+        sectionsPanel.addTab("<html><b>Introduction</b></html>", introPanel);
 
         javax.swing.GroupLayout crmPanelLayout = new javax.swing.GroupLayout(crmPanel);
         crmPanel.setLayout(crmPanelLayout);
@@ -309,7 +309,7 @@ public class SafetyReportEditor
             .addComponent(crmTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
-        sectionsPanel.addTab("Clinical risk management", crmPanel);
+        sectionsPanel.addTab("<html><b>Clinical risk management</b></html>", crmPanel);
 
         javax.swing.GroupLayout safetySystemPanelLayout = new javax.swing.GroupLayout(safetySystemPanel);
         safetySystemPanel.setLayout(safetySystemPanelLayout);
@@ -322,7 +322,7 @@ public class SafetyReportEditor
             .addComponent(safetyTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
-        sectionsPanel.addTab("Safety statement", safetySystemPanel);
+        sectionsPanel.addTab("<html><b>Safety statement</b></html>", safetySystemPanel);
 
         javax.swing.GroupLayout qaPanelLayout = new javax.swing.GroupLayout(qaPanel);
         qaPanel.setLayout(qaPanelLayout);
@@ -335,7 +335,7 @@ public class SafetyReportEditor
             .addComponent(qaTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
-        sectionsPanel.addTab("QA and Development", qaPanel);
+        sectionsPanel.addTab("<html><b>QA and Development</b></html>", qaPanel);
 
         javax.swing.GroupLayout configPanelLayout = new javax.swing.GroupLayout(configPanel);
         configPanel.setLayout(configPanelLayout);
@@ -348,7 +348,7 @@ public class SafetyReportEditor
             .addComponent(configTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
-        sectionsPanel.addTab("Config management", configPanel);
+        sectionsPanel.addTab("<html><b>Config management</b></html>", configPanel);
 
         buttonBar.setRollover(true);
 

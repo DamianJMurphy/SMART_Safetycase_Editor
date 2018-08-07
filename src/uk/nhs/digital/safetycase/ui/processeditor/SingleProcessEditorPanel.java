@@ -50,7 +50,7 @@ public class SingleProcessEditorPanel
         extends javax.swing.JPanel 
 {
 
-    private final String[] linkcolumns = {"Type", "Name", "Comment", "Via"};
+    private final String[] linkcolumns = {"Name", "Type", "Comment", "Via"};
     private JDialog parent = null;
     private SingleProcessEditorForm containerForm = null;
 //    private ProcessEditor editor = null;
@@ -105,15 +105,15 @@ public class SingleProcessEditorPanel
     String getProcessName() { return nameTextField.getText(); }
     
     void populateLinks() 
-            throws Exception
+//            throws Exception
     {
         if (processid == -1) {
             return;
         }
-        if (process == null) {
-            process = (Process) MetaFactory.getInstance().getFactory("Process").get(processid);
-        }
         try {
+            if (process == null) {
+                process = (Process) MetaFactory.getInstance().getFactory("Process").get(processid);
+            }
             
 //            HashMap<String,ArrayList<Relationship>> rels = hazard.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
@@ -220,6 +220,11 @@ public class SingleProcessEditorPanel
 
         directLinksOnlyCheckBox.setSelected(true);
         directLinksOnlyCheckBox.setText("Show direct links only");
+        directLinksOnlyCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                directLinksOnlyCheckBoxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout linksPanelLayout = new javax.swing.GroupLayout(linksPanel);
         linksPanel.setLayout(linksPanelLayout);
@@ -369,7 +374,14 @@ public class SingleProcessEditorPanel
         linkEditor.add(new LinkEditor(process).setParent(linkEditor));
         linkEditor.pack();
         linkEditor.setVisible(true);
-
+        
+        try {
+            populateLinks();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+/*
         try {
             HashMap<String,ArrayList<Relationship>> rels = process.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
@@ -395,7 +407,7 @@ public class SingleProcessEditorPanel
             JOptionPane.showMessageDialog(this, "Failed to load existing links for Process. Send logs to support", "Display failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to load existing links in SingleProcessEditor", e);
         }
-
+*/
     }//GEN-LAST:event_linksEditorButtonActionPerformed
 
     private void processEditorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processEditorButtonActionPerformed
@@ -447,6 +459,10 @@ public class SingleProcessEditorPanel
     private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
         containerForm.setModified(true);
     }//GEN-LAST:event_descriptionTextAreaKeyTyped
+
+    private void directLinksOnlyCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directLinksOnlyCheckBoxActionPerformed
+        populateLinks();
+    }//GEN-LAST:event_directLinksOnlyCheckBoxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

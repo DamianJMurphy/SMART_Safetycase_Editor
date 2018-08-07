@@ -769,110 +769,109 @@ public class SmartProject
                 break;
             }
         }
-        if (containerNode == null)
-            return;
+        if (containerNode != null) {
 
-        TreePath pathToContainer = new TreePath(containerNode.getPath());
-        boolean expanded = projectWindow.getProjectTree().isExpanded(pathToContainer);
-        
-        DefaultMutableTreeNode eventNode = null;
-        try {
-            eventNode = getTreeNode(p);
-        }
-        catch (Exception e) {
-            log("Cannot make eventNode processing editor notification event", e);
-            return;
-        }
-        
-        // TODO: On add, inserting first breaks the "select index in the existing table" (though not for existing entries). FIX.
-        switch (ev) {
-            case uk.nhs.digital.projectuiframework.Project.ADD:
-                treeModel.insertNodeInto(eventNode, containerNode, containerNode.getChildCount());
-                if (p.getDatabaseObjectName().contentEquals("Project"))
-                    fillOutNewProject(eventNode, p.getId());
-                break;
-            case uk.nhs.digital.projectuiframework.Project.DELETE:
-                for (int i = 0; i < containerNode.getChildCount(); i++) {
-                    DefaultMutableTreeNode node = (DefaultMutableTreeNode)containerNode.getChildAt(i);
-                    if (containerNode.getUserObject().toString().contentEquals("Hazard")) {
-                        if (node.getUserObject().toString().contentEquals(p.getTitle())) {
-                            treeModel.removeNodeFromParent(node);
-                            break;                            
+            TreePath pathToContainer = new TreePath(containerNode.getPath());
+            boolean expanded = projectWindow.getProjectTree().isExpanded(pathToContainer);
+
+            DefaultMutableTreeNode eventNode = null;
+            try {
+                eventNode = getTreeNode(p);
+            } catch (Exception e) {
+                log("Cannot make eventNode processing editor notification event", e);
+                return;
+            }
+
+            // TODO: On add, inserting first breaks the "select index in the existing table" (though not for existing entries). FIX.
+            switch (ev) {
+                case uk.nhs.digital.projectuiframework.Project.ADD:
+                    treeModel.insertNodeInto(eventNode, containerNode, containerNode.getChildCount());
+                    if (p.getDatabaseObjectName().contentEquals("Project")) {
+                        fillOutNewProject(eventNode, p.getId());
+                    }
+                    break;
+                case uk.nhs.digital.projectuiframework.Project.DELETE:
+                    for (int i = 0; i < containerNode.getChildCount(); i++) {
+                        DefaultMutableTreeNode node = (DefaultMutableTreeNode) containerNode.getChildAt(i);
+                        if (containerNode.getUserObject().toString().contentEquals("Hazard")) {
+                            if (node.getUserObject().toString().contentEquals(p.getTitle())) {
+                                treeModel.removeNodeFromParent(node);
+                                break;
+                            }
+                        } else if (containerNode.getUserObject().toString().contentEquals("Systems")) {
+                            // containerNode is grandparent of event node, so remove eventNode's parent
+                            if (node.getUserObject().toString().contentEquals(p.getTitle())) {
+                                treeModel.removeNodeFromParent(node);
+                                break;
+                            }
+                        } else {
+                            Persistable pr = (Persistable) node.getUserObject();
+                            if (pr.getTitle().contentEquals(p.getTitle()) && (pr.getId() == p.getId())) {
+                                treeModel.removeNodeFromParent(node);
+                                break;
+                            }
                         }
-                    } else if (containerNode.getUserObject().toString().contentEquals("Systems")) {
-                        // containerNode is grandparent of event node, so remove eventNode's parent
-                        if (node.getUserObject().toString().contentEquals(p.getTitle())) {
+                    }
+                    break;
+                case uk.nhs.digital.projectuiframework.Project.UPDATE:
+                    // Find the node we're replacing in the container node, by type and name
+                    boolean foundByName = false;
+                    for (int i = 0; i < containerNode.getChildCount(); i++) {
+                        DefaultMutableTreeNode node = (DefaultMutableTreeNode) containerNode.getChildAt(i);
+                        if (node.toString().contentEquals(eventNode.toString())) {
                             treeModel.removeNodeFromParent(node);
-                            break;
-                        }
-                    } else  {
-                        Persistable pr = (Persistable)node.getUserObject();
-                        if (pr.getTitle().contentEquals(p.getTitle()) && (pr.getId() == p.getId())) {
-                            treeModel.removeNodeFromParent(node);
+                            treeModel.insertNodeInto(eventNode, containerNode, i);
+                            foundByName = true;
                             break;
                         }
                     }
-                }
-                break;
-            case uk.nhs.digital.projectuiframework.Project.UPDATE:    
-                // Find the node we're replacing in the container node, by type and name
-                boolean foundByName = false;
-                for (int i = 0; i < containerNode.getChildCount(); i++) {
-                    DefaultMutableTreeNode node = (DefaultMutableTreeNode)containerNode.getChildAt(i);
-                    if (node.toString().contentEquals(eventNode.toString())) {
-                        treeModel.removeNodeFromParent(node);
-                        treeModel.insertNodeInto(eventNode, containerNode, i);
-                        foundByName = true;
-                        break;
-                    }
-                }
-                if (!foundByName) {
-                    // Didn't find by name, probably because the event we're being notified of is a
-                    // change of name. Search by type and id instead
-                    nodes = containerNode.depthFirstEnumeration();
-                    while (nodes.hasMoreElements()) {
-                        DefaultMutableTreeNode node = (DefaultMutableTreeNode)nodes.nextElement();
-                        Object n = node.getUserObject();
-                        if (n instanceof uk.nhs.digital.safetycase.data.Persistable) {
-                            Persistable existing = (Persistable)n;
-                            if (existing.getDatabaseObjectName().contentEquals(p.getDatabaseObjectName())) {
-                                if (existing.getId() == p.getId()) {
-                                    // If this is a Hazard, we need to replace the parent of "node" wiht the
-                                    // event node.
-                                    if (existing.getDatabaseObjectName().contentEquals("Hazard")) {
-                                        node = (DefaultMutableTreeNode)node.getParent();
-                                        int i = treeModel.getIndexOfChild(containerNode, node);
-                                        treeModel.removeNodeFromParent(node);
-                                        treeModel.insertNodeInto(eventNode, containerNode, i);
-                                    } else if (existing.getDatabaseObjectName().contentEquals("System")) {
-                                        node = (DefaultMutableTreeNode)node.getParent();
-                                        int i = treeModel.getIndexOfChild(containerNode, node);
-                                        treeModel.removeNodeFromParent(node);
-                                        treeModel.insertNodeInto(eventNode, containerNode, i);
-                                    } else {
-                                        int i = treeModel.getIndexOfChild(containerNode, node);
-                                        treeModel.removeNodeFromParent(node);
-                                        try {
+                    if (!foundByName) {
+                        // Didn't find by name, probably because the event we're being notified of is a
+                        // change of name. Search by type and id instead
+                        nodes = containerNode.depthFirstEnumeration();
+                        while (nodes.hasMoreElements()) {
+                            DefaultMutableTreeNode node = (DefaultMutableTreeNode) nodes.nextElement();
+                            Object n = node.getUserObject();
+                            if (n instanceof uk.nhs.digital.safetycase.data.Persistable) {
+                                Persistable existing = (Persistable) n;
+                                if (existing.getDatabaseObjectName().contentEquals(p.getDatabaseObjectName())) {
+                                    if (existing.getId() == p.getId()) {
+                                        // If this is a Hazard, we need to replace the parent of "node" wiht the
+                                        // event node.
+                                        if (existing.getDatabaseObjectName().contentEquals("Hazard")) {
+                                            node = (DefaultMutableTreeNode) node.getParent();
+                                            int i = treeModel.getIndexOfChild(containerNode, node);
+                                            treeModel.removeNodeFromParent(node);
                                             treeModel.insertNodeInto(eventNode, containerNode, i);
+                                        } else if (existing.getDatabaseObjectName().contentEquals("System")) {
+                                            node = (DefaultMutableTreeNode) node.getParent();
+                                            int i = treeModel.getIndexOfChild(containerNode, node);
+                                            treeModel.removeNodeFromParent(node);
+                                            treeModel.insertNodeInto(eventNode, containerNode, i);
+                                        } else {
+                                            int i = treeModel.getIndexOfChild(containerNode, node);
+                                            treeModel.removeNodeFromParent(node);
+                                            try {
+                                                treeModel.insertNodeInto(eventNode, containerNode, i);
+                                            } catch (ArrayIndexOutOfBoundsException aiobe) {
+                                                containerNode.add(eventNode);
+                                                treeModel.nodeChanged(containerNode);
+                                            }
                                         }
-                                        catch (ArrayIndexOutOfBoundsException aiobe) {
-                                            containerNode.add(eventNode);
-                                            treeModel.nodeChanged(containerNode);
-                                        }
+                                        break;
                                     }
-                                    break;                                    
                                 }
                             }
                         }
                     }
-                }
-                break;
-            default:
-                return;
-        }
-        if (expanded)
-            projectWindow.getProjectTree().expandPath(pathToContainer);
-        
+                    break;
+                default:
+                    return;
+            }
+            if (expanded) {
+                projectWindow.getProjectTree().expandPath(pathToContainer);
+            }
+        }    
         // Do this to stop subscribers removing themselves as a result of the
         // notification, and causing a concurrency exception.
         //

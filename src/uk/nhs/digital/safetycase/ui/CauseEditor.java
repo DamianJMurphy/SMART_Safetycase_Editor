@@ -72,6 +72,8 @@ public class CauseEditor extends javax.swing.JPanel
         catch (Exception e) {
             SmartProject.getProject().log("Failed to initialise CauseEditor", e);
         }
+        conditionsComboBox.setVisible(false);
+        jLabel2.setVisible(false);
     }
 
     private void populateLinks() {
