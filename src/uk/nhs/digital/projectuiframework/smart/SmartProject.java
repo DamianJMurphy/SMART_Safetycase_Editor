@@ -582,7 +582,7 @@ public class SmartProject
         try {
             p = (Persistable)node.getUserObject();
             String dbo = p.getDatabaseObjectName();
-            if (!dbo.contentEquals("System") && !node.isLeaf())
+            if (!dbo.startsWith("System") && !node.isLeaf())
                 return null;
             return icons.get(p.getDatabaseObjectName());
         }

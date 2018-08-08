@@ -64,6 +64,7 @@ public class ProcessStepDetail
         SmartProject.getProject().addNotificationSubscriber(this);
         DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
         hazardsTable.setModel(dtm);
+        hazardsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         dtm = new DefaultTableModel(linkcolumns, 0);
         linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         linksTable.setDefaultEditor(Object.class, null);

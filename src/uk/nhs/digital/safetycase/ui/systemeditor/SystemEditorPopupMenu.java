@@ -25,6 +25,8 @@ import javax.swing.TransferHandler;
 import com.mxgraph.examples.swing.editor.EditorActions.HistoryAction;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.util.mxResources;
+import uk.nhs.digital.safetycase.ui.GrowCanvasAction;
+import uk.nhs.digital.safetycase.ui.ShrinkCanvasAction;
 import uk.nhs.digital.safetycase.ui.SystemFunctionLinkAction;
 
 public class SystemEditorPopupMenu extends JPopupMenu {
@@ -108,6 +110,10 @@ public class SystemEditorPopupMenu extends JPopupMenu {
 
         add(editor.bind(mxResources.get("selectAll"), mxGraphActions
                 .getSelectAllAction()));
+                addSeparator();
+                add(editor.bind("Grow canvas", new GrowCanvasAction(editor.getGraphComponent()), "/com/mxgraph/examples/swing/images/maximize.gif"));
+                add(editor.bind("Shrink canvas", new ShrinkCanvasAction(editor.getGraphComponent()), "/com/mxgraph/examples/swing/images/collapse.gif"));
+        
     }
 
 }

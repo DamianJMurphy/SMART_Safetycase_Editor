@@ -26,7 +26,8 @@ import com.mxgraph.examples.swing.editor.EditorActions.HistoryAction;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.util.mxResources;
 import uk.nhs.digital.safetycase.ui.AddHazardAction;
-import uk.nhs.digital.safetycase.ui.ProcessStepLinkAction;
+import uk.nhs.digital.safetycase.ui.GrowCanvasAction;
+import uk.nhs.digital.safetycase.ui.ShrinkCanvasAction;
 import uk.nhs.digital.safetycase.ui.ProcessStepDetailsAction;
 
 public class ProcessEditorPopupMenu extends JPopupMenu
@@ -112,6 +113,10 @@ public class ProcessEditorPopupMenu extends JPopupMenu
 
 		add(editor.bind(mxResources.get("selectAll"), mxGraphActions
 				.getSelectAllAction()));
+                
+                addSeparator();
+                add(editor.bind("Grow canvas", new GrowCanvasAction(editor.getGraphComponent()), "/com/mxgraph/examples/swing/images/maximize.gif"));
+                add(editor.bind("Shrink canvas", new ShrinkCanvasAction(editor.getGraphComponent()), "/com/mxgraph/examples/swing/images/collapse.gif"));
 	}
 
 }

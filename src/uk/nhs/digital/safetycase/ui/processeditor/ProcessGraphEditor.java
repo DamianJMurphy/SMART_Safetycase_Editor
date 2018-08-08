@@ -22,6 +22,7 @@ import com.mxgraph.util.mxXmlUtils;
 import com.mxgraph.view.mxGraph;
 import java.awt.event.MouseEvent;
 import java.awt.print.PageFormat;
+import java.awt.print.Paper;
 import java.util.HashMap;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -142,6 +143,9 @@ public class ProcessGraphEditor
         {
                 PageFormat format = new PageFormat();
                 format.setOrientation(PageFormat.LANDSCAPE);
+                Paper p = format.getPaper();
+                p.setSize(p.getWidth() * 2, p.getHeight() * 2);
+                format.setPaper(p);
                 component.setPageFormat(format);
                 component.setAutoExtend(true);
                 

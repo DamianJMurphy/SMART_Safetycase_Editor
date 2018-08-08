@@ -10,6 +10,7 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.util.mxPoint;
 import com.mxgraph.view.mxCellState;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxGraphView;
 import java.util.Iterator;
 import java.util.List;
 import static uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor.numberFormat;
@@ -38,6 +39,7 @@ import static uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor.numberFormat
 			setAlternateEdgeStyle("edgeStyle=mxEdgeStyle.ElbowConnector;elbow=vertical");
 		}
 
+                public mxGraphView getCache() { return view; }
      
 		/**
 		 * Sets the edge template to be used to inserting edges.

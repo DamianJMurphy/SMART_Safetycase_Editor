@@ -26,8 +26,10 @@ import com.mxgraph.examples.swing.editor.EditorActions.HistoryAction;
 import com.mxgraph.swing.util.mxGraphActions;
 import com.mxgraph.util.mxResources;
 import uk.nhs.digital.safetycase.ui.AddHazardAction;
+import uk.nhs.digital.safetycase.ui.GrowCanvasAction;
 import uk.nhs.digital.safetycase.ui.ProcessStepLinkAction;
 import uk.nhs.digital.safetycase.ui.ProcessStepDetailsAction;
+import uk.nhs.digital.safetycase.ui.ShrinkCanvasAction;
 
 public class BowtieEditorPopupMenu extends JPopupMenu
 {
@@ -104,6 +106,10 @@ public class BowtieEditorPopupMenu extends JPopupMenu
 
 		add(editor.bind(mxResources.get("selectAll"), mxGraphActions
 				.getSelectAllAction()));
+                addSeparator();
+                add(editor.bind("Grow canvas", new GrowCanvasAction(editor.getGraphComponent()), "/com/mxgraph/examples/swing/images/maximize.gif"));
+                add(editor.bind("Shrink canvas", new ShrinkCanvasAction(editor.getGraphComponent()), "/com/mxgraph/examples/swing/images/collapse.gif"));
+                
 	}
 
 }
