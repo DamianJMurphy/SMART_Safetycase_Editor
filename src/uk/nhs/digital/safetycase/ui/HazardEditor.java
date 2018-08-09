@@ -722,8 +722,11 @@ public class HazardEditor extends javax.swing.JPanel
             int start = newBowtieTemplate.indexOf("__HAZARD_NAME__"); 
             sb.replace(start, start + "__HAZARD_NAME__".length(), summaryTextField.getText());
             xml = sb.toString();
+            bge.setHazardId(hazard.getId(), xml, true);
+        } else {
+            bge.setHazardId(hazard.getId(), xml, false);
         }
-        bge.setHazardId(hazard.getId(), xml);
+        
         if ((xml != null) && (xml.trim().length() > 0)) {
             HashMap<String,DiagramEditorElement> ex = getExistingBowtie(xml);
             if (ex != null)
@@ -771,6 +774,18 @@ public class HazardEditor extends javax.swing.JPanel
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        
+        String s = (String)conditionsComboBox.getSelectedItem();
+        if ((s == null) || (s.trim().length() == 0)) {
+            JOptionPane.showMessageDialog(this, "The hazard type must be given", "Incomplete data", JOptionPane.ERROR_MESSAGE);    
+            return;
+        }
+        s = summaryTextField.getText();
+        if ((s == null) || (s.trim().length() == 0)) {
+            JOptionPane.showMessageDialog(this, "The hazard must have a name", "Incomplete data", JOptionPane.ERROR_MESSAGE);    
+            return;
+        }
+        
         saveButton.setEnabled(false);
 
         if (statusComboBox.getSelectedIndex() == -1) {

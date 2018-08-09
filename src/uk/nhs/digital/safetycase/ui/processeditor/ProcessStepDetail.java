@@ -47,7 +47,7 @@ public class ProcessStepDetail
 {
 
     private static final String[] COLUMNS = {"Name", "Status", "Initial rating", "Residual rating"};
-    private final String[] linkcolumns = {"Type", "Name", "Comment", "Via"};
+    private final String[] linkcolumns = {"Name", "Type", "Comment", "Via"};
     
     private JDialog parent = null;
     private ProcessStep processStep = null;

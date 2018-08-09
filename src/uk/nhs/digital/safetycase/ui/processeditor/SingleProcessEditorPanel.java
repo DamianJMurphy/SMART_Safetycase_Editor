@@ -427,7 +427,8 @@ public class SingleProcessEditorPanel
         try {
             ProcessGraphEditor pge = new ProcessGraphEditor(process.getId());
             String xml = process.getAttributeValue("GraphXml");
-            pge.setProcessId(process.getId(), xml);
+            boolean newGraph = ((xml == null) || (xml.trim().length() == 0));
+            pge.setProcessId(process.getId(), xml, newGraph);
             PersistableFactory<ProcessStep> pfs = MetaFactory.getInstance().getFactory("ProcessStep");
             ArrayList<PersistableFilter> filter = new ArrayList<>();
             filter.add(new PersistableFilter("ProjectID", process.getAttributeValue("ProjectID")));

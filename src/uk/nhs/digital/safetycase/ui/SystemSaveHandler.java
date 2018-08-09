@@ -148,7 +148,7 @@ public class SystemSaveHandler
             }
             saveRootSystem(systemElements, projectid);
             sge.setExistingGraph(systemElements);
-            sge.setSystemId(system.getId(), xml);
+            sge.setSystemId(system.getId(), xml, false);
             java.lang.System.out.println(xml);
             SmartProject sp = SmartProject.getProject();
             if (systemExists) {

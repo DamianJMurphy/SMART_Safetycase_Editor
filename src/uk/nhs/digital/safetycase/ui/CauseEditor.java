@@ -44,7 +44,7 @@ public class CauseEditor extends javax.swing.JPanel
     private Cause cause = null;
     private boolean modified = false;
  
-    private final String[] linkcolumns = {"Type", "Name", "Comment", "Via"};
+    private final String[] linkcolumns = {"Name", "Type", "Comment", "Via"};
     private int newObjectProjectId = -1;
     /**
      * Creates new form HazardEditor

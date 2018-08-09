@@ -129,11 +129,13 @@ public class MetaFactory {
                     String m = r.getManagementClass();
                     if (includeauto || (m == null) || (!m.contentEquals("Diagram"))) {
                         ProjectLink l = makeProjectLink(start, r, d);
-                        if (!working.contains(l)) {
-                            working.add(l);
-                        } else {
-                            // TODO: add the details of the current link to the comments and remote path
-                            // if necessary
+                        if (l != null) {
+                            if (!working.contains(l)) {
+                                working.add(l);
+                            } else {
+                                // TODO: add the details of the current link to the comments and remote path
+                                // if necessary
+                            }
                         }
 //                    if (!working.add(l)) {
 //                        l.setChecked();
@@ -147,7 +149,7 @@ public class MetaFactory {
     
     private ProjectLink makeProjectLink(Persistable s, Relationship r, int d) 
             throws Exception
-    {
+    {        
         Persistable p = null;
         
         if (d == ProjectLink.FROM) {
@@ -155,7 +157,9 @@ public class MetaFactory {
         } else { 
             p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());            
         }
-        ProjectLink l = new ProjectLink(s, p, d);
+         if (s.getDatabaseObjectName().contentEquals(p.getDatabaseObjectName()) && (p.getId() == s.getId()))
+            return null;
+       ProjectLink l = new ProjectLink(s, p, d);
         
         boolean isDirect = false;
 

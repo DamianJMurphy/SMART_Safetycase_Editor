@@ -15,6 +15,7 @@ import org.w3c.dom.Document;
 import com.mxgraph.examples.swing.editor.BasicGraphEditor;
 import com.mxgraph.examples.swing.editor.EditorPalette;
 import com.mxgraph.io.mxCodec;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.util.mxGraphTransferable;
@@ -25,7 +26,9 @@ import com.mxgraph.util.mxXmlUtils;
 import com.mxgraph.view.mxGraph;
 import java.awt.event.MouseEvent;
 import java.awt.print.PageFormat;
+import java.awt.print.Paper;
 import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
@@ -65,7 +68,7 @@ public class SystemGraphEditor
         SmartProject.getProject().removeNotificationSubscriber(this);
     }
     
-    public void setSystemId(int i, String x) {
+    public void setSystemId(int i, String x, boolean newGraph) {
         systemId = i;
         getGraphComponent().getGraph().setModel(new mxGraphModel());
         getGraphComponent().getGraph().refresh();
@@ -76,6 +79,36 @@ public class SystemGraphEditor
         Document document = mxXmlUtils.parseXml(x);
         mxCodec codec = new mxCodec(document);
         codec.decode(document.getDocumentElement(), getGraphComponent().getGraph().getModel());
+        if (!newGraph) {
+            Map<String,Object> cells = ((mxGraphModel)getGraphComponent().getGraph().getModel()).getCells(); 
+            double minX = Double.MAX_VALUE;
+            double maxX = Double.MIN_VALUE;
+            double minY = Double.MAX_VALUE;
+            double maxY = Double.MIN_VALUE;
+            for (String id : cells.keySet()) {
+                mxCell c = (mxCell)cells.get(id);
+                if (c.getGeometry() != null) {
+                    if (c.getGeometry().getX() > maxX)
+                        maxX = c.getGeometry().getX();
+                    if (c.getGeometry().getY() > maxY)
+                        maxY = c.getGeometry().getY();
+                    if (c.getGeometry().getX() < minX)
+                        minX = c.getGeometry().getX();
+                    if (c.getGeometry().getY() < minY)
+                        minY = c.getGeometry().getY();
+                }
+            }
+
+    //        mxRectangle bounds = cache.getGraphBounds();
+
+            PageFormat format = getGraphComponent().getPageFormat();
+            Paper p = format.getPaper();
+    //        p.setSize(bounds.getHeight(), bounds.getWidth());
+            p.setSize(maxY + minY, maxX + minX);
+            format.setPaper(p);
+            getGraphComponent().setPageFormat(format);
+            getGraphComponent().refresh();        
+        }
         setModified(false);
         getUndoManager().clear();
         getGraphComponent().zoomAndCenter();

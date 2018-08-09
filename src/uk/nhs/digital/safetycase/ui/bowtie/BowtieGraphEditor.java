@@ -59,7 +59,7 @@ public class BowtieGraphEditor
     public void setExistingBowtie(HashMap<String,DiagramEditorElement> ex) { existingBowtie = ex; }
     public HashMap<String,DiagramEditorElement> getExistingBowtie() { return existingBowtie; }
     
-    public void setHazardId(int i, String x) { 
+    public void setHazardId(int i, String x, boolean newGraph) { 
         hazardId = i; 
         getGraphComponent().getGraph().setModel(new mxGraphModel());
         getGraphComponent().getGraph().refresh();
@@ -72,35 +72,37 @@ public class BowtieGraphEditor
 	codec.decode(document.getDocumentElement(), (mxGraphModel)getGraphComponent().getGraph().getModel());      
     
 //        mxGraphView cache = ((CustomGraph)getGraphComponent().getGraph()).getCache();
-        Map<String,Object> cells = ((mxGraphModel)getGraphComponent().getGraph().getModel()).getCells(); 
-        double minX = Double.MAX_VALUE;
-        double maxX = Double.MIN_VALUE;
-        double minY = Double.MAX_VALUE;
-        double maxY = Double.MIN_VALUE;
-        for (String id : cells.keySet()) {
-            mxCell c = (mxCell)cells.get(id);
-            if (c.getGeometry() != null) {
-                if (c.getGeometry().getX() > maxX)
-                    maxX = c.getGeometry().getX();
-                if (c.getGeometry().getY() > maxY)
-                    maxY = c.getGeometry().getY();
-                if (c.getGeometry().getX() < minX)
-                    minX = c.getGeometry().getX();
-                if (c.getGeometry().getY() < minY)
-                    minY = c.getGeometry().getY();
+        
+        if (!newGraph) {
+            Map<String,Object> cells = ((mxGraphModel)getGraphComponent().getGraph().getModel()).getCells(); 
+            double minX = Double.MAX_VALUE;
+            double maxX = Double.MIN_VALUE;
+            double minY = Double.MAX_VALUE;
+            double maxY = Double.MIN_VALUE;
+            for (String id : cells.keySet()) {
+                mxCell c = (mxCell)cells.get(id);
+                if (c.getGeometry() != null) {
+                    if (c.getGeometry().getX() > maxX)
+                        maxX = c.getGeometry().getX();
+                    if (c.getGeometry().getY() > maxY)
+                        maxY = c.getGeometry().getY();
+                    if (c.getGeometry().getX() < minX)
+                        minX = c.getGeometry().getX();
+                    if (c.getGeometry().getY() < minY)
+                        minY = c.getGeometry().getY();
+                }
             }
+
+    //        mxRectangle bounds = cache.getGraphBounds();
+
+            PageFormat format = getGraphComponent().getPageFormat();
+            Paper p = format.getPaper();
+    //        p.setSize(bounds.getHeight(), bounds.getWidth());
+            p.setSize(maxY + minY, maxX + minX);
+            format.setPaper(p);
+            getGraphComponent().setPageFormat(format);
+            getGraphComponent().refresh();
         }
-        
-//        mxRectangle bounds = cache.getGraphBounds();
-        
-        PageFormat format = getGraphComponent().getPageFormat();
-        Paper p = format.getPaper();
-//        p.setSize(bounds.getHeight(), bounds.getWidth());
-        p.setSize(maxY + minY, maxX + minX);
-        format.setPaper(p);
-        getGraphComponent().setPageFormat(format);
-        getGraphComponent().refresh();
-        
         setModified(false);
         getUndoManager().clear();
         getGraphComponent().zoomAndCenter();        

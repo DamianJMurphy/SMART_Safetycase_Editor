@@ -42,7 +42,7 @@ import uk.nhs.digital.safetycase.data.ValueSet;
 public class EffectEditor extends javax.swing.JPanel 
         implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
-    private final String[] linkcolumns = {"Type", "Name", "Comment", "Via"};
+    private final String[] linkcolumns = {"Name", "Type", "Comment", "Via"};
 
     private EditorComponent editorComponent = null;
     private Effect effect = null;

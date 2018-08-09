@@ -130,7 +130,7 @@ public class BowtieSaveHandler
             }
             saveBowtie(hazard, bowtieElements, projectid);
             bge.setExistingBowtie(bowtieElements);
-            bge.setHazardId(hazard.getId(), xml);
+            bge.setHazardId(hazard.getId(), xml, false);
             System.out.println(xml);
             SmartProject sp = SmartProject.getProject();
             if (existingHazard) {

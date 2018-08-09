@@ -508,10 +508,13 @@ public class SystemEditorDetails extends javax.swing.JPanel
             sb.replace(start, start + "__SYSTEM_NAME__".length(), nameTextField.getText());
             xml = sb.toString();     
             system.setAttribute("GraphCellId", "2");
+            sge.setExistingGraph(getExistingGraph(system, null));
+            sge.setSystemId(system.getId(), xml, true);
+        } else {
+            sge.setExistingGraph(getExistingGraph(system, null));
+            sge.setSystemId(system.getId(), xml, false);            
         }
 //        sge.setExistingGraph(getExistingGraph(xml));
-        sge.setExistingGraph(getExistingGraph(system, null));
-        sge.setSystemId(system.getId(), xml);
 //        sge.setPersistableObject(system);
         JTabbedPane tp = null;
         ProjectWindow pw = SmartProject.getProject().getProjectWindow();

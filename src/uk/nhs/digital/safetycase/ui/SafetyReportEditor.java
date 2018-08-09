@@ -50,6 +50,8 @@ import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.Project;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.Hazard;
+import uk.nhs.digital.safetycase.data.IssuesLog;
+import uk.nhs.digital.safetycase.data.Location;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
@@ -60,6 +62,7 @@ import uk.nhs.digital.safetycase.data.Report;
 import uk.nhs.digital.safetycase.data.SystemFunction;
 import uk.nhs.digital.safetycase.data.System;
 import uk.nhs.digital.safetycase.data.Process;
+import uk.nhs.digital.safetycase.data.Role;
 import uk.nhs.digital.safetycase.ui.bowtie.BowtieGraphEditor;
 import uk.nhs.digital.safetycase.ui.processeditor.ProcessGraphEditor;
 import uk.nhs.digital.safetycase.ui.systemeditor.SystemEditorDetails;
@@ -71,11 +74,11 @@ import uk.nhs.digital.safetycase.ui.systemeditor.SystemGraphEditor;
  */
 public class SafetyReportEditor
         extends javax.swing.JPanel
-        implements uk.nhs.digital.safetycase.ui.PersistableEditor, uk.nhs.digital.safetycase.ui.GraphicalEditor {
+        implements uk.nhs.digital.safetycase.ui.PersistableEditor {
 
     private EditorComponent editorComponent = null;
     private Project project = null;
-    
+
     private boolean modified = false;
 
     private Report report = null;
@@ -86,7 +89,8 @@ public class SafetyReportEditor
     protected PersistableFactory<System> systemFactory = null;
     protected PersistableFactory<SystemFunction> systemFunctionFactory = null;
     protected List<processStepRelations> psRels = null;
-    
+    protected ArrayList<ProcessStep> HRPSList = null;
+
     private Persistable focus = null;
 
     private ArrayList<Relationship> tableMap = null;
@@ -101,10 +105,14 @@ public class SafetyReportEditor
 
     private static final String H1_START = "<H1>"; //"<H1 style=\"text-decoration: underline;color:#4169E1\" >";
     private static final String H1_END = "</H1>\n";
-    private static final String H2_ANCHOR_START = "<H2 style=\"color:#4682B4\" id=\"%s\" >";
-    private static final String H2_START = "<H2 style=\"color:#4682B4\" >";
+    //private static final String H2_ANCHOR_START = "<H2 style=\"color:#4682B4\" id=\"%s\" >";
+    //private static final String H2_START = "<H2 style=\"color:#4682B4\" >";
+    private static final String H2_ANCHOR_START = "<H2 style=\"color:#507add\" id=\"%s\" ><a name=\"%s\">";
+    private static final String H2_START = "<H2 style=\"color:#507add\" >";
+    private static final String H2_ANCHOR_END = "</a></H2>\n";
     private static final String H2_END = "</H2>\n";
-    private static final String H3_START = "<H3 style=\"color:#7B68EE\" >";
+    // private static final String H3_START = "<H3 style=\"color:#7B68EE\" >"; //92B6D5
+    private static final String H3_START = "<H3 style=\"color:#C02F1D\" >";
     private static final String H3_END = "</H3>\n";
     private static final String TABLE_START = "<table class=\"AssociationsTable\" >";
     private static final String TABLE_END = "</table>\n";
@@ -115,15 +123,21 @@ public class SafetyReportEditor
 
     private static final String P_START = "<P>";
     private static final String PCLASS_START = "<P class=\"rating%s\">";
+    private static final String SPANCLASS_START = "<span class=\"rating%s\">";
+    private static final String SPAN_END = "</span>\n";
     private static final String P_END = "</P>\n";
     private static final String DIV_START = "<div>";//<div><img src="data:image/png;base64, iVB" alt="System" /></div> 
     private static final String DIV_END = "</div>\n";
-    private static String IMG_TAG = "<div style=\"text-align: center;\"><img src=\"data:image/png;base64, %s \" alt=\"%s \" /></div>\n";
+    private static String IMG_TAG = "<div><img src=\"data:image/png;base64, %s \" alt=\"%s \" /></div><br />\n";
+    //private static String IMG_TAG = "<div style=\"text-align: center;\"><img src=\"data:image/png;base64, %s \" alt=\"%s \" /></div><br />\n";
     private static String RELATED_TO = " Used in %s ( %s ).";
     // Titles for sections
     private static final String INTRO_SECTION = H1_START + "Introduction" + H1_END;
     private static final String SYSTEM_DEFINITION_SECTION = H1_START + "System Definition / Overview" + H1_END;
+    private static final String CARE_SETTINGS_SECTION = H1_START + "Care Settings" + H1_END;
+    private static final String ROLE_SECTION = H1_START + "Roles" + H1_END;
     private static final String CLINICAL_RISK_MANAGEMENT_SECTION = H1_START + "Hazard Analysis" + H1_END;
+    private static final String ISSUES_SECTION = H1_START + "Issues Log " + H1_END;
     private static final String RISK_ANALYSIS = H1_START + "Clinical Risk Analysis" + H1_END;
     private static final String RISK_EVALUATION = H1_START + "Clinical Risk Evaluation " + H1_END;
     private static final String RISK_CONTROL = H1_START + "Clinical Risk Control" + H1_END;
@@ -199,19 +213,77 @@ public class SafetyReportEditor
             + "	background:red;\n"
             + "       color:white;\n"
             + "	}\n"
+             + "span.rating0{\n"
+            + "	background:#00FF00;\n"
+            + "	}\n"
+            + "	span.rating1{\n"
+            + "	background:#00FF00;\n"
+            + "	}\n"
+            + "	span.rating2{\n"
+            + "	background:#00FF00;\n"
+            + "	}\n"
+            + "	span.rating3{\n"
+            + "	background:#FFC200;\n"
+            + "	}\n"
+            + "	span.rating4{\n"
+            + "	background:red;\n"
+            + "       color:white;\n"
+            + "	}\n"
+            + "	span.rating5{\n"
+            + "	background:red;\n"
+            + " color:white;\n"
+            + "	}\n"
+            + "table.HeaderTable { \n"
+            + "	border-collapse:collapse;\n"
+            + "	width:97%\n"
+            + "}\n"
+            + "\n"
+            + "table.HeaderTable td, table.HeaderTable th { \n"
+            + "	border:1px solid rgb(150, 150, 150);\n"
+            + "	padding:5px;\n"
+            + "}\n"
+            + "\n"
+            + "tr.title td {\n"
+            + "	border-left: 0px solid;\n"
+            + "	border-right: 0px solid;\n"
+            + "}\n"
+            + "table.HeaderTable tr td:first-child {\n"
+            + "  border-left: 0;\n"
+            + "}\n"
+            + "table.HeaderTable tr td:last-child {\n"
+            + "  border-right: 0;\n"
+            + "}\n"
+            + "td.normal {\n"
+            + "    width: 10%;\n"
+            + "}\n"
+            + "\n"
+            + "td.extended {\n"
+            + "    width: 80%;\n"
+            + "}\n"
+            + "td.medium {\n"
+            + "    width: 20%;\n"
+            + "}\n"
+            + "td.larger {\n"
+            + "    width: 40%;\n"
+            + "}\n"
+            +"br {\n" +
+"         display: block; \n" +
+"         content: \"\"; \n" +
+"         margin-top: 6;\n" +
+"}\n" +
+"br.extendedheight {\n" +
+"         display: block; \n" +
+"         content: \"\"; \n" +
+"         margin-top: 30;\n" +
+"}"
             + "</style>";
-    private static String CSS1 = "";
-    //private static String SYSTEMS_TABLE_START = "<table style=\"width:90%;\"><tr><td> System Links:</td>";
+    private static String CSS1 ="";
     private static String SYSTEMS_TABLE_START = "<table class=\"LinksTable\">\n<tr>\n<td> Systems:</td>\n<td>\n";
     private static String SYSTEMS_TABLE_END = "</tr>\n</table>\n";
-
     private static String SYSTEM_TABLE = null;
     private static String HAZARD_TABLE = null;
-
-    //private static String HAZARD_TABLE_START = "<table style=\"margin: auto;\"><tr><td> Hazard Links:</td>";
     private static String HAZARD_TABLE_START = "<table class=\"LinksTable\">\n<tr>\n<td> Hazards:</td>\n<td>\n";
     private static String HAZARD_TABLE_END = "</tr>\n</table>\n<br /><br />";
-
     private static String SYSTEM_REPORT = null;
     private static String HAZARD_REPORT = null;
 
@@ -296,7 +368,7 @@ public class SafetyReportEditor
                 .addComponent(introductionEditor, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE))
         );
 
-        sectionsPanel.addTab("<html><b>Introduction</b></html>", introPanel);
+        sectionsPanel.addTab("Introduction", introPanel);
 
         javax.swing.GroupLayout crmPanelLayout = new javax.swing.GroupLayout(crmPanel);
         crmPanel.setLayout(crmPanelLayout);
@@ -309,7 +381,7 @@ public class SafetyReportEditor
             .addComponent(crmTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
-        sectionsPanel.addTab("<html><b>Clinical risk management</b></html>", crmPanel);
+        sectionsPanel.addTab("Clinical risk management", crmPanel);
 
         javax.swing.GroupLayout safetySystemPanelLayout = new javax.swing.GroupLayout(safetySystemPanel);
         safetySystemPanel.setLayout(safetySystemPanelLayout);
@@ -322,7 +394,7 @@ public class SafetyReportEditor
             .addComponent(safetyTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
-        sectionsPanel.addTab("<html><b>Safety statement</b></html>", safetySystemPanel);
+        sectionsPanel.addTab("Safety statement", safetySystemPanel);
 
         javax.swing.GroupLayout qaPanelLayout = new javax.swing.GroupLayout(qaPanel);
         qaPanel.setLayout(qaPanelLayout);
@@ -335,7 +407,7 @@ public class SafetyReportEditor
             .addComponent(qaTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
-        sectionsPanel.addTab("<html><b>QA and Development</b></html>", qaPanel);
+        sectionsPanel.addTab("QA and Development", qaPanel);
 
         javax.swing.GroupLayout configPanelLayout = new javax.swing.GroupLayout(configPanel);
         configPanel.setLayout(configPanelLayout);
@@ -348,7 +420,7 @@ public class SafetyReportEditor
             .addComponent(configTextArea, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
         );
 
-        sectionsPanel.addTab("<html><b>Config management</b></html>", configPanel);
+        sectionsPanel.addTab("Config management", configPanel);
 
         buttonBar.setRollover(true);
 
@@ -417,7 +489,6 @@ public class SafetyReportEditor
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
 
-        //String test = ProcessReport();
         JFileChooser fc = new JFileChooser();
         fc.setCurrentDirectory(new java.io.File(".")); // start at application current directory
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -431,6 +502,7 @@ public class SafetyReportEditor
         StringBuilder body = new StringBuilder(TITLE_START);
         body.append(titleTextField.getText());
         body.append(TITLE_END);
+        body.append(headerTable);
         body.append("__SYSTEMTABLEPLACEHOLDER__");
         body.append("__HAZARDABLEPLACEHOLDER__");
         body.append(INTRO_SECTION);
@@ -444,13 +516,28 @@ public class SafetyReportEditor
         body.append(SystemReport()); // System Report
         body.append(P_END);
         body.append("<br /><br />");
+        body.append(CARE_SETTINGS_SECTION);
+        body.append(P_START);
+        body.append(CareSettingReport()); // Care Settings Report
+        body.append(P_END);
+        body.append("<br /><br />");
+        body.append(ROLE_SECTION);
+        body.append(P_START);
+        body.append(RolesReport()); // Roles Report
+        body.append(P_END);
+        body.append("<br /><br />");
         body.append(CLINICAL_RISK_MANAGEMENT_SECTION);
         body.append(P_START);
         body.append(crmTextArea.getBodyText());
         body.append(P_END);
         body.append(P_START);
-        body.append(ProcessReport());
-        //body.append(HazardReport()); // HAZARD Report
+        body.append(ProcessReport()); //Process Report
+        //body.append(HazardReport()); // HAZARD Report  //
+        body.append(P_END);
+        body.append("<br /><br />");
+        body.append(ISSUES_SECTION);
+        body.append(P_START);
+        body.append(IssuesReport()); // ISSUES Report
         body.append(P_END);
         body.append("<br /><br />");
         body.append(QA_OCUMENT_APPROVAL);
@@ -575,21 +662,14 @@ public class SafetyReportEditor
                 if (!p.isDeleted()) {
                     uk.nhs.digital.safetycase.data.System sy = (uk.nhs.digital.safetycase.data.System) p;
                     int pid = Integer.parseInt(sy.getAttributeValue("ParentSystemID"));
-                    if (pid == -1) {
-                        //systemsNode.add(populateSystemWithChildren(sy));
-//                        String xml = sy.getAttributeValue("GraphXml");
-//                        if (xml != null || xml.trim().length() != 0) {
-//                            systemSB.append(String.format(IMG_TAG, GeneratePersistableImage(p), p.getTitle()));
-//                        }
-                        //stSB.append(String.format("<td> <a href=\"#%s\">%s</a></td>", ("S"+p.getId()), p.getTitle()));
+                    if (pid == -1) { // root node
                         stSB.append(String.format("<li><a href=\"#%s\">%s</a></li>\n", ("S" + p.getId()), p.getTitle()));
-                        systemSB.append(String.format(H2_ANCHOR_START, ("S" + p.getId())));
+                        systemSB.append(String.format(H2_ANCHOR_START, ("S" + p.getId()), ("S" + p.getId())));
                         systemSB.append(p.getAttributeValue("Name"));
-                        systemSB.append(H2_END);
+                        systemSB.append(H2_ANCHOR_END);
                         systemSB.append(P_START);
                         systemSB.append("System Version: ");
                         systemSB.append(p.getAttributeValue("Version"));
-                        //systemSB.append(SmartProject.getProject().getApplicationIdentifier());
                         systemSB.append(P_END);
                         systemSB.append(P_START);
                         systemSB.append(p.getAttributeValue("Description"));
@@ -600,10 +680,8 @@ public class SafetyReportEditor
                         }
                         // SystemFunction section
                         systemSB.append(systemFunctionReport(p));
-
                         // subsystem section
                         systemSB.append(subSystemReport(p));
-//                       
                     }
                 }
             }
@@ -623,7 +701,6 @@ public class SafetyReportEditor
             return sfSB.toString();
         }
         for (Relationship r : systemFunctions) {
-            // if ((r.getComment() != null) && (r.getComment().contains("system diagram"))) {
             try {
                 Persistable sf = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
                 if (!sf.isDeleted()) {
@@ -633,22 +710,20 @@ public class SafetyReportEditor
                     sfSB.append(P_START);
                     sfSB.append(sf.getAttributeValue("Description"));
                     sfSB.append(P_END);
-                    // check for children/sub children realtionship
-                    //List<Persistable> lp= new ArrayList<>();
-                    //TODO: to ask hannah if she wants sub systems and their function in main system or display each system separately..
                     if ((r.getComment() != null) && (r.getComment().contains("system diagram"))) {
-                        List<Persistable> pl = findFunctionRelations(sf, new ArrayList<>());
+                        List<Persistable> pl = findAllRelatedRelations(sf, new ArrayList<>());
                         Boolean relFound = false;
                         for (Persistable pe : pl) {
-                            //systemSB.append(p.getTitle());
-                            relFound = true;
-                            sfSB.append(P_START).append(String.format(RELATED_TO, pe.getDatabaseObjectName(), pe.getTitle())).append(P_END);
+                            String t = pe.getDatabaseObjectName();
+                            if (!"System".equals(t) && !relFound) {
+                                relFound = true;
+                                sfSB.append(P_START).append(String.format(RELATED_TO, pe.getDatabaseObjectName(), pe.getTitle())).append(P_END);
+                            }
                         }
                         if (!relFound) {
                             sfSB.append(P_START).append(String.format("This %s is not associated with any care settings.", sf.getDatabaseObjectName())).append(P_END);
                         }
                     }
-
                     // write subfunction text only if it exist
                     String subFunc = systemFunctionReport(sf);
                     if (subFunc != null && !subFunc.isEmpty()) {
@@ -670,12 +745,10 @@ public class SafetyReportEditor
         StringBuilder ssSB = new StringBuilder();
         ArrayList<Relationship> subSystems = p.getRelationships("System");
         if (subSystems == null) {
-            //sfSB.append(P_START).append(String.format("This %s has no SystemFunction.", p.getDatabaseObjectName())).append(P_END);
             return ssSB.toString();
             //return null;
         }
         for (Relationship r : subSystems) {
-            // if ((r.getComment() != null) && (r.getComment().contains("system diagram"))) {
             try {
                 Persistable ss = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
                 if (!ss.isDeleted()) {
@@ -685,169 +758,150 @@ public class SafetyReportEditor
                     ssSB.append(P_START);
                     ssSB.append("Sub-System Version: ");
                     ssSB.append(ss.getAttributeValue("Version"));
-                    //ssSB.append(SmartProject.getProject().getApplicationIdentifier());
                     ssSB.append(P_END);
                     ssSB.append(P_START);
                     ssSB.append(ss.getAttributeValue("Description"));
                     ssSB.append(P_END);
                     // SystemFunction section
                     ssSB.append(systemFunctionReport(ss));
-                    // end of systemfunction section
-
                     // check for child subSystem
                     ssSB.append(subSystemReport(ss));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
-            
+
         }
 
         return ssSB.toString();
 
     }
-private List<Persistable> findFunctionRelations(Persistable relatedObject, List<Persistable> persistablelist)
+
+    private List<Persistable> findAllRelatedRelations(Persistable relatedObject, List<Persistable> persistablelist)
             throws Exception {
         List<Persistable> lp = persistablelist;
-        PersistableFactory<uk.nhs.digital.safetycase.data.SystemFunction> pfsf = MetaFactory.getInstance().getFactory("SystemFunction");
-        
-        
-        
+        PersistableFactory<uk.nhs.digital.safetycase.data.SystemFunction> pfsf = MetaFactory.getInstance().getFactory(relatedObject.getDatabaseObjectName());
         Persistable p;
         try {
-            if (relatedObject.getDatabaseObjectName().equals("SystemFunction")) {
-//                uk.nhs.digital.safetycase.data.SystemFunction systemfunction = pfsf.get(relatedObject.getId());
-//                HashMap<String, ArrayList<Relationship>> hrels = systemfunction.getRelationshipsForLoad();
-//                if (hrels != null) {
-//                    for (ArrayList<Relationship> a : hrels.values()) {
-//                        for (Relationship r : a) {
-//                            if ((r.getComment() != null) && (r.getComment().contains("system diagram"))) {
-//                                p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-//                                lp.add(p);
-//                                // find any sub children realtions
-//                                findFunctionRelations(p, lp);
-//                            }
-//                        }
-//                    }
-//                }  
-                 HashMap<String, ArrayList<Relationship>>  hrels = MetaFactory.getInstance().findFirstOrderRelationshipsForTarget(relatedObject, true, true);
-                 if (hrels != null) {
-                    for (Map.Entry<String, ArrayList<Relationship>> entry : hrels.entrySet()) {
-                        if(!entry.getKey().equalsIgnoreCase("System"))
-                        {
-                        String Source = entry.getKey();
-                        ArrayList<Relationship> Rels = entry.getValue();
-                    //for (ArrayList<Relationship> a : entry.getValue()) {
-                        for (Relationship r : Rels) {
-                                p = MetaFactory.getInstance().getFactory(Source).get(r.getSource());
-                               // p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                                lp.add(p);
-                                // find any sub children realtions
-                                
-                        }
-                   // }
+            HashMap<String, ArrayList<Relationship>> hrels = MetaFactory.getInstance().findFirstOrderRelationshipsForTarget(relatedObject, true, true);
+            if (hrels != null) {
+                for (Map.Entry<String, ArrayList<Relationship>> entry : hrels.entrySet()) {
+                    String Source = entry.getKey();
+                    ArrayList<Relationship> Rels = entry.getValue();
+                    for (Relationship r : Rels) {
+                        p = MetaFactory.getInstance().getFactory(Source).get(r.getSource());
+                        lp.add(p);
+                        // find any sub children
                     }
-                    }
-                }  
-                  
-                         
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-       
-        
+
         return lp;
     }
 
-private Persistable findParent(Persistable ch, String parentType)
-{
- ArrayList<Persistable> parent=null;
- ArrayList<Relationship> pRels = null;
-         ArrayList<Persistable> sf=null;
-          try {
+    private String CareSettingReport() {
+        StringBuilder LocationSB = new StringBuilder();
+        ArrayList<Persistable> Locations = null;
+        Map<Integer, Location> Locs = new HashMap<Integer, Location>();
+        try {
             if (proj != null) {
-                parent = MetaFactory.getInstance().getChildren(parentType, "ProjectID", proj.getId());
-                
+                Locations = MetaFactory.getInstance().getChildren("Location", "ProjectID", proj.getId());
+            } else {
+                Locations = MetaFactory.getInstance().getChildren("Location", "ProjectID", newObjectProjectId);
             }
-            } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-        Persistable pl = null;
-        for(Persistable p: parent)
-        {
-            pRels = p.getRelationships(ch.getDatabaseObjectName());
-            if (pRels != null)
-            {
-                for(Relationship r: pRels)
-                {
-                    if(r.getTarget() == p.getId())
-                    {
-                        
-                    }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        if (Locations != null) {
+            for (Persistable p : Locations) {
+                if (!p.isDeleted()) {
+                    Locs.put(p.getId(), (Location) p);
                 }
             }
-        }
-        ArrayList<Relationship> allRels = new ArrayList<>();
-        ArrayList<Relationship> hRels = ch.getRelationships(parentType);
-        
-        if (hRels == null) {
-            hRels = ch.getRelationships("System");
-            if(hRels == null)
-            {
-            return pl;
-            }
-        }
-        for (Relationship r : hRels) {
-            if (!r.isDeleted()) {
-                String m = r.getManagementClass();
-                if ((m == null) || (m.contains("Diagram"))) {
-                    try {
-                        Persistable hr = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                        return hr;
-                       // if(r.getTargetType().equalsIgnoreCase("System"))
-                       // hazardDependandsystemANDfunction(hr, r.getTargetType(), pl);
-                        
-                            
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            for (Location loc : Locs.values()) {
+                int pid = Integer.parseInt(loc.getAttributeValue("ParentLocationID"));
+                LocationSB.append(H2_START);
+                LocationSB.append(loc.getAttributeValue("Name"));
+                LocationSB.append(H2_END);
+                LocationSB.append(P_START);
+                LocationSB.append("Mnemonic: ");
+                LocationSB.append(loc.getAttributeValue("Mnemonic"));
+                LocationSB.append(P_END);
+                LocationSB.append(P_START);
+                LocationSB.append("Parent Location: ");
+                if (pid == -1) {
+                    LocationSB.append("N/A");
+                } else {
+                    Location pl = Locs.get(pid);
+                    LocationSB.append(pl.getAttributeValue("Name"));
+                }
+                LocationSB.append(P_END);
+                LocationSB.append(P_START);
+                LocationSB.append("Description: ");
+                LocationSB.append(loc.getAttributeValue("Description"));
+                LocationSB.append(P_END);
+                LocationSB.append(P_START).append("Related Role :");
+                try {
+                    List<Persistable> pl = findAllRelatedRelations((Persistable) loc, new ArrayList<>());
+                    Boolean relFound = false;
+                    for (Persistable pe : pl) {
+                        if (pe.getDatabaseObjectName().contentEquals("Role")) {
+                            relFound = true;
+                            LocationSB.append(String.format(RELATED_TO, pe.getDatabaseObjectName(), pe.getTitle())).append("<br/>");
+                        }
                     }
+                    if (!relFound) {
+                        LocationSB.append(String.format("This %s is not associated with any Role.", loc.getDatabaseObjectName()));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                LocationSB.append(P_END);
+            }
+        }else{
+            LocationSB.append("No locations found. ");
+        }
+        return LocationSB.toString();
+
+    }
+
+    private String RolesReport() {
+        StringBuilder RoleSB = new StringBuilder();
+        ArrayList<Persistable> Roles = null;
+        Map<Integer, Role> Rols = new HashMap<Integer, Role>();
+        try {
+            if (proj != null) {
+                Roles = MetaFactory.getInstance().getChildren("Role", "ProjectID", proj.getId());
+            } else {
+                Roles = MetaFactory.getInstance().getChildren("Role", "ProjectID", newObjectProjectId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        if (Roles != null) {
+            for (Persistable p : Roles) {
+                if (!p.isDeleted()) {
+                    Rols.put(p.getId(), (Role) p);
                 }
             }
-        }
-        return pl;
-    
-}
-// <editor-fold defaultstate="collapsed" desc="Unused_Code"> 
-//    private List<Persistable> findFunctionRelations(Persistable relatedObject, List<Persistable> persistablelist)
-//            throws Exception {
-//        List<Persistable> lp = persistablelist;
-//        PersistableFactory<uk.nhs.digital.safetycase.data.SystemFunction> pfsf = MetaFactory.getInstance().getFactory("SystemFunction");
-//        Persistable p;
-//        try {
-//            if (relatedObject.getDatabaseObjectName().equals("SystemFunction")) {
-//                uk.nhs.digital.safetycase.data.SystemFunction systemfunction = pfsf.get(relatedObject.getId());
-//                HashMap<String, ArrayList<Relationship>> hrels = systemfunction.getRelationshipsForLoad();
-//                if (hrels != null) {
-//                    for (ArrayList<Relationship> a : hrels.values()) {
-//                        for (Relationship r : a) {
-//                            if ((r.getComment() != null) && (r.getComment().contains("system diagram"))) {
-//                                p = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-//                                lp.add(p);
-//                                // find any sub children realtions
-//                                findFunctionRelations(p, lp);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return lp;
-//    }
-// </editor-fold>
+            for (Role rol : Rols.values()) {
+                RoleSB.append(H2_START);
+                RoleSB.append(rol.getAttributeValue("Name"));
+                RoleSB.append(H2_END);
+                RoleSB.append(P_START);
+                RoleSB.append("Description: ");
+                RoleSB.append(rol.getAttributeValue("Description"));
+                RoleSB.append(P_END);
+            }
+        } 
+        return RoleSB.toString();
+
+    }
 
     private String ProcessReport() {
         StringBuilder processSB = new StringBuilder();
@@ -866,44 +920,26 @@ private Persistable findParent(Persistable ch, String parentType)
             for (Persistable p : processList) {
                 if (!p.isDeleted()) {
                     Process process = (Process) p;
-//                    int pid = Integer.parseInt(process.getAttributeValue("ParentSystemID"));
-//                    if (pid == -1) {
-                    //systemsNode.add(populateSystemWithChildren(sy));
-//                        String xml = sy.getAttributeValue("GraphXml");
-//                        if (xml != null || xml.trim().length() != 0) {
-//                            systemSB.append(String.format(IMG_TAG, GeneratePersistableImage(p), p.getTitle()));
-//                        }
-                    //stSB.append(String.format("<td> <a href=\"#%s\">%s</a></td>", ("S"+p.getId()), p.getTitle()));
-                    //stSB.append(String.format("<li><a href=\"#%s\">%s</a></li>\n", ("S" + p.getId()), p.getTitle()));
-                    processSB.append(String.format(H2_ANCHOR_START, ("P" + p.getId())));
+                    processSB.append(String.format(H2_ANCHOR_START, ("P" + p.getId()), ("P" + p.getId())));
                     processSB.append("Care Process : ");
                     processSB.append(p.getAttributeValue("Name"));
-                    processSB.append(H2_END);
-                    processSB.append(P_START);
-                    processSB.append("Process Version: ");
-                    processSB.append(p.getAttributeValue("Version"));
-                    //systemSB.append(SmartProject.getProject().getApplicationIdentifier());
-                    processSB.append(P_END);
-//                    processSB.append(P_START);
-//                    processSB.append(p.getAttributeValue("Description"));
-//                    processSB.append(P_END);
+                    processSB.append(H2_ANCHOR_END);
                     String xml = process.getAttributeValue("GraphXml");
                     if ((xml != null) && (xml.trim().length() != 0)) {
                         processSB.append(String.format(IMG_TAG, GeneratePersistableImage(p), p.getTitle()));
                     }
-                    
+
                     // Proces Step section
                     String psRelations = processStepRelations(p);
-                    if( psRelations == null || psRelations.isEmpty()){
+                    if (psRelations == null || psRelations.isEmpty()) {
                         String t = "";
                     }
-                    if(psRels.size()>0){
+                    if (psRels.size() > 0) {
                         processSB.append(HazardReport(p.getAttributeValue("Name")));
-                    }else{
+                    } else {
                         processSB.append("This Process has no hazard links");
                     }
-                        
-                    
+
                 }
             }
         }
@@ -913,19 +949,12 @@ private Persistable findParent(Persistable ch, String parentType)
 
     private String processStepRelations(Persistable p) {
         StringBuilder psSB = new StringBuilder();
-
-        // Map<Hazard, Persistable> maps = new HashMap<Hazard, Persistable>();
         psRels = new ArrayList<processStepRelations>();
-
+        ArrayList<Hazard> hzl = new ArrayList<>(); // hazards list for process
         ArrayList<Persistable> processSteps;
         try {
             processSteps = MetaFactory.getInstance().getChildren("ProcessStep", "ProcessID", p.getId());
-
-            // ArrayList<Relationship> processSteps = p.getRelationships("ProcessStep");
-//            if ((processSteps == null) && p.getDatabaseObjectName().contentEquals("Hazard")) {
-//                return psSB.toString();
-//            } else 
-                if (processSteps == null) { // if a ProcessStep has no Relations
+            if (processSteps == null) { // if a ProcessStep has no Relations
                 psSB.append(P_START).append(String.format("This %s has no ProcessSteps.", p.getDatabaseObjectName())).append(P_END);
                 return psSB.toString();
             }
@@ -934,41 +963,20 @@ private Persistable findParent(Persistable ch, String parentType)
                 if ((ps.getTitle() != null) && ((!ps.getAttributeValue("Name").equalsIgnoreCase("Start")) && (!ps.getAttributeValue("Name").equalsIgnoreCase("Stop")))) {
                     ArrayList<Relationship> Relations = ps.getRelationships("Hazard");
                     if (Relations != null) {
-                        ArrayList<Hazard> hl  = new ArrayList<>();
+                        ArrayList<Hazard> hl = new ArrayList<>();
                         for (Relationship r : Relations) {
-                            Persistable hz = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                            //maps.put((Hazard)hz, ps);
-                            hl.add((Hazard) hz);
+                            if (!r.isDeleted()) {
+                                Persistable hz = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                                if (!hzl.contains((Hazard) hz)) {
+                                    hl.add((Hazard) hz);
+                                    hzl.add((Hazard) hz);
+                                }
+                            }
                         }
-                         psRels.add(new processStepRelations((ProcessStep) ps, hl));
+                        if (hl.size() > 0) {
+                            psRels.add(new processStepRelations((ProcessStep) ps, hl));
+                        }
                     }
-//                if (!ps.isDeleted()) {
-//                    psSB.append(H3_START);
-//                    psSB.append(ps.getAttributeValue("Name"));
-//                    psSB.append(H3_END);
-//                    psSB.append(P_START);
-//                    psSB.append(ps.getAttributeValue("Description"));
-//                    psSB.append(P_END);
-//                    // check for children/sub children realtionship
-//                    //List<Persistable> lp= new ArrayList<>();
-//                    
-//                        List<Persistable> pl = findFunctionRelations(ps, new ArrayList<>());
-//                        Boolean relFound = false;
-//                        for (Persistable pe : pl) {
-//                            //systemSB.append(p.getTitle());
-//                            relFound = true;
-//                            psSB.append(P_START).append(String.format(RELATED_TO, pe.getDatabaseObjectName(), pe.getTitle())).append(P_END);
-//                        }
-//                        if (!relFound) {
-//                            psSB.append(P_START).append(String.format("This %s is not associated with any care settings.", ps.getDatabaseObjectName())).append(P_END);
-//                        }
-//                    // write subfunction text only if it exist
-//                    String subFunc = systemFunctionReport(ps);
-//                    if (subFunc != null && !subFunc.isEmpty()) {
-//                        psSB.append(P_START).append("Sub Function").append(P_END);
-//                        psSB.append(systemFunctionReport(ps));
-//                    }
-//                }
                 }
             }
         } catch (Exception ex) {
@@ -978,110 +986,86 @@ private Persistable findParent(Persistable ch, String parentType)
         return psSB.toString();
 
     }
-    
-     private String HazardReport(String processTitle) {
-        StringBuilder hazardSB = new StringBuilder();
 
+    private String HazardReport(String processTitle) {
+        StringBuilder hazardSB = new StringBuilder();
         ArrayList<Persistable> hl = null;
         HashMap<String, ArrayList<Hazard>> hgta = new HashMap(); // HAZARD GroupType ArrayList
-        for(processStepRelations psr: psRels)
-        {
-        for (Hazard h : psr.hList) {
-            if (!h.isDeleted()) {
-                String key = h.getAttributeValue("GroupingType");
-                if (hgta.containsKey(key)) {
-                    hgta.get(key).add(h);
-                } else {
-                    ArrayList<Hazard> a = new ArrayList<>();
-                    a.add(h);
-                    hgta.put(key, a);
+        HashMap<ProcessStep, Hazard> pshl = new HashMap();
+        for (processStepRelations psr : psRels) {
+            ProcessStep ps = psr.pStep;
+            for (Hazard h : psr.hList) {
+                if (!h.isDeleted()) {
+                    pshl.put(ps, h);
+                    String key = h.getAttributeValue("GroupingType");
+                    if (hgta.containsKey(key)) {
+                        hgta.get(key).add(h);
+                    } else {
+                        ArrayList<Hazard> a = new ArrayList<>();
+                        a.add(h);
+                        hgta.put(key, a);
+                    }
                 }
             }
+        }
 
-        }
-        }
-        //Map<String, ArrayList<Persistable>> treeMap = new TreeMap<>(htl);
-        //style="display: inline; border-bottom: 6px solid red; background-color: #F0EBEB;"  
-       // hazardSB.append("<span style=\"margin-left: 40px;\">");
         for (ArrayList<Hazard> pa : hgta.values()) {
-//                hazardSB.append("<H2 class=\"h2\">Hazard Type: ");
-//                hazardSB.append(pa.get(0).getAttributeValue("GroupingType")).append(H2_END);
             for (Hazard h : pa) {
                 if (!h.isDeleted()) {
-                    //Hazard h = (Hazard) p;
                     hazardSB.append("<H2 class=\"h2\">Hazard Type: ");
                     hazardSB.append(pa.get(0).getAttributeValue("GroupingType")).append(H2_END);
-                    hazardSB.append(String.format(H2_ANCHOR_START, ("H" + h.getId())));
-                    hazardSB.append(h.getAttributeValue("Name"));
-                    hazardSB.append(H2_END);
+                    hazardSB.append(String.format(H2_ANCHOR_START, ("H" + h.getId()), ("H" + h.getId())));
+                    hazardSB.append("Hazard Name: ").append(h.getAttributeValue("Name"));
+                    hazardSB.append(H2_ANCHOR_END);
                     hazardSB.append(H3_START);
-//                    hazardSB.append("Hazard Type: ");
-//                    hazardSB.append(p.getAttributeValue("GroupingType"));
                     hazardSB.append(H3_END);
                     hazardSB.append(P_START);
-                    hazardSB.append(h.getAttributeValue("Description"));
+                    hazardSB.append("Hazard Description: ").append(h.getAttributeValue("Description"));
                     hazardSB.append(P_END);
                     String xml = h.getAttributeValue("GraphXml");
                     if ((xml != null) && (xml.trim().length() != 0)) {
                         hazardSB.append(String.format(IMG_TAG, GeneratePersistableImage(h), h.getTitle()));
                     }
-
-                     hazardSB.append(TABLE_START);
-                     hazardSB.append(TR_START).append(TD_START).append("Associated Care Process : ").append(TD_END).append(TD_START).append(P_START).append(processTitle).append(P_END).append(TR_END);
-                     hazardSB.append(HazardProcessStep(h, "Associated Care Process Step: "));
-                     hazardSB.append(HazardAssociatedReport(h, "Location", "Linked Care Setting : "));
-                    // hazardSB.append(HazardAssociatedReport(h, "SystemFunction", "Associated System Function : "));
-                    
+                    hazardSB.append(TABLE_START);
+                    hazardSB.append(TR_START).append(TD_START).append("Associated Care Process : ").append(TD_END).append(TD_START).append(P_START).append(processTitle).append(P_END).append(TR_END);
+                    hazardSB.append(HazardProcessStep(h, "Associated Care Process Step: "));
+                    hazardSB.append(HazardAssociatedReport(h, "Location", "Linked Care Setting : "));
                     hazardSB.append(HazardAssociatedSystemReport(h, "Associated System Function : ")); //HazardProcessStep
-                    
-                    //hazardSB.append(TR_END).append(TR_START);
                     hazardSB.append(HazardAssociatedReport(h, "Effect", "Potential Clinical Effects : "));
                     hazardSB.append(TABLE_END);
-
-//                    hazardSB.append(TABLE_START).append(TR_START);
-//                    hazardSB.append(HazardAssociatedReport(p, "SystemFunction", "Associated System Function : "));
-//                    hazardSB.append(TR_END).append(TR_START);
-//                    //hazardSB.append(HazardAssociatedReport(p, "Process", "Associated Care Process : ")); //HazardProcessStep
-//                    hazardSB.append(HazardProcessStep(h, "Associated Care Process Step: ")); 
-//                    hazardSB.append(TR_END).append(TR_START);
-//                    hazardSB.append(HazardAssociatedReport(p, "Effect", "Potential Clinical Effects : "));
-//                    hazardSB.append(TR_END).append(TABLE_END);
-                    //get cause, effect, controls  = {"Cause", "Effect", "Control"};
-                    hazardSB.append(H3_START).append("Initial Risk Assessment").append(H3_END);;
+                    hazardSB.append(H2_START).append("Initial Risk Assessment").append(H2_END);;
                     hazardSB.append(H3_START).append("Possible Causes").append(H3_END);
                     hazardSB.append(HazardDependents(h, "Cause", "Existing Controls"));
                     hazardSB.append(H3_START).append("Possible Effects").append(H3_END);
                     hazardSB.append(HazardDependents(h, "Effect", "Existing Controls"));
-                    hazardSB.append(H3_START).append("Existing Controls").append(H3_END);
-                    hazardSB.append(HazardDependents(h, "Control", "Existing Controls"));
+                    //  hazardSB.append(H3_START).append("Existing Controls").append(H3_END);//not required any more
+                    // hazardSB.append(HazardDependents(h, "Control", "Existing Controls")); //not required any more
                     hazardSB.append(H3_START).append("Initial Risk").append(H3_END);
                     hazardSB.append(HazradRiskAssessmentReport(h, "iniitalAssessment"));
-                    
-                    hazardSB.append(H3_START).append("Residual Risk Assessment").append(H3_END);
+
+                    hazardSB.append(H2_START).append("Residual Risk Assessment").append(H2_END);
                     hazardSB.append(H3_START).append("Possible Causes").append(H3_END);
                     hazardSB.append(HazardDependents(h, "Cause", "Additional Controls"));
                     hazardSB.append(H3_START).append("Possible Effects").append(H3_END);
                     hazardSB.append(HazardDependents(h, "Effect", "Additional Controls"));
-                    hazardSB.append(H3_START).append("Additional Controls").append(H3_END);
-                    hazardSB.append(HazardDependents(h, "Control", "Additional Controls"));
+                    // hazardSB.append(H3_START).append("Additional Controls").append(H3_END); //not required any more
+                    // hazardSB.append(HazardDependents(h, "Control", "Additional Controls")); // not required any more
                     hazardSB.append(H3_START).append("Residual Risk").append(H3_END);
                     hazardSB.append(HazradRiskAssessmentReport(h, "residualAssessment"));
-
-//                    hazardSB.append(P_START);
-//                    hazardSB.append("Maximum Initial Severity: ");                    
-//                    hazardSB.append(p.getAttributeValue("")); //hazard.getAttribute("InitialSeverity").getIntValue()
-//                    hazardSB.append(P_END);
+                    hazardSB.append(P_START).append("Overall Hazard Clinical Justification: ").append(CheckforNullorEmptyValue(h, "CLINICALJUSTIFICATION")).append("<br />");
+                    hazardSB.append("Overall Hazard  Status: ").append(CheckforNullorEmptyValue(h, "STATUS")).append(P_END);
                 }
             }
         }
         return hazardSB.toString();
     }
-     private String HazardLinks(){
+
+    private String HazardLinks() {
         ArrayList<Persistable> hl = null;
         StringBuilder htSB = new StringBuilder();
         htSB.append(HAZARD_TABLE_START);
-        
-                try {
+
+        try {
             if (proj != null) {
                 hl = MetaFactory.getInstance().getChildren("Hazard", "ProjectID", proj.getId());
             } else {
@@ -1091,134 +1075,26 @@ private Persistable findParent(Persistable ch, String parentType)
             e.printStackTrace();
             return "No Hazards found.";
         }
-        if(hl == null){
+        if (hl == null) {
             return (htSB.append("No Hazards found.</td>\n").append(HAZARD_TABLE_END)).toString();
         }
-         for (Persistable p : hl) {
-                if (!p.isDeleted()) {
-                    Hazard h = (Hazard) p;
-                    htSB.append(String.format("<li> <a href=\"#%s\">%s</a></li>\n", ("H" + h.getId()), h.getTitle()));    
-                }
-         }
-        
-       htSB.append("</td>\n").append(HAZARD_TABLE_END);
+        for (Persistable p : hl) {
+            if (!p.isDeleted()) {
+                Hazard h = (Hazard) p;
+                htSB.append(String.format("<li> <a href=\"#%s\">%s</a></li>\n", ("H" + h.getId()), h.getTitle()));
+            }
+        }
+
+        htSB.append("</td>\n").append(HAZARD_TABLE_END);
         return htSB.toString();
-     }
-// <editor-fold defaultstate="collapsed" desc="Unused_Code"> 
-//    private String HazardReport() {
-//        StringBuilder hazardSB = new StringBuilder();
-//
-//        ArrayList<Persistable> hl = null;
-//
-//        StringBuilder htSB = new StringBuilder();
-//        htSB.append(HAZARD_TABLE_START);
-//
-//        try {
-//            if (proj != null) {
-//                hl = MetaFactory.getInstance().getChildren("Hazard", "ProjectID", proj.getId());
-//            } else {
-//                hl = MetaFactory.getInstance().getChildren("Hazard", "ProjectID", newObjectProjectId);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return "";
-//        }
-//        //HashMap<String, ArrayList<Persistable>> htest = new HashMap<String, ArrayList<Persistable>>();
-//        HashMap<String, ArrayList<Persistable>> hgta = new HashMap(); // HAZARD GroupType ArrayList
-//        for (Persistable p : hl) {
-//            if (!p.isDeleted()) {
-//                String key = p.getAttributeValue("GroupingType");
-//                if (hgta.containsKey(key)) {
-//                    hgta.get(key).add(p);
-//                } else {
-//                    ArrayList<Persistable> a = new ArrayList<>();
-//                    a.add(p);
-//                    hgta.put(key, a);
-//                }
-//            }
-//
-//        }
-//        //Map<String, ArrayList<Persistable>> treeMap = new TreeMap<>(htl);
-//        //style="display: inline; border-bottom: 6px solid red; background-color: #F0EBEB;"  
-//
-//        for (ArrayList<Persistable> pa : hgta.values()) {
-////                hazardSB.append("<H2 class=\"h2\">Hazard Type: ");
-////                hazardSB.append(pa.get(0).getAttributeValue("GroupingType")).append(H2_END);
-//            for (Persistable p : pa) {
-//                if (!p.isDeleted()) {
-//                    Hazard h = (Hazard) p;
-//                    hazardSB.append("<H2 class=\"h2\">Hazard Type: ");
-//                    hazardSB.append(pa.get(0).getAttributeValue("GroupingType")).append(H2_END);
-//                    // htSB.append(String.format("<td> <a href=\"#%s\">%s</a></td>", ("H"+p.getId()), p.getTitle()));
-//                    htSB.append(String.format("<li> <a href=\"#%s\">%s</a></li>\n", ("H" + p.getId()), p.getTitle()));
-//                    hazardSB.append(String.format(H2_ANCHOR_START, ("H" + p.getId())));
-//                    hazardSB.append(p.getAttributeValue("Name"));
-//                    hazardSB.append(H2_END);
-//                    hazardSB.append(H3_START);
-////                    hazardSB.append("Hazard Type: ");
-////                    hazardSB.append(p.getAttributeValue("GroupingType"));
-//                    hazardSB.append(H3_END);
-//                    hazardSB.append(P_START);
-//                    hazardSB.append(p.getAttributeValue("Description"));
-//                    hazardSB.append(P_END);
-//                    String xml = h.getAttributeValue("GraphXml");
-//                    if ((xml != null) && (xml.trim().length() != 0)) {
-//                        hazardSB.append(String.format(IMG_TAG, GeneratePersistableImage(p), p.getTitle()));
-//                    }
-//
-//                    hazardSB.append(TABLE_START);
-//                    hazardSB.append(HazardAssociatedReport(p, "SystemFunction", "Associated System Function : "));
-//                    //hazardSB.append(HazardAssociatedReport(p, "Process", "Associated Care Process : ")); //HazardProcessStep
-//                    hazardSB.append(HazardProcessStep(h, "Associated Care Process Step: "));
-//                    //hazardSB.append(TR_END).append(TR_START);
-//                    hazardSB.append(HazardAssociatedReport(p, "Effect", "Potential Clinical Effects : "));
-//                    hazardSB.append(TABLE_END);
-//
-////                    hazardSB.append(TABLE_START).append(TR_START);
-////                    hazardSB.append(HazardAssociatedReport(p, "SystemFunction", "Associated System Function : "));
-////                    hazardSB.append(TR_END).append(TR_START);
-////                    //hazardSB.append(HazardAssociatedReport(p, "Process", "Associated Care Process : ")); //HazardProcessStep
-////                    hazardSB.append(HazardProcessStep(h, "Associated Care Process Step: ")); 
-////                    hazardSB.append(TR_END).append(TR_START);
-////                    hazardSB.append(HazardAssociatedReport(p, "Effect", "Potential Clinical Effects : "));
-////                    hazardSB.append(TR_END).append(TABLE_END);
-//                    //get cause, effect, controls  = {"Cause", "Effect", "Control"};
-//                    hazardSB.append(HazardDependents(h, "Cause", "Possible Causes"));
-//                    hazardSB.append(HazardDependents(h, "Effect", "Possible Effects"));
-//                    hazardSB.append(H3_START);
-//                    hazardSB.append("Initial Risk Assessment");
-//                    hazardSB.append(H3_END);
-//                    hazardSB.append(HazradRiskAssessmentReport(h, "iniitalAssessment"));
-//
-//                    hazardSB.append(HazardDependents(h, "Control", "Controls"));
-//                    hazardSB.append(H3_START);
-//                    hazardSB.append("Residual Risk Assessment");
-//                    hazardSB.append(H3_END);
-//                    hazardSB.append(HazradRiskAssessmentReport(h, "residualAssessment"));
-//
-////                    hazardSB.append(P_START);
-////                    hazardSB.append("Maximum Initial Severity: ");                    
-////                    hazardSB.append(p.getAttributeValue("")); //hazard.getAttribute("InitialSeverity").getIntValue()
-////                    hazardSB.append(P_END);
-//                }
-//            }
-//        }
-//
-//        htSB.append("</td>\n").append(HAZARD_TABLE_END);
-//        HAZARD_TABLE = htSB.toString();
-//        return hazardSB.toString();
-//    }
-// </editor-fold>  
+    }
 
     private String HazardAssociatedReport(Persistable p, String type, String InitialText) {
         StringBuilder haSB = new StringBuilder();
-
-        //haSB.append(TR_START).append(TD_START).append(InitialText).append(TD_END);
         haSB.append(TR_START).append(TD_START).append(InitialText).append(TD_END).append(TD_START);
         ArrayList<Relationship> hRels = p.getRelationships(type);
         if (hRels == null) {
             haSB.append("No Association").append(TD_END).append(TR_END);
-            //haSB.append(TD_START).append("No Association").append(TD_END).append(TR_END);
             return haSB.toString();
         }
         for (Relationship r : hRels) {
@@ -1228,13 +1104,6 @@ private Persistable findParent(Persistable ch, String parentType)
                     try {
                         Persistable hr = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
                         haSB.append(P_START).append(hr.getTitle()).append(P_END);
-//                    if(!firstRow){
-//                        firstRow = true;
-//                        haSB.append(P_START).append(hr.getTitle()).append(P_END);
-//                    }
-//                    else
-//                        haSB.append(P_START).append(hr.getTitle()).append(P_END);
-//                        //haSB.append(P_START).append(TD_START).append(TD_END).append(TD_START).append(hr.getTitle()).append(TD_END).append(TR_END);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1243,165 +1112,80 @@ private Persistable findParent(Persistable ch, String parentType)
         }
         haSB.append(TR_END);
         return haSB.toString();
-
     }
-    
-// <editor-fold defaultstate="collapsed" desc="Unused_Code"> 
-//    private String HazardAssociatedSystemReport(Persistable p, String InitialText){
-//                StringBuilder haSB = new StringBuilder();
-//        ArrayList<Persistable> pl = new ArrayList<>(); 
-//        //haSB.append(TR_START).append(TD_START).append(InitialText).append(TD_END);
-//        haSB.append(TR_START).append(TD_START).append(InitialText).append(TD_END).append(TD_START);
-//        
-//        String Source = "SystemFunction";
-//        try {
-//         HashMap<String, ArrayList<Relationship>>  hrels = MetaFactory.getInstance().findFirstOrderRelationshipsForTarget(p, true, true);
-//                 if (hrels != null) {
-//                      ArrayList<Relationship> hRels = hrels.get("SystemFunction");
-//                      if(hRels.isEmpty()){
-//                          Source = "System";
-//                          hRels = hrels.get(Source);
-//                      }
-//                     if(hRels.isEmpty()){
-//                         
-//                        haSB.append("No Association").append(TD_END).append(TR_END);
-//                        //haSB.append(TD_START).append("No Association").append(TD_END).append(TR_END);
-//                        return haSB.toString();
-//                     } 
-//                     for (Relationship r : hRels) {
-//                         p = MetaFactory.getInstance().getFactory(Source).get(r.getSource());
-//                         haSB.append(P_START).append(p.getTitle()).append(P_END);
-//                     }  
-//                }  
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        
-//        
-//                haSB.append(TR_END);
-//        return haSB.toString();
-//    }
-//    private ArrayList<Persistable> hazardDependandsystemANDfunction(Persistable p, String relType, ArrayList<Persistable> pl){
-//       ArrayList<Persistable> s=null;
-//         ArrayList<Persistable> sf=null;
-//          try {
-//            if (proj != null) {
-//                s = MetaFactory.getInstance().getChildren("System", "ProjectID", proj.getId());
-//                sf = MetaFactory.getInstance().getChildren("SystemFunction", "ProjectID", proj.getId());
-//            }
-//            } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//        // ArrayList<Persistable> pl = new ArrayList<>();
-//         ArrayList<Relationship> allRels = new ArrayList<>();
-//        ArrayList<Relationship> hRels = p.getRelationships(relType);
-//        
-//        if (hRels == null) {
-//            hRels = p.getRelationships("System");
-//            if(hRels == null)
-//            {
-//            return pl;
-//            }
-//        }
-//        for (Relationship r : hRels) {
-//            if (!r.isDeleted()) {
-//                String m = r.getManagementClass();
-//                if ((m == null) || (m.contains("Diagram"))) {
-//                    try {
-//                        Persistable hr = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-//                        pl.add(hr);
-//                       // if(r.getTargetType().equalsIgnoreCase("System"))
-//                        hazardDependandsystemANDfunction(hr, r.getTargetType(), pl);
-//                        
-//                            
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }
-//        return pl;   
-//    }
-// </editor-fold>  
-     private String HazardAssociatedSystemReport(Persistable p, String InitialText) {
+
+    private String HazardAssociatedSystemReport(Persistable p, String InitialText) {
         StringBuilder haSB = new StringBuilder();
-        ArrayList<Persistable> pl = new ArrayList<>(); 
-        //haSB.append(TR_START).append(TD_START).append(InitialText).append(TD_END);
+        ArrayList<Persistable> pl = new ArrayList<>();
         haSB.append(TR_START).append(TD_START).append(InitialText).append(TD_END).append(TD_START);
-        
-        pl = hazardDependandsystemANDfunction(p, "SystemFunction", pl);
-          
-        if (pl == null) {
-            
+        pl = hazardDependentSystemAndFunction2(p, "SystemFunction", pl);
+        if (pl.isEmpty()) {
             haSB.append("No Association").append(TD_END).append(TR_END);
-            //haSB.append(TD_START).append("No Association").append(TD_END).append(TR_END);
             return haSB.toString();
-            
         }
         for (Persistable r : pl) {
             if (!r.isDeleted()) {
-                    try {               
-                        
-                        haSB.append(P_START).append(r.getTitle()).append(P_END);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    haSB.append(P_START).append(r.getTitle()).append(P_END);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-        
+        }
         haSB.append(TR_END);
         return haSB.toString();
-
     }
-     private ArrayList<Persistable> hazardDependandsystemANDfunction(Persistable p, String relType, ArrayList<Persistable> pl)
-     {
-         ArrayList<Persistable> s=null;
-         ArrayList<Persistable> sf=null;
-          try {
-            if (proj != null) {
-                s = MetaFactory.getInstance().getChildren("System", "ProjectID", proj.getId());
-                sf = MetaFactory.getInstance().getChildren("SystemFunction", "ProjectID", proj.getId());
-            }
-            } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-        // ArrayList<Persistable> pl = new ArrayList<>();
-         ArrayList<Relationship> allRels = new ArrayList<>();
-        ArrayList<Relationship> hRels = p.getRelationships(relType);
-        
-        if (hRels == null) {
-            hRels = p.getRelationships("System");
-            if(hRels == null)
-            {
+
+    private ArrayList<Persistable> hazardDependentSystemAndFunction2(Persistable h, String relType, ArrayList<Persistable> pl) {
+        ArrayList<Relationship> PSRels = null;
+        if (h == null) {
             return pl;
-            }
         }
-        for (Relationship r : hRels) {
-            if (!r.isDeleted()) {
-                String m = r.getManagementClass();
-                if ((m == null) || (m.contains("Diagram"))) {
-                    try {
-                        Persistable hr = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-                        pl.add(hr);
-                       // if(r.getTargetType().equalsIgnoreCase("System"))
-                        hazardDependandsystemANDfunction(hr, r.getTargetType(), pl);
-                        
-                            
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        if (HRPSList != null) {
+            for (ProcessStep p : HRPSList) {
+                ArrayList<Relationship> PSR = p.getRelationships("Hazard");
+                if (PSR == null) {
+                    continue;
+                }
+                for (Relationship psr : PSR) {
+                    if (!psr.isDeleted()) {
+                        try {
+                            if (psr.getTarget() == h.getId()) {
+                                PSRels = p.getRelationships(relType);
+                                if (PSRels == null) {
+                                    PSRels = p.getRelationships("System");
+                                    if (PSRels == null) {
+                                        continue;
+                                    }
+                                }
+                                for (Relationship r : PSRels) {
+                                    if (!r.isDeleted()) {
+                                        String m = r.getManagementClass();
+                                        if ((m == null) || (m.contains("Diagram"))) {
+                                            try {
+                                                Persistable pr = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                                                pl.add(pr);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
         }
         return pl;
-     }
+    }
+
     private String HazardDependents(Hazard h, String type, String InitialText) {
-        //String[] HAZARDEPENDENTS = {"Cause", "Effect", "Control"};
-        // String[] TYPETEXT = {"Possible Causes", "Possible Effects", "Controls"};
         StringBuilder hdSB = new StringBuilder();
-        String description=null;
+        String description = null;
         try {
-           // hdSB.append(H3_START).append(InitialText).append(H3_END);
             ArrayList<Relationship> rels = h.getRelationships(type);
             if (rels == null) {
                 hdSB.append("No Related ").append(type);
@@ -1409,102 +1193,71 @@ private Persistable findParent(Persistable ch, String parentType)
             }
             for (Relationship r : rels) {
                 String m = r.getManagementClass();
-                if ((m == null) || (m.contains("Diagram"))) { // controls creating two relations, filtering one.
+                if ((m == null) || (m.contains("Diagram"))) { // controls creating two relations, filtering one relation.
                     Persistable p = MetaFactory.getInstance().getFactory(type).get(r.getTarget());
-                    description = CheckforNullorEmptyValue(p);
-//                    if (p.getAttributeValue("Description") == null || (p.getAttributeValue("Description")).equals("")) {
-//                        description = "Not Provided.";
-//                    } else {
-//                        description = p.getAttributeValue("Description");
-//                    }
-                    if (type.equals("Control")) { // control needs to show the state of the control
-                        if((!p.getAttributeValue("State").equalsIgnoreCase("Additional"))&& InitialText.equalsIgnoreCase("Existing Controls")){
-                            hdSB.append(P_START).append("<b>Title : </b>").append(p.getTitle()).append(" (").append(p.getAttributeValue("State")).append(")").append("<br/><b>Description : </b>").append(description).append(P_END);
-                            
+                    description = CheckforNullorEmptyValue(p, "Description");
+                    if (type.equals("Cause") && (InitialText.equalsIgnoreCase("Existing Controls"))) {
+                        hdSB.append(RelatedControlReport(p, "Control", "Existing Controls"));
+                    } else if (type.equals("Cause") && InitialText.equalsIgnoreCase("Additional Controls")) {
+                        hdSB.append(RelatedControlReport(p, "Control", "Additional Controls"));
+                    } else if (type.equals("Effect") && (InitialText.equalsIgnoreCase("Existing Controls"))) {
+                        hdSB.append(RelatedControlReport(p, "Control", "Existing Controls"));
+                    } else if (type.equals("Effect") && InitialText.equalsIgnoreCase("Additional Controls")) {
+                        hdSB.append(RelatedControlReport(p, "Control", "Additional Controls"));
+                    } else if (p.getDatabaseObjectName().equalsIgnoreCase("Control")) {
+                        if (p.getAttributeValue("GroupingType").equalsIgnoreCase("Existing") && InitialText.equalsIgnoreCase("Existing Controls")) {
+                            hdSB.append(P_START).append("Title : ").append(p.getTitle()).append("<br/>Description : ").append(description).append(P_END);
+                        } else if (p.getAttributeValue("GroupingType").equalsIgnoreCase("Additional") && InitialText.equalsIgnoreCase("Additional Controls")) {
+                            hdSB.append(P_START).append("Title : ").append(p.getTitle()).append("<br/>Description : ").append(description).append(P_END);
                         }
-                        else if(p.getAttributeValue("State").equalsIgnoreCase("Additional")&& InitialText.equalsIgnoreCase("Additional Controls"))
-                            hdSB.append(P_START).append("<b>Title : </b>").append(p.getTitle()).append(" (").append(p.getAttributeValue("State")).append(")").append("<br/><b>Description : </b>").append(description).append(P_END);
-                    } else if(type.equals("Cause") && (InitialText.equalsIgnoreCase("Existing Controls"))) {
-                        //hdSB.append(P_START).append("<b>Title : </b>").append(title).append("<br/><b>Description : </b>").append(description);
-                        hdSB.append(RelatedControlReport(p, "Control", "Existing Controls"));
-                     } else if(type.equals("Cause") && InitialText.equalsIgnoreCase("Additional Controls")) {
-                        //hdSB.append(P_START).append("<b>Title : </b>").append(p.getTitle()).append("<br/><b>Description : </b>").append(description);
-                        hdSB.append(RelatedControlReport(p, "Control", "Additional Controls"));
-                    } else if(type.equals("Effect") && (InitialText.equalsIgnoreCase("Existing Controls"))) {
-                        //hdSB.append(P_START).append("<b>Title : </b>").append(p.getTitle()).append("<br/><b>Description : </b>").append(description);
-                        hdSB.append(RelatedControlReport(p, "Control", "Existing Controls"));
-                    } else if(type.equals("Effect") && InitialText.equalsIgnoreCase("Additional Controls")) {
-                        //hdSB.append(P_START).append("<b>Title : </b>").append(p.getTitle()).append("<br/><b>Description : </b>").append(description);
-                        hdSB.append(RelatedControlReport(p, "Control", "Additional Controls"));
-                    }else  if(type.equals("Control") && InitialText.equalsIgnoreCase("Existing Controls")){
-                        hdSB.append(P_START).append("<b>Title : </b>").append(p.getTitle()).append("<br/><b>Description : </b>").append(description).append(P_END);
-                    }else  if(type.equals("Control") && InitialText.equalsIgnoreCase("Additional Controls")){
-                        hdSB.append(P_START).append("<b>Title : </b>").append(p.getTitle()).append("<br/><b>Description : </b>").append(description).append(P_END);
                     }
-                    
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
-       return hdSB.toString().length()<1 ? "No " + type  + " exists with " + InitialText  : hdSB.toString();
-        //return hdSB.toString();
+        return hdSB.toString().length() < 1 ? "No " + type + " exists with " + InitialText : hdSB.toString();
     }
-    private String RelatedControlReport(Persistable P, String type, String InitialText)
-    {
+
+    private String RelatedControlReport(Persistable P, String type, String InitialText) {
         StringBuilder hdSB = new StringBuilder();
-        String ControlDescription, PersistableDescription;
-        PersistableDescription = CheckforNullorEmptyValue(P);
-//        if (P.getAttributeValue("Description") == null || (P.getAttributeValue("Description")).equals("")) {
-//                        CauseDescription = "Not Provided.";
-//                    } else {
-//                        CauseDescription = P.getAttributeValue("Description");
-//                    }
-        try {            
+        String ControlDescription, ControlClicicalJustification, ControlEvidence, PersistableDescription;
+        PersistableDescription = CheckforNullorEmptyValue(P, "Description");
+        try {
             ArrayList<Relationship> rels = P.getRelationships(type);
+
             if (rels == null) {
-                hdSB.append(P_START).append("<b>Title : </b>").append(P.getTitle()).append("<br/><b>Description : </b>").append(PersistableDescription);
-                hdSB.append("<br/>No Releted ").append(type).append((P_END));
+                hdSB.append(P_START).append("Title : ").append(P.getTitle()).append("<br/>Description : ").append(PersistableDescription);
+                hdSB.append("<br/>No Related ").append(type).append((P_END));
                 return hdSB.toString();
             }
             for (Relationship r : rels) {
-                
-              //  if ((m == null) || (m.contains("Diagram"))) { // controls creating two relations, filtering one.
-                    Persistable p = MetaFactory.getInstance().getFactory(type).get(r.getTarget());
-                    ControlDescription = CheckforNullorEmptyValue(p);
-//                    if (p.getAttributeValue("Description") == null || (p.getAttributeValue("Description")).equals("")) {
-//                        ControlDescription = "Not Provided.";
-//                    } else {
-//                        ControlDescription = p.getAttributeValue("Description");
-//                    }
-                     // control needs to show the state of the control
-                        if((!p.getAttributeValue("State").equalsIgnoreCase("Additional"))&& InitialText.equalsIgnoreCase("Existing Controls")){
-                            hdSB.append(P_START).append("<b>Title : </b>").append(P.getTitle()).append("<br/><b>Description : </b>").append(PersistableDescription);
-                            hdSB.append("<br/><b> Related Control Title : </b>").append(p.getTitle()).append(" (").append(p.getAttributeValue("State")).append(")").append("<br/><b>Related Control Description : </b>").append(ControlDescription);
-                        }else if(p.getAttributeValue("State").equalsIgnoreCase("Additional")&& InitialText.equalsIgnoreCase("Additional Controls")){
-                            hdSB.append(P_START).append("<b>Title : </b>").append(P.getTitle()).append("<br/><b>Description : </b>").append(PersistableDescription);
-                            hdSB.append("<br/><b>Related Control Title : </b>").append(p.getTitle()).append(" (").append(p.getAttributeValue("State")).append(")").append("<br/><b>Related Control Description : </b>").append(ControlDescription);
-                        }
-//                        }else if (!RelatedControlExists){
-//                            hdSB.append(P_START).append("<b>Title : </b>").append(P.getTitle()).append("<br/><b>Description : </b>").append(PersistableDescription);
-//                            hdSB.append("<br/><b>No Related Control.</b>");
-//                        }
-                            
-//                        }else if(InitialText.equalsIgnoreCase("Related Controls"))
-//                            hdSB.append("<b>Related Control Title : </b>").append(p.getTitle()).append(" (").append(p.getAttributeValue("State")).append(")").append("<br/><b>Related Control Description : </b>").append(ControlDescription);
-                    
-              //  }
+                Persistable p = MetaFactory.getInstance().getFactory(type).get(r.getTarget());
+                ControlDescription = CheckforNullorEmptyValue(p, "Description");
+                ControlClicicalJustification = CheckforNullorEmptyValue(p, "ClinicalJustification");
+                ControlEvidence = CheckforNullorEmptyValue(p, "Evidence");
+                if ((p.getAttributeValue("GroupingType").equalsIgnoreCase("Existing")) && InitialText.equalsIgnoreCase("Existing Controls")) { // p
+                    hdSB.append("Title : ").append(P.getTitle()).append("<br/>Description : ").append(PersistableDescription);
+                    hdSB.append("<br/> Related Control Title : ").append(p.getTitle()).append("<br/>Related Control Description : ").append(ControlDescription);
+                    hdSB.append("<br/> Related Control Clinical Justification : ").append(ControlClicicalJustification).append("<br/>Related Control Evidence : ").append(ControlEvidence).append("<br class=\"extendedheight\" /><br />");
+                } else if (p.getAttributeValue("GroupingType").equalsIgnoreCase("Additional") && InitialText.equalsIgnoreCase("Additional Controls")) { //p
+                    hdSB.append("Title : ").append(P.getTitle()).append("<br/>Description : ").append(PersistableDescription);
+                    hdSB.append("<br/>Related Control Title : ").append(p.getTitle()).append("<br/>Related Control Description : ").append(ControlDescription);
+                    hdSB.append("<br/> Related Control Clinical Justification : ").append(ControlClicicalJustification).append("<br />Related Control Evidence : ").append(ControlEvidence).append("<br class=\"extendedheight\" /><br />");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
-        if(hdSB.length()>1)
-        hdSB.append(P_END);
+//        if (hdSB.length() > 1) {
+//            hdSB.append(P_END);
+//        }
         return hdSB.toString();
-        
+
     }
+
     private String HazradRiskAssessmentReport(Hazard h, String type) {
         StringBuilder hraSB = new StringBuilder();
         int is = h.getAttribute("InitialSeverity").getIntValue();
@@ -1515,56 +1268,60 @@ private Persistable findParent(Persistable ch, String parentType)
 
         int irr = h.getAttribute("InitialRiskRating").getIntValue();
         int rrr = h.getAttribute("ResidualRiskRating").getIntValue();
-
+        hraSB.append(P_START);
         if (type.equals("iniitalAssessment")) {
-
-            hraSB.append(P_START);
+            //hraSB.append("<br />");
             hraSB.append("Initial Severity: ");
-            // hraSB.append(String.format(PCLASS_START, is));
             hraSB.append(Hazard.translateSeverity(is));
-            hraSB.append(P_END);
+            hraSB.append("<br />");
 
-            hraSB.append(P_START);
+           // hraSB.append(P_START);
             hraSB.append("Initial Likelihood: ");
-            //hraSB.append(String.format(PCLASS_START, ilh));
             hraSB.append(Hazard.translateLikelihood(ilh));
-            hraSB.append(P_END);
+           // hraSB.append(P_END);
+           hraSB.append("<br />");
 
+//            hraSB.append("Initial Risk Rating: ");
+//            hraSB.append(String.format(PCLASS_START, irr));
+//            hraSB.append(" &nbsp;").append(h.getAttribute("InitialRiskRating").getIntValue()).append(" &nbsp;");
+//            hraSB.append(P_END).append("<br class=\"extendedheight\" />");
             hraSB.append("Initial Risk Rating: ");
-            hraSB.append(String.format(PCLASS_START, irr));
-            //hraSB.append("Initial Risk Rating: ");
+            hraSB.append(String.format(SPANCLASS_START, irr));
             hraSB.append(" &nbsp;").append(h.getAttribute("InitialRiskRating").getIntValue()).append(" &nbsp;");
-            hraSB.append(P_END).append("<br /><br />");
+            hraSB.append(SPAN_END).append("<br class=\"extendedheight\" />").append(P_END);
             return hraSB.toString();
         } else {
-
-            hraSB.append(P_START);
+            //hraSB.append("<br />");
             hraSB.append("Residual Severity: ");
-            //hraSB.append(String.format(PCLASS_START, rs));
-            hraSB.append(Hazard.translateSeverity(rs));   //TODO check if the value sent are in right order   
-            hraSB.append(P_END);
+            hraSB.append(Hazard.translateSeverity(rs));
+            //hraSB.append(P_END);
+             hraSB.append("<br/>");
 
-            hraSB.append(P_START);
+           // hraSB.append(P_START);
             hraSB.append("Residual Likelihood: ");
-            //hraSB.append(String.format(PCLASS_START, rlh));
-            hraSB.append(Hazard.translateLikelihood(rlh));  //TODO check if the value sent are in right order      
-            hraSB.append(P_END);
+            hraSB.append(Hazard.translateLikelihood(rlh));
+           // hraSB.append(P_END);
+            hraSB.append("<br/>");
 
+//            hraSB.append("Residual Risk Rating: ");
+//            hraSB.append(String.format(PCLASS_START, rrr));
+//            hraSB.append(" &nbsp;").append(h.getAttribute("ResidualRiskRating").getIntValue()).append(" &nbsp;");
+//            hraSB.append(P_END).append("<br /><br />");
+            
             hraSB.append("Residual Risk Rating: ");
-            hraSB.append(String.format(PCLASS_START, rrr));
-            //hraSB.append("Residual Risk Rating: ");
+            hraSB.append(String.format(SPANCLASS_START, rrr));
             hraSB.append(" &nbsp;").append(h.getAttribute("ResidualRiskRating").getIntValue()).append(" &nbsp;");
-            hraSB.append(P_END).append("<br /><br />");
+            hraSB.append(SPAN_END).append("<br class=\"extendedheight\" />").append(P_END);
             return hraSB.toString();
         }
     }
 
-    private String HazardProcessStep(Hazard h, String InitialText) {        
+    private String HazardProcessStep(Hazard h, String InitialText) {
         Boolean found = false;
         StringBuilder psSB = new StringBuilder();
-        //psSB.append(TD_START).append(InitialText).append(TD_END).append(TD_START);
         psSB.append(TR_START).append(TD_START).append(InitialText).append(TD_END);
         Collection<ProcessStep> PSF = null;
+        HRPSList = new ArrayList<>(); // hazard related ProcessStep list
         try {
             PSF = MetaFactory.getInstance().getFactory("ProcessStep").getEntries();
         } catch (Exception e) {
@@ -1582,13 +1339,17 @@ private Persistable findParent(Persistable ch, String parentType)
                     if (!r.isDeleted()) {
                         try {
                             if (r.getTarget() == h.getId()) {
+
                                 if (!found) {
                                     found = true;
+                                    HRPSList.add(p);
                                     psSB.append(TD_START).append(p.getAttributeValue("Name")).append(TD_END).append(TR_END);
                                 } else {
-                                    psSB.append(TR_START).append(TD_START).append(TD_END).append(TD_START).append(p.getAttributeValue("Name")).append(TD_END).append(TR_END);
+                                    if (!HRPSList.contains(p)) {
+                                        HRPSList.add(p);
+                                        psSB.append(TR_START).append(TD_START).append(TD_END).append(TD_START).append(p.getAttributeValue("Name")).append(TD_END).append(TR_END);
+                                    }
                                 }
-                                //psSB.append(p.getAttributeValue("Name")).append("  ");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -1608,42 +1369,38 @@ private Persistable findParent(Persistable ch, String parentType)
         String imageData = "";
         BasicGraphEditor editor = null;
         HashMap<String, DiagramEditorElement> ex = null;
-        //String FName = FILEPATH + "/" + p.getTitle() + ".png";
         String xml = p.getAttributeValue("GraphXml");
         if (p.getDatabaseObjectName().contentEquals("System")) {
             SystemEditorDetails sed = new SystemEditorDetails();
             SystemGraphEditor sge = new SystemGraphEditor(p.getId());
             sed.setSystem((System) p);
-            //ex = sed.getExistingGraph(xml);
             ex = sed.getExistingGraph(p, null);
             sge.setExistingGraph(ex);
             if (ex != null) {
                 editor = (BasicGraphEditor) sge;
             }
-        } else if(p.getDatabaseObjectName() == "Process"){
-                    ProcessGraphEditor pge = new ProcessGraphEditor(p.getId());
-                    pge.setProcessId(p.getId(), xml);
-                   try{
-                    PersistableFactory<ProcessStep> pfs = MetaFactory.getInstance().getFactory("ProcessStep");
-                    ArrayList<PersistableFilter> filter = new ArrayList<>();
-                    filter.add(new PersistableFilter("ProjectID", p.getAttributeValue("ProjectID")));
-                    filter.add(new PersistableFilter("ProcessID", p.getAttributeValue("ProcessID")));
-                    Collection<ProcessStep> steps = pfs.getEntries(filter);
-                    HashMap<String, DiagramEditorElement> existingSteps = new HashMap<>();
-                    for (ProcessStep ps : steps) {
-                        existingSteps.put(ps.getAttributeValue("GraphCellId"), new DiagramEditorElement(ps));
-                    }
-                    pge.setExistingSteps(existingSteps);
-                    editor = (BasicGraphEditor) pge;
-                    }
-                   catch (Exception e) {
-                    JOptionPane.showMessageDialog(this, "Failed to build details for generatiing Process image. Send logs to support", "Warning", JOptionPane.ERROR_MESSAGE);
-                    SmartProject.getProject().log("Failed to build details for graphical Process editor in ReportEditor", e);
-                   }
-                } 
-        else if (p.getDatabaseObjectName().contentEquals("Hazard")) {
+        } else if (p.getDatabaseObjectName() == "Process") {
+            ProcessGraphEditor pge = new ProcessGraphEditor(p.getId());
+            pge.setProcessId(p.getId(), xml, false);
+            try {
+                PersistableFactory<ProcessStep> pfs = MetaFactory.getInstance().getFactory("ProcessStep");
+                ArrayList<PersistableFilter> filter = new ArrayList<>();
+                filter.add(new PersistableFilter("ProjectID", p.getAttributeValue("ProjectID")));
+                filter.add(new PersistableFilter("ProcessID", p.getAttributeValue("ProcessID")));
+                Collection<ProcessStep> steps = pfs.getEntries(filter);
+                HashMap<String, DiagramEditorElement> existingSteps = new HashMap<>();
+                for (ProcessStep ps : steps) {
+                    existingSteps.put(ps.getAttributeValue("GraphCellId"), new DiagramEditorElement(ps));
+                }
+                pge.setExistingSteps(existingSteps);
+                editor = (BasicGraphEditor) pge;
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Failed to build details for generatiing Process image. Send logs to support", "Warning", JOptionPane.ERROR_MESSAGE);
+                SmartProject.getProject().log("Failed to build details for graphical Process editor in ReportEditor", e);
+            }
+        } else if (p.getDatabaseObjectName().contentEquals("Hazard")) {
             BowtieGraphEditor bge = new BowtieGraphEditor(p.getId());
-            bge.setHazardId(p.getId(), xml);
+            bge.setHazardId(p.getId(), xml, false);
             HazardEditor he = new HazardEditor();
             if ((xml != null) && (xml.trim().length() > 0)) {
                 he.setHazard((Hazard) p);
@@ -1663,16 +1420,15 @@ private Persistable findParent(Persistable ch, String parentType)
                 mxCodec codec = new mxCodec(doc);
                 codec.decode(doc.getDocumentElement(), graph.getModel());
                 //RenderedImage image = mxCellRenderer.createBufferedImage(graph, null, 1, null, false, null);
-
                 BufferedImage image = mxCellRenderer.createBufferedImage(graph, null, 1, null, false, null);
                 int w;
                 int h;
                 float rateX = (float) 600 / (float) image.getWidth();
                 float rateY = (float) 500 / (float) image.getHeight();
-                if((float) image.getWidth()< (float) 600 && (float) image.getHeight()< (float) 500){
-                     w = (int) image.getWidth() ;
+                if ((float) image.getWidth() < (float) 600 && (float) image.getHeight() < (float) 500) {
+                    w = (int) image.getWidth();
                     h = (int) image.getHeight();
-                }else if (rateX > rateY) {
+                } else if (rateX > rateY) {
                     w = (int) (image.getWidth() * rateY);
                     h = (int) (image.getHeight() * rateY);
 
@@ -1683,17 +1439,8 @@ private Persistable findParent(Persistable ch, String parentType)
                 }
                 //BufferedImage resizeImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB); //TYPE_INT_ARGB
                 BufferedImage resizeImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB); //TYPE_INT_ARGB
-//                 Graphics2D g2d = thumb.createGraphics();
-//                  g2d.setColor(Color.WHITE);
-                //g2d.drawImage(image1, h, h, Color.yellow, editor)
                 resizeImage.createGraphics().drawImage(image.getScaledInstance(w, h, java.awt.Image.SCALE_SMOOTH), 0, 0, null);
-                // resizeImage.createGraphics().drawImage(image.getScaledInstance(w, h, java.awt.Image.SCALE_SMOOTH), 0, 0, Color.WHITE, null);
-
                 imageData = encodeToBase64String(resizeImage, "png");
-                // imageData = encodeToBase64String(image, "png");
-//            ByteArrayOutputStream os = new ByteArrayOutputStream();
-//            ImageIO.write(resizeImage, "png", os);
-//            imageData = Base64.getEncoder().encodeToString(os.toByteArray());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1702,6 +1449,45 @@ private Persistable findParent(Persistable ch, String parentType)
         return imageData;
     }
 
+     private String IssuesReport() {
+        StringBuilder IssuesSB = new StringBuilder();
+        ArrayList<Persistable> IssuesList = null;
+        Map<Integer, IssuesLog> Issues = new HashMap<Integer, IssuesLog>();
+        try {
+            if (proj != null) {
+                IssuesList = MetaFactory.getInstance().getChildren("IssuesLog", "ProjectID", proj.getId());
+            } else {
+                IssuesList = MetaFactory.getInstance().getChildren("IssuesLog", "ProjectID", newObjectProjectId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        if (IssuesList != null) {
+            for (Persistable p : IssuesList) {
+                if (!p.isDeleted()) {
+                    Issues.put(p.getId(), (IssuesLog) p);
+                }
+            }
+            for (IssuesLog issue : Issues.values()) {
+                IssuesSB.append(H2_START);
+                IssuesSB.append(issue.getAttributeValue("Name"));
+                IssuesSB.append(H2_END);
+                IssuesSB.append("Description: ").append(issue.getAttributeValue("Description"));
+                IssuesSB .append("<br/>Reference: ").append(issue.getAttributeValue("ExternalIdentifier"));
+                IssuesSB .append("<br/>Grouping Type: ").append(issue.getAttributeValue("GroupingType"));
+                IssuesSB .append("<br/>CreatedDate: ").append(issue.getAttributeValue("CreatedDate"));
+                IssuesSB .append("<br/>Resolved Date: ").append(issue.getAttributeValue("ResolvedDate"));
+                IssuesSB .append("<br/>Resolution Type: ").append(issue.getAttributeValue("ResolutionType"));
+                IssuesSB.append("<br/>Resolution Description: ").append(issue.getAttributeValue("Resolution")).append("<br/><br/>");
+            }
+        }else {
+            IssuesSB.append("No issues found");
+        }
+        return IssuesSB.toString();
+
+    }
+    
     public static String encodeToBase64String(RenderedImage image, String type) {
         String imageString = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -1715,13 +1501,20 @@ private Persistable findParent(Persistable ch, String parentType)
         }
         return imageString;
     }
-    
-    public String CheckforNullorEmptyValue(Persistable p){
-        if (p.getAttributeValue("Description") == null || (p.getAttributeValue("Description")).equals("")) {
-                        return "Not Provided.";
-                    } else {
-                        return p.getAttributeValue("Description");
-                    }
+
+//    public String CheckforNullorEmptyValue(Persistable p) {
+//        if (p.getAttributeValue("Description") == null || (p.getAttributeValue("Description")).equals("")) {
+//            return "Not Provided.";
+//        } else {
+//            return p.getAttributeValue("Description");
+//        }
+//    }
+    public String CheckforNullorEmptyValue(Persistable p, String Attribute) {
+        if (p.getAttributeValue(Attribute) == null || (p.getAttributeValue(Attribute)).equals("")) {
+            return "Not Provided.";
+        } else {
+            return p.getAttributeValue(Attribute);
+        }
     }
 
     @Override
@@ -1818,5 +1611,92 @@ private Persistable findParent(Persistable ch, String parentType)
     public void unsubscribe() {
         SmartProject.getProject().removeNotificationSubscriber(this);
     }
+
+    private static final String headerTable = "<h2><strong style=\"color: #507add;\">Document Management</strong></h2>\n"
+            + "<h3><strong style=\"color: #507add;\">Revision History</strong></h3>\n"
+            + "<table class=\"HeaderTable\">\n"
+            + "    <tr class=\"title\">\n"
+            + "        <td ><strong>Version</strong></td>\n"
+            + "        <td ><strong>Date </strong></td>\n"
+            + "        <td ><strong>Summary of Changes</strong></td>\n"
+            + "    </tr>\n"
+            + "    <tr>\n"
+            + "        <td class=\"normal\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"normal\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"extended\"><p>&nbsp;</p></td>\n"
+            + "    </tr>\n"
+            + "	<tr>\n"
+            + "        <td class=\"normal\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"normal\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"extended\"><p>&nbsp;</p></td>\n"
+            + "    </tr>\n"
+            + "	<tr>\n"
+            + "        <td class=\"normal\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"normal\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"extended\"><p>&nbsp;</p></td>\n"
+            + "    </tr>\n"
+            + "	<tr>\n"
+            + "        <td class=\"normal\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"normal\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"extended\"><p>&nbsp;</p></td>\n"
+            + "    </tr>\n"
+            + "	<tr>\n"
+            + "        <td class=\"normal\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"normal\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"extended\"><p>&nbsp;</p></td>\n"
+            + "    </tr>\n"
+            + "</table>\n"
+            + "\n"
+            + "<p>&nbsp;</p>\n"
+            + "<h3><strong style=\"color: #507add;\">Reviewers</strong></h3>\n"
+            + "<p>This document must be reviewed by the following people:</p>\n"
+            + "<table class=\"HeaderTable\">\n"
+            + "    <tr class=\"title\">\n"
+            + "        <td ><strong>Reviewer Name</strong></td>\n"
+            + "        <td ><strong>Title / Responsibility </strong></td>\n"
+            + "        <td ><strong>Date</strong></td>\n"
+            + "		<td ><strong>Version</strong></td>\n"
+            + "    </tr>\n"
+            + "    <tr>\n"
+            + "        <td class=\"medium\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"larger\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"medium\"><p>&nbsp;</p></td>\n"
+            + "		<td class=\"medium\"><p>&nbsp;</p></td>\n"
+            + "		\n"
+            + "    </tr>\n"
+            + "	<tr>\n"
+            + "        <td class=\"medium\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"larger\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"medium\"><p>&nbsp;</p></td>\n"
+            + "		<td class=\"medium\"><p>&nbsp;</p></td>\n"
+            + "    </tr>\n"
+            + "	</table>\n"
+            + "\n"
+            + "<p>&nbsp;</p>\n"
+            + "<h3><strong style=\"color: #507add;\">Approved by</strong></h3>\n"
+            + "<p>This document must be approved by the following people:</p>\n"
+            + "<table class=\"HeaderTable\">\n"
+            + "    <tr class=\"title\">\n"
+            + "        <td ><strong>Approver Name</strong></td>\n"
+            + "        <td ><strong>Title / Responsibility </strong></td>\n"
+            + "        <td ><strong>Date</strong></td>\n"
+            + "		<td ><strong>Version</strong></td>\n"
+            + "    </tr>\n"
+            + "    <tr>\n"
+            + "        <td class=\"medium\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"larger\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"medium\"><p>&nbsp;</p></td>\n"
+            + "		<td class=\"medium\"><p>&nbsp;</p></td>\n"
+            + "		\n"
+            + "    </tr>\n"
+            + "	<tr>\n"
+            + "        <td class=\"medium\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"larger\"><p>&nbsp;</p></td>\n"
+            + "        <td class=\"medium\"><p>&nbsp;</p></td>\n"
+            + "		<td class=\"medium\"><p>&nbsp;</p></td>\n"
+            + "    </tr>\n"
+            + "	</table>\n"
+            + "\n"
+            + "<p>&nbsp;</p>";
 
 }

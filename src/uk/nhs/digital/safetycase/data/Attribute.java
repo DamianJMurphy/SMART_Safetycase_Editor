@@ -52,7 +52,9 @@ public class Attribute {
             return "";
         if (stringValue != null)
             return stringValue;
-        return intValue.toString();
+        if (intValue != null)
+            return intValue.toString();
+        return "";
     }
     
     public int getIntValue() { 

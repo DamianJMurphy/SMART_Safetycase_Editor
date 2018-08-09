@@ -40,7 +40,7 @@ import uk.nhs.digital.safetycase.data.Role;
 public class RoleEditor extends javax.swing.JPanel
         implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
-    private final String[] linkcolumns = {"Type", "Name", "Comment", "Via"};
+    private final String[] linkcolumns = {"Name", "Type", "Comment", "Via"};
     private Role role = null;
     private EditorComponent editorComponent = null;
     private int newObjectProjectId = -1;

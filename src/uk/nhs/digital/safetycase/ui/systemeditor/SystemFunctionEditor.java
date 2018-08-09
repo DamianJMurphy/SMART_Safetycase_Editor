@@ -46,7 +46,7 @@ public class SystemFunctionEditor extends javax.swing.JPanel
        
     private EditorComponent editorComponent = null;
     private final String[] functioncolumns = {"Name", "Description", "ParentFunction", "System"};
-    private final String[] linkcolumns = {"Type", "Name", "Comment", "Via"};
+    private final String[] linkcolumns = {"Name", "Type", "Comment", "Via"};
 
     private boolean modified = false;
     /**
