@@ -104,14 +104,29 @@ public class SmartProject
     {
         project = this;
         logger = new SmartLogger();
+        resetDatabase(true);
+    }
+    
+    public void resetDatabase(boolean init)
+            throws Exception
+    {
         try {
-            metaFactory = MetaFactory.getInstance();
+            if (init) {
+                java.lang.System.setProperty(Database.CONNECTIONURLPROPERTY, java.lang.System.getProperty("SMART.dburl"));
+                metaFactory = MetaFactory.getInstance();
+            } else {
+                metaFactory.shutdown();
+                java.lang.System.setProperty(Database.CONNECTIONURLPROPERTY, java.lang.System.getProperty("SMART.dburl"));
+                metaFactory.init();
+            } 
             metaFactory.initialise();
+            initialise();
+            
         }
         catch (Exception e) {
             log(Level.SEVERE, "Failed to initialise metaFactory", e);
             throw new Exception("Failed to initialise database access", e);
-        }
+        }        
     }
     
     public void setDisplayFont(Font f) { applicationFont = f; }
@@ -998,9 +1013,12 @@ public class SmartProject
         try {
             FileWriter fw = new FileWriter(java.lang.System.getProperty("user.home") + "/smart.properties");
             Properties p = new Properties();
-            p.setProperty("SMART.userfont", java.lang.System.getProperty("SMART.userfont"));
+            if (java.lang.System.getProperty("SMART.userfont") != null)
+                p.setProperty("SMART.userfont", java.lang.System.getProperty("SMART.userfont"));
+            if (java.lang.System.getProperty("SMART.allowdatabasechange") != null)
+                p.setProperty("SMART.allowdatabasechange", java.lang.System.getProperty("SMART.allowdatabasechange"));
             p.setProperty("SMART.dburl", java.lang.System.getProperty("SMART.dburl"));
-            p.store(fw, "Font size change");
+            p.store(fw, "Updated from SMART session");
         }
         catch (IOException e) {
             log("Failed to save properties", e);

@@ -115,7 +115,7 @@ public class ProcessEditorPopupMenu extends JPopupMenu
 				.getSelectAllAction()));
                 
                 addSeparator();
-                add(editor.bind("Grow canvas", new GrowCanvasAction(editor.getGraphComponent()), "/com/mxgraph/examples/swing/images/maximize.gif"));
+                add(editor.bind("Grow canvas", new GrowCanvasAction(editor.getGraphComponent()), "/com/mxgraph/examples/swing/images/expand.gif"));
                 add(editor.bind("Shrink canvas", new ShrinkCanvasAction(editor.getGraphComponent()), "/com/mxgraph/examples/swing/images/collapse.gif"));
 	}
 

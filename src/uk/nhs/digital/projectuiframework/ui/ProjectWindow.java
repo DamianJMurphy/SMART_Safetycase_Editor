@@ -21,10 +21,14 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.Enumeration;
 import uk.nhs.digital.projectuiframework.Project;
 import java.util.HashMap;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -98,6 +102,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         saveAllMenu = new javax.swing.JMenu();
         mainFileMenu = new javax.swing.JMenu();
         mainMenuNew = new javax.swing.JMenuItem();
+        changeDatabaseMenuItem = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         mainMenuExit = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
@@ -175,6 +180,14 @@ public class ProjectWindow extends javax.swing.JFrame {
             }
         });
         mainFileMenu.add(mainMenuNew);
+
+        changeDatabaseMenuItem.setText("Change database");
+        changeDatabaseMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeDatabaseMenuItemActionPerformed(evt);
+            }
+        });
+        mainFileMenu.add(changeDatabaseMenuItem);
         mainFileMenu.add(jSeparator1);
 
         mainMenuExit.setText("Exit");
@@ -678,6 +691,63 @@ public class ProjectWindow extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_formWindowClosing
 
+    private void changeDatabaseMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeDatabaseMenuItemActionPerformed
+
+        String c = System.getProperty("SMART.allowdatabasechange"); 
+        if ((c == null) || !c.toLowerCase().startsWith("y")) {
+            JOptionPane.showMessageDialog(rootPane, "This feature is not available.", "Not available", JOptionPane.OK_OPTION);
+            return;
+        }
+        
+        String dbLocation = null;
+        JFileChooser jfc = new JFileChooser();
+        jfc.setDialogType(JFileChooser.OPEN_DIALOG);
+        jfc.setDialogTitle("SMART database directory");
+        jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        jfc.setMultiSelectionEnabled(false);
+        int result = jfc.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File f = jfc.getSelectedFile();
+            if (f.getAbsolutePath().contains(" ") || f.getName().contains(" ")) {
+                JOptionPane.showMessageDialog(this, "Due to the database URL requirements, installation locations cannot contain spaces", "Invalid location", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (f.exists() && f.canWrite()) {
+                File dbcheckinstall = new File(f, "Database");
+                if (dbcheckinstall.exists()) {
+                    File olddb = new File(dbcheckinstall, "safety.script");
+                    if (olddb.exists()) {
+                        dbLocation = olddb.getAbsolutePath();
+                    }
+                }
+                if (dbLocation == null) {
+                    JOptionPane.showMessageDialog(this, "No SMART database found in " + f.getAbsolutePath(), "No database", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "The selected location either does not exist or cannot be accessed", "Invalid location", JOptionPane.INFORMATION_MESSAGE);
+            }
+            String databaseUrl = "jdbc:hsqldb:file:" + f.getAbsolutePath() + "/Database/safety;shutdown=true";
+//            System.out.println(databaseUrl);
+            System.setProperty("SMART.dburl", databaseUrl);
+                        
+            try {
+                SmartProject sp = SmartProject.getProject();     
+                sp.resetDatabase(false);
+                setTreeModel(sp.getTreeModel(), sp.getName(), sp);
+                int permanent = JOptionPane.showConfirmDialog(this, "Make this database URL:\n" + databaseUrl + "\nthe default ?", "Make database default", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);                
+                if (permanent == JOptionPane.YES_OPTION) {                                    
+                    sp.saveUserProperties();
+                }
+            }
+            catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Resetting database failed:\n" + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        
+    }//GEN-LAST:event_changeDatabaseMenuItemActionPerformed
+
     public void newProject(String n, Project p) {
         lastProjectAdded = p;
         projects.put(n, p);        
@@ -740,6 +810,7 @@ public class ProjectWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem changeDatabaseMenuItem;
     private javax.swing.ButtonGroup fontsizes;
     private javax.swing.JMenuItem helpAboutMenuItem;
     private javax.swing.JMenu helpMenu;

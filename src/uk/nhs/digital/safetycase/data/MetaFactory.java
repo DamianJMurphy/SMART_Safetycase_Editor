@@ -42,39 +42,45 @@ public class MetaFactory {
     
     private MetaFactory() {
         try {
-            database = new Database();
-            PersistableFactory<Role> pfRole = new PersistableFactory<>(database, "Role");
-            factories.put("Role", pfRole);
-            PersistableFactory<System> pfSystem = new PersistableFactory<>(database, "System");
-            factories.put("System", pfSystem);
-            PersistableFactory<SystemFunction> pfSystemFunction = new PersistableFactory<>(database, "SystemFunction");
-            factories.put("SystemFunction", pfSystemFunction);
-            PersistableFactory<Location> pfLocation = new PersistableFactory<>(database, "Location");
-            factories.put("Location", pfLocation);
-            PersistableFactory<Project> pfProject = new PersistableFactory<>(database, "Project");
-            factories.put("Project", pfProject);
-            PersistableFactory<Process> pfProcess = new PersistableFactory<>(database, "Process");
-            factories.put("Process", pfProcess);
-            PersistableFactory<ProcessStep> pfProcessStep = new PersistableFactory<>(database, "ProcessStep");
-            factories.put("ProcessStep", pfProcessStep);
-            PersistableFactory<IssuesLog> pfIssuesLog = new PersistableFactory<>(database, "IssuesLog");
-            factories.put("IssuesLog", pfIssuesLog);
-            PersistableFactory<Effect> pfEffect = new PersistableFactory<>(database, "Effect");
-            factories.put("Effect", pfEffect);
-            PersistableFactory<Cause> pfCause = new PersistableFactory<>(database, "Cause");
-            factories.put("Cause", pfCause);
-            PersistableFactory<Control> pfControl = new PersistableFactory<>(database, "Control");
-            factories.put("Control", pfControl);
-            PersistableFactory<Hazard> pfHazard = new PersistableFactory<>(database, "Hazard");
-            factories.put("Hazard", pfHazard);
-            PersistableFactory<Report> pfReport = new PersistableFactory<>(database, "Report");
-            factories.put("Report", pfReport);
-            loadValueSets();   
-            library = database.loadLibraries();
+            init();
         }
         catch (Exception e) {
             bootException = e;
         }
+    }
+    
+    public final void init() 
+            throws Exception
+    {
+        database = new Database();
+        PersistableFactory<Role> pfRole = new PersistableFactory<>(database, "Role");
+        factories.put("Role", pfRole);
+        PersistableFactory<System> pfSystem = new PersistableFactory<>(database, "System");
+        factories.put("System", pfSystem);
+        PersistableFactory<SystemFunction> pfSystemFunction = new PersistableFactory<>(database, "SystemFunction");
+        factories.put("SystemFunction", pfSystemFunction);
+        PersistableFactory<Location> pfLocation = new PersistableFactory<>(database, "Location");
+        factories.put("Location", pfLocation);
+        PersistableFactory<Project> pfProject = new PersistableFactory<>(database, "Project");
+        factories.put("Project", pfProject);
+        PersistableFactory<Process> pfProcess = new PersistableFactory<>(database, "Process");
+        factories.put("Process", pfProcess);
+        PersistableFactory<ProcessStep> pfProcessStep = new PersistableFactory<>(database, "ProcessStep");
+        factories.put("ProcessStep", pfProcessStep);
+        PersistableFactory<IssuesLog> pfIssuesLog = new PersistableFactory<>(database, "IssuesLog");
+        factories.put("IssuesLog", pfIssuesLog);
+        PersistableFactory<Effect> pfEffect = new PersistableFactory<>(database, "Effect");
+        factories.put("Effect", pfEffect);
+        PersistableFactory<Cause> pfCause = new PersistableFactory<>(database, "Cause");
+        factories.put("Cause", pfCause);
+        PersistableFactory<Control> pfControl = new PersistableFactory<>(database, "Control");
+        factories.put("Control", pfControl);
+        PersistableFactory<Hazard> pfHazard = new PersistableFactory<>(database, "Hazard");
+        factories.put("Hazard", pfHazard);
+        PersistableFactory<Report> pfReport = new PersistableFactory<>(database, "Report");
+        factories.put("Report", pfReport);
+        loadValueSets();
+        library = database.loadLibraries();
     }
     
     public ArrayList<ProjectLink> exploreLinks(Persistable start, Persistable p, ArrayList<ProjectLink> working, boolean includeauto) 
@@ -325,8 +331,8 @@ public class MetaFactory {
     public void initialise()
             throws Exception
     {
-        if (database == null)
-            throw new Exception("Database initialisation failed");
+//        if (database == null)
+//            throw new Exception("Database initialisation failed");
         database.loadAllowedRelationships();
         for (PersistableFactory p : factories.values()) {
             p.loadAll();
