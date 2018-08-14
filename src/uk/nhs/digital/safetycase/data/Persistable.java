@@ -150,6 +150,8 @@ public abstract class Persistable {
             return false;
         
         for (Relationship r : rels) {
+            if (r.isDeleted())
+                return true;
             if (r.getTarget() == target.getId())
                 if ((r.getManagementClass() == null) || includeAutomatic)
                     return true;
