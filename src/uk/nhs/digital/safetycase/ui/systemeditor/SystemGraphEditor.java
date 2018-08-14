@@ -147,7 +147,7 @@ public class SystemGraphEditor
         this("mxGraph Editor", new CustomGraphComponent(new CustomGraph(), s));
         init(this.graphComponent);
         systemId = s;
-        
+        this.graphComponent.getGraph().setGridEnabled(true);
     }
 
     /**
@@ -155,6 +155,7 @@ public class SystemGraphEditor
      */
     public SystemGraphEditor(String appTitle, mxGraphComponent component) {
         super(appTitle, component);
+        this.graphComponent.getGraph().setGridEnabled(true);
 //        init(component);
     }
     

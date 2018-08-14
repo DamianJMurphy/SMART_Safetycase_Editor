@@ -150,6 +150,7 @@ public class BowtieGraphEditor
                 init(this.graphComponent);
                 hazardId = h;
                 this.graphComponent.getGraph().setCellsCloneable(false);
+                this.graphComponent.getGraph().setGridEnabled(true);
                 
 	}
 
@@ -165,6 +166,7 @@ public class BowtieGraphEditor
 	{
 		super(appTitle, component);
                 init(component);
+                this.graphComponent.getGraph().setGridEnabled(true);
         }
         private void init(mxGraphComponent component) {
                 PageFormat format = new PageFormat();

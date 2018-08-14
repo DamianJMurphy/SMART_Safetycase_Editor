@@ -140,6 +140,23 @@ public abstract class Persistable {
         return rels;
     }
 
+    public boolean hasRelationshipWith(Persistable target, boolean includeAutomatic) 
+    {
+        if (target == null)
+            return false;
+        
+        ArrayList<Relationship> rels = relationships.get(target.getDatabaseObjectName());
+        if (rels == null)
+            return false;
+        
+        for (Relationship r : rels) {
+            if (r.getTarget() == target.getId())
+                if ((r.getManagementClass() == null) || includeAutomatic)
+                    return true;
+        }
+        return false;
+    }
+    
     
     public ArrayList<String> getReadOnlyAttributeNames() { 
         if (readOnlyAttributeList == null) {

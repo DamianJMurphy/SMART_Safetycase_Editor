@@ -161,6 +161,7 @@ public class ProcessGraphEditor
 		this("mxGraph Editor", new CustomGraphComponent(new CustomGraph(), p));
                 init(this.graphComponent);
                 processId = p;
+                this.graphComponent.getGraph().setGridEnabled(true);
 	}
 
 	/**
@@ -169,6 +170,7 @@ public class ProcessGraphEditor
 	public ProcessGraphEditor(String appTitle, mxGraphComponent component)
 	{
 		super(appTitle, component);
+                this.graphComponent.getGraph().setGridEnabled(true);
 //                init(component);
         }
         private void init(mxGraphComponent component) 

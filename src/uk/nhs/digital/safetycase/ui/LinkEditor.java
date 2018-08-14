@@ -363,8 +363,10 @@ public class LinkEditor extends javax.swing.JPanel {
             targetInstances = new ArrayList<>();
             for (Persistable p : targets) {
                 if (!p.isDeleted()) {
-                    dlm.addElement(p.getTitle());
-                    targetInstances.add(p);
+                    if (!focus.hasRelationshipWith(p, false)) {
+                        dlm.addElement(p.getTitle());
+                        targetInstances.add(p);
+                    }
                 }
             }
             targetList.setModel(dlm);
@@ -379,6 +381,9 @@ public class LinkEditor extends javax.swing.JPanel {
         relationshipsTable.clearSelection();
         discardButtonActionPerformed(null);
         editedRelationship = null;
+        if (targetTypeComboBox.getItemCount() == 1) {
+           targetTypeComboBoxActionPerformed(null); 
+        }
     }//GEN-LAST:event_newButtonActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
