@@ -17,15 +17,20 @@
  */
 package uk.nhs.digital.projectuiframework;
 import java.io.File;
-import java.util.Properties;
 /**
- *
+ * Some static helper functions for instantiating Project implementations based on a property.
+ * Set System property referenced by PROJECTCLASSPROPERTY to the class name of the implementation.
  * @author damian
  */
 public abstract class ProjectHelper implements Project {
     
     public static final String PROJECTCLASSPROPERTY = "uk.nhs.digital.projectuiframework.projectclass";
     
+    /**
+     * Instantiate a project with System properties only.
+     * @return
+     * @throws Exception 
+     */
     public static Project createProject() 
             throws Exception
     { 
@@ -33,7 +38,12 @@ public abstract class ProjectHelper implements Project {
         p.initialise();
         return p; 
     }
-    
+
+    /**
+     * Instantiate a project and load the given properties file.
+     * @return
+     * @throws Exception 
+     */    
     public static Project createProject(File f) 
             throws Exception
     { 
