@@ -50,7 +50,10 @@ import uk.nhs.digital.safetycase.ui.PersistableEditor;
 import uk.nhs.digital.safetycase.ui.views.ViewConstructor;
 
 /**
- *
+ * This provides central services to the application. It is responsible for creating the database connection,
+ * and the MetaFactory that provides access to the local cache and manages persistence. SmartProject also 
+ * houses the notification subscriber system, and application resources such as icons. It is responsible for 
+ * building the TreeModel for the main window display, and the logger.
  * @author damian
  */
 public class SmartProject 
@@ -107,7 +110,13 @@ public class SmartProject
         resetDatabase(true);
     }
     
-    public void resetDatabase(boolean init)
+    /**
+     * (Re) initialises the database (reads the System property "SMART.dburl") and re-loads the MetaFactory. Called at
+     * start-up and when the user requests a change of database.
+     * @param init Whether the MetaFactory needs to be instantiated.
+     * @throws Exception 
+     */
+    public final void resetDatabase(boolean init)
             throws Exception
     {
         try {
@@ -129,7 +138,16 @@ public class SmartProject
         }        
     }
     
+    /**
+     * Store the Font instance for the user-selectable display size.
+     * @param f 
+     */
     public void setDisplayFont(Font f) { applicationFont = f; }
+    
+    /**
+     * Get the currently-selected Font.
+     * @return 
+     */
     public Font getDisplayFont() { return applicationFont; }
     
     @Override
@@ -137,6 +155,9 @@ public class SmartProject
         return java.lang.System.getProperty("uk.nhs.digital.safetycase.applicationidentity");
     }
     
+    /**
+     * Cleanly shut down the database connection.
+     */
     @Override
     public void shutdown() {
         try {
@@ -147,11 +168,22 @@ public class SmartProject
         }
     }
     
+    /**
+     * Log the given message for a Throwable at Level.INFO severity.
+     * @param message
+     * @param thrown 
+     */
     @Override
     public void log(String message, Throwable thrown) {
         log(Level.INFO, message, thrown);
     }
 
+    /**
+     * Log the given message for a Throwable.
+     * @param level
+     * @param message
+     * @param thrown 
+     */
     @Override
     public void log(Level level, String message, Throwable thrown) {
         LogRecord lr = new LogRecord(level, message);
@@ -159,7 +191,12 @@ public class SmartProject
         logger.log(lr);
     }
 
-    
+    /**
+     * Returns the stored icon identified by String s, using the default icons for the given tree cell renderer for scale.
+     * @param s
+     * @param r
+     * @return 
+     */
     private ImageIcon getIcon(String s, ProjectTreeCellRenderer r) {
         try {
             ImageIcon icon = ResourceUtils.getImageIcon(s);
@@ -171,8 +208,21 @@ public class SmartProject
             return null;
         }       
     }
+    
+    /**
+     * Convenience method for getting hold of a reference to this instance.
+     * @return 
+     */
     public static final SmartProject getProject() { return project; }
     
+    /**
+     * Determine what the editor UI class is for a TreePath selected by the user in the 
+     * project tree view. This includes checks as to whether the identified object can
+     * be created from a "New" pop-up menu item. Will return null if the UI class cannot
+     * be resolved.
+     * @param t
+     * @return 
+     */
     @SuppressWarnings("UseSpecificCatch")
     private EditorComponent resolveNonContainedComponent(TreePath t) {
         
@@ -247,6 +297,13 @@ public class SmartProject
         return ec;
     }
     
+    /**
+     * From the user-selected tree path, walk back up until we reach a Project data object which owns the path, and
+     * return its ID.
+     * 
+     * @param t
+     * @return 
+     */
     private int getSelectedProject(TreePath t) {
         DefaultMutableTreeNode d = (DefaultMutableTreeNode)t.getLastPathComponent();
         DefaultMutableTreeNode p = null;
@@ -263,6 +320,11 @@ public class SmartProject
         return -1;
     }
     
+    /**
+     * Return a UI editor for the object at the end of a user-selected tree path.
+     * @param t
+     * @return 
+     */
     @Override
     public EditorComponent getEditorComponent(TreePath t) {
         if (t.getLastPathComponent().toString().contentEquals("Issues Log")) {
@@ -569,22 +631,40 @@ public class SmartProject
         return -1;
     }
 
+    /**
+     * Project id owning the currently-selected branch.
+     * @return 
+     */
     @Override
     public int getCurrentProjectID() {
         return currentProjectId;
     }
     
+    /**
+     * Set the project id of the owner of the currently-selected branch.
+     * @param id 
+     */
     @Override
     public void setCurrentProjectID(int id) {
         currentProjectId = id;
     }
 
+    /**
+     * Return the icon associated with the given database object name
+     * @param s
+     * @return 
+     */
     @Override
     public ImageIcon getIcon(String s) 
     {
         return icons.get(s);
     }
     
+    /**
+     * Return the icon associated with the database object name for the given object.
+     * @param o
+     * @return 
+     */
     @Override
     public ImageIcon getIcon(Object o) 
     {
@@ -614,6 +694,13 @@ public class SmartProject
         return null;
     }
     
+    /**
+     * Resolve the TreeNode for the selected object.
+     * 
+     * @param o
+     * @return
+     * @throws Exception If o is not a Persistable 
+     */
     @Override
     public DefaultMutableTreeNode getTreeNode(Object o)
             throws Exception
@@ -707,6 +794,14 @@ public class SmartProject
         return true;
     }
     
+    /**
+     * Uses the notification mechanism to check existing subscribers that might be open editors
+     * for the object.
+     * 
+     * @param o
+     * @param caller
+     * @return 
+     */
     @Override
     public JPanel getExistingEditor(Object o, Object caller) {
         if (notificationSubscribers != null) {
@@ -921,6 +1016,11 @@ public class SmartProject
         }
     }
     
+    /**
+     * Called from the "New project" menu item, to make an empty project tree structure.
+     * @param d
+     * @param pid 
+     */
     private void fillOutNewProject(DefaultMutableTreeNode d, int pid) {
         DefaultMutableTreeNode dmtn = null;
         dmtn = new DefaultMutableTreeNode("Systems");
@@ -985,6 +1085,13 @@ public class SmartProject
         return checkCreatableViaForm(s);
     }
     
+    /**
+     * Returns either a string message instructing the user how to create an object of the 
+     * given type, or null to tell the application that a new instance can be made from the
+     * tree-view popup menu.
+     * @param s
+     * @return 
+     */
     private String checkCreatableViaForm(String s) {
         if (s.contentEquals("Cause")) {
             return "Create new Causes in context using the Bowtie editor";
@@ -998,6 +1105,10 @@ public class SmartProject
         return null;        
     }
 
+    /**
+     * Used by the user-selectable display size, to ensure that table rows display correctly.
+     * @return 
+     */
     public int getTableRowHeight() {
         return (int)(applicationFont.getSize() * 1.3);        
     }
@@ -1025,6 +1136,12 @@ public class SmartProject
         }
     }
     
+    /**
+     * Sets the project window, creates the tree cell renderer, and loads the icons.
+     * Also sets the intial display font from the user's last-saved value in the
+     * default properties file.
+     * @param pw 
+     */
     @Override
     public void setProjectWindow(ProjectWindow pw) {
         projectWindow = pw;

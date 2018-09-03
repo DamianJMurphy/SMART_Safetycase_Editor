@@ -22,7 +22,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import uk.nhs.digital.projectuiframework.Project;
 /**
- *
+ * DefaultTreeCellRenderer subclass to set display text size, and node icon.
+ * 
  * @author damian
  */
 public class ProjectTreeCellRenderer 
