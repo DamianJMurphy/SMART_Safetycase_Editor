@@ -52,6 +52,9 @@ public class MetaFactory {
     public final void init() 
             throws Exception
     {
+        if (bootException != null) {
+            bootException = null;
+        }
         database = new Database();
         PersistableFactory<Role> pfRole = new PersistableFactory<>(database, "Role");
         factories.put("Role", pfRole);
@@ -272,6 +275,16 @@ public class MetaFactory {
         }
         return null;
     }
+
+    public static final MetaFactory getResetInstance()
+            throws Exception
+    {
+        instance.init();
+        if (bootException != null)
+            throw new Exception("MetaFactory instantiation failed", bootException);
+        return instance;
+    }
+
     
     public static final MetaFactory getInstance()
             throws Exception

@@ -21,9 +21,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.Enumeration;
 import uk.nhs.digital.projectuiframework.Project;
 import java.util.HashMap;
@@ -39,6 +37,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 import uk.nhs.digital.projectuiframework.InitialTab;
+import uk.nhs.digital.projectuiframework.ProjectHelper;
 import uk.nhs.digital.projectuiframework.smart.RiskMatrix;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.ui.Housekeeper;
@@ -698,7 +697,18 @@ public class ProjectWindow extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "This feature is not available.", "Not available", JOptionPane.OK_OPTION);
             return;
         }
+        changeDatabase(false);
+    }
+    public void changeDatabase(boolean atstartup) {
         
+        if (atstartup) {
+            int r = JOptionPane.showOptionDialog(rootPane, "The default database could not be opened. Would you like to choose another one ?", "Use another database ?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+            if (r == JOptionPane.NO_OPTION) {
+                JOptionPane.showMessageDialog(rootPane, "OK, closing SMART. You may need to send error logs to support.", "Closing", JOptionPane.OK_OPTION);
+                System.exit(1);
+            }
+            
+        }
         String dbLocation = null;
         JFileChooser jfc = new JFileChooser();
         jfc.setDialogType(JFileChooser.OPEN_DIALOG);
@@ -710,6 +720,10 @@ public class ProjectWindow extends javax.swing.JFrame {
             File f = jfc.getSelectedFile();
             if (f.getAbsolutePath().contains(" ") || f.getName().contains(" ")) {
                 JOptionPane.showMessageDialog(this, "Due to the database URL requirements, installation locations cannot contain spaces", "Invalid location", JOptionPane.ERROR_MESSAGE);
+                if (atstartup) {
+                    JOptionPane.showMessageDialog(rootPane, "Closing SMART. You may need to send error logs to support.", "Closing", JOptionPane.OK_OPTION);
+                    System.exit(1);
+                }
                 return;
             }
             if (f.exists() && f.canWrite()) {
@@ -722,6 +736,10 @@ public class ProjectWindow extends javax.swing.JFrame {
                 }
                 if (dbLocation == null) {
                     JOptionPane.showMessageDialog(this, "No SMART database found in " + f.getAbsolutePath(), "No database", JOptionPane.INFORMATION_MESSAGE);
+                    if (atstartup) {
+                        JOptionPane.showMessageDialog(rootPane, "Closing SMART. You may need to send error logs to support.", "Closing", JOptionPane.OK_OPTION);
+                        System.exit(1);
+                    }
                     return;
                 }
             } else {
@@ -732,8 +750,14 @@ public class ProjectWindow extends javax.swing.JFrame {
             System.setProperty("SMART.dburl", databaseUrl);
                         
             try {
-                SmartProject sp = SmartProject.getProject();     
-                sp.resetDatabase(false);
+                // If startup is true, it will need making first
+                SmartProject sp = null;
+                if (atstartup) {
+                    sp = (SmartProject)ProjectHelper.createProject();
+                } else {
+                    sp = SmartProject.getProject();
+                    sp.resetDatabase(false);
+                }
                 setTreeModel(sp.getTreeModel(), sp.getName(), sp);
                 int permanent = JOptionPane.showConfirmDialog(this, "Make this database URL:\n" + databaseUrl + "\nthe default ?", "Make database default", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);                
                 if (permanent == JOptionPane.YES_OPTION) {                                    
@@ -742,6 +766,10 @@ public class ProjectWindow extends javax.swing.JFrame {
             }
             catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Resetting database failed:\n" + e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                if (atstartup) {
+                    JOptionPane.showMessageDialog(rootPane, "Closing SMART. You may need to send error logs to support.", "Closing", JOptionPane.OK_OPTION);
+                    System.exit(1);
+                }                
             }
         }
         

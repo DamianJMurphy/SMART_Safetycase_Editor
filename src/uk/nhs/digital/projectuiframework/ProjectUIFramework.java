@@ -70,7 +70,7 @@ public class ProjectUIFramework {
         }
         java.lang.System.setProperty("user", "SA");
         java.lang.System.setProperty("password", "");
-        java.lang.System.setProperty("uk.nhs.digital.safetycase.applicationidentity", "NHS Digital SMART Safety Case Editor DEVELOPMENT 20180810");
+        java.lang.System.setProperty("uk.nhs.digital.safetycase.applicationidentity", "NHS Digital SMART Safety Case Editor DEVELOPMENT 20180907");
 //        java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Process","uk.nhs.digital.safetycase.ui.processeditor.ProcessEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Process","uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorForm");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Location","uk.nhs.digital.safetycase.ui.LocationEditor");
@@ -88,6 +88,7 @@ public class ProjectUIFramework {
         java.lang.System.setProperty("uk.nhs.digial.projectuiframework.appicon", "/uk/nhs/digital/projectuiframework/smart/nhsd-16x16.png");
         System.out.println("Running on " + System.getProperty("os.name"));
         ProjectWindow p = null;
+        boolean offerOtherDatabase = false;
         try {
             p= new ProjectWindow();
             smart = ProjectHelper.createProject();
@@ -99,9 +100,27 @@ public class ProjectUIFramework {
         }
         catch (Exception e) {
             System.err.println("Fatal error initialising: " + e.toString());
+            offerOtherDatabase = true;
+        }
+        if (p == null) {
+            // TODO: Show "can't make window" error
             System.exit(1);
         }
         p.setVisible(true);
+        if (offerOtherDatabase) {
+            p.changeDatabase(true);
+            smart.setProjectWindow(p);
+            p.setTitle(smart.getApplicationIdentifier());
+            try {
+                MetaFactory.getInstance().setUIProject(smart);
+            }
+            catch (Exception e) {
+                System.err.println("Fatal error initialising: " + e.toString());
+                // TODO: Display an error 
+                System.exit(1);
+            }
+            p.setTreeModel(smart.getTreeModel(), smart.getName(), smart);
+        }
     }
     
 }

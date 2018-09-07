@@ -122,7 +122,7 @@ public class SmartProject
         try {
             if (init) {
                 java.lang.System.setProperty(Database.CONNECTIONURLPROPERTY, java.lang.System.getProperty("SMART.dburl"));
-                metaFactory = MetaFactory.getInstance();
+                metaFactory = MetaFactory.getResetInstance();
             } else {
                 metaFactory.shutdown();
                 java.lang.System.setProperty(Database.CONNECTIONURLPROPERTY, java.lang.System.getProperty("SMART.dburl"));
