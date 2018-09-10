@@ -109,9 +109,11 @@ public class ProjectUIFramework {
         p.setVisible(true);
         if (offerOtherDatabase) {
             p.changeDatabase(true);
-            smart.setProjectWindow(p);
-            p.setTitle(smart.getApplicationIdentifier());
             try {
+                smart = ProjectHelper.createProject();
+                smart.setProjectWindow(p);
+                p.setTitle(smart.getApplicationIdentifier());
+           
                 MetaFactory.getInstance().setUIProject(smart);
             }
             catch (Exception e) {
