@@ -31,7 +31,6 @@ import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.Control;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
-import uk.nhs.digital.safetycase.data.ProjectLink;
 import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.data.ValueSet;
 
@@ -42,7 +41,7 @@ import uk.nhs.digital.safetycase.data.ValueSet;
 public class ControlEditor extends javax.swing.JPanel 
          implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
-    private final String[] linkcolumns = {"Name", "Type", "Comment", "Via"};
+    private final String[] linkcolumns = {"Type", "Name", "Comment"};
 
     private EditorComponent editorComponent = null;
     private Control control = null;
@@ -57,7 +56,7 @@ public class ControlEditor extends javax.swing.JPanel
         SmartProject.getProject().addNotificationSubscriber(this);
         linksTable.setModel(linkModel);
         linksTable.setDefaultEditor(Object.class, null);
-        linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());        
+        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
         linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         try {
 //            ValueSet controlType = MetaFactory.getInstance().getValueSet("ControlType");
@@ -72,12 +71,11 @@ public class ControlEditor extends javax.swing.JPanel
                 String s = cstates.next();
                 stateComboBox.addItem(s);
             }
-//            ArrayList<String> conds = MetaFactory.getInstance().getFactory("Control").getDistinctSet("GroupingType");
+            ArrayList<String> conds = MetaFactory.getInstance().getFactory("Control").getDistinctSet("GroupingType");
             groupComboBox.addItem("Additional");
-            groupComboBox.addItem("Existing");
-//            for (String s : conds) {
-//                groupComboBox.addItem(s);
-//            }
+            for (String s : conds) {
+                groupComboBox.addItem(s);
+            }
             
             
             ArrayList<String> typelist = MetaFactory.getInstance().getFactory("Control").getDistinctSet("Type");
@@ -97,6 +95,7 @@ public class ControlEditor extends javax.swing.JPanel
         catch (Exception e) {
             SmartProject.getProject().log("Failed to initialise ControlEditor", e);
         }
+        modified = false;
         
     }
 
@@ -150,7 +149,6 @@ public class ControlEditor extends javax.swing.JPanel
         jScrollPane3 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
         editLinksButton = new javax.swing.JButton();
-        directLinksOnlyCheckBox = new javax.swing.JCheckBox();
         saveButton = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -173,7 +171,7 @@ public class ControlEditor extends javax.swing.JPanel
 
         jLabel3.setText("State");
 
-        jLabel4.setText("Type");
+        jLabel4.setText("Group");
 
         nameTextField.setEditable(false);
 
@@ -218,30 +216,28 @@ public class ControlEditor extends javax.swing.JPanel
             }
         });
 
-        jLabel2.setText("Group");
+        jLabel2.setText("Type");
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGap(13, 13, 13)
-                        .addComponent(jLabel3)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel3))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel2)
-                        .addGap(9, 9, 9)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(groupComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(stateComboBox, 0, 694, Short.MAX_VALUE)))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(groupComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(stateComboBox, 0, 720, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelLayout.createSequentialGroup()
@@ -258,22 +254,22 @@ public class ControlEditor extends javax.swing.JPanel
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(stateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addGap(18, 18, 18)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(groupComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(13, 13, 13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(conditionsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(31, Short.MAX_VALUE))
+                    .addComponent(conditionsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(groupComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addContainerGap(29, Short.MAX_VALUE))
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelLayout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
                         .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(144, Short.MAX_VALUE)))
+                    .addContainerGap(111, Short.MAX_VALUE)))
         );
 
         editorPanel.add(mainPanel);
@@ -306,11 +302,11 @@ public class ControlEditor extends javax.swing.JPanel
         );
         descriptionPanelLayout.setVerticalGroup(
             descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 84, Short.MAX_VALUE)
+            .addGap(0, 99, Short.MAX_VALUE)
             .addGroup(descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(descriptionPanelLayout.createSequentialGroup()
                     .addGap(11, 11, 11)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
                     .addGap(11, 11, 11)))
         );
 
@@ -342,11 +338,11 @@ public class ControlEditor extends javax.swing.JPanel
         );
         justificationPanelLayout.setVerticalGroup(
             justificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 84, Short.MAX_VALUE)
+            .addGap(0, 99, Short.MAX_VALUE)
             .addGroup(justificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(justificationPanelLayout.createSequentialGroup()
                     .addGap(11, 11, 11)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
                     .addGap(11, 11, 11)))
         );
 
@@ -380,11 +376,11 @@ public class ControlEditor extends javax.swing.JPanel
         );
         evidenceContainerLayout.setVerticalGroup(
             evidenceContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 82, Short.MAX_VALUE)
+            .addGap(0, 97, Short.MAX_VALUE)
             .addGroup(evidenceContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(evidenceContainerLayout.createSequentialGroup()
                     .addGap(11, 11, 11)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
                     .addGap(11, 11, 11)))
         );
 
@@ -412,33 +408,20 @@ public class ControlEditor extends javax.swing.JPanel
             }
         });
 
-        directLinksOnlyCheckBox.setSelected(true);
-        directLinksOnlyCheckBox.setText("Show direct links only");
-        directLinksOnlyCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                directLinksOnlyCheckBoxActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout linksPanelLayout = new javax.swing.GroupLayout(linksPanel);
         linksPanel.setLayout(linksPanelLayout);
         linksPanelLayout.setHorizontalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 760, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(linksPanelLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(editLinksButton))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(directLinksOnlyCheckBox)
-                .addContainerGap())
         );
         linksPanelLayout.setVerticalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(linksPanelLayout.createSequentialGroup()
-                .addComponent(directLinksOnlyCheckBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editLinksButton))
         );
@@ -461,7 +444,7 @@ public class ControlEditor extends javax.swing.JPanel
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
+            .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -526,7 +509,27 @@ public class ControlEditor extends javax.swing.JPanel
         linkEditor.add(new LinkEditor(control).setParent(linkEditor));
         linkEditor.pack();
         linkEditor.setVisible(true);
-        populateLinks();
+
+        try {
+            HashMap<String,ArrayList<Relationship>> rels = control.getRelationshipsForLoad();
+            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
+            for (String t : rels.keySet()) {
+                ArrayList<Relationship> a = rels.get(t);
+                for (Relationship r : a) {
+                    String m = r.getManagementClass();
+                    if ((m == null) || (!m.contentEquals("Diagram"))) {                    
+                        Object[] row = new Object[linkcolumns.length];
+                        for (int i = 0; i < linkcolumns.length; i++)
+                            row[i] = r;
+                        dtm.addRow(row);
+                    }
+                }
+            }
+            linksTable.setModel(dtm);
+        }
+        catch (Exception e) {
+            SmartProject.getProject().log("Failed to process editLinks action in ControlEditor", e);
+        }
     }//GEN-LAST:event_editLinksButtonActionPerformed
 
     private void conditionsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conditionsComboBoxActionPerformed
@@ -569,10 +572,6 @@ public class ControlEditor extends javax.swing.JPanel
         modified = true;
     }//GEN-LAST:event_evidenceTextAreaKeyTyped
 
-    private void directLinksOnlyCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directLinksOnlyCheckBoxActionPerformed
-        populateLinks();
-    }//GEN-LAST:event_directLinksOnlyCheckBoxActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea clinicalJustificationTextArea;
@@ -580,7 +579,6 @@ public class ControlEditor extends javax.swing.JPanel
     private javax.swing.JPanel descriptionAndJustificationContainer;
     private javax.swing.JPanel descriptionPanel;
     private javax.swing.JTextArea descriptionTextArea;
-    private javax.swing.JCheckBox directLinksOnlyCheckBox;
     private javax.swing.JButton editLinksButton;
     private javax.swing.JPanel editorPanel;
     private javax.swing.JPanel evidenceContainer;
@@ -653,35 +651,33 @@ public class ControlEditor extends javax.swing.JPanel
                 break;
             }
         }        
-        populateLinks();
-        modified = false;
-    }
-
-    private void populateLinks() {
         try {
-            
-//            HashMap<String,ArrayList<Relationship>> rels = hazard.getRelationshipsForLoad();
+            HashMap<String,ArrayList<Relationship>> rels = control.getRelationshipsForLoad();
             DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            ArrayList<ProjectLink> pls = new ArrayList<>();
-            pls = MetaFactory.getInstance().exploreLinks(control, control, pls, false);
-            for (ProjectLink pl : pls) {
-                if (!directLinksOnlyCheckBox.isSelected() || (pl.getRemotePath().length() == 0)) {
-                    Object[] row = new Object[linkcolumns.length];
-                    for (int i = 0; i < linkcolumns.length; i++) {
-                        row[i] = pl;
+            for (String t : rels.keySet()) {
+                ArrayList<Relationship> a = rels.get(t);
+                for (Relationship r : a) {
+                    if (r.isDeleted())
+                        continue;
+                    
+                    String m = r.getManagementClass();
+                    if ((m == null) || (!m.contentEquals("Diagram"))) {                    
+                        Object[] row = new Object[linkcolumns.length];
+                        for (int i = 0; i < linkcolumns.length; i++)
+                            row[i] = r;
+                        dtm.addRow(row);
                     }
-                    dtm.addRow(row);
                 }
             }
-              
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
-            JOptionPane.showMessageDialog(editorPanel, "Failed to load Control relationshis for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
-            SmartProject.getProject().log("Failed to load control relationships", e);
+            JOptionPane.showMessageDialog(editorPanel, "Failed to load Control for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to set persistable object in ControlEditor", e);
         }
+        modified = false;
     }
-    
+
     @Override
     public Component getComponent() {
         return this;

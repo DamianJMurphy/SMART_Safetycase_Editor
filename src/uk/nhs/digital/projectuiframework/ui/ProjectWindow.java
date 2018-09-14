@@ -16,7 +16,7 @@
  *  
  */
 package uk.nhs.digital.projectuiframework.ui;
-import com.sun.glass.events.MouseEvent;
+import java.awt.event.MouseEvent;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -490,7 +490,7 @@ public class ProjectWindow extends javax.swing.JFrame {
             return;
         }
         
-        if ((evt.getButton() == MouseEvent.BUTTON_RIGHT) || (evt.getButton() == java.awt.event.MouseEvent.BUTTON3)) {
+        if (evt.getButton() == java.awt.event.MouseEvent.BUTTON3) {
             if (evt.getClickCount() == 1) {
                 TreePath pmp = projectTree.getPathForLocation(evt.getX(), evt.getY());
                 if (pmp != null) {

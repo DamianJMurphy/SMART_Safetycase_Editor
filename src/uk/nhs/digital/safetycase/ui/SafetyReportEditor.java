@@ -1052,8 +1052,8 @@ public class SafetyReportEditor
                     // hazardSB.append(HazardDependents(h, "Control", "Additional Controls")); // not required any more
                     hazardSB.append(H3_START).append("Residual Risk").append(H3_END);
                     hazardSB.append(HazradRiskAssessmentReport(h, "residualAssessment"));
-                    hazardSB.append(P_START).append("Overall Hazard Clinical Justification: ").append(CheckforNullorEmptyValue(h, "CLINICALJUSTIFICATION")).append("<br />");
-                    hazardSB.append("Overall Hazard  Status: ").append(CheckforNullorEmptyValue(h, "STATUS")).append(P_END);
+                    hazardSB.append(P_START).append("Overall Hazard Clinical Justification: ").append(CheckforNullorEmptyValue(h, "ClinicalJustification")).append("<br />");
+                    hazardSB.append("Overall Hazard  Status: ").append(CheckforNullorEmptyValue(h, "Status")).append(P_END);
                 }
             }
         }
@@ -1164,6 +1164,7 @@ public class SafetyReportEditor
                                         if ((m == null) || (m.contains("Diagram"))) {
                                             try {
                                                 Persistable pr = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
+                                                 if(!pl.contains(pr))
                                                 pl.add(pr);
                                             } catch (Exception e) {
                                                 e.printStackTrace();
@@ -1222,7 +1223,7 @@ public class SafetyReportEditor
 
     private String RelatedControlReport(Persistable P, String type, String InitialText) {
         StringBuilder hdSB = new StringBuilder();
-        String ControlDescription, ControlClicicalJustification, ControlEvidence, PersistableDescription;
+        String ControlState,ControlDescription, ControlClicicalJustification, ControlEvidence, PersistableDescription;
         PersistableDescription = CheckforNullorEmptyValue(P, "Description");
         try {
             ArrayList<Relationship> rels = P.getRelationships(type);
@@ -1234,16 +1235,17 @@ public class SafetyReportEditor
             }
             for (Relationship r : rels) {
                 Persistable p = MetaFactory.getInstance().getFactory(type).get(r.getTarget());
+                ControlState = CheckforNullorEmptyValue(p, "State");
                 ControlDescription = CheckforNullorEmptyValue(p, "Description");
                 ControlClicicalJustification = CheckforNullorEmptyValue(p, "ClinicalJustification");
                 ControlEvidence = CheckforNullorEmptyValue(p, "Evidence");
-                if ((p.getAttributeValue("GroupingType").equalsIgnoreCase("Existing")) && InitialText.equalsIgnoreCase("Existing Controls")) { // p
+                if (((p.getAttributeValue("GroupingType").equalsIgnoreCase("Existing")) || (p.getAttributeValue("Type").equalsIgnoreCase("Existing"))) && InitialText.equalsIgnoreCase("Existing Controls")) { // p
                     hdSB.append("Title : ").append(P.getTitle()).append("<br/>Description : ").append(PersistableDescription);
-                    hdSB.append("<br/> Related Control Title : ").append(p.getTitle()).append("<br/>Related Control Description : ").append(ControlDescription);
+                    hdSB.append("<br/> Related Control Title : ").append(p.getTitle()).append("<br/>Related Control Description : ").append(ControlDescription).append("<br/>Related Control State : ").append(ControlState);
                     hdSB.append("<br/> Related Control Clinical Justification : ").append(ControlClicicalJustification).append("<br/>Related Control Evidence : ").append(ControlEvidence).append("<br class=\"extendedheight\" /><br />");
-                } else if (p.getAttributeValue("GroupingType").equalsIgnoreCase("Additional") && InitialText.equalsIgnoreCase("Additional Controls")) { //p
+                } else if ((p.getAttributeValue("GroupingType").equalsIgnoreCase("Additional") || (p.getAttributeValue("Type").equalsIgnoreCase("Additional"))) && InitialText.equalsIgnoreCase("Additional Controls")) { //p
                     hdSB.append("Title : ").append(P.getTitle()).append("<br/>Description : ").append(PersistableDescription);
-                    hdSB.append("<br/>Related Control Title : ").append(p.getTitle()).append("<br/>Related Control Description : ").append(ControlDescription);
+                    hdSB.append("<br/>Related Control Title : ").append(p.getTitle()).append("<br/>Related Control Description : ").append(ControlDescription).append("<br/>Related Control State : ").append(ControlState);
                     hdSB.append("<br/> Related Control Clinical Justification : ").append(ControlClicicalJustification).append("<br />Related Control Evidence : ").append(ControlEvidence).append("<br class=\"extendedheight\" /><br />");
                 }
             }
@@ -1275,11 +1277,11 @@ public class SafetyReportEditor
             hraSB.append(Hazard.translateSeverity(is));
             hraSB.append("<br />");
 
-           // hraSB.append(P_START);
+//           // hraSB.append(P_START);
             hraSB.append("Initial Likelihood: ");
             hraSB.append(Hazard.translateLikelihood(ilh));
-           // hraSB.append(P_END);
-           hraSB.append("<br />");
+//           hraSB.append(P_END);
+//           hraSB.append("<br />");
 
 //            hraSB.append("Initial Risk Rating: ");
 //            hraSB.append(String.format(PCLASS_START, irr));
@@ -1365,6 +1367,40 @@ public class SafetyReportEditor
         return psSB.toString();
     }
 
+     // <editor-fold defaultstate="collapsed" desc="Unused Code">  
+    private ArrayList<ProcessStep> HazardProcessStep(Hazard h)
+    {
+     ArrayList<ProcessStep> PSRels = new ArrayList<>();
+     Collection<ProcessStep> PSC = null;
+     try {
+            PSC = MetaFactory.getInstance().getFactory("ProcessStep").getEntries();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return PSRels;
+        }
+        if (PSC != null) {
+            for (ProcessStep p : PSC) {
+                ArrayList<Relationship> PSR = p.getRelationships("Hazard");
+                if (PSR == null) {
+                    continue;
+                }
+                for (Relationship r : PSR) {
+                    if (!r.isDeleted()) {
+                        try {
+                            if (r.getTarget() == h.getId() && PSRels.isEmpty()) {
+                                    PSRels.add(p);
+                                } else if (r.getTarget() == h.getId() && !PSRels.contains(p)) {
+                                        PSRels.add(p);
+                                    }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+     return PSRels;
+    }// </editor-fold> 
     private String GeneratePersistableImage(Persistable p) {
         String imageData = "";
         BasicGraphEditor editor = null;
