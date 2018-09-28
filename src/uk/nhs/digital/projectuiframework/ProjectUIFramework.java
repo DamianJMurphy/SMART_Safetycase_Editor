@@ -70,7 +70,7 @@ public class ProjectUIFramework {
         }
         java.lang.System.setProperty("user", "SA");
         java.lang.System.setProperty("password", "");
-        java.lang.System.setProperty("uk.nhs.digital.safetycase.applicationidentity", "NHS Digital SMART Safety Case Editor DEVELOPMENT 20180914");
+        java.lang.System.setProperty("uk.nhs.digital.safetycase.applicationidentity", "NHS Digital SMART Safety Case Editor DEVELOPMENT 20180928");
 //        java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Process","uk.nhs.digital.safetycase.ui.processeditor.ProcessEditor");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Process","uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorForm");
         java.lang.System.setProperty("uk.nhs.digital.safetycase.ui.Location","uk.nhs.digital.safetycase.ui.LocationEditor");

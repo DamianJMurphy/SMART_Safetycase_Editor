@@ -489,16 +489,35 @@ public class SafetyReportEditor
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
 
-        JFileChooser fc = new JFileChooser();
-        fc.setCurrentDirectory(new java.io.File(".")); // start at application current directory
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int returnVal = fc.showSaveDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            FILEPATH = fc.getSelectedFile().toString();
-        } else {
-            return;
-        }
-
+        String fileName = null;
+        boolean needFileName = false;
+        do {
+            needFileName = false;
+            JFileChooser fc = new JFileChooser();
+            fc.setCurrentDirectory(new java.io.File(".")); // start at application current directory
+            fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            int returnVal = fc.showSaveDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                fileName = fc.getSelectedFile().toString();
+            } else {
+                return;
+            }
+            if (new File(fileName).exists()) {
+                int replace = JOptionPane.showConfirmDialog(this, "There is already a file with that name, replace it ?", "File exists", JOptionPane.YES_NO_CANCEL_OPTION);
+                switch (replace) {
+                    case JOptionPane.YES_OPTION:
+                        needFileName = false;
+                        break;
+                    case JOptionPane.CANCEL_OPTION:
+                        return;
+                    case JOptionPane.NO_OPTION:
+                    default:
+                        needFileName = true;
+                        break;
+                }
+            }
+        } while (needFileName);
+        
         StringBuilder body = new StringBuilder(TITLE_START);
         body.append(titleTextField.getText());
         body.append(TITLE_END);
@@ -569,22 +588,21 @@ public class SafetyReportEditor
         } else {
             name = "TestReport" + "_" + dateTime + ".html";
         }
-        String fileName = FILEPATH + "/" + name;
-        if (new File(FILEPATH).exists()) {
-            FileWriter fWriter = null;
-            BufferedWriter writer = null;
-            try {
-                fWriter = new FileWriter(fileName);
-                writer = new BufferedWriter(fWriter);
-                writer.write(data);
-                writer.close();
-                fWriter.close();
-                JOptionPane.showMessageDialog(null, fileName, "Report Created", JOptionPane.INFORMATION_MESSAGE);
-            } catch (HeadlessException | IOException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Error Occured", JOptionPane.ERROR_MESSAGE);
-            }
+//        String fileName = FILEPATH + "/" + name;
+        FileWriter fWriter = null;
+        BufferedWriter writer = null;
+        try {
+            fWriter = new FileWriter(fileName);
+            writer = new BufferedWriter(fWriter);
+            writer.write(data);
+            writer.close();
+            fWriter.close();
+            JOptionPane.showMessageDialog(null, fileName, "Report Created", JOptionPane.INFORMATION_MESSAGE);
+        } catch (HeadlessException | IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error Occured", JOptionPane.ERROR_MESSAGE);
         }
+        
     }//GEN-LAST:event_exportButtonActionPerformed
 
     private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed

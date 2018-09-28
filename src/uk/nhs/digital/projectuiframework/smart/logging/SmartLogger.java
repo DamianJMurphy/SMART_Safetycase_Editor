@@ -35,7 +35,7 @@ public class SmartLogger
     private static final String LOGGER_NAME = "uk.nhs.digital.projectuiframework.smart.Logger";
     private static final int DEFAULT_LIMIT = 1048576;
     private static final int DEFAULT_FILES = 16;
-    private static final String DEFAULT_FILENAME_PATTERN = "%t/SMART_%g.log";
+    private static final String DEFAULT_FILENAME_PATTERN = "%h/SMART_%g.log";
     private static final String PATTERN_PROPERTY = "uk.nhs.digital.projectuiframework.smart.logging.filenamepattern";
     private static final String LIMIT_PROPERTY = "uk.nhs.digital.projectuiframework.smart.logging.filesizelimit";
     private static final String FILECOUNT_PROPERTY = "uk.nhs.digital.projectuiframework.smart.logging.filecount";
@@ -46,7 +46,7 @@ public class SmartLogger
         super.setLevel(Level.ALL);
         addHandler(makeHandler());        
         LogManager.getLogManager().addLogger(this);
-        System.out.println("Logging to " + System.getProperty("java.io.tmpdir"));
+        System.out.println("Logging to " + System.getProperty("user.home"));
     }
     
     private Handler makeHandler() {

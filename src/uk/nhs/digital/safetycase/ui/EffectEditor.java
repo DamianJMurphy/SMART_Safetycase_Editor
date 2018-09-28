@@ -19,8 +19,6 @@ package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,8 +30,6 @@ import uk.nhs.digital.safetycase.data.Effect;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.ProjectLink;
-import uk.nhs.digital.safetycase.data.Relationship;
-import uk.nhs.digital.safetycase.data.ValueSet;
 
 /**
  *
