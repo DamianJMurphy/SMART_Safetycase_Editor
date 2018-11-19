@@ -16,7 +16,6 @@
  *  
  */
 package uk.nhs.digital.projectuiframework.ui;
-import java.awt.event.MouseEvent;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -362,6 +361,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         EditorComponent ec = proj.getEditorComponent(p);
         if (ec == null)
             return;
+        
         mainWindowTabbedPane.setSelectedComponent(mainWindowTabbedPane.add(ec.getTitle(), ec.getComponent()));
         mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
     }
