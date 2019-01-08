@@ -386,7 +386,7 @@ public class SystemEditorDetails extends javax.swing.JPanel
             return;
         
          int r = JOptionPane.showConfirmDialog(this, "Really delete this System ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);        
-        if (r == JOptionPane.CANCEL_OPTION)
+        if (r != JOptionPane.OK_OPTION)
             return;
        
         try {
