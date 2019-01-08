@@ -1102,6 +1102,9 @@ public class SmartProject
         if (s.contentEquals("Effect")) {
             return "Create new Effects in context using the Bowtie editor";
         }
+        if (s.contentEquals("Issue")) {
+            return "Create new issues in the Issue editor";
+        }
         return null;        
     }
 

@@ -121,8 +121,9 @@ public class RoleEditor extends javax.swing.JPanel
         directLinksOnlyCheckBox = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
-        buttonsPanel = new javax.swing.JPanel();
+        commonToolBar = new javax.swing.JToolBar();
         saveButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
         discardButton = new javax.swing.JButton();
 
         editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -144,7 +145,7 @@ public class RoleEditor extends javax.swing.JPanel
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addGap(83, 83, 83)
-                .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
+                .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -176,11 +177,11 @@ public class RoleEditor extends javax.swing.JPanel
         descriptionPanel.setLayout(descriptionPanelLayout);
         descriptionPanelLayout.setHorizontalGroup(
             descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 717, Short.MAX_VALUE)
+            .addGap(0, 724, Short.MAX_VALUE)
             .addGroup(descriptionPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(descriptionPanelLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 693, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         descriptionPanelLayout.setVerticalGroup(
@@ -243,11 +244,13 @@ public class RoleEditor extends javax.swing.JPanel
             .addGroup(linksPanelLayout.createSequentialGroup()
                 .addComponent(editLinksButtonButtonPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         editorPanel.add(linksPanel);
+
+        commonToolBar.setRollover(true);
 
         saveButton.setText("Save");
         saveButton.addActionListener(new java.awt.event.ActionListener() {
@@ -255,6 +258,8 @@ public class RoleEditor extends javax.swing.JPanel
                 saveButtonActionPerformed(evt);
             }
         });
+        commonToolBar.add(saveButton);
+        commonToolBar.add(jSeparator1);
 
         discardButton.setText("Delete");
         discardButton.addActionListener(new java.awt.event.ActionListener() {
@@ -262,27 +267,7 @@ public class RoleEditor extends javax.swing.JPanel
                 discardButtonActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout buttonsPanelLayout = new javax.swing.GroupLayout(buttonsPanel);
-        buttonsPanel.setLayout(buttonsPanelLayout);
-        buttonsPanelLayout.setHorizontalGroup(
-            buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonsPanelLayout.createSequentialGroup()
-                .addContainerGap(472, Short.MAX_VALUE)
-                .addComponent(saveButton)
-                .addGap(18, 18, 18)
-                .addComponent(discardButton)
-                .addContainerGap())
-        );
-        buttonsPanelLayout.setVerticalGroup(
-            buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(buttonsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(buttonsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(discardButton)
-                    .addComponent(saveButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        commonToolBar.add(discardButton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -292,19 +277,17 @@ public class RoleEditor extends javax.swing.JPanel
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addComponent(commonToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(buttonsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(8, 8, 8)
+                .addComponent(commonToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -314,7 +297,7 @@ public class RoleEditor extends javax.swing.JPanel
             return;
         
         int r = JOptionPane.showConfirmDialog(this, "Really delete this Role ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);        
-        if (r == JOptionPane.CANCEL_OPTION)
+        if (r != JOptionPane.OK_OPTION)
             return;
         
         try {
@@ -409,7 +392,7 @@ public class RoleEditor extends javax.swing.JPanel
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel buttonsPanel;
+    private javax.swing.JToolBar commonToolBar;
     private javax.swing.JPanel descriptionPanel;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JCheckBox directLinksOnlyCheckBox;
@@ -420,6 +403,7 @@ public class RoleEditor extends javax.swing.JPanel
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JPanel linksPanel;
     private javax.swing.JTable linksTable;
     private javax.swing.JTextField nameTextField;

@@ -103,34 +103,103 @@ public class ProjectEditor
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        nameTextField = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        ownerTextField = new javax.swing.JTextField();
-        customerTextField = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        descriptionTextArea = new javax.swing.JTextArea();
-        jPanel3 = new javax.swing.JPanel();
-        deleteButton = new javax.swing.JButton();
+        controlButtonsToolbar = new javax.swing.JToolBar();
         saveButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
         cancelCreateButton = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
         createProjectButton = new javax.swing.JButton();
-        jPanel6 = new javax.swing.JPanel();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        deleteButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         projectSummaryTextPane = new javax.swing.JTextPane();
+        jPanel10 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        descriptionTextArea = new javax.swing.JTextArea();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        nameTextField = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        ownerTextField = new javax.swing.JTextField();
+        customerTextField = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
 
-        setLayout(new java.awt.BorderLayout(0, 5));
+        controlButtonsToolbar.setRollover(true);
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.PAGE_AXIS));
+        saveButton.setText("Save");
+        saveButton.setFocusable(false);
+        saveButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        saveButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+        controlButtonsToolbar.add(saveButton);
+        controlButtonsToolbar.add(jSeparator1);
 
-        jLabel1.setText("Name");
+        cancelCreateButton.setText("Cancel");
+        cancelCreateButton.setFocusable(false);
+        cancelCreateButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        cancelCreateButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        cancelCreateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelCreateButtonActionPerformed(evt);
+            }
+        });
+        controlButtonsToolbar.add(cancelCreateButton);
+        controlButtonsToolbar.add(jSeparator2);
+
+        createProjectButton.setText("Create");
+        createProjectButton.setFocusable(false);
+        createProjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        createProjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        createProjectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createProjectButtonActionPerformed(evt);
+            }
+        });
+        controlButtonsToolbar.add(createProjectButton);
+        controlButtonsToolbar.add(jSeparator3);
+
+        deleteButton.setText("Delete");
+        deleteButton.setFocusable(false);
+        deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+        controlButtonsToolbar.add(deleteButton);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Project summary"));
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        projectSummaryTextPane.setEditable(false);
+        jScrollPane2.setViewportView(projectSummaryTextPane);
+
+        jPanel1.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+
+        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
+        jPanel10.setLayout(new java.awt.BorderLayout());
+
+        descriptionTextArea.setColumns(20);
+        descriptionTextArea.setLineWrap(true);
+        descriptionTextArea.setRows(5);
+        descriptionTextArea.setWrapStyleWord(true);
+        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                descriptionTextAreaKeyTyped(evt);
+            }
+        });
+        jScrollPane3.setViewportView(descriptionTextArea);
+
+        jPanel10.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+
+        jLabel4.setText("Name");
 
         nameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -138,7 +207,7 @@ public class ProjectEditor
             }
         });
 
-        jLabel2.setText("Owner");
+        jLabel5.setText("Owner");
 
         ownerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
@@ -152,116 +221,72 @@ public class ProjectEditor
             }
         });
 
-        jLabel3.setText("Author");
+        jLabel6.setText("Author");
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
                         .addGap(39, 39, 39)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 840, Short.MAX_VALUE)
+                        .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 1107, Short.MAX_VALUE)
                             .addComponent(ownerTextField)
                             .addComponent(customerTextField, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+        jPanel9Layout.setVerticalGroup(
+            jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel9Layout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
                     .addComponent(ownerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
                     .addComponent(customerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        jPanel2.add(jPanel5);
+        jPanel10.add(jPanel9, java.awt.BorderLayout.PAGE_START);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
-        jPanel4.setLayout(new java.awt.BorderLayout());
-
-        descriptionTextArea.setColumns(20);
-        descriptionTextArea.setLineWrap(true);
-        descriptionTextArea.setRows(5);
-        descriptionTextArea.setWrapStyleWord(true);
-        descriptionTextArea.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                descriptionTextAreaKeyTyped(evt);
-            }
-        });
-        jScrollPane1.setViewportView(descriptionTextArea);
-
-        jPanel4.add(jScrollPane1, java.awt.BorderLayout.CENTER);
-
-        jPanel2.add(jPanel4);
-
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        deleteButton.setText("Delete");
-        deleteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteButtonActionPerformed(evt);
-            }
-        });
-        jPanel3.add(deleteButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, -1, -1));
-
-        saveButton.setText("Save");
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
-        jPanel3.add(saveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 10, 90, -1));
-
-        cancelCreateButton.setText("Cancel");
-        cancelCreateButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelCreateButtonActionPerformed(evt);
-            }
-        });
-        jPanel3.add(cancelCreateButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 10, -1, -1));
-
-        createProjectButton.setText("Create");
-        createProjectButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createProjectButtonActionPerformed(evt);
-            }
-        });
-        jPanel3.add(createProjectButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 10, -1, -1));
-
-        jPanel2.add(jPanel3);
-        jPanel2.add(jPanel6);
-
-        add(jPanel2, java.awt.BorderLayout.NORTH);
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Project summary"));
-        jPanel1.setLayout(new java.awt.BorderLayout());
-
-        projectSummaryTextPane.setEditable(false);
-        jScrollPane2.setViewportView(projectSummaryTextPane);
-
-        jPanel1.add(jScrollPane2, java.awt.BorderLayout.CENTER);
-
-        add(jPanel1, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(controlButtonsToolbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(6, 6, 6))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 1228, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(controlButtonsToolbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelCreateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelCreateButtonActionPerformed
@@ -354,17 +379,17 @@ public class ProjectEditor
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
-    private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
+    private void customerTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_customerTextFieldKeyTyped
         modified = true;
-    }//GEN-LAST:event_nameTextFieldKeyTyped
+    }//GEN-LAST:event_customerTextFieldKeyTyped
 
     private void ownerTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ownerTextFieldKeyTyped
         modified = true;
     }//GEN-LAST:event_ownerTextFieldKeyTyped
 
-    private void customerTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_customerTextFieldKeyTyped
+    private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
         modified = true;
-    }//GEN-LAST:event_customerTextFieldKeyTyped
+    }//GEN-LAST:event_nameTextFieldKeyTyped
 
     private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
         modified = true;
@@ -373,22 +398,23 @@ public class ProjectEditor
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelCreateButton;
+    private javax.swing.JToolBar controlButtonsToolbar;
     private javax.swing.JButton createProjectButton;
     private javax.swing.JTextField customerTextField;
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextArea descriptionTextArea;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JTextField ownerTextField;
     private javax.swing.JTextPane projectSummaryTextPane;

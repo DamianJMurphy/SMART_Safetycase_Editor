@@ -130,7 +130,6 @@ public class CauseEditor extends javax.swing.JPanel
         editorPanel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         linksPanel = new javax.swing.JPanel();
-        editLinksButton = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
         directLinksOnlyCheckBox = new javax.swing.JCheckBox();
@@ -142,8 +141,10 @@ public class CauseEditor extends javax.swing.JPanel
         nameTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         conditionsComboBox = new javax.swing.JComboBox<>();
-        jPanel2 = new javax.swing.JPanel();
+        commonToolBar = new javax.swing.JToolBar();
         saveButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
+        editLinksButton = new javax.swing.JButton();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -151,13 +152,6 @@ public class CauseEditor extends javax.swing.JPanel
         editorPanel.setLayout(new javax.swing.BoxLayout(editorPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
         linksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Links"));
-
-        editLinksButton.setText("Links ...");
-        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editLinksButtonActionPerformed(evt);
-            }
-        });
 
         linksTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -184,12 +178,10 @@ public class CauseEditor extends javax.swing.JPanel
         linksPanel.setLayout(linksPanelLayout);
         linksPanelLayout.setHorizontalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 894, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(editLinksButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(directLinksOnlyCheckBox, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addComponent(directLinksOnlyCheckBox)
                 .addContainerGap())
         );
         linksPanelLayout.setVerticalGroup(
@@ -198,9 +190,8 @@ public class CauseEditor extends javax.swing.JPanel
                 .addContainerGap()
                 .addComponent(directLinksOnlyCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 3, Short.MAX_VALUE)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editLinksButton))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
@@ -226,7 +217,7 @@ public class CauseEditor extends javax.swing.JPanel
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -254,6 +245,25 @@ public class CauseEditor extends javax.swing.JPanel
         });
         jPanel4.add(conditionsComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 40, 788, -1));
 
+        commonToolBar.setRollover(true);
+
+        saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(saveButton);
+        commonToolBar.add(jSeparator1);
+
+        editLinksButton.setText("Links ...");
+        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editLinksButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(editLinksButton);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -262,17 +272,22 @@ public class CauseEditor extends javax.swing.JPanel
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(8, 8, 8))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(commonToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(commonToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(9, 9, 9)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -282,32 +297,6 @@ public class CauseEditor extends javax.swing.JPanel
         editorPanel.add(jPanel1);
 
         add(editorPanel);
-
-        saveButton.setText("Save");
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(828, Short.MAX_VALUE)
-                .addComponent(saveButton)
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(saveButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        add(jPanel2);
     }// </editor-fold>//GEN-END:initComponents
 
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
@@ -408,6 +397,7 @@ public class CauseEditor extends javax.swing.JPanel
 //        descriptionTextArea.setText("");        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToolBar commonToolBar;
     private javax.swing.JComboBox<String> conditionsComboBox;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JCheckBox directLinksOnlyCheckBox;
@@ -416,11 +406,11 @@ public class CauseEditor extends javax.swing.JPanel
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JPanel linksPanel;
     private javax.swing.JTable linksTable;
     private javax.swing.JTextField nameTextField;

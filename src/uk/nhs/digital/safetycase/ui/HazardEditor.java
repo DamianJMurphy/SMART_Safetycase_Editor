@@ -214,10 +214,6 @@ public class HazardEditor extends javax.swing.JPanel
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
-        saveButton = new javax.swing.JButton();
-        discardButton = new javax.swing.JButton();
-        bowtieButton = new javax.swing.JButton();
-        analysisContainer = new javax.swing.JPanel();
         analysisScrollPane = new javax.swing.JScrollPane();
         analysisPanel = new javax.swing.JPanel();
         ratingsPanel = new javax.swing.JPanel();
@@ -242,12 +238,19 @@ public class HazardEditor extends javax.swing.JPanel
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         statusComboBox = new javax.swing.JComboBox<>();
-        editLinksButton = new javax.swing.JButton();
         linksPanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
-        saveButtonBottom = new javax.swing.JButton();
         directLinksOnlyCheckBox = new javax.swing.JCheckBox();
+        commonToolBar = new javax.swing.JToolBar();
+        saveButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
+        bowtieButton = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
+        editLinksButton = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        discardButton = new javax.swing.JButton();
+        analysisContainer = new javax.swing.JPanel();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
 
@@ -288,82 +291,6 @@ public class HazardEditor extends javax.swing.JPanel
             }
         });
         jScrollPane2.setViewportView(descriptionTextArea);
-
-        saveButton.setText("Save");
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
-
-        discardButton.setText("Delete");
-        discardButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                discardButtonActionPerformed(evt);
-            }
-        });
-
-        bowtieButton.setText("Bowtie");
-        bowtieButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bowtieButtonActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
-        editorPanel.setLayout(editorPanelLayout);
-        editorPanelLayout.setHorizontalGroup(
-            editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(editorPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addComponent(bowtieButton, javax.swing.GroupLayout.DEFAULT_SIZE, 866, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(discardButton))
-                    .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(summaryTextField))))
-                .addContainerGap())
-        );
-        editorPanelLayout.setVerticalGroup(
-            editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editorPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(summaryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(conditionsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel4)
-                .addGap(3, 3, 3)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(bowtieButton)
-                    .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(discardButton)
-                        .addComponent(saveButton)))
-                .addContainerGap())
-        );
-
-        add(editorPanel);
-
-        analysisContainer.setLayout(new javax.swing.BoxLayout(analysisContainer, javax.swing.BoxLayout.LINE_AXIS));
 
         analysisScrollPane.setPreferredSize(new java.awt.Dimension(734, 572));
 
@@ -411,7 +338,7 @@ public class HazardEditor extends javax.swing.JPanel
                     .addComponent(jLabel8))
                 .addGap(26, 26, 26)
                 .addGroup(initialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(initialLikelihoodSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+                    .addComponent(initialLikelihoodSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
                     .addComponent(initialSeveritySpinner)
                     .addComponent(initialRiskRatingTextField))
                 .addContainerGap())
@@ -473,7 +400,7 @@ public class HazardEditor extends javax.swing.JPanel
                         .addGap(13, 13, 13)
                         .addComponent(jLabel10)
                         .addGap(35, 35, 35)
-                        .addComponent(residualLikelihoodSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE))
+                        .addComponent(residualLikelihoodSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE))
                     .addGroup(residualPanelLayout.createSequentialGroup()
                         .addGap(17, 17, 17)
                         .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -534,20 +461,20 @@ public class HazardEditor extends javax.swing.JPanel
         clinicalJustificationPanel.setLayout(clinicalJustificationPanelLayout);
         clinicalJustificationPanelLayout.setHorizontalGroup(
             clinicalJustificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1046, Short.MAX_VALUE)
+            .addGap(0, 1073, Short.MAX_VALUE)
             .addGroup(clinicalJustificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(clinicalJustificationPanelLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(clinicalJustificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1022, Short.MAX_VALUE)
+                    .addComponent(clinicalJustificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1049, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         clinicalJustificationPanelLayout.setVerticalGroup(
             clinicalJustificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 204, Short.MAX_VALUE)
+            .addGap(0, 205, Short.MAX_VALUE)
             .addGroup(clinicalJustificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clinicalJustificationPanelLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(clinicalJustificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                    .addComponent(clinicalJustificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 
@@ -566,13 +493,6 @@ public class HazardEditor extends javax.swing.JPanel
             }
         });
 
-        editLinksButton.setText("Links ...");
-        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editLinksButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -581,10 +501,8 @@ public class HazardEditor extends javax.swing.JPanel
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addGap(13, 13, 13)
-                .addComponent(statusComboBox, 0, 858, Short.MAX_VALUE)
-                .addGap(24, 24, 24)
-                .addComponent(editLinksButton)
-                .addContainerGap())
+                .addComponent(statusComboBox, 0, 885, Short.MAX_VALUE)
+                .addGap(126, 126, 126))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -592,9 +510,7 @@ public class HazardEditor extends javax.swing.JPanel
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(editLinksButton)))
+                    .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -615,13 +531,6 @@ public class HazardEditor extends javax.swing.JPanel
         ));
         jScrollPane4.setViewportView(linksTable);
 
-        saveButtonBottom.setText("Save");
-        saveButtonBottom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonBottomActionPerformed(evt);
-            }
-        });
-
         directLinksOnlyCheckBox.setSelected(true);
         directLinksOnlyCheckBox.setText(" Show direct links only");
         directLinksOnlyCheckBox.addActionListener(new java.awt.event.ActionListener() {
@@ -634,11 +543,7 @@ public class HazardEditor extends javax.swing.JPanel
         linksPanel.setLayout(linksPanelLayout);
         linksPanelLayout.setHorizontalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 1046, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(saveButtonBottom, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 1073, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(directLinksOnlyCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -646,19 +551,101 @@ public class HazardEditor extends javax.swing.JPanel
         linksPanelLayout.setVerticalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(linksPanelLayout.createSequentialGroup()
+                .addContainerGap(20, Short.MAX_VALUE)
                 .addComponent(directLinksOnlyCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(saveButtonBottom))
+                .addContainerGap())
         );
 
         analysisPanel.add(linksPanel);
 
         analysisScrollPane.setViewportView(analysisPanel);
 
-        analysisContainer.add(analysisScrollPane);
+        commonToolBar.setRollover(true);
 
+        saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(saveButton);
+        commonToolBar.add(jSeparator1);
+
+        bowtieButton.setText("Bowtie");
+        bowtieButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bowtieButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(bowtieButton);
+        commonToolBar.add(jSeparator2);
+
+        editLinksButton.setText("Links ...");
+        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editLinksButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(editLinksButton);
+        commonToolBar.add(jSeparator3);
+
+        discardButton.setText("Delete");
+        discardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                discardButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(discardButton);
+
+        javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
+        editorPanel.setLayout(editorPanelLayout);
+        editorPanelLayout.setHorizontalGroup(
+            editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editorPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
+                    .addGroup(editorPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(editorPanelLayout.createSequentialGroup()
+                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(summaryTextField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
+            .addComponent(analysisScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1096, Short.MAX_VALUE)
+            .addComponent(commonToolBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        editorPanelLayout.setVerticalGroup(
+            editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editorPanelLayout.createSequentialGroup()
+                .addComponent(commonToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
+                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(summaryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(conditionsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(analysisScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        add(editorPanel);
+
+        analysisContainer.setLayout(new javax.swing.BoxLayout(analysisContainer, javax.swing.BoxLayout.LINE_AXIS));
         add(analysisContainer);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -750,7 +737,7 @@ public class HazardEditor extends javax.swing.JPanel
         }
 
         int r = JOptionPane.showConfirmDialog(this, "Really delete this Hazard (this will also remove any Causes, Controls and Effects on the Hazard's bowtie) ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if (r == JOptionPane.CANCEL_OPTION) {
+        if (r != JOptionPane.OK_OPTION) {
             return;
         }
         try {
@@ -888,10 +875,6 @@ public class HazardEditor extends javax.swing.JPanel
         modified = true;
     }//GEN-LAST:event_summaryTextFieldKeyTyped
 
-    private void saveButtonBottomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonBottomActionPerformed
-        saveButtonActionPerformed(evt);
-    }//GEN-LAST:event_saveButtonBottomActionPerformed
-
     private void directLinksOnlyCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directLinksOnlyCheckBoxActionPerformed
         populateLinks();
     }//GEN-LAST:event_directLinksOnlyCheckBoxActionPerformed
@@ -952,6 +935,7 @@ public class HazardEditor extends javax.swing.JPanel
     private javax.swing.JPanel clinicalJustificationPanel;
     private javax.swing.JScrollPane clinicalJustificationScrollPane;
     private javax.swing.JTextArea clinicalJustificationTextArea;
+    private javax.swing.JToolBar commonToolBar;
     private javax.swing.JComboBox<String> conditionsComboBox;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JCheckBox directLinksOnlyCheckBox;
@@ -976,6 +960,9 @@ public class HazardEditor extends javax.swing.JPanel
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JPanel linksPanel;
     private javax.swing.JTable linksTable;
     private javax.swing.JPanel ratingsPanel;
@@ -984,7 +971,6 @@ public class HazardEditor extends javax.swing.JPanel
     private javax.swing.JTextField residualRiskRatingTextField;
     private javax.swing.JSpinner residualSeveritySpinner;
     private javax.swing.JButton saveButton;
-    private javax.swing.JButton saveButtonBottom;
     private javax.swing.JComboBox<String> statusComboBox;
     private javax.swing.JTextField summaryTextField;
     // End of variables declaration//GEN-END:variables
