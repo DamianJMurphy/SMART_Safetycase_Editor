@@ -17,6 +17,7 @@
  */
 package uk.nhs.digital.safetycase.ui.processeditor;
 
+import java.awt.Component;
 import uk.nhs.digital.safetycase.data.Process;
 import uk.nhs.digital.safetycase.data.PersistableFactory;
 import uk.nhs.digital.safetycase.ui.LinkEditor;
@@ -32,8 +33,10 @@ import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
+import uk.nhs.digital.projectuiframework.ui.SaveRejectedException;
 import uk.nhs.digital.projectuiframework.ui.UndockTabComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
+import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFilter;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.ProjectLink;
@@ -46,28 +49,36 @@ import uk.nhs.digital.safetycase.ui.LinkTableCellRenderer;
  *
  * @author damian
  */
-public class SingleProcessEditorPanel 
+public class SingleProcessEditor 
         extends javax.swing.JPanel 
+        implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
 
     private final String[] linkcolumns = {"Name", "Type", "Comment", "Via"};
     private JDialog parent = null;
-    private SingleProcessEditorForm containerForm = null;
+//    private SingleProcessEditorForm containerForm = null;
 //    private ProcessEditor editor = null;
     private int processid = -1;
     private Process process = null;
     private int newObjectProjectId = -1;
+    private EditorComponent editorComponent = null;
+    private boolean modified = false;
+    
     /**
      * Creates new form SingleProcessEditorPanel
      */
-    public SingleProcessEditorPanel() {
+    @SuppressWarnings("LeakingThisInConstructor")
+    public SingleProcessEditor() {
         initComponents();
         try {
+            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
             linksTable.setDefaultEditor(Object.class, null);
             linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());
             linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
+            linksTable.setModel(dtm);
         }
         catch (Exception e) {}
+        SmartProject.getProject().addNotificationSubscriber(this);
     }
     
     void setProcessId(int i) 
@@ -77,17 +88,17 @@ public class SingleProcessEditorPanel
         populateLinks();
     }
     
-    SingleProcessEditorPanel setParent(JDialog p) {
+    SingleProcessEditor setParent(JDialog p) {
         parent = p;
         return this;
     }
     
-    SingleProcessEditorPanel setParent(SingleProcessEditorForm p) {
-        containerForm = p;
-        return this;
-    }
+//    SingleProcessEditor setParent(SingleProcessEditorForm p) {
+//        containerForm = p;
+//        return this;
+//    }
     
-//    SingleProcessEditorPanel setEditor(ProcessEditor p) { 
+//    SingleProcessEditor setEditor(ProcessEditor p) { 
 //        editor = p; 
 //        return this;
 //    }
@@ -150,19 +161,24 @@ public class SingleProcessEditorPanel
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
-        deleteButton = new javax.swing.JButton();
-        saveButton = new javax.swing.JButton();
         linksPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
-        linksEditorButton = new javax.swing.JButton();
         directLinksOnlyCheckBox = new javax.swing.JCheckBox();
+        commonToolBar = new javax.swing.JToolBar();
+        saveButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
         processEditorButton = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
+        linksEditorButton = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        deleteButton = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setText("Name");
 
+        nameTextField.setEditable(false);
         nameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 nameTextFieldKeyTyped(evt);
@@ -182,20 +198,6 @@ public class SingleProcessEditorPanel
         });
         jScrollPane1.setViewportView(descriptionTextArea);
 
-        deleteButton.setText("Delete");
-        deleteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteButtonActionPerformed(evt);
-            }
-        });
-
-        saveButton.setText("Save");
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
-
         linksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Links"));
 
         linksTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -210,13 +212,6 @@ public class SingleProcessEditorPanel
             }
         ));
         jScrollPane2.setViewportView(linksTable);
-
-        linksEditorButton.setText("Links...");
-        linksEditorButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                linksEditorButtonActionPerformed(evt);
-            }
-        });
 
         directLinksOnlyCheckBox.setSelected(true);
         directLinksOnlyCheckBox.setText("Show direct links only");
@@ -233,22 +228,29 @@ public class SingleProcessEditorPanel
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 713, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(linksEditorButton, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(directLinksOnlyCheckBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(directLinksOnlyCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         linksPanelLayout.setVerticalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(linksPanelLayout.createSequentialGroup()
-                .addContainerGap(16, Short.MAX_VALUE)
+                .addGap(16, 16, 16)
                 .addComponent(directLinksOnlyCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(linksEditorButton)
-                .addContainerGap())
+                .addGap(43, 43, 43))
         );
+
+        commonToolBar.setRollover(true);
+
+        saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(saveButton);
+        commonToolBar.add(jSeparator1);
 
         processEditorButton.setText("Process Editor...");
         processEditorButton.addActionListener(new java.awt.event.ActionListener() {
@@ -256,56 +258,67 @@ public class SingleProcessEditorPanel
                 processEditorButtonActionPerformed(evt);
             }
         });
+        commonToolBar.add(processEditorButton);
+        commonToolBar.add(jSeparator2);
+
+        linksEditorButton.setText("Links...");
+        linksEditorButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                linksEditorButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(linksEditorButton);
+        commonToolBar.add(jSeparator3);
+
+        deleteButton.setText("Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(deleteButton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(commonToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(53, 53, 53)
-                        .addComponent(nameTextField))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(248, 248, 248)
-                        .addComponent(processEditorButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(saveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(deleteButton))
-                    .addComponent(linksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(linksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(53, 53, 53)
+                                .addComponent(nameTextField)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(commonToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                .addGap(19, 19, 19)
+                .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(saveButton)
-                        .addComponent(deleteButton))
-                    .addComponent(processEditorButton))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(linksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    void setNewObjectProjectId(int i) {
+    @Override
+    public void setNewObjectProjectId(int i) {
         newObjectProjectId = i;
     }
     
@@ -342,13 +355,14 @@ public class SingleProcessEditorPanel
             } else {
                 SmartProject.getProject().editorEvent(Project.UPDATE, process);
             }
-            containerForm.setNewProcess(process);
+//            containerForm.setNewProcess(process);
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Failed to save Process. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in SingleProcessEditor", e);
         }
-        containerForm.setModified(false);
+        modified = false;
+//        containerForm.setModified(false);
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
@@ -356,7 +370,7 @@ public class SingleProcessEditorPanel
             return;
 
         int r = JOptionPane.showConfirmDialog(this, "Really delete this Care process ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);        
-        if (r == JOptionPane.CANCEL_OPTION)
+        if (r != JOptionPane.OK_OPTION)
             return;
         
         try {
@@ -381,33 +395,6 @@ public class SingleProcessEditorPanel
         catch (Exception e) {
             e.printStackTrace();
         }
-/*
-        try {
-            HashMap<String,ArrayList<Relationship>> rels = process.getRelationshipsForLoad();
-            DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-            for (String t : rels.keySet()) {
-                ArrayList<Relationship> a = rels.get(t);
-                if (a != null) {
-                    for (Relationship r : a) {
-//                    String[] row = new String[linkcolumns.length];
-//                    Persistable tgt = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget());
-//                    row[0] = tgt.getDisplayName();
-//                    row[1] = tgt.getAttributeValue("Name");
-//                    row[2] = r.getComment();
-                        Object[] row = new Object[linkcolumns.length];
-                        for (int i = 0; i < linkcolumns.length; i++)
-                            row[i] = r;
-                        dtm.addRow(row);
-                    }
-                }
-            }
-            linksTable.setModel(dtm);
-        }
-        catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Failed to load existing links for Process. Send logs to support", "Display failed", JOptionPane.ERROR_MESSAGE);
-            SmartProject.getProject().log("Failed to load existing links in SingleProcessEditor", e);
-        }
-*/
     }//GEN-LAST:event_linksEditorButtonActionPerformed
 
     private void processEditorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processEditorButtonActionPerformed
@@ -417,13 +404,13 @@ public class SingleProcessEditorPanel
             return;
         }
         
-        if (containerForm != null) {
-            JPanel pnl = SmartProject.getProject().getExistingEditor(process, containerForm);
+//        if (containerForm != null) {
+            JPanel pnl = SmartProject.getProject().getExistingEditor(process, this);
             if (pnl != null) {
                 SmartProject.getProject().getProjectWindow().selectPanel(pnl);
                 return;
             }
-        }
+//        }
         try {
             ProcessGraphEditor pge = new ProcessGraphEditor(process.getId());
             String xml = process.getAttributeValue("GraphXml");
@@ -454,11 +441,12 @@ public class SingleProcessEditorPanel
     }//GEN-LAST:event_processEditorButtonActionPerformed
 
     private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
-       containerForm.setModified(true);
+//       containerForm.setModified(true);
     }//GEN-LAST:event_nameTextFieldKeyTyped
 
     private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
-        containerForm.setModified(true);
+//        containerForm.setModified(true);
+        modified = true;
     }//GEN-LAST:event_descriptionTextAreaKeyTyped
 
     private void directLinksOnlyCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directLinksOnlyCheckBoxActionPerformed
@@ -467,6 +455,7 @@ public class SingleProcessEditorPanel
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToolBar commonToolBar;
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JCheckBox directLinksOnlyCheckBox;
@@ -474,6 +463,9 @@ public class SingleProcessEditorPanel
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JButton linksEditorButton;
     private javax.swing.JPanel linksPanel;
     private javax.swing.JTable linksTable;
@@ -481,5 +473,67 @@ public class SingleProcessEditorPanel
     private javax.swing.JButton processEditorButton;
     private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void setPersistableObject(Persistable p) {
+        if (p == null)
+            return;
+        process = (Process)p;
+        processid = process.getId();
+        setData(process.getAttributeValue("Name"), process.getAttributeValue("Version"), 
+                    process.getAttributeValue("Source"), process.getAttributeValue("Description"));       
+        populateLinks();
+/*        
+        try {
+            ArrayList<Persistable> ps = MetaFactory.getInstance().getChildren("ProcessStep", "ProcessID", process.getId());
+            processSteps.populateList(ps);            
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to load Care process for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to set persistable object in SingleProcessEditorForm", e);
+        }
+*/
+    }
+
+    @Override
+    public void setEditorComponent(EditorComponent ed) {
+        editorComponent = ed;
+    }
+
+    @Override
+    public Component getComponent() {
+        return this;
+    }
+
+    @Override
+    public boolean wantsScrollPane() {
+        return false;
+    }
+
+    @Override
+    public boolean notification(int evtype, Object o) throws SaveRejectedException {
+        return false;
+    }
+
+    @Override
+    public JPanel getEditor(Object o) {
+        try {
+            Process p = (Process)o;
+            if (p == process)
+                return this;
+        }
+        catch (Exception e) {}
+        return null;
+    }
+
+    @Override
+    public void unsubscribe() {
+        SmartProject.getProject().removeNotificationSubscriber(this);
+    }
+
+    @Override
+    public boolean isModified() {
+       return modified;
+    }
 
 }

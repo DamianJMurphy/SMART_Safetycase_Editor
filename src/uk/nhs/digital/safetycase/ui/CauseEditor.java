@@ -49,13 +49,13 @@ public class CauseEditor extends javax.swing.JPanel
     /**
      * Creates new form HazardEditor
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public CauseEditor() {
         initComponents();
         linksTable.setDefaultEditor(Object.class, null);
 //        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());        
         linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());        
         DefaultTableModel dtm = new DefaultTableModel(linkcolumns, 0);
-        SmartProject.getProject().addNotificationSubscriber(this);
         linksTable.setModel(dtm);
         linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
 
@@ -74,6 +74,7 @@ public class CauseEditor extends javax.swing.JPanel
         }
         conditionsComboBox.setVisible(false);
         jLabel2.setVisible(false);
+        SmartProject.getProject().addNotificationSubscriber(this);
     }
 
     private void populateLinks() {

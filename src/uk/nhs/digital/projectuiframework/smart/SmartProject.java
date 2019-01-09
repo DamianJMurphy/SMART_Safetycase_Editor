@@ -75,7 +75,7 @@ public class SmartProject
     public static final String PROJECT_ICON = "/uk/nhs/digital/safetycase/ui/project.png";
     public static final String ANALYSIS_ICON = "/uk/nhs/digital/projectuiframework/smart/scales.png";
     public static final String BOWTIE_ICON = "/uk/nhs/digital/safetycase/ui/bowtie.png";
-    
+    public static final String PROCESSSTEP_ICON = "/uk/nhs/digital/projectuiframework/smart/processstep.png";
     public static final String HELP_ABOUT_ICON = "/uk/nhs/digital/projectuiframework/smart/smart-about.png";
     public static final String SMART_ICON = "/uk/nhs/digital/projectuiframework/smart/nhsd-16x16.png";
     
@@ -458,6 +458,41 @@ public class SmartProject
         projectWindow.resetTreeModel(treeModel);
     }
     
+    private DefaultMutableTreeNode populateSingleProcess(Persistable p) {
+        DefaultMutableTreeNode pn = new DefaultMutableTreeNode(p.getTitle());
+        pn.setUserObject(p);
+        
+        ArrayList<Persistable> steps = metaFactory.getChildren("ProcessStep", "ProcessID", p.getId());
+        if (steps == null) {
+            return pn;
+        }
+        for (Persistable s : steps) {
+            if (s.isDeleted()) {
+                continue;
+            }
+            DefaultMutableTreeNode sn = new DefaultMutableTreeNode(s.getTitle());
+            sn.setUserObject(s);
+            pn.add(sn);
+        }
+        return pn;
+    }
+    
+    private DefaultMutableTreeNode populateProcesses(int pid) 
+    {
+        DefaultMutableTreeNode pnode = new DefaultMutableTreeNode("Care Process");
+        ArrayList<Persistable> list = metaFactory.getChildren("Process", "ProjectID", pid);
+        if (list == null)
+            return pnode;
+        for (Persistable p : list) {
+            if (p.isDeleted())
+                continue;
+            DefaultMutableTreeNode pn = populateSingleProcess(p);
+            if (pn != null)
+                pnode.add(pn);
+        }
+        return pnode;
+    }
+    
     private DefaultMutableTreeNode populateProject(uk.nhs.digital.safetycase.data.Project proj) {
         DefaultMutableTreeNode p = new DefaultMutableTreeNode(proj.getTitle());
         p.setUserObject(proj);
@@ -468,7 +503,7 @@ public class SmartProject
 
         populateProjectComponent("Care Settings", p, proj.getId());
         populateProjectComponent("Role", p, proj.getId());
-        populateProjectComponent("Care Process", p, proj.getId());
+        p.add(populateProcesses(proj.getId()));
         p.add(populateHazard(proj.getId()));
 
         DefaultMutableTreeNode issuesNode = new DefaultMutableTreeNode("Issues Log");
@@ -554,8 +589,8 @@ public class SmartProject
         String s = type;
         if (type.contentEquals("Care Settings"))
             s = "Location";
-        if (type.contentEquals("Care Process"))
-            s = "Process";
+//        if (type.contentEquals("Care Process"))
+//            s = "Process";
         ArrayList<Persistable> list = metaFactory.getChildren(s, "ProjectID", id);
         if (list == null)
             return;
@@ -746,6 +781,8 @@ public class SmartProject
             uk.nhs.digital.safetycase.data.System sys = (uk.nhs.digital.safetycase.data.System)p;
             ArrayList<Persistable> alreadySeen = new ArrayList<>();
             return populateSystemWithChildren(sys, alreadySeen);
+        } else if (p.getDatabaseObjectName().contentEquals("Process")) {
+            return populateSingleProcess(p);
         } else {
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(p.getTitle());
             node.setUserObject(o);
@@ -892,7 +929,6 @@ public class SmartProject
                 return;
             }
 
-            // TODO: On add, inserting first breaks the "select index in the existing table" (though not for existing entries). FIX.
             switch (ev) {
                 case uk.nhs.digital.projectuiframework.Project.ADD:
                     treeModel.insertNodeInto(eventNode, containerNode, containerNode.getChildCount());
@@ -1154,6 +1190,7 @@ public class SmartProject
         icons.put("System", getIcon(SYSTEM_ICON, r));
         icons.put("SystemFunction", getIcon(FUNCTION_ICON, r));
         icons.put("Process", getIcon(PROCESS_ICON, r));
+        icons.put("ProcessStep", getIcon(PROCESSSTEP_ICON, r));
         icons.put("Hazard", getIcon(HAZARD_ICON, r));
         icons.put("Cause", getIcon(CAUSE_ICON, r));
         icons.put("Control", getIcon(CONTROL_ICON, r));
@@ -1230,6 +1267,8 @@ public class SmartProject
         return systemsNode;
     }
 
+
+    
     private DefaultMutableTreeNode populateSystemWithChildren(uk.nhs.digital.safetycase.data.System s, ArrayList<Persistable> alreadySeen) {
         
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(s.getTitle());

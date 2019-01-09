@@ -35,7 +35,7 @@
             </Constraint>
           </Constraints>
         </Component>
-        <Component class="uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorPanel" name="processEditor">
+        <Component class="uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditor" name="processEditor">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
               <JSplitPaneConstraints position="left"/>

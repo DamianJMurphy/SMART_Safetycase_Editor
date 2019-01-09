@@ -51,21 +51,22 @@ public class SingleProcessEditorForm
     /**
      * Creates new form SingleProcessEditorForm
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public SingleProcessEditorForm(int pid)
             throws Exception
     {
         initComponents();
-        SmartProject.getProject().addNotificationSubscriber(this);
         PersistableFactory<Process> pfp = (PersistableFactory<Process>)MetaFactory.getInstance().getFactory("Process");
         if (pid != -1) {
             process = pfp.get(pid);
             processEditor.setData(process.getAttributeValue("Name"), process.getAttributeValue("Version"), process.getAttributeValue("Source"), 
                     process.getAttributeValue("Description"));
             processEditor.setProcessId(pid);
-            processEditor.setParent(this);
+//            processEditor.setParent(this);
             ArrayList<Persistable> ps = MetaFactory.getInstance().getChildren("ProcessStep", "ProcessID", pid);
             processSteps.populateList(ps);
         }
+        SmartProject.getProject().addNotificationSubscriber(this);
     }
     
     void setModified(boolean b) { modified = b; }
@@ -79,7 +80,7 @@ public class SingleProcessEditorForm
             throws Exception
     {
         initComponents();
-        processEditor.setParent(this);
+//        processEditor.setParent(this);
         SmartProject.getProject().addNotificationSubscriber(this);
     }
     
@@ -110,7 +111,7 @@ public class SingleProcessEditorForm
 
         jSplitPane1 = new javax.swing.JSplitPane();
         processSteps = new uk.nhs.digital.safetycase.ui.processeditor.ProcessEditorStepList();
-        processEditor = new uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorPanel();
+        processEditor = new uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditor();
 
         setLayout(new java.awt.CardLayout());
 
@@ -124,7 +125,7 @@ public class SingleProcessEditorForm
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSplitPane jSplitPane1;
-    private uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditorPanel processEditor;
+    private uk.nhs.digital.safetycase.ui.processeditor.SingleProcessEditor processEditor;
     private uk.nhs.digital.safetycase.ui.processeditor.ProcessEditorStepList processSteps;
     // End of variables declaration//GEN-END:variables
 

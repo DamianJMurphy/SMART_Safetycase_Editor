@@ -358,6 +358,10 @@ public class RoleEditor extends javax.swing.JPanel
 //        if ((r == null) || (r.isEmpty())) {
 //            JOptionPane.showMessageDialog(this, "Role has no links to Care Settings, at least one must be added before this Role is valid for a report", "Add link to Care Setting", JOptionPane.INFORMATION_MESSAGE);            
 //        }
+        String cos = System.getProperty("SMART.closeonsave");
+        if ((cos != null) && (cos.contains("Role"))) {
+           // TODO: Close this editor (need to find container ExternalEditorView or Tab component and ask that to close)
+        }
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped

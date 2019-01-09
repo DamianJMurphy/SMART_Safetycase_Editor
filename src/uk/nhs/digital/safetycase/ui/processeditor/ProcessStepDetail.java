@@ -17,6 +17,7 @@
  */
 package uk.nhs.digital.safetycase.ui.processeditor;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JDialog;
@@ -24,11 +25,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
+import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
+import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.ProjectLink;
 import uk.nhs.digital.safetycase.data.Relationship;
@@ -43,16 +46,32 @@ import uk.nhs.digital.safetycase.ui.LinkTableCellRenderer;
  */
 public class ProcessStepDetail 
         extends javax.swing.JPanel 
-        implements DataNotificationSubscriber
+        implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
 
     private static final String[] COLUMNS = {"Name", "Status", "Initial rating", "Residual rating"};
     private final String[] linkcolumns = {"Name", "Type", "Comment", "Via"};
     
+    private EditorComponent editorComponent = null;
     private JDialog parent = null;
     private ProcessStep processStep = null;
     private final ArrayList<Hazard> hazardList = new ArrayList<>();
     private boolean modified = false;
+    
+    @SuppressWarnings("LeakingThisInConstructor")
+    public ProcessStepDetail() {
+        initComponents();
+        DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
+        hazardsTable.setModel(dtm);
+        hazardsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
+        dtm = new DefaultTableModel(linkcolumns, 0);
+        linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
+        linksTable.setDefaultEditor(Object.class, null);
+        linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());
+        linksTable.setModel(dtm);
+        SmartProject.getProject().addNotificationSubscriber(this);
+    }
+    
     /**
      * Creates new form ProcessStepDetail
      * @param ps
@@ -61,7 +80,6 @@ public class ProcessStepDetail
     public ProcessStepDetail(ProcessStep ps) {
         initComponents();
         processStep = ps;
-        SmartProject.getProject().addNotificationSubscriber(this);
         DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
         hazardsTable.setModel(dtm);
         hazardsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
@@ -73,6 +91,7 @@ public class ProcessStepDetail
         if (ps != null) {
             populate();
         }
+        SmartProject.getProject().addNotificationSubscriber(this);
     }
 
    private void populateLinks() {
@@ -154,16 +173,20 @@ public class ProcessStepDetail
         jScrollPane1 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
+        commonToolBar = new javax.swing.JToolBar();
+        saveButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
+        editSelectedHazardButton = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
+        editLinksButton = new javax.swing.JButton();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
         hazardsPanel = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         hazardsTable = new javax.swing.JTable();
-        editSelectedHazardButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
         directLinksOnlyCheckBox = new javax.swing.JCheckBox();
-        editLinksButton = new javax.swing.JButton();
 
         jLabel2.setText("Description");
 
@@ -194,6 +217,37 @@ public class ProcessStepDetail
 
         jLabel3.setText("Description");
 
+        commonToolBar.setRollover(true);
+
+        saveButton.setText("Save");
+        saveButton.setFocusable(false);
+        saveButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        saveButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(saveButton);
+        commonToolBar.add(jSeparator1);
+
+        editSelectedHazardButton.setText("Edit selected hazard");
+        editSelectedHazardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editSelectedHazardButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(editSelectedHazardButton);
+        commonToolBar.add(jSeparator2);
+
+        editLinksButton.setText("Links...");
+        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editLinksButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(editLinksButton);
+
         javax.swing.GroupLayout namePanelLayout = new javax.swing.GroupLayout(namePanel);
         namePanel.setLayout(namePanelLayout);
         namePanelLayout.setHorizontalGroup(
@@ -210,22 +264,26 @@ public class ProcessStepDetail
                                 .addComponent(jLabel3)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(namePanelLayout.createSequentialGroup()
+                                .addGap(2, 2, 2)
                                 .addComponent(jLabel1)
-                                .addGap(20, 20, 20)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(nameTextField)))))
                 .addContainerGap())
+            .addComponent(commonToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         namePanelLayout.setVerticalGroup(
             namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(namePanelLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(6, 6, 6)
+                .addComponent(commonToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
-                .addGap(2, 2, 2)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
         );
 
         add(namePanel);
@@ -246,33 +304,21 @@ public class ProcessStepDetail
         ));
         jScrollPane2.setViewportView(hazardsTable);
 
-        editSelectedHazardButton.setText("Edit selected hazard");
-        editSelectedHazardButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editSelectedHazardButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout hazardsPanelLayout = new javax.swing.GroupLayout(hazardsPanel);
         hazardsPanel.setLayout(hazardsPanelLayout);
         hazardsPanelLayout.setHorizontalGroup(
             hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(hazardsPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 905, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, hazardsPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(editSelectedHazardButton)))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 905, Short.MAX_VALUE)
                 .addContainerGap())
         );
         hazardsPanelLayout.setVerticalGroup(
             hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(hazardsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(editSelectedHazardButton))
+                .addGap(42, 42, 42)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         add(hazardsPanel);
@@ -293,13 +339,6 @@ public class ProcessStepDetail
         directLinksOnlyCheckBox.setSelected(true);
         directLinksOnlyCheckBox.setText("Show direct links only");
 
-        editLinksButton.setText("Links...");
-        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editLinksButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -308,8 +347,7 @@ public class ProcessStepDetail
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(editLinksButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(directLinksOnlyCheckBox))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE))
                 .addContainerGap())
@@ -317,26 +355,15 @@ public class ProcessStepDetail
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(directLinksOnlyCheckBox)
-                    .addComponent(editLinksButton))
+                .addContainerGap()
+                .addComponent(directLinksOnlyCheckBox)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
-        JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
-        linkEditor.add(new LinkEditor(processStep).setParent(linkEditor));
-        linkEditor.pack();
-        linkEditor.setVisible(true);
-        
-        populate();
-    }//GEN-LAST:event_editLinksButtonActionPerformed
 
     private void descriptionTextAreaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_descriptionTextAreaFocusLost
         processStep.setAttribute("Description", descriptionTextArea.getText());
@@ -354,8 +381,36 @@ public class ProcessStepDetail
         modified = true;
     }//GEN-LAST:event_descriptionTextAreaKeyTyped
 
+    private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed
+        JDialog linkEditor = new JDialog(JOptionPane.getFrameForComponent(this), true);
+        linkEditor.add(new LinkEditor(processStep).setParent(linkEditor));
+        linkEditor.pack();
+        linkEditor.setVisible(true);
+
+        populate();
+    }//GEN-LAST:event_editLinksButtonActionPerformed
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        if (processStep == null) {
+            JOptionPane.showMessageDialog(this, "Care process steps should be created via the Care Process editor.", "Context!", JOptionPane.ERROR_MESSAGE);
+            return;           
+        }
+        processStep.setAttribute("Description", descriptionTextArea.getText());
+        try {
+            MetaFactory.getInstance().getFactory(processStep.getDatabaseObjectName()).put(processStep);
+            SmartProject.getProject().editorEvent(Project.UPDATE, processStep);
+        }
+        catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to save Process Step. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            SmartProject.getProject().log("Failed to save in ProcessStepDetail", e);
+        }
+        modified = false;
+        
+    }//GEN-LAST:event_saveButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToolBar commonToolBar;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JCheckBox directLinksOnlyCheckBox;
     private javax.swing.JButton editLinksButton;
@@ -370,9 +425,12 @@ public class ProcessStepDetail
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JTable linksTable;
     private javax.swing.JPanel namePanel;
     private javax.swing.JTextField nameTextField;
+    private javax.swing.JButton saveButton;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -400,6 +458,31 @@ public class ProcessStepDetail
     @Override
     public boolean isModified() {
         return modified;
+    }
+
+    @Override
+    public void setPersistableObject(Persistable p) {
+        processStep = (ProcessStep)p;    
+        if (processStep != null)
+            populate();
+    }
+
+    @Override
+    public void setEditorComponent(EditorComponent ed) {
+        editorComponent = ed;
+    }
+
+    @Override
+    public Component getComponent() {
+        return this;
+    }
+
+    @Override
+    public void setNewObjectProjectId(int i) { }
+
+    @Override
+    public boolean wantsScrollPane() {
+        return false;
     }
 
 
