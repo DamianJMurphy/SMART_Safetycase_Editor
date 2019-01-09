@@ -289,14 +289,19 @@ public class LocationEditor extends javax.swing.JPanel
             } else {
                 editorComponent.notifyEditorEvent(Project.UPDATE, location);
             }
-            SmartProject.getProject().getProjectWindow().setViewTitle(this, "Care setting:"  + location.getAttributeValue("Name"));
-            
+            SmartProject.getProject().getProjectWindow().setViewTitle(this, "Care setting:"  + location.getAttributeValue("Name"));            
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(editorPanel, "Failed to save Care setting. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in LocationEditor", e);
         }
         modified = false;
+        String cos = System.getProperty("SMART.closeonsave");
+        if ((cos != null) && (cos.contains("CareSetting"))) {
+           unsubscribe();
+           SmartProject.getProject().getProjectWindow().closeContainer(this);
+        }
+        
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped

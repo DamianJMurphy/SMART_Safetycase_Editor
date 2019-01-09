@@ -361,6 +361,8 @@ public class RoleEditor extends javax.swing.JPanel
         String cos = System.getProperty("SMART.closeonsave");
         if ((cos != null) && (cos.contains("Role"))) {
            // TODO: Close this editor (need to find container ExternalEditorView or Tab component and ask that to close)
+           unsubscribe();
+           SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
     }//GEN-LAST:event_saveButtonActionPerformed
 
