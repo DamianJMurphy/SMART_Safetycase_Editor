@@ -62,6 +62,7 @@ public class ProjectEditor
         smartProject = (SmartProject)sp;
         ownerTextField.setText(System.getProperty("user.name"));
         projectSummaryTextPane.setText("New");
+        descriptionTextArea.setFont(jLabel4.getFont());
         SmartProject.getProject().addNotificationSubscriber(this);
     }
 
