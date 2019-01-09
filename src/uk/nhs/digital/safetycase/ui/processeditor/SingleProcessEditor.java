@@ -362,7 +362,11 @@ public class SingleProcessEditor
             SmartProject.getProject().log("Failed to save in SingleProcessEditor", e);
         }
         modified = false;
-//        containerForm.setModified(false);
+        String cos = System.getProperty("SMART.closeonsave");
+        if ((cos != null) && (cos.contains("Process"))) {
+           unsubscribe();
+           SmartProject.getProject().getProjectWindow().closeContainer(this);
+        }
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed

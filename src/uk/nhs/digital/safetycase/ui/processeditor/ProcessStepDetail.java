@@ -405,6 +405,11 @@ public class ProcessStepDetail
             SmartProject.getProject().log("Failed to save in ProcessStepDetail", e);
         }
         modified = false;
+        String cos = System.getProperty("SMART.closeonsave");
+        if ((cos != null) && (cos.contains("Step"))) {
+           unsubscribe();
+           SmartProject.getProject().getProjectWindow().closeContainer(this);
+        }
         
     }//GEN-LAST:event_saveButtonActionPerformed
 

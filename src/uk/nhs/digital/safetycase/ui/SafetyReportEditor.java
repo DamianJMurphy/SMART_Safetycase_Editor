@@ -337,9 +337,12 @@ public class SafetyReportEditor
         configTextArea = new uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel();
         buttonBar = new javax.swing.JToolBar();
         newButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JToolBar.Separator();
         saveButton = new javax.swing.JButton();
-        deleteButton = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
         exportButton = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
+        deleteButton = new javax.swing.JButton();
 
         jLabel1.setText("Title");
 
@@ -434,6 +437,7 @@ public class SafetyReportEditor
             }
         });
         buttonBar.add(newButton);
+        buttonBar.add(jSeparator1);
 
         saveButton.setText("Save");
         saveButton.setFocusable(false);
@@ -445,6 +449,16 @@ public class SafetyReportEditor
             }
         });
         buttonBar.add(saveButton);
+        buttonBar.add(jSeparator2);
+
+        exportButton.setText("Export");
+        exportButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportButtonActionPerformed(evt);
+            }
+        });
+        buttonBar.add(exportButton);
+        buttonBar.add(jSeparator3);
 
         deleteButton.setText("Delete");
         deleteButton.setFocusable(false);
@@ -456,14 +470,6 @@ public class SafetyReportEditor
             }
         });
         buttonBar.add(deleteButton);
-
-        exportButton.setText("Export");
-        exportButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exportButtonActionPerformed(evt);
-            }
-        });
-        buttonBar.add(exportButton);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -1599,6 +1605,9 @@ public class SafetyReportEditor
     private javax.swing.JPanel introPanel;
     private uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel introductionEditor;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JButton newButton;
     private javax.swing.JPanel qaPanel;
     private uk.nhs.digital.safetycase.ui.ekit.HtmlEditorPanel qaTextArea;

@@ -338,6 +338,12 @@ public class CauseEditor extends javax.swing.JPanel
             SmartProject.getProject().log("Failed to save in CauseEditor", e);
         }
         modified = false;
+        String cos = System.getProperty("SMART.closeonsave");
+        if ((cos != null) && (cos.contains("Cause"))) {
+           unsubscribe();
+           SmartProject.getProject().getProjectWindow().closeContainer(this);
+        }
+        
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped

@@ -494,6 +494,12 @@ public class ControlEditor extends javax.swing.JPanel
             SmartProject.getProject().log("Failed to save in ControlEditor", e);
         }
         modified = false;
+        String cos = System.getProperty("SMART.closeonsave");
+        if ((cos != null) && (cos.contains("Control"))) {
+           unsubscribe();
+           SmartProject.getProject().getProjectWindow().closeContainer(this);
+        }
+        
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void editLinksButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editLinksButtonActionPerformed

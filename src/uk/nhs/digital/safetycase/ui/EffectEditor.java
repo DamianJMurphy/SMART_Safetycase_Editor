@@ -292,6 +292,12 @@ public class EffectEditor extends javax.swing.JPanel
             SmartProject.getProject().log("Failed to save in EffectEditor", e);
         }
         modified = false;
+        String cos = System.getProperty("SMART.closeonsave");
+        if ((cos != null) && (cos.contains("Effect"))) {
+           unsubscribe();
+           SmartProject.getProject().getProjectWindow().closeContainer(this);
+        }
+        
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void linksEditorButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linksEditorButtonActionPerformed

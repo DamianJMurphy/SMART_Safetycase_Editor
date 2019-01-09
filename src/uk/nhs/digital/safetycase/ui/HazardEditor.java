@@ -837,6 +837,12 @@ public class HazardEditor extends javax.swing.JPanel
         }
         modified = false;
         saveButton.setEnabled(true);
+        String cos = System.getProperty("SMART.closeonsave");
+        if ((cos != null) && (cos.contains("Hazard"))) {
+           unsubscribe();
+           SmartProject.getProject().getProjectWindow().closeContainer(this);
+        }
+        
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void conditionsComboBoxKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_conditionsComboBoxKeyTyped

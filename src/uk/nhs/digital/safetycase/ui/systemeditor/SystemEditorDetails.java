@@ -445,6 +445,12 @@ public class SystemEditorDetails extends javax.swing.JPanel
             SmartProject.getProject().log("Failed to save in SystemEditorDetails", e);            
         }
         modified = false;
+        String cos = java.lang.System.getProperty("SMART.closeonsave");
+        if ((cos != null) && (cos.contains("System"))) {
+           unsubscribe();
+           SmartProject.getProject().getProjectWindow().closeContainer(this);
+        }
+        
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void functionEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_functionEditActionPerformed
