@@ -171,8 +171,11 @@ public class HazardEditor extends javax.swing.JPanel
     /**
      * Creates new form HazardEditor
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public HazardEditor() {
         init();
+        descriptionTextArea.setFont(summaryTextField.getFont());
+        clinicalJustificationTextArea.setFont(summaryTextField.getFont());
         SmartProject.getProject().addNotificationSubscriber(this);
     }
 

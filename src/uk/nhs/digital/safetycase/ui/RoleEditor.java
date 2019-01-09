@@ -57,6 +57,7 @@ public class RoleEditor extends javax.swing.JPanel
         linksTable.setDefaultEditor(Object.class, null);
         linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());        
         linksTable.setModel(dtm);
+        descriptionTextArea.setFont(nameTextField.getFont());
         SmartProject.getProject().addNotificationSubscriber(this);
     }
 

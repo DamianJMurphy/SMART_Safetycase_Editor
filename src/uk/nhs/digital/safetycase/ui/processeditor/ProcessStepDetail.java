@@ -19,12 +19,10 @@ package uk.nhs.digital.safetycase.ui.processeditor;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
-import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
@@ -38,7 +36,6 @@ import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.ui.HazardEditor;
 import uk.nhs.digital.safetycase.ui.LinkEditor;
 import uk.nhs.digital.safetycase.ui.LinkExplorerTableCellRenderer;
-import uk.nhs.digital.safetycase.ui.LinkTableCellRenderer;
 
 /**
  *
@@ -69,6 +66,7 @@ public class ProcessStepDetail
         linksTable.setDefaultEditor(Object.class, null);
         linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());
         linksTable.setModel(dtm);
+        descriptionTextArea.setFont(nameTextField.getFont());
         SmartProject.getProject().addNotificationSubscriber(this);
     }
     

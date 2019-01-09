@@ -91,6 +91,8 @@ public class IssuesLogEditor
         catch (Exception e) {
             SmartProject.getProject().log("Failed to initialise IssuesLogEditor", e);
         }
+        descriptionTextArea.setFont(nameTextField.getFont());
+        resolutionTextArea.setFont(nameTextField.getFont());
     }
 
     @Override

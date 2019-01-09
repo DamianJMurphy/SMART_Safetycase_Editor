@@ -19,7 +19,6 @@ package uk.nhs.digital.safetycase.ui;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -74,6 +73,7 @@ public class CauseEditor extends javax.swing.JPanel
         }
         conditionsComboBox.setVisible(false);
         jLabel2.setVisible(false);
+        descriptionTextArea.setFont(nameTextField.getFont());
         SmartProject.getProject().addNotificationSubscriber(this);
     }
 

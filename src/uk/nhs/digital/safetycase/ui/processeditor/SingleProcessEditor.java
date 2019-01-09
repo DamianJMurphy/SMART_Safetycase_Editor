@@ -78,6 +78,7 @@ public class SingleProcessEditor
             linksTable.setModel(dtm);
         }
         catch (Exception e) {}
+        descriptionTextArea.setFont(nameTextField.getFont());
         SmartProject.getProject().addNotificationSubscriber(this);
     }
     

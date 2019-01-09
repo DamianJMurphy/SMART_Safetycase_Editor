@@ -95,6 +95,9 @@ public class ControlEditor extends javax.swing.JPanel
         catch (Exception e) {
             SmartProject.getProject().log("Failed to initialise ControlEditor", e);
         }
+        descriptionTextArea.setFont(nameTextField.getFont());
+        clinicalJustificationTextArea.setFont(nameTextField.getFont());
+        evidenceTextArea.setFont(nameTextField.getFont());
         modified = false;
         
     }

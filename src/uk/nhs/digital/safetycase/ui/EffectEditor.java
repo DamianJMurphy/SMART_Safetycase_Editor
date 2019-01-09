@@ -74,7 +74,7 @@ public class EffectEditor extends javax.swing.JPanel
         catch (Exception e) {
             SmartProject.getProject().log("Failed to initialise EffectEditor", e);
         }
-        
+        descriptionTextArea.setFont(nameTextField.getFont());
     }
 
     @Override

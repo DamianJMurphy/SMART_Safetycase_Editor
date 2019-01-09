@@ -66,11 +66,13 @@ public class SystemEditorDetails extends javax.swing.JPanel
     /**
      * Creates new form SystemEditor
      */
+    @SuppressWarnings("LeakingThisInConstructor")
      public SystemEditorDetails() {
         initComponents();
         loadNewTemplate();
         functionsTable.setDefaultEditor(Object.class, null);
         functionsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
+        descriptionTextArea.setFont(nameTextField.getFont());
         SmartProject.getProject().addNotificationSubscriber(this);
 
      }

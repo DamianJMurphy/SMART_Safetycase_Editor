@@ -50,6 +50,7 @@ public class LocationEditor extends javax.swing.JPanel
     public LocationEditor() {
         initComponents();
         parentLocationComboBox.setModel(new DefaultComboBoxModel());
+        descriptionTextArea.setFont(nameTextField.getFont());
         SmartProject.getProject().addNotificationSubscriber(this);
     }
     

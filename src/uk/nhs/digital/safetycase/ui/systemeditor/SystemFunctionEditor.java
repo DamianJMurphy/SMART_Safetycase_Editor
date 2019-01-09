@@ -19,7 +19,6 @@ package uk.nhs.digital.safetycase.ui.systemeditor;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -30,7 +29,6 @@ import uk.nhs.digital.projectuiframework.ui.EditorComponent;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.ProjectLink;
-import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.data.SystemFunction;
 import uk.nhs.digital.safetycase.ui.LinkEditor;
 import uk.nhs.digital.safetycase.ui.LinkExplorerTableCellRenderer;
@@ -52,15 +50,15 @@ public class SystemFunctionEditor extends javax.swing.JPanel
     /**
      * Creates new form SystemFunctionEditorPanel
      */
+    @SuppressWarnings("LeakingThisInConstructor")
     public SystemFunctionEditor() {
         initComponents();
         linksTable.setDefaultEditor(Object.class, null);
 //        linksTable.setDefaultRenderer(Object.class, new LinkTableCellRenderer());
         linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());
-        
-        SmartProject.getProject().addNotificationSubscriber(this);
         editLinksButton.setVisible(false);
-              
+        descriptionTextArea.setFont(nameTextField.getFont());
+        SmartProject.getProject().addNotificationSubscriber(this);
     }    
     @Override
     public void unsubscribe() {
