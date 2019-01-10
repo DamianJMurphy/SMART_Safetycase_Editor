@@ -313,7 +313,7 @@ public class ObjectLinkReporter
         File f = fc.getSelectedFile();
         if (f.exists()) {
             int response = JOptionPane.showConfirmDialog(this, "A file with that name already exists. Overwrite it ?", "File exists", JOptionPane.YES_NO_OPTION);
-            if (response == JOptionPane.CANCEL_OPTION)
+            if (response != JOptionPane.OK_OPTION)
                 return;
                 
         }

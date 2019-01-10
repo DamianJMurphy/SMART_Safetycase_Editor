@@ -72,6 +72,7 @@ public class ProjectEditor
         createProjectButton.setEnabled(false);
         cancelCreateButton.setVisible(false);
         cancelCreateButton.setEnabled(false);
+        descriptionTextArea.setFont(nameTextField.getFont());
         SmartProject.getProject().addNotificationSubscriber(this);
     }
     
@@ -366,7 +367,7 @@ public class ProjectEditor
         if (project == null)
             return;
         int r = JOptionPane.showConfirmDialog(this, "Really delete this Project ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);        
-        if (r == JOptionPane.CANCEL_OPTION)
+        if (r != JOptionPane.OK_OPTION)
             return;
         
         try {
