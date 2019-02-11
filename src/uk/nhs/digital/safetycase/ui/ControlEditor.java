@@ -72,10 +72,7 @@ public class ControlEditor extends javax.swing.JPanel
                 stateComboBox.addItem(s);
             }
             ArrayList<String> conds = MetaFactory.getInstance().getFactory("Control").getDistinctSet("GroupingType");
-//            groupComboBox.addItem("Additional");
-            for (String s : conds) {
-                groupComboBox.addItem(s);
-            }
+
             
             
             ArrayList<String> typelist = MetaFactory.getInstance().getFactory("Control").getDistinctSet("Type");
@@ -84,9 +81,6 @@ public class ControlEditor extends javax.swing.JPanel
             conditionsComboBox.addItem("Training");
             conditionsComboBox.addItem("Business process change");
 
-            for (String s : typelist) {
-                conditionsComboBox.addItem(s);
-            }
             ArrayList<String> states = MetaFactory.getInstance().getFactory("Control").getDistinctSet("State");
             for (String s : states) {
                 stateComboBox.addItem(s);
@@ -259,7 +253,7 @@ public class ControlEditor extends javax.swing.JPanel
                     .addComponent(nameTextField)
                     .addComponent(groupComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(stateComboBox, 0, 720, Short.MAX_VALUE))
+                    .addComponent(stateComboBox, 0, 773, Short.MAX_VALUE))
                 .addContainerGap())
             .addComponent(commonToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );

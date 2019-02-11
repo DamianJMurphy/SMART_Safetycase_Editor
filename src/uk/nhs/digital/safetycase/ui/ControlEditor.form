@@ -82,7 +82,7 @@
                           <Component id="nameTextField" max="32767" attributes="0"/>
                           <Component id="groupComboBox" max="32767" attributes="0"/>
                           <Component id="conditionsComboBox" max="32767" attributes="0"/>
-                          <Component id="stateComboBox" pref="720" max="32767" attributes="0"/>
+                          <Component id="stateComboBox" pref="773" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
