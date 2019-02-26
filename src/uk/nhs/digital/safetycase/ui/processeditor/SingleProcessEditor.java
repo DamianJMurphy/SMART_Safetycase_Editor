@@ -184,7 +184,6 @@ public class SingleProcessEditor
 
         jLabel1.setText("Name");
 
-        nameTextField.setEditable(false);
         nameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 nameTextFieldKeyTyped(evt);
