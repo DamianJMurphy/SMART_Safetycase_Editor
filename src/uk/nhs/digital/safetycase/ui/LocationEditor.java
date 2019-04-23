@@ -79,27 +79,33 @@ public class LocationEditor extends javax.swing.JPanel
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         editorPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         descriptionTextArea = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
-        mnemonicTextField = new javax.swing.JTextField();
         parentLocationComboBox = new javax.swing.JComboBox<>();
         jToolBar1 = new javax.swing.JToolBar();
+        jSeparator3 = new javax.swing.JToolBar.Separator();
         saveButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         discardButton = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JToolBar.Separator();
 
-        editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jButton1.setText("jButton1");
+
+        setBackground(new java.awt.Color(255, 255, 255));
+        setPreferredSize(new java.awt.Dimension(792, 470));
+
+        editorPanel.setBackground(new java.awt.Color(229, 239, 248));
+        editorPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         editorPanel.setEnabled(false);
 
         jLabel1.setText("Name");
-
-        jLabel2.setText("Acronym");
+        jLabel1.setPreferredSize(new java.awt.Dimension(232, 92));
 
         jLabel3.setText("Description");
 
@@ -122,21 +128,59 @@ public class LocationEditor extends javax.swing.JPanel
             }
         });
 
-        mnemonicTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                mnemonicTextFieldKeyTyped(evt);
-            }
-        });
-
         parentLocationComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 parentLocationComboBoxMouseClicked(evt);
             }
         });
 
+        javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
+        editorPanel.setLayout(editorPanelLayout);
+        editorPanelLayout.setHorizontalGroup(
+            editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editorPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3)
+                    .addComponent(parentLocationComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(editorPanelLayout.createSequentialGroup()
+                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(editorPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(nameTextField)))
+                .addContainerGap())
+        );
+        editorPanelLayout.setVerticalGroup(
+            editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editorPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(parentLocationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jToolBar1.setBackground(new java.awt.Color(41, 156, 214));
+        jToolBar1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         jToolBar1.setRollover(true);
+        jToolBar1.setName(""); // NOI18N
+        jToolBar1.add(jSeparator3);
 
         saveButton.setText("Save");
+        saveButton.setToolTipText("Click to Save");
+        saveButton.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveButtonActionPerformed(evt);
@@ -146,91 +190,47 @@ public class LocationEditor extends javax.swing.JPanel
         jToolBar1.add(jSeparator1);
 
         discardButton.setText("Delete");
+        discardButton.setToolTipText("Delete Care Setting");
+        discardButton.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         discardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 discardButtonActionPerformed(evt);
             }
         });
         jToolBar1.add(discardButton);
-
-        javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
-        editorPanel.setLayout(editorPanelLayout);
-        editorPanelLayout.setHorizontalGroup(
-            editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(editorPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE)
-                            .addComponent(parentLocationComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, editorPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addGap(0, 480, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, editorPanelLayout.createSequentialGroup()
-                                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(mnemonicTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE))))
-                        .addGap(17, 17, 17))
-                    .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        editorPanelLayout.setVerticalGroup(
-            editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(editorPanelLayout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(mnemonicTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(parentLocationComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jToolBar1.add(jSeparator2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void discardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_discardButtonActionPerformed
 
         if (location == null)
-            return;
-        
-        int r = JOptionPane.showConfirmDialog(this, "Really delete this Care setting ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);        
+        return;
+
+        int r = JOptionPane.showConfirmDialog(this, "Really delete this Care setting ?", "Confirm delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (r != JOptionPane.OK_OPTION)
-            return;
-        
+        return;
+
         try {
             MetaFactory.getInstance().getFactory("Location").delete(location);
             SmartProject.getProject().editorEvent(Project.DELETE, location);
@@ -240,17 +240,15 @@ public class LocationEditor extends javax.swing.JPanel
             JOptionPane.showMessageDialog(editorPanel, "Failed to delete Care setting. Send logs to support", "Delete failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in LocationEditor", e);
         }
-        
 
-//        descriptionTextArea.setText("");
-//        nameTextField.setText("");
-//        mnemonicTextField.setText("");
-//        locationsList.clearSelection();
+        //        descriptionTextArea.setText("");
+        //        nameTextField.setText("");
+        //        mnemonicTextField.setText("");
+        //        locationsList.clearSelection();
     }//GEN-LAST:event_discardButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-    
-        
+
         try {
             String duplicateWarning = MetaFactory.getInstance().getDuplicateCheckMessage("Location", "Care setting", nameTextField.getText(), SmartProject.getProject().getCurrentProjectID(), location);
             if (duplicateWarning != null) {
@@ -259,19 +257,18 @@ public class LocationEditor extends javax.swing.JPanel
             }
         } catch (Exception e) {
         }
-        
+
         boolean created = false;
         if (location == null) {
             location = new Location();
             created = true;
         }
         location.setAttribute("Name", nameTextField.getText());
-        location.setAttribute("Mnemonic", mnemonicTextField.getText());
         location.setAttribute("Description", descriptionTextArea.getText());
         if (newObjectProjectId == -1)
-            location.setAttribute("ProjectID", Integer.parseInt(location.getAttributeValue("ProjectID")));
-        else 
-            location.setAttribute("ProjectID",newObjectProjectId);
+        location.setAttribute("ProjectID", Integer.parseInt(location.getAttributeValue("ProjectID")));
+        else
+        location.setAttribute("ProjectID",newObjectProjectId);
         int parent = parentLocationComboBox.getSelectedIndex() - 1;
         if (parent != -1) {
             if (!parentLocationComboBox.getSelectedItem().toString().contentEquals("N/A")) {
@@ -290,7 +287,7 @@ public class LocationEditor extends javax.swing.JPanel
             } else {
                 editorComponent.notifyEditorEvent(Project.UPDATE, location);
             }
-            SmartProject.getProject().getProjectWindow().setViewTitle(this, "Care setting:"  + location.getAttributeValue("Name"));            
+            SmartProject.getProject().getProjectWindow().setViewTitle(this, "Care setting:"  + location.getAttributeValue("Name"));
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(editorPanel, "Failed to save Care setting. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
@@ -299,23 +296,19 @@ public class LocationEditor extends javax.swing.JPanel
         modified = false;
         String cos = System.getProperty("SMART.closeonsave");
         if ((cos != null) && (cos.contains("CareSetting"))) {
-           unsubscribe();
-           SmartProject.getProject().getProjectWindow().closeContainer(this);
+            unsubscribe();
+            SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
-        
+
     }//GEN-LAST:event_saveButtonActionPerformed
-
-    private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
-        modified = true;
-    }//GEN-LAST:event_nameTextFieldKeyTyped
-
-    private void mnemonicTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_mnemonicTextFieldKeyTyped
-        modified = true;
-    }//GEN-LAST:event_mnemonicTextFieldKeyTyped
 
     private void parentLocationComboBoxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parentLocationComboBoxMouseClicked
         modified = true;
     }//GEN-LAST:event_parentLocationComboBoxMouseClicked
+
+    private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_nameTextFieldKeyTyped
 
     private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
         modified = true;
@@ -328,7 +321,6 @@ public class LocationEditor extends javax.swing.JPanel
         }
         descriptionTextArea.setText(location.getAttributeValue("Description"));
         nameTextField.setText(location.getAttributeValue("Name"));
-        mnemonicTextField.setText(location.getAttributeValue("Mnemonic"));
         if (location.getAttribute("ParentLocationID").getIntValue() == -1) {
             parentLocationComboBox.setSelectedIndex(0);
         } else {
@@ -396,14 +388,15 @@ public class LocationEditor extends javax.swing.JPanel
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JButton discardButton;
     private javax.swing.JPanel editorPanel;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.JToolBar.Separator jSeparator2;
+    private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JTextField mnemonicTextField;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JComboBox<String> parentLocationComboBox;
     private javax.swing.JButton saveButton;

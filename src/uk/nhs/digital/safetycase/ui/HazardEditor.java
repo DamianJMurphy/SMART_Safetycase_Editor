@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import javax.swing.ImageIcon;
@@ -36,6 +37,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.SpinnerListModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Element;
@@ -50,6 +54,7 @@ import uk.nhs.digital.projectuiframework.ui.resources.ResourceUtils;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Persistable;
+import uk.nhs.digital.safetycase.data.Process;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.ProjectLink;
 import uk.nhs.digital.safetycase.data.Relationship;
@@ -73,6 +78,9 @@ public class HazardEditor extends javax.swing.JPanel
     private final ArrayList<Hazard> hazards = new ArrayList<>();
     private final ArrayList<Relationship> displayedLinks = new ArrayList<>();
     private Hazard hazard = null;
+    private MetaFactory metaFactory = null;
+    private DefaultTreeModel treeModel = null;
+    private DefaultMutableTreeNode root = null;
     
     private ProcessStep parentProcessStep = null;
     private static String newBowtieTemplate = null;
@@ -234,7 +242,6 @@ public class HazardEditor extends javax.swing.JPanel
         residualSeveritySpinner = new javax.swing.JSpinner();
         residualLikelihoodSpinner = new javax.swing.JSpinner();
         residualRiskRatingTextField = new javax.swing.JTextField();
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 0), new java.awt.Dimension(4, 32767));
         clinicalJustificationPanel = new javax.swing.JPanel();
         clinicalJustificationScrollPane = new javax.swing.JScrollPane();
         clinicalJustificationTextArea = new javax.swing.JTextArea();
@@ -246,6 +253,7 @@ public class HazardEditor extends javax.swing.JPanel
         linksTable = new javax.swing.JTable();
         directLinksOnlyCheckBox = new javax.swing.JCheckBox();
         commonToolBar = new javax.swing.JToolBar();
+        jSeparator4 = new javax.swing.JToolBar.Separator();
         saveButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         bowtieButton = new javax.swing.JButton();
@@ -253,11 +261,12 @@ public class HazardEditor extends javax.swing.JPanel
         editLinksButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         discardButton = new javax.swing.JButton();
-        analysisContainer = new javax.swing.JPanel();
+        jSeparator5 = new javax.swing.JToolBar.Separator();
 
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
+        setBackground(new java.awt.Color(255, 255, 255));
 
-        editorPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        editorPanel.setBackground(new java.awt.Color(229, 239, 248));
+        editorPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         editorPanel.setPreferredSize(new java.awt.Dimension(724, 227));
 
         jLabel1.setText("Name");
@@ -295,14 +304,17 @@ public class HazardEditor extends javax.swing.JPanel
         });
         jScrollPane2.setViewportView(descriptionTextArea);
 
+        analysisScrollPane.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         analysisScrollPane.setPreferredSize(new java.awt.Dimension(734, 572));
 
+        analysisPanel.setBackground(new java.awt.Color(229, 239, 248));
         analysisPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Create Bowtie before completing analysis"));
         analysisPanel.setLayout(new javax.swing.BoxLayout(analysisPanel, javax.swing.BoxLayout.PAGE_AXIS));
         analysisPanel.add(riskMatrixPanel);
 
         ratingsPanel.setLayout(new java.awt.GridLayout(1, 0));
 
+        initialPanel.setBackground(new java.awt.Color(229, 239, 248));
         initialPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Initial ratings"));
 
         jLabel6.setText("Severity");
@@ -323,6 +335,7 @@ public class HazardEditor extends javax.swing.JPanel
             }
         });
 
+        initialRiskRatingTextField.setEditable(false);
         initialRiskRatingTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 initialRiskRatingTextFieldKeyTyped(evt);
@@ -341,7 +354,7 @@ public class HazardEditor extends javax.swing.JPanel
                     .addComponent(jLabel8))
                 .addGap(26, 26, 26)
                 .addGroup(initialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(initialLikelihoodSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
+                    .addComponent(initialLikelihoodSpinner)
                     .addComponent(initialSeveritySpinner)
                     .addComponent(initialRiskRatingTextField))
                 .addContainerGap())
@@ -366,6 +379,7 @@ public class HazardEditor extends javax.swing.JPanel
 
         ratingsPanel.add(initialPanel);
 
+        residualPanel.setBackground(new java.awt.Color(229, 239, 248));
         residualPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Residual ratings"));
 
         jLabel9.setText("Severity");
@@ -386,6 +400,7 @@ public class HazardEditor extends javax.swing.JPanel
             }
         });
 
+        residualRiskRatingTextField.setEditable(false);
         residualRiskRatingTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 residualRiskRatingTextFieldKeyTyped(evt);
@@ -397,56 +412,41 @@ public class HazardEditor extends javax.swing.JPanel
         residualPanelLayout.setHorizontalGroup(
             residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(residualPanelLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(residualPanelLayout.createSequentialGroup()
-                        .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
-                        .addComponent(jLabel10)
-                        .addGap(35, 35, 35)
-                        .addComponent(residualLikelihoodSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE))
-                    .addGroup(residualPanelLayout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(residualPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(50, 50, 50)
-                                .addComponent(residualSeveritySpinner))
-                            .addGroup(residualPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel11)
-                                .addGap(32, 32, 32)
-                                .addComponent(residualRiskRatingTextField)))))
-                .addGap(17, 17, 17))
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11))
+                .addGap(24, 24, 24)
+                .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(residualRiskRatingTextField)
+                    .addComponent(residualSeveritySpinner)
+                    .addComponent(residualLikelihoodSpinner))
+                .addContainerGap())
         );
         residualPanelLayout.setVerticalGroup(
             residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(residualPanelLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(residualPanelLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(jLabel9))
-                    .addComponent(residualSeveritySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(residualPanelLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(residualPanelLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(jLabel10))
-                    .addComponent(residualLikelihoodSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(residualPanelLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(jLabel11))
-                    .addComponent(residualRiskRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap()
+                .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(residualSeveritySpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(residualLikelihoodSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(residualPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(residualRiskRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addGap(14, 14, 14))
         );
 
         ratingsPanel.add(residualPanel);
 
         analysisPanel.add(ratingsPanel);
 
+        clinicalJustificationPanel.setBackground(new java.awt.Color(229, 239, 248));
         clinicalJustificationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Clinical justification"));
 
         clinicalJustificationTextArea.setColumns(20);
@@ -464,11 +464,11 @@ public class HazardEditor extends javax.swing.JPanel
         clinicalJustificationPanel.setLayout(clinicalJustificationPanelLayout);
         clinicalJustificationPanelLayout.setHorizontalGroup(
             clinicalJustificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1073, Short.MAX_VALUE)
+            .addGap(0, 1333, Short.MAX_VALUE)
             .addGroup(clinicalJustificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(clinicalJustificationPanelLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(clinicalJustificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1049, Short.MAX_VALUE)
+                    .addComponent(clinicalJustificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1321, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         clinicalJustificationPanelLayout.setVerticalGroup(
@@ -477,11 +477,13 @@ public class HazardEditor extends javax.swing.JPanel
             .addGroup(clinicalJustificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clinicalJustificationPanelLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(clinicalJustificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                    .addComponent(clinicalJustificationScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 
         analysisPanel.add(clinicalJustificationPanel);
+
+        jPanel1.setBackground(new java.awt.Color(229, 239, 248));
 
         jLabel3.setText("Status");
 
@@ -496,30 +498,8 @@ public class HazardEditor extends javax.swing.JPanel
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3)
-                .addGap(13, 13, 13)
-                .addComponent(statusComboBox, 0, 885, Short.MAX_VALUE)
-                .addGap(126, 126, 126))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        analysisPanel.add(jPanel1);
-
-        linksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Links"));
+        linksPanel.setBackground(new java.awt.Color(229, 239, 248));
+        linksPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Linked to"));
 
         linksTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -546,7 +526,7 @@ public class HazardEditor extends javax.swing.JPanel
         linksPanel.setLayout(linksPanelLayout);
         linksPanelLayout.setHorizontalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 1073, Short.MAX_VALUE)
+            .addComponent(jScrollPane4)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, linksPanelLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(directLinksOnlyCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -554,53 +534,42 @@ public class HazardEditor extends javax.swing.JPanel
         linksPanelLayout.setVerticalGroup(
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(linksPanelLayout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(directLinksOnlyCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        analysisPanel.add(linksPanel);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(statusComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addComponent(linksPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(34, Short.MAX_VALUE))
+        );
+
+        analysisPanel.add(jPanel1);
 
         analysisScrollPane.setViewportView(analysisPanel);
-
-        commonToolBar.setRollover(true);
-
-        saveButton.setText("Save");
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
-        commonToolBar.add(saveButton);
-        commonToolBar.add(jSeparator1);
-
-        bowtieButton.setText("Bowtie");
-        bowtieButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bowtieButtonActionPerformed(evt);
-            }
-        });
-        commonToolBar.add(bowtieButton);
-        commonToolBar.add(jSeparator2);
-
-        editLinksButton.setText("Links ...");
-        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editLinksButtonActionPerformed(evt);
-            }
-        });
-        commonToolBar.add(editLinksButton);
-        commonToolBar.add(jSeparator3);
-
-        discardButton.setText("Delete");
-        discardButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                discardButtonActionPerformed(evt);
-            }
-        });
-        commonToolBar.add(discardButton);
 
         javax.swing.GroupLayout editorPanelLayout = new javax.swing.GroupLayout(editorPanel);
         editorPanel.setLayout(editorPanelLayout);
@@ -611,45 +580,108 @@ public class HazardEditor extends javax.swing.JPanel
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2)
                     .addGroup(editorPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(editorPanelLayout.createSequentialGroup()
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(summaryTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(conditionsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(summaryTextField)))
+                    .addGroup(editorPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(analysisScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1408, Short.MAX_VALUE))
                 .addContainerGap())
-            .addComponent(analysisScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1096, Short.MAX_VALUE)
-            .addComponent(commonToolBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         editorPanelLayout.setVerticalGroup(
             editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(editorPanelLayout.createSequentialGroup()
-                .addComponent(commonToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
+                .addContainerGap()
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(summaryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(summaryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(editorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(conditionsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(jLabel2)
+                    .addComponent(conditionsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(analysisScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(analysisScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        add(editorPanel);
+        commonToolBar.setBackground(new java.awt.Color(41, 156, 214));
+        commonToolBar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        commonToolBar.setRollover(true);
+        commonToolBar.add(jSeparator4);
 
-        analysisContainer.setLayout(new javax.swing.BoxLayout(analysisContainer, javax.swing.BoxLayout.LINE_AXIS));
-        add(analysisContainer);
+        saveButton.setText("Save");
+        saveButton.setToolTipText("Click to Save");
+        saveButton.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(saveButton);
+        commonToolBar.add(jSeparator1);
+
+        bowtieButton.setText("Bowtie");
+        bowtieButton.setToolTipText("Draw Bowtie Diagram");
+        bowtieButton.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        bowtieButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bowtieButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(bowtieButton);
+        commonToolBar.add(jSeparator2);
+
+        editLinksButton.setText("Links ...");
+        editLinksButton.setToolTipText("Edit Links");
+        editLinksButton.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        editLinksButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editLinksButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(editLinksButton);
+        commonToolBar.add(jSeparator3);
+
+        discardButton.setText("Delete");
+        discardButton.setToolTipText("Delete Hazard");
+        discardButton.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        discardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                discardButtonActionPerformed(evt);
+            }
+        });
+        commonToolBar.add(discardButton);
+        commonToolBar.add(jSeparator5);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(commonToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 1424, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(commonToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
+                .addContainerGap())
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     
@@ -681,16 +713,6 @@ public class HazardEditor extends javax.swing.JPanel
         initialRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)initialLikelihoodSpinner.getValue(), (String)initialSeveritySpinner.getValue())));
         modified = true;
     }//GEN-LAST:event_initialLikelihoodSpinnerStateChanged
-
-    private void residualSeveritySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_residualSeveritySpinnerStateChanged
-        residualRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)residualLikelihoodSpinner.getValue(), (String)residualSeveritySpinner.getValue())));
-        modified = true;
-    }//GEN-LAST:event_residualSeveritySpinnerStateChanged
-
-    private void residualLikelihoodSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_residualLikelihoodSpinnerStateChanged
-        residualRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)residualLikelihoodSpinner.getValue(), (String)residualSeveritySpinner.getValue())));
-        modified = true;
-    }//GEN-LAST:event_residualLikelihoodSpinnerStateChanged
 
     private void bowtieButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bowtieButtonActionPerformed
 
@@ -809,20 +831,101 @@ public class HazardEditor extends javax.swing.JPanel
         //            hazard.setAttribute("ProjectID", Integer.parseInt(hazard.getAttributeValue("ProjectID")));
         //        else
         hazard.setAttribute("ProjectID", SmartProject.getProject().getCurrentProjectID());
+        treeModel = SmartProject.getProject().getTreeModel();
         try {
             MetaFactory.getInstance().getFactory(hazard.getDatabaseObjectName()).put(hazard);
             if (create) {
-                SmartProject.getProject().editorEvent(Project.ADD, hazard);
+                //create relationship
+                Relationship r = new Relationship(parentProcessStep.getId(), hazard.getId(), hazard.getDatabaseObjectName());
+                parentProcessStep.addRelationship(r);
+                MetaFactory.getInstance().getFactory(parentProcessStep.getDatabaseObjectName()).put(parentProcessStep);
+                
+                //traverse tree 
+                
+                root = (DefaultMutableTreeNode)treeModel.getRoot();
+                Enumeration nodes = root.breadthFirstEnumeration();
+                DefaultMutableTreeNode projectNode = null;
+                while (nodes.hasMoreElements()) {
+                            DefaultMutableTreeNode d = (DefaultMutableTreeNode)nodes.nextElement();
+                            uk.nhs.digital.safetycase.data.Project proj = null;
+                            try {
+                                proj = (uk.nhs.digital.safetycase.data.Project)d.getUserObject();
+                                if (proj.getId() == (Integer.parseInt(hazard.getAttributeValue("ProjectID")))) {
+                                    projectNode = d;
+                                    break;
+                                }
+                            }
+                            catch (Exception eIgnore) {}
+                        }
+                
+//                nodes = projectNode.depthFirstEnumeration();
+        
+                DefaultMutableTreeNode careProcessFolderNode = null;
+                int projectChildCount = projectNode.getChildCount();
+
+                System.out.println("---" + projectNode.toString() + "---");
+//                uk.nhs.digital.safetycase.data.Process processFolder = null;
+                for (int i = 0; i < projectChildCount; i++) {
+
+                    DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) projectNode.getChildAt(i);
+                    try{
+                    if (childNode.getUserObject().toString().equals("Care Process")) {                       
+                        careProcessFolderNode = (DefaultMutableTreeNode)childNode;
+//                        processFolder = (uk.nhs.digital.safetycase.data.Process)careProcessFolderNode.getUserObject();
+                    } 
+                    } catch (Exception e){
+                        
+                    }
+                }
+                
+                
+                int careProcessChildCount = careProcessFolderNode.getChildCount();
+                
+                for (int i = 0; i < careProcessChildCount; i++) {
+
+                    DefaultMutableTreeNode processNode = (DefaultMutableTreeNode) careProcessFolderNode.getChildAt(i);
+                    try{
+                        int processChildCount = processNode.getChildCount();
+                        for (int j = 0; j < processChildCount; j++) {
+                            DefaultMutableTreeNode psNode = (DefaultMutableTreeNode)processNode.getChildAt(j);
+                            ProcessStep processStep = (ProcessStep) psNode.getUserObject();
+                            try {
+                                if (processStep.getId() == parentProcessStep.getId()) {
+                                    TreePath pathToContainer = new TreePath(psNode.getPath());
+                                    boolean expanded = SmartProject.getProject().getProjectWindow().getProjectTree().isExpanded(pathToContainer);
+                                    
+                                    DefaultMutableTreeNode hazardNode = null;
+                                    try {
+                                          hazardNode = SmartProject.getProject().getTreeNode(hazard);
+                                          treeModel.insertNodeInto(hazardNode, psNode, psNode.getChildCount());
+                                        } catch (Exception e) {
+                                            //log("Cannot make eventNode processing editor notification event", e);
+                                            return;
+                                        }
+                                    break;
+                            }
+                            } catch (Exception e1){}
+                        }
+                             
+                    } catch (Exception e2){
+                        
+                    }
+            
+                }
+                
+//                SmartProject.getProject().editorEvent(Project.ADD, hazard);              
                 create = false;
+                
+                
             } else {
                 SmartProject.getProject().editorEvent(Project.UPDATE, hazard);
             }
             SmartProject.getProject().getProjectWindow().setViewTitle(this, "Hazard:" + hazard.getAttributeValue("Name"));
-            if (parentProcessStep != null) {
-                Relationship r = new Relationship(parentProcessStep.getId(), hazard.getId(), hazard.getDatabaseObjectName());
-                parentProcessStep.addRelationship(r);
-                MetaFactory.getInstance().getFactory(parentProcessStep.getDatabaseObjectName()).put(parentProcessStep);
-            }
+//            if (parentProcessStep != null) {  
+//                Relationship r = new Relationship(parentProcessStep.getId(), hazard.getId(), hazard.getDatabaseObjectName());
+//                parentProcessStep.addRelationship(r);
+//                MetaFactory.getInstance().getFactory(parentProcessStep.getDatabaseObjectName()).put(parentProcessStep);
+//            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(editorPanel, "Failed to save Hazard. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in HazardEditor", e);
@@ -864,10 +967,6 @@ public class HazardEditor extends javax.swing.JPanel
         modified = true;
     }//GEN-LAST:event_initialRiskRatingTextFieldKeyTyped
 
-    private void residualRiskRatingTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_residualRiskRatingTextFieldKeyTyped
-        modified = true;
-    }//GEN-LAST:event_residualRiskRatingTextFieldKeyTyped
-
     private void clinicalJustificationTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_clinicalJustificationTextAreaKeyTyped
         modified = true;
     }//GEN-LAST:event_clinicalJustificationTextAreaKeyTyped
@@ -887,6 +986,20 @@ public class HazardEditor extends javax.swing.JPanel
     private void directLinksOnlyCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directLinksOnlyCheckBoxActionPerformed
         populateLinks();
     }//GEN-LAST:event_directLinksOnlyCheckBoxActionPerformed
+
+    private void residualRiskRatingTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_residualRiskRatingTextFieldKeyTyped
+        modified = true;
+    }//GEN-LAST:event_residualRiskRatingTextFieldKeyTyped
+
+    private void residualLikelihoodSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_residualLikelihoodSpinnerStateChanged
+        residualRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)residualLikelihoodSpinner.getValue(), (String)residualSeveritySpinner.getValue())));
+        modified = true;
+    }//GEN-LAST:event_residualLikelihoodSpinnerStateChanged
+
+    private void residualSeveritySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_residualSeveritySpinnerStateChanged
+        residualRiskRatingTextField.setText(Integer.toString(Hazard.getRating((String)residualLikelihoodSpinner.getValue(), (String)residualSeveritySpinner.getValue())));
+        modified = true;
+    }//GEN-LAST:event_residualSeveritySpinnerStateChanged
     
     void setHazard(Hazard h) { hazard = h; }
     
@@ -937,7 +1050,6 @@ public class HazardEditor extends javax.swing.JPanel
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel analysisContainer;
     private javax.swing.JPanel analysisPanel;
     private javax.swing.JScrollPane analysisScrollPane;
     private javax.swing.JButton bowtieButton;
@@ -951,7 +1063,6 @@ public class HazardEditor extends javax.swing.JPanel
     private javax.swing.JButton discardButton;
     private javax.swing.JButton editLinksButton;
     private javax.swing.JPanel editorPanel;
-    private javax.swing.Box.Filler filler1;
     private javax.swing.JSpinner initialLikelihoodSpinner;
     private javax.swing.JPanel initialPanel;
     private javax.swing.JTextField initialRiskRatingTextField;
@@ -972,6 +1083,8 @@ public class HazardEditor extends javax.swing.JPanel
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JToolBar.Separator jSeparator4;
+    private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JPanel linksPanel;
     private javax.swing.JTable linksTable;
     private javax.swing.JPanel ratingsPanel;

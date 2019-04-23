@@ -17,6 +17,7 @@
  */
 package uk.nhs.digital.safetycase.ui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -72,6 +73,10 @@ public class ProjectEditor
         createProjectButton.setEnabled(false);
         cancelCreateButton.setVisible(false);
         cancelCreateButton.setEnabled(false);
+        //jSeparator1.setVisible(false);
+        jSeparator2.setVisible(false);
+        jSeparator3.setVisible(false);
+        descriptionTextArea.setFont(nameTextField.getFont());
         SmartProject.getProject().addNotificationSubscriber(this);
     }
     
@@ -104,7 +109,9 @@ public class ProjectEditor
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         controlButtonsToolbar = new javax.swing.JToolBar();
+        jSeparator5 = new javax.swing.JToolBar.Separator();
         saveButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         cancelCreateButton = new javax.swing.JButton();
@@ -112,12 +119,7 @@ public class ProjectEditor
         createProjectButton = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         deleteButton = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        projectSummaryTextPane = new javax.swing.JTextPane();
-        jPanel10 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        descriptionTextArea = new javax.swing.JTextArea();
+        jSeparator4 = new javax.swing.JToolBar.Separator();
         jPanel9 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
@@ -125,11 +127,26 @@ public class ProjectEditor
         ownerTextField = new javax.swing.JTextField();
         customerTextField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        descriptionTextArea = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        projectSummaryTextPane = new javax.swing.JTextPane();
 
+        jButton1.setText("jButton1");
+
+        setBackground(new java.awt.Color(255, 255, 255));
+
+        controlButtonsToolbar.setBackground(new java.awt.Color(41, 156, 214));
+        controlButtonsToolbar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         controlButtonsToolbar.setRollover(true);
+        controlButtonsToolbar.add(jSeparator5);
 
         saveButton.setText("Save");
+        saveButton.setToolTipText("Click to Save");
+        saveButton.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         saveButton.setFocusable(false);
         saveButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         saveButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -142,6 +159,8 @@ public class ProjectEditor
         controlButtonsToolbar.add(jSeparator1);
 
         cancelCreateButton.setText("Cancel");
+        cancelCreateButton.setToolTipText("Cancel");
+        cancelCreateButton.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         cancelCreateButton.setFocusable(false);
         cancelCreateButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         cancelCreateButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -154,6 +173,8 @@ public class ProjectEditor
         controlButtonsToolbar.add(jSeparator2);
 
         createProjectButton.setText("Create");
+        createProjectButton.setToolTipText("Create Project");
+        createProjectButton.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         createProjectButton.setFocusable(false);
         createProjectButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         createProjectButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -166,6 +187,8 @@ public class ProjectEditor
         controlButtonsToolbar.add(jSeparator3);
 
         deleteButton.setText("Delete");
+        deleteButton.setToolTipText("Delete Project");
+        deleteButton.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         deleteButton.setFocusable(false);
         deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -175,17 +198,44 @@ public class ProjectEditor
             }
         });
         controlButtonsToolbar.add(deleteButton);
+        controlButtonsToolbar.add(jSeparator4);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Project summary"));
-        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanel9.setBackground(new java.awt.Color(229, 239, 248));
+        jPanel9.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
 
-        projectSummaryTextPane.setEditable(false);
-        jScrollPane2.setViewportView(projectSummaryTextPane);
+        jLabel4.setText("Name");
 
-        jPanel1.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+        nameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nameTextFieldKeyTyped(evt);
+            }
+        });
 
-        jPanel10.setBorder(javax.swing.BorderFactory.createTitledBorder("Description"));
-        jPanel10.setLayout(new java.awt.BorderLayout());
+        jLabel5.setText("Owner");
+
+        ownerTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ownerTextFieldActionPerformed(evt);
+            }
+        });
+        ownerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                ownerTextFieldKeyTyped(evt);
+            }
+        });
+
+        customerTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                customerTextFieldActionPerformed(evt);
+            }
+        });
+        customerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                customerTextFieldKeyTyped(evt);
+            }
+        });
+
+        jLabel6.setText("Author");
 
         descriptionTextArea.setColumns(20);
         descriptionTextArea.setLineWrap(true);
@@ -198,31 +248,7 @@ public class ProjectEditor
         });
         jScrollPane3.setViewportView(descriptionTextArea);
 
-        jPanel10.add(jScrollPane3, java.awt.BorderLayout.CENTER);
-
-        jLabel4.setText("Name");
-
-        nameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                nameTextFieldKeyTyped(evt);
-            }
-        });
-
-        jLabel5.setText("Owner");
-
-        ownerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                ownerTextFieldKeyTyped(evt);
-            }
-        });
-
-        customerTextField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                customerTextFieldKeyTyped(evt);
-            }
-        });
-
-        jLabel6.setText("Author");
+        jLabel1.setText("Description");
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -231,62 +257,94 @@ public class ProjectEditor
             .addGroup(jPanel9Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel9Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
                             .addComponent(jLabel5)
+                            .addComponent(jLabel4)
                             .addComponent(jLabel6))
-                        .addGap(39, 39, 39)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 1107, Short.MAX_VALUE)
+                            .addComponent(customerTextField)
                             .addComponent(ownerTextField)
-                            .addComponent(customerTextField, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(nameTextField))))
                 .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
-                .addGap(5, 5, 5)
+                .addContainerGap()
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel4)
+                    .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(ownerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(ownerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(customerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                .addGap(18, 18, 18))
         );
 
-        jPanel10.add(jPanel9, java.awt.BorderLayout.PAGE_START);
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+
+        jPanel1.setBackground(new java.awt.Color(229, 239, 248));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Project summary"));
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        projectSummaryTextPane.setEditable(false);
+        projectSummaryTextPane.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        jScrollPane2.setViewportView(projectSummaryTextPane);
+
+        jPanel1.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(controlButtonsToolbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(6, 6, 6))
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 1228, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(controlButtonsToolbar, javax.swing.GroupLayout.DEFAULT_SIZE, 805, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(controlButtonsToolbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -304,7 +362,7 @@ public class ProjectEditor
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Duplicate detection failed. Send logs to support", "Warning", JOptionPane.INFORMATION_MESSAGE);
-            SmartProject.getProject().log("Failed to do duplicate detection in PorjectEditor", e);
+            SmartProject.getProject().log("Failed to do duplicate detection in ProjectEditor", e);
         }
 
         project = new uk.nhs.digital.safetycase.data.Project();
@@ -317,7 +375,7 @@ public class ProjectEditor
             smartProject.editorEvent(Project.ADD, project);
         }
         catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Failed to save Porject. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failed to save Project. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in ProjectEditor", e);
         }
         unsubscribe();
@@ -334,7 +392,7 @@ public class ProjectEditor
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Duplicate detection failed. Send logs to support", "Warning", JOptionPane.INFORMATION_MESSAGE);
-            SmartProject.getProject().log("Failed to do duplicate detection in PorjectEditor existing save", e);
+            SmartProject.getProject().log("Failed to do duplicate detection in ProjectEditor existing save", e);
         }
 
         boolean created = false;
@@ -354,7 +412,7 @@ public class ProjectEditor
                 SmartProject.getProject().editorEvent(Project.UPDATE, project);
         }
         catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Failed to save Porject. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failed to save Project. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in ProjectEditor", e);
         }
         makeProjectSummary();
@@ -375,26 +433,34 @@ public class ProjectEditor
             SmartProject.getProject().getProjectWindow().closeContainer(this);
         }
         catch(Exception e) {
-            JOptionPane.showMessageDialog(this, "Failed to delete Porject. Send logs to support", "Delete failed", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failed to delete Project. Send logs to support", "Delete failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to delete in ProjectEditor", e);
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
+        modified = true;
+    }//GEN-LAST:event_descriptionTextAreaKeyTyped
 
     private void customerTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_customerTextFieldKeyTyped
         modified = true;
     }//GEN-LAST:event_customerTextFieldKeyTyped
 
+    private void customerTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_customerTextFieldActionPerformed
+
     private void ownerTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ownerTextFieldKeyTyped
         modified = true;
     }//GEN-LAST:event_ownerTextFieldKeyTyped
 
+    private void ownerTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ownerTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ownerTextFieldActionPerformed
+
     private void nameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nameTextFieldKeyTyped
         modified = true;
     }//GEN-LAST:event_nameTextFieldKeyTyped
-
-    private void descriptionTextAreaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descriptionTextAreaKeyTyped
-        modified = true;
-    }//GEN-LAST:event_descriptionTextAreaKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -404,18 +470,21 @@ public class ProjectEditor
     private javax.swing.JTextField customerTextField;
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextArea descriptionTextArea;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JToolBar.Separator jSeparator4;
+    private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JTextField ownerTextField;
     private javax.swing.JTextPane projectSummaryTextPane;
@@ -468,17 +537,17 @@ public class ProjectEditor
                 }
             }
             if (systemcount == 1) {
-                sb.append("There is one system defined. It implements ");
+                sb.append("There is one System defined. It implements ");
                 if (functions == 1) {
-                    sb.append("one identified system function.");
+                    sb.append("one identified System Function.");
                 } else {
                     sb.append(functions);
-                    sb.append(" identified system functions.");
+                    sb.append(" identified System Functions.");
                 }
             } else {
                 sb.append("There are ");
                 sb.append(systemcount);
-                sb.append(" systems defined, of which ");
+                sb.append(" Systems defined, of which ");
                 if (rootsystems == 1) {
                     sb.append("one is top-level.");
                 } else {
@@ -487,10 +556,10 @@ public class ProjectEditor
                 }
                 sb.append("\n\nThey implement ");
                 if (functions == 1) {
-                    sb.append("one identified system function.\n\n");
+                    sb.append("one identified System Function.\n\n");
                 } else {
                     sb.append(functions);
-                    sb.append(" system functions between them.\n\n");
+                    sb.append(" System Functions between them.\n\n");
                 }
             }
                 
@@ -504,11 +573,11 @@ public class ProjectEditor
                 settings++;
             }
             if (settings == 1) {
-                sb.append("There is one Care setting identified and ");
-            } else {
-                sb.append("There are ");
+                sb.append("\n\nThere is one Care Setting identified and ");
+            } else {                
+                sb.append("\n\nThere are ");
                 sb.append(settings);
-                sb.append(" Care settings identified and ");
+                sb.append(" Care Settings identified and ");
             }
             Collection<Role> roles = MetaFactory.getInstance().getFactory("Role").getEntries(project.getId());
             int role = 0;
@@ -561,7 +630,7 @@ public class ProjectEditor
                 }
             }
             if (hcount == 1) {
-                sb.append("There is one hazard defined, which is ");
+                sb.append("There is one Hazard defined, which is ");
                 if (wip == 1) {
                     sb.append(" currently work in progress.");
                 } else if (accepted == 1) {
@@ -569,42 +638,42 @@ public class ProjectEditor
                 } else if (justified == 1) {
                     sb.append(" outside those limits but are considered clinically-justified.\n\n");
                 } else {
-                    sb.append(" outside acceptable limits (that is, it has a residual risk rating of > 3) and is not accepted due to lack of clinical justification.\n\n");
+                    sb.append(" outside acceptable limits (that is, it has a residual risk rating of 3 or above) and is not accepted due to lack of clinical justification.\n\n");
                 }
             } else {
                 sb.append("There are ");
                 sb.append(hcount);                
-                sb.append(" hazards identified of which ");
+                sb.append(" Hazards identified of which ");
                 sb.append(wip);
                 if (wip == 1)
                     sb.append(" is ");
                 else 
-                    sb.append(" are ");
+                    sb.append(" are");
                 sb.append("currently work-in-progress and still undergoing analysis.\n");
                 sb.append(accepted);
                 if (accepted == 1)
                     sb.append(" is ");
                 else 
-                    sb.append(" are ");
+                    sb.append(" are");
                 sb.append(" within acceptable limits of likelihood and severity and ");
                 sb.append(justified);
                 if (justified == 1)
                     sb.append(" is ");
                 else 
-                    sb.append(" are ");
+                    sb.append(" are");
 
                 sb.append(" outside those limits but considered clinically-justified.\n\n");
                 sb.append(notaccepted);
                 if (notaccepted == 1)
                     sb.append(" is ");
                 else 
-                    sb.append(" are ");                
-                sb.append(" outside acceptable limits (that is with a residual risk rating of > 3) and not accepted due to lack of clinical justification\n\n");
+                    sb.append(" are");                
+                sb.append(" outside acceptable limits (that is with a residual risk rating of 3 or above) and not accepted due to lack of clinical justification\n\n");
                 if (htypes.size() == 1) {
-                    sb.append("One hazard type was identified.");
+                    sb.append("One Hazard type was identified.");
                 } else {
                     sb.append(htypes.size());
-                    sb.append(" hazard types were identified.");
+                    sb.append(" Hazard types were identified.");
                 }
                 
             }
