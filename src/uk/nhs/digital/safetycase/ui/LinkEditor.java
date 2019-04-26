@@ -514,7 +514,7 @@ public class LinkEditor extends javax.swing.JPanel {
         targetList.setModel(new DefaultListModel());
         commentTextArea.setText("");
         linkDetailPanel.setEnabled(false);
-        saveButton.setEnabled(false);
+        saveButton.setEnabled(true);
     }//GEN-LAST:event_saveButtonActionPerformed
 
 

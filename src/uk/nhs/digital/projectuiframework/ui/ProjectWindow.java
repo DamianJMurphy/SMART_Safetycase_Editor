@@ -58,8 +58,8 @@ public class ProjectWindow extends javax.swing.JFrame {
     public ProjectWindow() {
         initComponents();
         String s = System.getProperty("uk.nhs.digital.projectuiframework.initialtabtitle");
-        mainWindowTabbedPane.add(s, new InitialTab());
-        mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
+        homeMenu.add(s, new InitialTab());
+        homeMenu.setTabComponentAt(homeMenu.getSelectedIndex(), new UndockTabComponent(homeMenu));
         // Stop Netbeans' UI builder screwing up the scrolling behaviour of the tree
         projectTree.setPreferredSize(null);
         setSize(new Dimension(1620,950));
@@ -95,9 +95,10 @@ public class ProjectWindow extends javax.swing.JFrame {
         mainWindowSplitPane = new javax.swing.JSplitPane();
         projectTreeScrollPane = new javax.swing.JScrollPane();
         projectTree = new javax.swing.JTree();
-        mainWindowTabbedPane = new javax.swing.JTabbedPane();
+        homeMenu = new javax.swing.JTabbedPane();
         mainMenu = new javax.swing.JMenuBar();
         saveAllMenu = new javax.swing.JMenu();
+        hmMenu = new javax.swing.JMenu();
         mainFileMenu = new javax.swing.JMenu();
         mainMenuNew = new javax.swing.JMenuItem();
         changeDatabaseMenuItem = new javax.swing.JMenuItem();
@@ -149,9 +150,10 @@ public class ProjectWindow extends javax.swing.JFrame {
 
         mainWindowSplitPane.setLeftComponent(projectTreeScrollPane);
 
-        mainWindowTabbedPane.setAutoscrolls(true);
-        mainWindowTabbedPane.setPreferredSize(new java.awt.Dimension(600, 600));
-        mainWindowSplitPane.setRightComponent(mainWindowTabbedPane);
+        homeMenu.setAutoscrolls(true);
+        homeMenu.setPreferredSize(new java.awt.Dimension(600, 600));
+        mainWindowSplitPane.setRightComponent(homeMenu);
+        homeMenu.getAccessibleContext().setAccessibleName("");
 
         getContentPane().add(mainWindowSplitPane);
 
@@ -159,15 +161,27 @@ public class ProjectWindow extends javax.swing.JFrame {
 
         saveAllMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/uk/nhs/digital/projectuiframework/ui/resources/media-floppy.png"))); // NOI18N
         saveAllMenu.addMenuListener(new javax.swing.event.MenuListener() {
-            public void menuSelected(javax.swing.event.MenuEvent evt) {
-                saveAllMenuMenuSelected(evt);
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
             }
             public void menuDeselected(javax.swing.event.MenuEvent evt) {
             }
-            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                saveAllMenuMenuSelected(evt);
             }
         });
         mainMenu.add(saveAllMenu);
+
+        hmMenu.setText("Home");
+        hmMenu.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                hmMenuMenuSelected(evt);
+            }
+        });
+        mainMenu.add(hmMenu);
 
         mainFileMenu.setText("File");
 
@@ -310,7 +324,7 @@ public class ProjectWindow extends javax.swing.JFrame {
 
         setJMenuBar(mainMenu);
 
-        pack();
+        setBounds(50, 50, 918, 931);
     }// </editor-fold>//GEN-END:initComponents
 
     private void mainMenuNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mainMenuNewActionPerformed
@@ -333,7 +347,7 @@ public class ProjectWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mainMenuNewActionPerformed
 
-    public javax.swing.JTabbedPane getMainWindowTabbedPane() { return mainWindowTabbedPane; }
+    public javax.swing.JTabbedPane getMainWindowTabbedPane() { return homeMenu; }
     
     public void newObjectRequested(TreePath p) 
     {
@@ -362,8 +376,8 @@ public class ProjectWindow extends javax.swing.JFrame {
         if (ec == null)
             return;
         
-        mainWindowTabbedPane.setSelectedComponent(mainWindowTabbedPane.add(ec.getTitle(), ec.getComponent()));
-        mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
+        homeMenu.setSelectedComponent(homeMenu.add(ec.getTitle(), ec.getComponent()));
+        homeMenu.setTabComponentAt(homeMenu.getSelectedIndex(), new UndockTabComponent(homeMenu));
     }
     
     public boolean isDocked(JPanel p) {
@@ -417,9 +431,9 @@ public class ProjectWindow extends javax.swing.JFrame {
     
     public void selectPanel(JPanel p) {
         if (isDocked(p)) {
-            int i = mainWindowTabbedPane.indexOfComponent(p);
+            int i = homeMenu.indexOfComponent(p);
             if (i != -1) {
-                mainWindowTabbedPane.setSelectedIndex(i);
+                homeMenu.setSelectedIndex(i);
                 return;
             }
         }
@@ -531,21 +545,21 @@ public class ProjectWindow extends javax.swing.JFrame {
                         projectTree.collapsePath(t);
                     return;
                 }
-               mainWindowTabbedPane.setSelectedComponent(mainWindowTabbedPane.add(view.getTitle(), view.getComponent()));
-               mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));                    
+               homeMenu.setSelectedComponent(homeMenu.add(view.getTitle(), view.getComponent()));
+               homeMenu.setTabComponentAt(homeMenu.getSelectedIndex(), new UndockTabComponent(homeMenu));                    
                return;
             }
-            for (int i = 0; i < mainWindowTabbedPane.getTabCount(); i++) {
-                if (ec.getTitle().contentEquals((mainWindowTabbedPane.getTitleAt(i)))) {
-                    mainWindowTabbedPane.setSelectedIndex(i);
+            for (int i = 0; i < homeMenu.getTabCount(); i++) {
+                if (ec.getTitle().contentEquals((homeMenu.getTitleAt(i)))) {
+                    homeMenu.setSelectedIndex(i);
                     return;
                 }
             }
             if (evt.getButton() == java.awt.event.MouseEvent.BUTTON1) {
-               mainWindowTabbedPane.setSelectedComponent(mainWindowTabbedPane.add(ec.getTitle(), ec.getComponent()));
-               mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));                    
+               homeMenu.setSelectedComponent(homeMenu.add(ec.getTitle(), ec.getComponent()));
+               homeMenu.setTabComponentAt(homeMenu.getSelectedIndex(), new UndockTabComponent(homeMenu));                    
             } else {
-               ExternalEditorView.start(ec.getComponent(), ec.getTitle(), mainWindowTabbedPane);
+               ExternalEditorView.start(ec.getComponent(), ec.getTitle(), homeMenu);
             }  
         }        
     }//GEN-LAST:event_projectTreeMouseClicked
@@ -584,15 +598,15 @@ public class ProjectWindow extends javax.swing.JFrame {
 
     private void showProcessMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showProcessMenuItemActionPerformed
         String s = System.getProperty("uk.nhs.digital.projectuiframework.initialtabtitle");
-        for (int i = 0; i < mainWindowTabbedPane.getTabCount(); i++) {
-            if ("SMART".contentEquals((mainWindowTabbedPane.getTitleAt(i)))) {
-                mainWindowTabbedPane.setSelectedIndex(i);
+        for (int i = 0; i < homeMenu.getTabCount(); i++) {
+            if ("SMART".contentEquals((homeMenu.getTitleAt(i)))) {
+                homeMenu.setSelectedIndex(i);
                 return;
             }
         }
         
-        mainWindowTabbedPane.setSelectedComponent(mainWindowTabbedPane.add(s, new InitialTab()));
-        mainWindowTabbedPane.setTabComponentAt(mainWindowTabbedPane.getSelectedIndex(), new UndockTabComponent(mainWindowTabbedPane));
+        homeMenu.setSelectedComponent(homeMenu.add(s, new InitialTab()));
+        homeMenu.setTabComponentAt(homeMenu.getSelectedIndex(), new UndockTabComponent(homeMenu));
     }//GEN-LAST:event_showProcessMenuItemActionPerformed
 
     private void riskMatrixMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_riskMatrixMenuItemActionPerformed
@@ -776,6 +790,20 @@ public class ProjectWindow extends javax.swing.JFrame {
         
     }//GEN-LAST:event_changeDatabaseMenuItemActionPerformed
 
+    private void hmMenuMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event_hmMenuMenuSelected
+        String st = System.getProperty("uk.nhs.digital.projectuiframework.initialtabtitle");
+        for (int i = 0; i < homeMenu.getTabCount(); i++) {
+            if ("SMART".contentEquals((homeMenu.getTitleAt(i)))) {
+                homeMenu.setSelectedIndex(i);
+                return;
+            }
+        }
+        
+        homeMenu.setSelectedComponent(homeMenu.add(st, new InitialTab()));
+        homeMenu.setTabComponentAt(homeMenu.getSelectedIndex(), new UndockTabComponent(homeMenu));
+    
+    }//GEN-LAST:event_hmMenuMenuSelected
+
     public void newProject(String n, Project p) {
         lastProjectAdded = p;
         projects.put(n, p);        
@@ -842,6 +870,8 @@ public class ProjectWindow extends javax.swing.JFrame {
     private javax.swing.ButtonGroup fontsizes;
     private javax.swing.JMenuItem helpAboutMenuItem;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenu hmMenu;
+    private javax.swing.JTabbedPane homeMenu;
     private javax.swing.JMenuItem importMenuItem;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JRadioButtonMenuItem largeFontMenu;
@@ -852,7 +882,6 @@ public class ProjectWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem mainMenuExit;
     private javax.swing.JMenuItem mainMenuNew;
     private javax.swing.JSplitPane mainWindowSplitPane;
-    private javax.swing.JTabbedPane mainWindowTabbedPane;
     private javax.swing.JRadioButtonMenuItem mediumFontMenu;
     private javax.swing.JTree projectTree;
     private javax.swing.JScrollPane projectTreeScrollPane;
