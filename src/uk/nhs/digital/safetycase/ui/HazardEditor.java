@@ -93,13 +93,15 @@ public class HazardEditor extends javax.swing.JPanel
     private final RiskMatrixPanel riskMatrixPanel = new RiskMatrixPanel();
     
     private static ImageIcon riskMatrixImageIcon = null;
-    private static final SpinnerListModel initialSeveritySpinnerModel = new SpinnerListModel();
-    private static final SpinnerListModel initialLikelihoodSpinnerModel = new SpinnerListModel();
-    private static final SpinnerListModel residualSeveritySpinnerModel = new SpinnerListModel();
-    private static final SpinnerListModel residualLikelihoodSpinnerModel = new SpinnerListModel();
+    private final SpinnerListModel initialSeveritySpinnerModel = new SpinnerListModel();
+    private final SpinnerListModel initialLikelihoodSpinnerModel = new SpinnerListModel();
+    private final SpinnerListModel residualSeveritySpinnerModel = new SpinnerListModel();
+    private final SpinnerListModel residualLikelihoodSpinnerModel = new SpinnerListModel();
 
-    
-    static {
+  
+    private void init() {
+        initComponents();
+        
         try {            
             riskMatrixImageIcon = ResourceUtils.getImageIcon(RISK_MATRIX_IMAGE);
             riskMatrixImageIcon = new ImageIcon(riskMatrixImageIcon.getImage().getScaledInstance(RISK_MATRIX_X, RISK_MATRIX_Y, Image.SCALE_DEFAULT));
@@ -123,11 +125,7 @@ public class HazardEditor extends javax.swing.JPanel
         catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    
-    
-    private void init() {
-        initComponents();
+        
         if (newBowtieTemplate == null) {
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(NEW_HAZARD_BOWTIE_TEMPLATE)));
