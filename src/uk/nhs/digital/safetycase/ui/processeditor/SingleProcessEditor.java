@@ -24,16 +24,15 @@ import uk.nhs.digital.safetycase.ui.LinkEditor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.projectuiframework.ui.EditorComponent;
-import uk.nhs.digital.projectuiframework.ui.ExternalEditorView;
 import uk.nhs.digital.projectuiframework.ui.ProjectWindow;
 import uk.nhs.digital.projectuiframework.ui.SaveRejectedException;
 import uk.nhs.digital.projectuiframework.ui.UndockTabComponent;
@@ -42,6 +41,7 @@ import uk.nhs.digital.safetycase.data.Persistable;
 import uk.nhs.digital.safetycase.data.PersistableFilter;
 import uk.nhs.digital.safetycase.data.ProcessStep;
 import uk.nhs.digital.safetycase.data.ProjectLink;
+import uk.nhs.digital.safetycase.data.Relationship;
 import uk.nhs.digital.safetycase.ui.DiagramEditorElement;
 import uk.nhs.digital.safetycase.ui.LinkExplorerTableCellRenderer;
 
@@ -55,6 +55,7 @@ public class SingleProcessEditor
 {
 
     private final String[] linkcolumns = {"Name", "Type", "Comment", "Via"};
+    private final String[] hazColumns = {"Process Step", "Hazard ID", "Hazard Name", "Hazard Description", "Hazard Status"};
     private JDialog parent = null;
 //    private SingleProcessEditorForm containerForm = null;
 //    private ProcessEditor editor = null;
@@ -63,8 +64,7 @@ public class SingleProcessEditor
     private int newObjectProjectId = -1;
     private EditorComponent editorComponent = null;
     private boolean modified = false;
-    
-    private ArrayList<ProcessStep> steps = new ArrayList<>();
+    private DefaultTableCellRenderer hazrenderer = new HazardTableCellRenderer();
     
     /**
      * Creates new form SingleProcessEditorPanel
@@ -78,12 +78,19 @@ public class SingleProcessEditor
             linksTable.setDefaultRenderer(Object.class, new LinkExplorerTableCellRenderer());
             linksTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
             linksTable.setModel(dtm);
+            
+            DefaultTableModel htm = new DefaultTableModel(hazColumns, 0);
+            hazTable.setDefaultEditor(Object.class, null);
+            hazTable.setDefaultRenderer(Object.class, hazrenderer);
+            hazTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
+            hazTable.setModel(htm);
+               
         }
         catch (Exception e) {}
         descriptionTextArea.setFont(nameTextField.getFont());
         SmartProject.getProject().addNotificationSubscriber(this);
     }
-    
+        
     void setProcessId(int i) 
             throws Exception
     { 
@@ -142,7 +149,7 @@ public class SingleProcessEditor
                     dtm.addRow(row);
                 }
             }
-              
+             
             linksTable.setModel(dtm);
         }
         catch (Exception e) {
@@ -150,6 +157,59 @@ public class SingleProcessEditor
             SmartProject.getProject().log("Failed to load hazard relationships", e);
         }
     }
+    
+    private void hazardSummary() {
+
+        ArrayList<Persistable> hazards = null;
+        if (processid == -1) {
+            return;
+        }       
+        try {
+            if (process == null) {
+                process = (Process) MetaFactory.getInstance().getFactory("Process").get(processid);
+            }
+            
+            ArrayList<Persistable> pSteps = null;
+            DefaultTableModel htm = new DefaultTableModel(hazColumns, 0);
+            
+            pSteps = MetaFactory.getInstance().getChildren("ProcessStep", "ProcessID", process.getId());
+            hazards = MetaFactory.getInstance().getChildren("Hazard", "ProjectID", SmartProject.getProject().getCurrentProjectID());
+            
+            if (pSteps == null) {
+                    return;
+                }                
+            for (Persistable processstep: pSteps) {
+                 ArrayList<Relationship> hazRels = processstep.getRelationships("Hazard");                 
+                 if(hazRels != null) {
+                     for (Relationship r: hazRels) {
+                         if (!r.isDeleted()) {
+                             try {                           
+                            for (Persistable h : hazards) {                                
+                                if (h.isDeleted()) {
+                                    continue;  
+                                }                                
+                                if (r.getTarget() == h.getId()) {
+                                    String hazId = Integer.toString(h.getId());
+                                    Object[] row = {processstep.getAttribute("Name"),hazId ,h.getAttribute("Name"),h.getAttribute("Description"),h.getAttribute("Status")};
+                                    htm.addRow(row);      
+                                }               
+                            }
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                       }
+                     }
+                 }                 
+                 
+                 hazTable.setModel(htm);
+                }                            
+            }   
+            catch(Exception e) {
+                 JOptionPane.showMessageDialog(this, "Failed to load Hazard Summary", "Load failed", JOptionPane.ERROR_MESSAGE);
+                 SmartProject.getProject().log("Failed to load hazard summary", e);
+            }         
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -179,19 +239,9 @@ public class SingleProcessEditor
         jScrollPane2 = new javax.swing.JScrollPane();
         linksTable = new javax.swing.JTable();
         directLinksOnlyCheckBox = new javax.swing.JCheckBox();
-
-        commonToolBar = new javax.swing.JToolBar();
-        saveButton = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JToolBar.Separator();
-        processEditorButton = new javax.swing.JButton();
-        jSeparator2 = new javax.swing.JToolBar.Separator();
-        linksEditorButton = new javax.swing.JButton();
-        jSeparator3 = new javax.swing.JToolBar.Separator();
-        deleteButton = new javax.swing.JButton();
-        stepsListPanel = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        stepsList = new javax.swing.JList<>();
-
+        hazTable = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -306,11 +356,37 @@ public class SingleProcessEditor
             linksPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(linksPanelLayout.createSequentialGroup()
                 .addComponent(directLinksOnlyCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(15, Short.MAX_VALUE))
+        );
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazard Summary"));
+
+        hazTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(hazTable);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -320,6 +396,7 @@ public class SingleProcessEditor
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(linksPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -342,34 +419,14 @@ public class SingleProcessEditor
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(linksPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26))
         );
 
         linksPanel.getAccessibleContext().setAccessibleName("Linkes");
-
-        stepsListPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Process steps"));
-
-        stepsList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                stepsListMouseClicked(evt);
-            }
-        });
-        jScrollPane3.setViewportView(stepsList);
-
-        javax.swing.GroupLayout stepsListPanelLayout = new javax.swing.GroupLayout(stepsListPanel);
-        stepsListPanel.setLayout(stepsListPanelLayout);
-        stepsListPanelLayout.setHorizontalGroup(
-            stepsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3)
-        );
-        stepsListPanelLayout.setVerticalGroup(
-            stepsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(stepsListPanelLayout.createSequentialGroup()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                .addContainerGap())
-        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -378,10 +435,8 @@ public class SingleProcessEditor
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-
                     .addComponent(commonToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -390,10 +445,8 @@ public class SingleProcessEditor
                 .addContainerGap()
                 .addComponent(commonToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-
+                .addContainerGap(11, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -441,6 +494,9 @@ public class SingleProcessEditor
             JOptionPane.showMessageDialog(this, "Failed to save Process. Send logs to support", "Save failed", JOptionPane.ERROR_MESSAGE);
             SmartProject.getProject().log("Failed to save in SingleProcessEditor", e);
         }
+        
+        hazardSummary();      
+        
         modified = false;
         String cos = System.getProperty("SMART.closeonsave");
         if ((cos != null) && (cos.contains("Process"))) {
@@ -537,33 +593,17 @@ public class SingleProcessEditor
         populateLinks();
     }//GEN-LAST:event_directLinksOnlyCheckBoxActionPerformed
 
-    private void stepsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stepsListMouseClicked
-        if (evt.getClickCount() == 2) {
-            int index = stepsList.locationToIndex(evt.getPoint());
-            try {
-                ProcessStep ps = steps.get(index);
-                                JPanel pnl = SmartProject.getProject().getExistingEditor(ps, SmartProject.getProject().getProjectWindow());
-                                if (pnl != null) {
-                                    SmartProject.getProject().getProjectWindow().selectPanel(pnl);
-                                    return;
-                                }
-                                
-                                ProcessStepDetail psd = new ProcessStepDetail(ps);
-                                ExternalEditorView editorView = new ExternalEditorView(psd, "Step:" + ps.getAttributeValue("Name"), SmartProject.getProject().getProjectWindow().getMainWindowTabbedPane());                
-            }
-            catch (Exception e) {}
-        }
-    }//GEN-LAST:event_stepsListMouseClicked
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar commonToolBar;
     private javax.swing.JButton deleteButton;
     private javax.swing.JTextArea descriptionTextArea;
     private javax.swing.JCheckBox directLinksOnlyCheckBox;
+    private javax.swing.JTable hazTable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -578,29 +618,8 @@ public class SingleProcessEditor
     private javax.swing.JTextField nameTextField;
     private javax.swing.JButton processEditorButton;
     private javax.swing.JButton saveButton;
-    private javax.swing.JList<String> stepsList;
-    private javax.swing.JPanel stepsListPanel;
     // End of variables declaration//GEN-END:variables
 
-    private void populateSteps() {
-        try {
-            ArrayList<Persistable> ps = MetaFactory.getInstance().getChildren("ProcessStep", "ProcessID", process.getId());
-            DefaultListModel dlm = new DefaultListModel();
-            steps.clear();
-            if (ps != null) {
-                for (Persistable s : ps) {
-                    dlm.addElement(s);
-                    steps.add((ProcessStep)s);
-                }
-            }          
-            stepsList.setModel(dlm);
-        }
-        catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Failed to load Care process for editing", "Load failed", JOptionPane.ERROR_MESSAGE);
-            SmartProject.getProject().log("Failed to set persistable object in SingleProcessEditorForm", e);
-        }        
-    }
-    
     @Override
     public void setPersistableObject(Persistable p) {
         if (p == null)
@@ -609,8 +628,8 @@ public class SingleProcessEditor
         processid = process.getId();
         setData(process.getAttributeValue("Name"), process.getAttributeValue("Version"), 
                     process.getAttributeValue("Source"), process.getAttributeValue("Description"));       
-        populateLinks();        
-        populateSteps();
+        populateLinks();
+        hazardSummary();
     }
 
     @Override
