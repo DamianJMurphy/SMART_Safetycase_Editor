@@ -829,7 +829,6 @@ public class HazardEditor extends javax.swing.JPanel
         //            hazard.setAttribute("ProjectID", Integer.parseInt(hazard.getAttributeValue("ProjectID")));
         //        else
         hazard.setAttribute("ProjectID", SmartProject.getProject().getCurrentProjectID());
-        treeModel = SmartProject.getProject().getTreeModel();
         try {
             MetaFactory.getInstance().getFactory(hazard.getDatabaseObjectName()).put(hazard);
             if (create) {
@@ -837,81 +836,7 @@ public class HazardEditor extends javax.swing.JPanel
                 Relationship r = new Relationship(parentProcessStep.getId(), hazard.getId(), hazard.getDatabaseObjectName());
                 parentProcessStep.addRelationship(r);
                 MetaFactory.getInstance().getFactory(parentProcessStep.getDatabaseObjectName()).put(parentProcessStep);
-                
-                //traverse tree 
-                
-                root = (DefaultMutableTreeNode)treeModel.getRoot();
-                Enumeration nodes = root.breadthFirstEnumeration();
-                DefaultMutableTreeNode projectNode = null;
-                while (nodes.hasMoreElements()) {
-                            DefaultMutableTreeNode d = (DefaultMutableTreeNode)nodes.nextElement();
-                            uk.nhs.digital.safetycase.data.Project proj = null;
-                            try {
-                                proj = (uk.nhs.digital.safetycase.data.Project)d.getUserObject();
-                                if (proj.getId() == (Integer.parseInt(hazard.getAttributeValue("ProjectID")))) {
-                                    projectNode = d;
-                                    break;
-                                }
-                            }
-                            catch (Exception eIgnore) {}
-                        }
-                
-//                nodes = projectNode.depthFirstEnumeration();
-        
-                DefaultMutableTreeNode careProcessFolderNode = null;
-                int projectChildCount = projectNode.getChildCount();
-
-                System.out.println("---" + projectNode.toString() + "---");
-//                uk.nhs.digital.safetycase.data.Process processFolder = null;
-                for (int i = 0; i < projectChildCount; i++) {
-
-                    DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) projectNode.getChildAt(i);
-                    try{
-                    if (childNode.getUserObject().toString().equals("Care Process")) {                       
-                        careProcessFolderNode = (DefaultMutableTreeNode)childNode;
-//                        processFolder = (uk.nhs.digital.safetycase.data.Process)careProcessFolderNode.getUserObject();
-                    } 
-                    } catch (Exception e){
-                        
-                    }
-                }
-                
-                
-                int careProcessChildCount = careProcessFolderNode.getChildCount();
-                
-                for (int i = 0; i < careProcessChildCount; i++) {
-
-                    DefaultMutableTreeNode processNode = (DefaultMutableTreeNode) careProcessFolderNode.getChildAt(i);
-                    try{
-                        int processChildCount = processNode.getChildCount();
-                        for (int j = 0; j < processChildCount; j++) {
-                            DefaultMutableTreeNode psNode = (DefaultMutableTreeNode)processNode.getChildAt(j);
-                            ProcessStep processStep = (ProcessStep) psNode.getUserObject();
-                            try {
-                                if (processStep.getId() == parentProcessStep.getId()) {
-                                    TreePath pathToContainer = new TreePath(psNode.getPath());
-                                    boolean expanded = SmartProject.getProject().getProjectWindow().getProjectTree().isExpanded(pathToContainer);
-                                    
-                                    DefaultMutableTreeNode hazardNode = null;
-                                    try {
-                                          hazardNode = SmartProject.getProject().getTreeNode(hazard);
-                                          treeModel.insertNodeInto(hazardNode, psNode, psNode.getChildCount());
-                                        } catch (Exception e) {
-                                            //log("Cannot make eventNode processing editor notification event", e);
-                                            return;
-                                        }
-                                    break;
-                            }
-                            } catch (Exception e1){}
-                        }
-                             
-                    } catch (Exception e2){
-                        
-                    }
-            
-                }
-                
-//                SmartProject.getProject().editorEvent(Project.ADD, hazard);              
+                SmartProject.getProject().editorEvent(Project.ADD, hazard);              
                 create = false;
                 
                 
@@ -1161,6 +1086,11 @@ public class HazardEditor extends javax.swing.JPanel
 
             descriptionTextArea.setText(hazard.getAttributeValue("Description"));
             clinicalJustificationTextArea.setText(hazard.getAttributeValue("ClinicalJustification"));
+            
+            String stf = summaryTextField.getText();
+            if (((stf != null) || (stf.trim().length() != 0))) {
+                summaryTextField.setEditable(false);
+            }
         }
         catch (Exception e) {
             JOptionPane.showMessageDialog(editorPanel, "Failed to load Hazard for editing", "Load failed", JOptionPane.ERROR_MESSAGE);

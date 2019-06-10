@@ -458,6 +458,51 @@ public class SmartProject
         projectWindow.resetTreeModel(treeModel);
     }
     
+     private DefaultMutableTreeNode populateSingleProcess(Persistable p, int projID) {
+        
+        DefaultMutableTreeNode pn = new DefaultMutableTreeNode(p.getTitle());
+        pn.setUserObject(p);
+        ArrayList<Persistable> hazardList = metaFactory.getChildren("Hazard", "ProjectID", projID);
+        ArrayList<Persistable> steps = metaFactory.getChildren("ProcessStep", "ProcessID", p.getId());
+        if (steps == null) {
+            return pn;
+        }
+        for (Persistable s : steps) {
+            if (s.isDeleted()) {
+                continue;               
+            }           
+               
+            DefaultMutableTreeNode sn = new DefaultMutableTreeNode(s.getTitle()); 
+            sn.setUserObject(s);
+            pn.add(sn);
+            
+            ArrayList<Relationship> PSR = s.getRelationships("Hazard");
+
+            if(PSR == null){               
+                continue;
+            }   
+                for (Relationship r : PSR) {                   
+                    if (!r.isDeleted()) {                       
+                        try {                           
+                            for (Persistable h : hazardList) {                                
+                                if (h.isDeleted()) {
+                                    continue;  
+                                }                                
+                                    if (r.getTarget() == h.getId()) {                                       
+                                         DefaultMutableTreeNode actualHazNode = populateSingleHazard((Hazard)h);
+                                         actualHazNode.setUserObject(h);
+                                         sn.add(actualHazNode);
+                                        }               
+                            }
+                        }catch (Exception e) {
+                            e.printStackTrace();
+                        }                       
+                    }
+                }               
+        }  
+        return pn;
+    }
+    
     private DefaultMutableTreeNode populateSingleProcess(Persistable p) {
         DefaultMutableTreeNode pn = new DefaultMutableTreeNode(p.getTitle());
         pn.setUserObject(p);
@@ -486,7 +531,7 @@ public class SmartProject
         for (Persistable p : list) {
             if (p.isDeleted())
                 continue;
-            DefaultMutableTreeNode pn = populateSingleProcess(p);
+            DefaultMutableTreeNode pn = populateSingleProcess(p,pid);
             if (pn != null)
                 pnode.add(pn);
         }
@@ -504,7 +549,7 @@ public class SmartProject
         populateProjectComponent("Care Settings", p, proj.getId());
         populateProjectComponent("Role", p, proj.getId());
         p.add(populateProcesses(proj.getId()));
-        p.add(populateHazard(proj.getId()));
+//        p.add(populateHazard(proj.getId()));
 
         DefaultMutableTreeNode issuesNode = new DefaultMutableTreeNode("Issues Log");
         p.add(issuesNode);
@@ -782,7 +827,7 @@ public class SmartProject
             ArrayList<Persistable> alreadySeen = new ArrayList<>();
             return populateSystemWithChildren(sys, alreadySeen);
         } else if (p.getDatabaseObjectName().contentEquals("Process")) {
-            return populateSingleProcess(p);
+            return populateSingleProcess(p, SmartProject.getProject().getCurrentProjectID());
         } else {
             DefaultMutableTreeNode node = new DefaultMutableTreeNode(p.getTitle());
             node.setUserObject(o);
@@ -875,7 +920,7 @@ public class SmartProject
             updateProjectNodeInTree(p, ev);
             return;
         } else if ("HazardCauseControlEffect".contains(p.getDatabaseObjectName())) {
-            search = "Hazard";
+            search = "Care Process";
         } else if (p.getDatabaseObjectName().contentEquals("Process")) {
             search = "Care Process";
         } else {    
@@ -912,12 +957,66 @@ public class SmartProject
         while (nodes.hasMoreElements()) {
             DefaultMutableTreeNode d = (DefaultMutableTreeNode)nodes.nextElement();
             if ((d.getUserObject() instanceof java.lang.String) && (((String)d.getUserObject()).contentEquals(search))) {
-                containerNode = d;
+                if ("HazardCauseControlEffect".contains(p.getDatabaseObjectName())) {
+                    
+                nodes = projectNode.depthFirstEnumeration();
+        
+                DefaultMutableTreeNode careProcessFolderNode = null;
+                int projectChildCount = projectNode.getChildCount();
+//                uk.nhs.digital.safetycase.data.Process processFolder = null;
+                for (int i = 0; i < projectChildCount; i++) {
+                    DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) projectNode.getChildAt(i);
+                    try{
+                    if (childNode.getUserObject().toString().equals("Care Process")) {                       
+                        careProcessFolderNode = (DefaultMutableTreeNode)childNode;
+                        break;
+                    } 
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                
+                int careProcessChildCount = careProcessFolderNode.getChildCount();
+
+                for (int i = 0; i < careProcessChildCount; i++) {
+                    
+                    DefaultMutableTreeNode processNode = (DefaultMutableTreeNode) careProcessFolderNode.getChildAt(i);
+
+                    try{                        
+                        int processStepChildCount = processNode.getChildCount();
+                        for (int j = 0; j < processStepChildCount; j++) {
+                            DefaultMutableTreeNode processStepNode = (DefaultMutableTreeNode)processNode.getChildAt(j);
+                            ProcessStep processStep = (ProcessStep) processStepNode.getUserObject();
+                            
+                            ArrayList<Relationship> PSR = processStep.getRelationships("Hazard");                            
+                            if (PSR == null) {
+                                continue;
+                            }                            
+                            for (Relationship r : PSR) {
+                                if (!r.isDeleted()) {
+                                    try {
+                                            if (r.getTarget() == p.getId()) {
+                                                containerNode = processStepNode;
+                                                break;
+                                            }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            } 
+                        }                             
+                    } catch (Exception e2){
+                        e2.printStackTrace();
+                    }            
+                }
+                    
+                } else {                
+                    containerNode = d;
+                }
                 break;
             }
         }
-        if (containerNode != null) {
-
+        if (containerNode != null) { 
             TreePath pathToContainer = new TreePath(containerNode.getPath());
             boolean expanded = projectWindow.getProjectTree().isExpanded(pathToContainer);
 
@@ -939,12 +1038,20 @@ public class SmartProject
                 case uk.nhs.digital.projectuiframework.Project.DELETE:
                     for (int i = 0; i < containerNode.getChildCount(); i++) {
                         DefaultMutableTreeNode node = (DefaultMutableTreeNode) containerNode.getChildAt(i);
-                        if (containerNode.getUserObject().toString().contentEquals("Hazard")) {
+                        Object dbObject = containerNode.getUserObject();
+//                        if (containerNode.getUserObject().toString().contentEquals("Hazard")) {
+//                            if (node.getUserObject().toString().contentEquals(p.getTitle())) {
+//                                treeModel.removeNodeFromParent(node);
+//                                break;
+//                            }
+//                        }
+                        if (dbObject instanceof uk.nhs.digital.safetycase.data.ProcessStep) {
                             if (node.getUserObject().toString().contentEquals(p.getTitle())) {
                                 treeModel.removeNodeFromParent(node);
                                 break;
                             }
-                        } else if (containerNode.getUserObject().toString().contentEquals("Systems")) {
+                    }  
+                        else if (containerNode.getUserObject().toString().contentEquals("Systems")) {
                             // containerNode is grandparent of event node, so remove eventNode's parent
                             if (node.getUserObject().toString().contentEquals(p.getTitle())) {
                                 treeModel.removeNodeFromParent(node);
@@ -952,12 +1059,12 @@ public class SmartProject
                             }
                         } else {
                             Persistable pr = (Persistable) node.getUserObject();
-                            if (pr.getTitle().contentEquals(p.getTitle()) && (pr.getId() == p.getId())) {
-                                treeModel.removeNodeFromParent(node);
-                                break;
+                                if (pr.getTitle().contentEquals(p.getTitle()) && (pr.getId() == p.getId())) {
+                                    treeModel.removeNodeFromParent(node);
+                                    break;
+                                }
                             }
                         }
-                    }
                     break;
                 case uk.nhs.digital.projectuiframework.Project.UPDATE:
                     // Find the node we're replacing in the container node, by type and name
@@ -1067,8 +1174,8 @@ public class SmartProject
         d.add(dmtn);
         dmtn = new DefaultMutableTreeNode("Care Process");
         d.add(dmtn);
-        dmtn = new DefaultMutableTreeNode("Hazard");
-        d.add(dmtn);
+        //dmtn = new DefaultMutableTreeNode("Hazard");
+        //d.add(dmtn);
         dmtn = new DefaultMutableTreeNode("Issues Log");
         d.add(dmtn);
         DefaultMutableTreeNode viewsNode = populateViewsNode(pid);        
