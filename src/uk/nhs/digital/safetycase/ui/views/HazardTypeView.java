@@ -24,12 +24,14 @@ import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.DataNotificationSubscriber;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
 import uk.nhs.digital.safetycase.data.Hazard;
 import uk.nhs.digital.safetycase.data.MetaFactory;
 import uk.nhs.digital.safetycase.data.Project;
+import uk.nhs.digital.safetycase.ui.processeditor.HazardTableCellRenderer;
 
 /**
  *
@@ -39,10 +41,11 @@ public class HazardTypeView
         extends javax.swing.JPanel 
         implements ViewConstructor, DataNotificationSubscriber
 {
-    private static final String[] COLUMNS = {"Name", "Status", "Initial rating", "Residual rating"};
+    private static final String[] COLUMNS = {"Hazard ID", "Hazard Name", "Initial rating", "Residual rating", "Status"};
+    private DefaultTableCellRenderer hazrenderer = new HazardTableCellRenderer();
     private Project project = null;
     private ArrayList<Hazard> hazards = new ArrayList<>();
-    private ArrayList<Hazard> displayedHazards = new ArrayList<>();
+    private ArrayList<Hazard> displayedHazards = new ArrayList<>();    
     /**
      * Creates new form HazardTypeView
      */
@@ -50,6 +53,8 @@ public class HazardTypeView
         initComponents();
         DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
         hazardsTable.setModel(dtm);
+        hazardsTable.setDefaultEditor(Object.class, null);
+        hazardsTable.setDefaultRenderer(Object.class, hazrenderer);
         hazardsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         hazardsTable.setCellSelectionEnabled(false);
         hazardsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
@@ -127,10 +132,12 @@ public class HazardTypeView
         residualSeverityTextField = new javax.swing.JTextField();
         residualRatingTextField = new javax.swing.JTextField();
 
+        setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
 
         hazardSelectionPanel.setLayout(new javax.swing.BoxLayout(hazardSelectionPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
+        typesListPanel.setBackground(new java.awt.Color(229, 239, 248));
         typesListPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazard types"));
 
         typesList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -146,7 +153,7 @@ public class HazardTypeView
             typesListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(typesListPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE))
         );
         typesListPanelLayout.setVerticalGroup(
             typesListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,6 +164,7 @@ public class HazardTypeView
 
         hazardSelectionPanel.add(typesListPanel);
 
+        hazardsPanel.setBackground(new java.awt.Color(229, 239, 248));
         hazardsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazards"));
 
         hazardsTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -176,11 +184,11 @@ public class HazardTypeView
         hazardsPanel.setLayout(hazardsPanelLayout);
         hazardsPanelLayout.setHorizontalGroup(
             hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 595, Short.MAX_VALUE)
+            .addGap(0, 604, Short.MAX_VALUE)
             .addGroup(hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(hazardsPanelLayout.createSequentialGroup()
                     .addGap(5, 5, 5)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         hazardsPanelLayout.setVerticalGroup(
@@ -189,7 +197,7 @@ public class HazardTypeView
             .addGroup(hazardsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(hazardsPanelLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
                     .addGap(23, 23, 23)))
         );
 
@@ -197,6 +205,7 @@ public class HazardTypeView
 
         add(hazardSelectionPanel);
 
+        selectedHazardPanel.setBackground(new java.awt.Color(229, 239, 248));
         selectedHazardPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Hazard"));
 
         jLabel1.setText("Name");
@@ -261,16 +270,16 @@ public class HazardTypeView
                     .addComponent(jScrollPane3)
                     .addComponent(jScrollPane4)
                     .addGroup(selectedHazardPanelLayout.createSequentialGroup()
-                        .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(selectedHazardPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(37, 37, 37)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(initialSeverityTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(selectedHazardPanelLayout.createSequentialGroup()
                                 .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel6)
                                     .addComponent(jLabel8))
-                                .addGap(21, 21, 21)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(initialLikelihoodTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(initialRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -280,12 +289,12 @@ public class HazardTypeView
                                 .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel9)
                                     .addComponent(jLabel10))
-                                .addGap(16, 16, 16))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, selectedHazardPanelLayout.createSequentialGroup()
                                 .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                         .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(residualLikelihoodTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                            .addComponent(residualLikelihoodTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
                             .addComponent(residualRatingTextField)
                             .addComponent(residualSeverityTextField)))
                     .addGroup(selectedHazardPanelLayout.createSequentialGroup()
@@ -312,11 +321,11 @@ public class HazardTypeView
                 .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(conditionTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(selectedHazardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(statusTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -348,13 +357,14 @@ public class HazardTypeView
                     .addComponent(jLabel8)
                     .addComponent(residualRatingTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
-                .addContainerGap(271, Short.MAX_VALUE))
+                .addContainerGap(209, Short.MAX_VALUE))
         );
 
         add(selectedHazardPanel);
     }// </editor-fold>//GEN-END:initComponents
 
     private void typesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_typesListValueChanged
+        clearDisplayedHazards();
         String s = typesList.getSelectedValue();
         if ((s == null) || (s.trim().length() == 0))
             return;
@@ -366,10 +376,11 @@ public class HazardTypeView
             if (t.contentEquals(s)) {
                 displayedHazards.add(h);
                 String[] row = new String[COLUMNS.length];
-                row[0] = h.getAttributeValue("Name");
-                row[1] = h.getAttributeValue("Status");
+                row[0] = Integer.toString(h.getId());
+                row[1] = h.getAttributeValue("Name");
                 row[2] = h.getAttributeValue("InitialRiskRating");
                 row[3] = h.getAttributeValue("ResidualRiskRating");
+                row[4] = h.getAttributeValue("Status"); 
                 dtm.addRow(row);
             }
         }

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import uk.nhs.digital.projectuiframework.Project;
 import uk.nhs.digital.projectuiframework.smart.SmartProject;
@@ -46,8 +47,9 @@ public class ProcessStepDetail
         implements uk.nhs.digital.safetycase.ui.PersistableEditor
 {
 
-    private static final String[] COLUMNS = {"Name", "Status", "Initial rating", "Residual rating"};
+    private static final String[] COLUMNS = {"Hazard ID", "Hazard Name", "Initial rating", "Residual rating", "Status"};
     private final String[] linkcolumns = {"Name", "Type", "Comment", "Via"};
+    private DefaultTableCellRenderer hazrenderer = new HazardTableCellRenderer();
     
     private EditorComponent editorComponent = null;
     private JDialog parent = null;
@@ -59,6 +61,8 @@ public class ProcessStepDetail
     public ProcessStepDetail() {
         initComponents();
         DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
+        hazardsTable.setDefaultEditor(Object.class, null);
+        hazardsTable.setDefaultRenderer(Object.class, hazrenderer);
         hazardsTable.setModel(dtm);
         hazardsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         dtm = new DefaultTableModel(linkcolumns, 0);
@@ -79,6 +83,8 @@ public class ProcessStepDetail
         initComponents();
         processStep = ps;
         DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
+        hazardsTable.setDefaultEditor(Object.class, null);
+        hazardsTable.setDefaultRenderer(Object.class, hazrenderer);
         hazardsTable.setModel(dtm);
         hazardsTable.setRowHeight(SmartProject.getProject().getTableRowHeight());
         dtm = new DefaultTableModel(linkcolumns, 0);
@@ -131,10 +137,11 @@ public class ProcessStepDetail
                     Hazard h = (Hazard)MetaFactory.getInstance().getFactory("Hazard").get(r.getTarget());
                     if (!h.isDeleted()) {
                         String[] row = new String[COLUMNS.length];
-                        row[0] = h.getAttributeValue("Name");
-                        row[1] = h.getAttributeValue("Status");
+                        row[0] = Integer.toString(h.getId());
+                        row[1] = h.getAttributeValue("Name");
                         row[2] = h.getAttributeValue("InitialRiskRating");
-                        row[3] = h.getAttributeValue("ResidualRiskRating") ;
+                        row[3] = h.getAttributeValue("ResidualRiskRating");
+                        row[4] = h.getAttributeValue("Status") ;
                         hazardList.add(h);
                         dtm.addRow(row);
                     }
