@@ -237,6 +237,12 @@ public class ProcessGraphEditor
 								ProcessGraphEditor.class
 										.getResource("/uk/nhs/digital/safetycase/ui/processeditor/decision.png")),
 						"rhombus;whiteSpace=wrap", 160, 160, "");
+                processPalette
+				.addTemplate("Swimlane",
+						new ImageIcon(
+								ProcessGraphEditor.class
+										.getResource("/uk/nhs/digital/safetycase/ui/processeditor/swimlane.png")),
+						 "swimlane",600, 200, "Swimlane");
 		processPalette
 				.addEdgeTemplate("Straight",
 						new ImageIcon(

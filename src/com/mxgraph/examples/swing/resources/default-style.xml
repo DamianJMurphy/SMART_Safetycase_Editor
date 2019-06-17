@@ -61,9 +61,10 @@
 	</add>
 	<add as="swimlane">
 		<add as="shape" value="swimlane"/>
-		<add as="fontSize" value="12"/>
+		<add as="fontSize" value="22"/>
 		<add as="fontStyle" value="1"/>
 		<add as="startSize" value="23"/>
+                <add as="horizontal" value="0"/>
 	</add>
 	<add as="group">
 		<add as="verticalAlign" value="top"/>
