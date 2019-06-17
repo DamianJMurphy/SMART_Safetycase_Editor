@@ -120,6 +120,7 @@ public class SafetyReportEditor
     private static final String TR_END = "</tr>\n";
     private static final String TD_START = "<td>";
     private static final String TD_END = "</td>\n";
+    private static final String TD_FIXED_WIDTH = "<td style=\"width:30%\">";
 
     private static final String P_START = "<P>";
     // SL not used private static final String PCLASS_START = "<P class=\"rating%s\">";
@@ -139,9 +140,9 @@ public class SafetyReportEditor
     private static final String ROLE_SECTION = H1_START + "Roles" + H1_END;
     private static final String CLINICAL_RISK_MANAGEMENT_SECTION = H1_START + "Hazard Analysis" + H1_END;
     
-    private static final String HAZARD_SUMMARY_TABLE_START = "<table style=\"width:90%\" class=\"StandardTable\" >";
+    private static final String HAZARD_SUMMARY_TABLE_START = "<table style=\"width:95%\" class=\"StandardTable\" >";
     private static final String HAZARD_SUMMARY_TABLE_END = "\n</table>\n<br /><br />";
-    private static final String STANDARD_TABLE_START = "<table style=\"width:80%\" class=\"StandardTable\" >";
+    private static final String STANDARD_TABLE_START = "<table style=\"width:95%\" class=\"StandardTable\" >";
     private static final String STANDARD_TABLE_END = "\n</table>\n<br /><br />";
     private static final String TABLE_ROW_HEADING_START = "<tr class=\"HeadingRow\" >";
  
@@ -750,7 +751,7 @@ public class SafetyReportEditor
                 Persistable sf = MetaFactory.getInstance().getFactory(r.getTargetType()).get(r.getTarget()); 
                 if (!sf.isDeleted()) {
                     sfSB.append(STANDARD_TABLE_START);
-                    sfSB.append(TABLE_ROW_HEADING_START).append(TD_START).append("Name").append(TD_END).append(TD_START).append("Description").append(TD_END).append(TR_END);
+                    sfSB.append(TABLE_ROW_HEADING_START).append(TD_FIXED_WIDTH).append("Name").append(TD_END).append(TD_START).append("Description").append(TD_END).append(TR_END);
                     sfSB.append(TR_START).append(TD_START).append(sf.getAttributeValue("Name")).append(TD_END).append(TD_START).append(sf.getAttributeValue("Description")).append(TD_END).append(TR_END);
                     sfSB.append(TABLE_ROW_HEADING_START).append(TD_START).append("Care Process").append(TD_END).append(TD_START).append("Care Process Step").append(TD_END).append(TR_END);
                     if ((r.getComment() != null) && (r.getComment().contains("system diagram"))) {
@@ -878,7 +879,7 @@ public class SafetyReportEditor
             for (Location loc : Locs.values()) {
 //                int pid = Integer.parseInt(loc.getAttributeValue("ParentLocationID"));
                 LocationSB.append(STANDARD_TABLE_START);
-                LocationSB.append(TABLE_ROW_HEADING_START).append(TD_START).append("Name").append(TD_END).append(TD_START).append("Description").append(TD_END).append(TR_END);
+                LocationSB.append(TABLE_ROW_HEADING_START).append(TD_FIXED_WIDTH).append("Name").append(TD_END).append(TD_START).append("Description").append(TD_END).append(TR_END);
                 LocationSB.append(TR_START).append(TD_START).append(loc.getAttributeValue("Name")).append(TD_END).append(TD_START).append(loc.getAttributeValue("Description")).append(TD_END).append(TR_END);
 
 
@@ -931,7 +932,7 @@ public class SafetyReportEditor
             }
             for (Role rol : Rols.values()) {
                 RoleSB.append(STANDARD_TABLE_START);
-                RoleSB.append(TABLE_ROW_HEADING_START).append(TD_START).append("Name").append(TD_END).append(TD_START).append("Description").append(TD_END).append(TR_END);
+                RoleSB.append(TABLE_ROW_HEADING_START).append(TD_FIXED_WIDTH).append("Name").append(TD_END).append(TD_START).append("Description").append(TD_END).append(TR_END);
                 RoleSB.append(TR_START).append(TD_START).append(rol.getAttributeValue("Name")).append(TD_END).append(TD_START).append(rol.getAttributeValue("Description")).append(TD_END).append(TR_END);
                 RoleSB.append(STANDARD_TABLE_END);
             }
@@ -1058,7 +1059,7 @@ public class SafetyReportEditor
                     hazardSB.append("<br />");
                                        
                     hazardSB.append(STANDARD_TABLE_START);
-                    hazardSB.append(TABLE_ROW_HEADING_START).append(TD_START).append("Hazard Associations").append(TD_END).append(TD_START).append("Name").append(TD_END).append(TR_END);
+                    hazardSB.append(TABLE_ROW_HEADING_START).append(TD_FIXED_WIDTH).append("Hazard Associations").append(TD_END).append(TD_START).append("Name").append(TD_END).append(TR_END);
                     
                     hazardSB.append(HazardAssociatedReport(h, "Location", "Linked Care Setting : "));                    
                     hazardSB.append(TR_START).append(TD_START).append("Associated Care Process : ").append(TD_END).append(TD_START).append(processTitle).append(TD_END).append(TR_END); 
@@ -1112,7 +1113,7 @@ public class SafetyReportEditor
                     // hazardSB.append(HazardDependents(h, "Control", "Existing Controls")); //not required any more
                     hazardSB.append(H3_START).append("Initial Risk").append(H3_END);
                     hazardSB.append(STANDARD_TABLE_START);
-                    hazardSB.append(TABLE_ROW_HEADING_START).append(TD_START).append("Consequence").append(TD_END).append(TD_START).append("Likelihood").append(TD_END).append(TD_START).append("Rating").append(TD_END).append(TR_END);
+                    hazardSB.append(TABLE_ROW_HEADING_START).append(TD_FIXED_WIDTH).append("Consequence").append(TD_END).append(TD_START).append("Likelihood").append(TD_END).append(TD_START).append("Rating").append(TD_END).append(TR_END);
                     hazardSB.append(HazradRiskAssessmentReport(h, "iniitalAssessment"));
                     hazardSB.append(STANDARD_TABLE_END);
 
@@ -1125,13 +1126,13 @@ public class SafetyReportEditor
                     // hazardSB.append(HazardDependents(h, "Control", "Additional Controls")); // not required any more
                     hazardSB.append(H3_START).append("Residual Risk").append(H3_END);
                     hazardSB.append(STANDARD_TABLE_START);
-                    hazardSB.append(TABLE_ROW_HEADING_START).append(TD_START).append("Consequence").append(TD_END).append(TD_START).append("Likelihood").append(TD_END).append(TD_START).append("Rating").append(TD_END).append(TR_END);
+                    hazardSB.append(TABLE_ROW_HEADING_START).append(TD_FIXED_WIDTH).append("Consequence").append(TD_END).append(TD_START).append("Likelihood").append(TD_END).append(TD_START).append("Rating").append(TD_END).append(TR_END);
                     hazardSB.append(HazradRiskAssessmentReport(h, "residualAssessment"));
                     hazardSB.append(STANDARD_TABLE_END);
           //          hazardSB.append("<br />");
                     hazardSB.append(STANDARD_TABLE_START);
-                    hazardSB.append(TR_START).append(TD_START).append("Overall Hazard Clinical Justification: ").append(TD_END).append("<td colspan=\"2\">").append(CheckforNullorEmptyValue(h, "ClinicalJustification")).append(TD_END).append(TR_END);
-                    hazardSB.append(TR_START).append(TD_START).append("Overall Hazard  Status: ").append(TD_END).append("<td colspan=\"2\">").append(CheckforNullorEmptyValue(h, "Status")).append(TD_END).append(TR_END);
+                    hazardSB.append(TR_START).append(TD_FIXED_WIDTH).append("Overall Hazard Clinical Justification: ").append(TD_END).append("<td colspan=\"2\">").append(CheckforNullorEmptyValue(h, "ClinicalJustification")).append(TD_END).append(TR_END);
+                    hazardSB.append(TR_START).append(TD_FIXED_WIDTH).append("Overall Hazard  Status: ").append(TD_END).append("<td colspan=\"2\">").append(CheckforNullorEmptyValue(h, "Status")).append(TD_END).append(TR_END);
                     hazardSB.append(STANDARD_TABLE_END);
 //                    hazardSB.append(P_START).append("Overall Hazard Clinical Justification: ").append(CheckforNullorEmptyValue(h, "ClinicalJustification")).append("<br />");
 //                    hazardSB.append("Overall Hazard  Status: ").append(CheckforNullorEmptyValue(h, "Status")).append(P_END);
@@ -1367,7 +1368,7 @@ public class SafetyReportEditor
 
             if (rels == null) {
                 hdSB.append(STANDARD_TABLE_START);
-                hdSB.append(TABLE_ROW_HEADING_START).append(TD_START).append("Title : ").append(TD_END).append(TD_START).append(P.getTitle()).append(TD_END).append(TR_END);
+                hdSB.append(TABLE_ROW_HEADING_START).append(TD_FIXED_WIDTH).append("Title : ").append(TD_END).append(TD_START).append(P.getTitle()).append(TD_END).append(TR_END);
                 hdSB.append(TR_START).append(TD_START).append("Description : ").append(TD_END).append(TD_START).append(PersistableDescription).append(TD_END).append(TR_END);
                 hdSB.append(TR_START).append("<td colspan=\"2\">").append("No Related ").append(type).append(TD_END).append(TR_END);
                 hdSB.append(STANDARD_TABLE_END);
@@ -1381,7 +1382,7 @@ public class SafetyReportEditor
                 ControlEvidence = CheckforNullorEmptyValue(p, "Evidence");
                 if (((p.getAttributeValue("GroupingType").equalsIgnoreCase("Existing")) || (p.getAttributeValue("Type").equalsIgnoreCase("Existing"))) && InitialText.equalsIgnoreCase("Existing Controls")) { // p
                     hdSB.append(STANDARD_TABLE_START);
-                    hdSB.append(TABLE_ROW_HEADING_START).append(TD_START).append("Title : ").append(TD_END).append(TD_START).append(P.getTitle()).append(TD_END).append(TR_END);
+                    hdSB.append(TABLE_ROW_HEADING_START).append(TD_FIXED_WIDTH).append("Title : ").append(TD_END).append(TD_START).append(P.getTitle()).append(TD_END).append(TR_END);
                     hdSB.append(TR_START).append(TD_START).append("Description : ").append(TD_END).append(TD_START).append(PersistableDescription).append(TD_END).append(TR_END);
                     hdSB.append(TR_START).append(TD_START).append("Control Title : ").append(TD_END).append(TD_START).append(p.getTitle()).append(TD_END).append(TR_END);
                     hdSB.append(TR_START).append(TD_START).append("Control Description : ").append(TD_END).append(TD_START).append(ControlDescription).append(TD_END).append(TR_END);
@@ -1391,7 +1392,7 @@ public class SafetyReportEditor
                     hdSB.append(STANDARD_TABLE_END);
                 } else if ((p.getAttributeValue("GroupingType").equalsIgnoreCase("Additional") || (p.getAttributeValue("Type").equalsIgnoreCase("Additional"))) && InitialText.equalsIgnoreCase("Additional Controls")) { //p
                     hdSB.append(STANDARD_TABLE_START);
-                    hdSB.append(TABLE_ROW_HEADING_START).append(TD_START).append("Title : ").append(TD_END).append(TD_START).append(P.getTitle()).append(TD_END).append(TR_END);
+                    hdSB.append(TABLE_ROW_HEADING_START).append(TD_FIXED_WIDTH).append("Title : ").append(TD_END).append(TD_START).append(P.getTitle()).append(TD_END).append(TR_END);
                     hdSB.append(TR_START).append(TD_START).append("Description : ").append(TD_END).append(TD_START).append(PersistableDescription).append(TD_END).append(TR_END);
                     hdSB.append(TR_START).append(TD_START).append("Control Title : ").append(TD_END).append(TD_START).append(p.getTitle()).append(TD_END).append(TR_END);
                     hdSB.append(TR_START).append(TD_START).append("Control Description : ").append(TD_END).append(TD_START).append(ControlDescription).append(TD_END).append(TR_END);
