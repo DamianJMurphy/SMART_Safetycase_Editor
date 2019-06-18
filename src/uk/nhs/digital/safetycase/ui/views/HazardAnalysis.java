@@ -92,7 +92,7 @@ public class HazardAnalysis
     }
 
     private void populateHazardsTable(String type) {
-        
+        clearDisplayedHazards();
         DefaultTableModel dtm = new DefaultTableModel(COLUMNS, 0);
         displayedHazards.clear();
         if (hazardStates.get(type) != null) {
