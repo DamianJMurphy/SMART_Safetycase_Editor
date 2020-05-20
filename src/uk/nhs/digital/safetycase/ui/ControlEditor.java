@@ -77,13 +77,13 @@ public class ControlEditor extends javax.swing.JPanel
             
             ArrayList<String> typelist = MetaFactory.getInstance().getFactory("Control").getDistinctSet("Type");
             conditionsComboBox.addItem("Design");
-            conditionsComboBox.addItem("Test");
+//            conditionsComboBox.addItem("Test");
             conditionsComboBox.addItem("Training");
             conditionsComboBox.addItem("Business process change");
 
             ArrayList<String> states = MetaFactory.getInstance().getFactory("Control").getDistinctSet("State");
             for (String s : states) {
-                stateComboBox.addItem(s);
+//                stateComboBox.addItem(s);
             }
         }
         catch (Exception e) {

@@ -72,6 +72,7 @@ public class ProcessStepDetail
         linksTable.setModel(dtm);
         descriptionTextArea.setFont(nameTextField.getFont());
         SmartProject.getProject().addNotificationSubscriber(this);
+        editSelectedHazardButton.setVisible(false);
     }
     
     /**
@@ -96,6 +97,7 @@ public class ProcessStepDetail
             populate();
         }
         SmartProject.getProject().addNotificationSubscriber(this);
+        editSelectedHazardButton.setVisible(false);
     }
 
    private void populateLinks() {

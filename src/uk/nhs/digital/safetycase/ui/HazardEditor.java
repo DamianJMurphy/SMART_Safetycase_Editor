@@ -485,6 +485,7 @@ public class HazardEditor extends javax.swing.JPanel
 
         jLabel3.setText("Status");
 
+        statusComboBox.setToolTipText("");
         statusComboBox.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 statusComboBoxMouseClicked(evt);

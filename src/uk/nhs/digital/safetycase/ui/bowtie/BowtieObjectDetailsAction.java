@@ -154,6 +154,7 @@ public class BowtieObjectDetailsAction
 //                        detailEditor.pack();
 //                        detailEditor.setVisible(true);
                         ExternalEditorView editorView = new ExternalEditorView(pe.getComponent(), p.getDisplayName() + ":" + p.getAttributeValue("Name"), SmartProject.getProject().getProjectWindow().getMainWindowTabbedPane());
+                        return;
                     }
                 }
             }

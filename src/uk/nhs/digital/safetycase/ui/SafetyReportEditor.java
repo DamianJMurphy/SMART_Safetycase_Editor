@@ -313,6 +313,7 @@ public class SafetyReportEditor
     public SafetyReportEditor() throws Exception {
         initComponents();
         SmartProject.getProject().addNotificationSubscriber(this);
+        JOptionPane.showMessageDialog(this, "Before exporting the safety case, save all work and close the tabs", "Save all work & close tabs", JOptionPane.INFORMATION_MESSAGE);
 
     }
 
@@ -522,7 +523,7 @@ public class SafetyReportEditor
             fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
             int returnVal = fc.showSaveDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                fileName = fc.getSelectedFile().toString();
+                fileName = fc.getSelectedFile().toString()+".html";
             } else {
                 return;
             }
@@ -1066,7 +1067,7 @@ public class SafetyReportEditor
                     hazardSB.append(HazardProcessStep(h, "Associated Care Process Step: "));                                      
                     hazardSB.append(HazardAssociatedSystemReport(h, "Associated System Function : "));
                     hazardSB.append(HazardAssociatedReport(h, "Role", "Roles : "));
-                    hazardSB.append(HazardAssociatedReport(h, "Effect", "Potential Clinical Effects : "));
+                    hazardSB.append(HazardAssociatedReport(h, "Effect", "Potential Clinical Harm : "));
  
 //                    hazardSB.append(TR_START).append(TD_START).append("Role").append(TD_END).append(TD_START).append("Enter Roles").append(TD_END).append(TR_END);                                      
                     hazardSB.append(STANDARD_TABLE_END);                   
@@ -1107,7 +1108,7 @@ public class SafetyReportEditor
                     hazardSB.append(H2_START).append("Initial Risk Assessment").append(H2_END);;
                     hazardSB.append(H3_START).append("Possible Causes").append(H3_END);
                     hazardSB.append(HazardDependents(h, "Cause", "Existing Controls"));
-                    hazardSB.append(H3_START).append("Possible Effects").append(H3_END);
+                    hazardSB.append(H3_START).append("Possible Harm").append(H3_END);
                     hazardSB.append(HazardDependents(h, "Effect", "Existing Controls"));
                     //  hazardSB.append(H3_START).append("Existing Controls").append(H3_END);//not required any more
                     // hazardSB.append(HazardDependents(h, "Control", "Existing Controls")); //not required any more
@@ -1120,7 +1121,7 @@ public class SafetyReportEditor
                     hazardSB.append(H2_START).append("Residual Risk Assessment").append(H2_END);
                     hazardSB.append(H3_START).append("Possible Causes").append(H3_END);
                     hazardSB.append(HazardDependents(h, "Cause", "Additional Controls"));
-                    hazardSB.append(H3_START).append("Possible Effects").append(H3_END);
+                    hazardSB.append(H3_START).append("Possible Harm").append(H3_END);
                     hazardSB.append(HazardDependents(h, "Effect", "Additional Controls"));
                     // hazardSB.append(H3_START).append("Additional Controls").append(H3_END); //not required any more
                     // hazardSB.append(HazardDependents(h, "Control", "Additional Controls")); // not required any more
@@ -1355,8 +1356,14 @@ public class SafetyReportEditor
             e.printStackTrace();
             return "";
         }
-        return hdSB.toString().length() < 1 ? hdSB.append(STANDARD_TABLE_START).append(TR_START).append(TD_START).append("No " + type + " exists with " + InitialText).append(TD_END).append(TR_END).append(STANDARD_TABLE_END).toString()  : hdSB.toString();
+        
+        if (type == "Effect") {
+            return hdSB.toString().length() < 1 ? hdSB.append(STANDARD_TABLE_START).append(TR_START).append(TD_START).append("No " + "Harm" + " exists with " + InitialText).append(TD_END).append(TR_END).append(STANDARD_TABLE_END).toString()  : hdSB.toString();
+        } else {
+        
+            return hdSB.toString().length() < 1 ? hdSB.append(STANDARD_TABLE_START).append(TR_START).append(TD_START).append("No " + type + " exists with " + InitialText).append(TD_END).append(TR_END).append(STANDARD_TABLE_END).toString()  : hdSB.toString();
 //      return hdSB.toString().length() < 1 ? "No " + type + " exists with " + InitialText  : hdSB.toString();  //original code
+        }
     }
 
     private String RelatedControlReport(Persistable P, String type, String InitialText) {
@@ -1759,7 +1766,7 @@ public class SafetyReportEditor
                 return;
             }
             report = (Report) p;
-            proj = (Project) MetaFactory.getInstance().getFactory("Project").get(report.getAttribute("ProjectID").getIntValue());
+            proj = (Project) MetaFactory.getInstance().getFactory("Project").get(report.getAttribute("ProjectID").getIntValue());            
             titleTextField.setText(report.getAttributeValue("Title"));
             introductionEditor.setText(report.getAttributeValue("Introduction"));
             configTextArea.setText(report.getAttributeValue("CCMdetails"));

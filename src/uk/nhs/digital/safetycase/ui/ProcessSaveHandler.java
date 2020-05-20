@@ -130,6 +130,9 @@ public class ProcessSaveHandler
                     }
                 } else {
                     String style = cell.getAttribute("style");
+                    if (style.equals("swimlane")) {
+                        continue;
+                    }
                     String n = cell.getAttribute("value");
                     ps = new ProcessStep();
                     int cellId = Integer.parseInt(id);
@@ -148,8 +151,8 @@ public class ProcessSaveHandler
                             else
                                 ps.setAttribute("Type", "Stop");
                         }
-                    }
-                }
+                    }                   
+                  }
                 psf.put(ps);
             }
         }

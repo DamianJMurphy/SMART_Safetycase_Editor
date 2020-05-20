@@ -223,12 +223,12 @@ public class BowtieGraphEditor
 						"image;image=/uk/nhs/digital/safetycase/ui/bowtie/control.jpg;whiteSpace=wrap",
 						50, 50, "Control");
 		bowtiePalette
-				.addTemplate("Effect",
+				.addTemplate("Harm",
 						new ImageIcon(
 								BowtieGraphEditor.class
 										.getResource("/uk/nhs/digital/safetycase/ui/bowtie/effect.png")),
 						"image;image=/uk/nhs/digital/safetycase/ui/bowtie/effect.png;whiteSpace=wrap",
-						50, 50, "Effect");
+						50, 50, "Harm");
 		bowtiePalette
 				.addEdgeTemplate("Straight",
 						new ImageIcon(

@@ -607,8 +607,15 @@ public class SmartProject
     
     private void populateHazardDependents(String type, DefaultMutableTreeNode hazardnode, Hazard h)
     {
-        DefaultMutableTreeNode node = new DefaultMutableTreeNode(type);
+        DefaultMutableTreeNode node;
+        
+        if (type.equals("Effect")) {
+        node = new DefaultMutableTreeNode("Harm");
         hazardnode.add(node);
+        } else {
+        node = new DefaultMutableTreeNode(type);
+        hazardnode.add(node);
+        }
         try {
             ArrayList<Relationship> rels = h.getRelationships(type);
             if (rels == null)
@@ -626,7 +633,7 @@ public class SmartProject
             log("Error getting hazard dependents", e);
         }
     }
-    
+     
     private void populateProjectComponent(String type, DefaultMutableTreeNode n, int id)
     {
         DefaultMutableTreeNode node = new DefaultMutableTreeNode(type);
