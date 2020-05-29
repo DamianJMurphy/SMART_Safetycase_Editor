@@ -70,7 +70,7 @@
             <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="Copyright 2018 NHS Digital. Licensed under the Apache License, Version 2.0.&#xa;&#xa;Made in Yorkshire by: Hannah McCann (UX Lead, Safety Engineering SME), Damian Murphy and &#xa;Sharif Ullah (development team).&#xa;&#xa;Aided and abetted by Sean White (NHS Digital Safety Team) and Ibrahim Habli (University of York)&#xa;&#xa;Graphical editors powered by mxGraph (http://www.jgraph.com), licenced under Apache Licence, version 2.0&#xa;HTML editors powered by Ekit (http://www.hexidec.com) licenced under LGPL, copyright Howard Kistler.&#xa;PDF SMART methodology display powered by Apache PDFbox, copyright Apache Software Foundation.&#xa;&#xa;"/>
+            <Property name="text" type="java.lang.String" value="Copyright 2018 NHS Digital. Licensed under the Apache License, Version 2.0.&#xa;&#xa;Project Manager: Shakir Laher (Lead Engineer)&#xa;&#xa;Project Team: Damian Murphy, Sharif Ullah and Shakir Laher (Software Engineering Team). Hannah McCann (UX Lead, Safety Engineering SME)&#xa;&#xa;Aided and abetted by Sean White (NHS Digital Safety Team) and Ibrahim Habli (University of York)&#xa;&#xa;Graphical editors powered by mxGraph (http://www.jgraph.com), licenced under Apache Licence, version 2.0&#xa;HTML editors powered by Ekit (http://www.hexidec.com) licenced under LGPL, copyright Howard Kistler.&#xa;PDF SMART methodology display powered by Apache PDFbox, copyright Apache Software Foundation.&#xa;&#xa;"/>
           </Properties>
         </Component>
       </SubComponents>
